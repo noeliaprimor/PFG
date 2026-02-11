@@ -1,0 +1,212 @@
+<!-- File: tema2-1.html  -->
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Tema 2-1</title>
+  <link rel="stylesheet" href="/css/styles.css" />
+  <script src="https://kit.fontawesome.com/d8a0cf358f.js" crossorigin="anonymous"></script>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <title id = "TituloP">Módulo 2, Tema 1</title>
+
+</head>
+
+<body>
+  <!-- incluye la cabecera -->
+  <div data-include="../../partials/header.html"></div>
+
+  <main>
+
+
+    <p>
+
+    </p>
+
+    <a href="#" id="scroll" title="Volver Arriba" style="display: none;">Arriba<span></span></a>
+
+    <!-- Titulos -->
+
+    <h2 class="titulos-leccion"> Módulo 2: Procesamiento Paralelo basado en Spark</h2>
+    <h3 class="titulos-leccion">Tema 1: Introducción e instalación de Apache Spark</h3>
+    <br>
+
+    <!-- Indice -->
+    <div class="indice-container">
+        <button id="toggle-index">Mostrar Índice<i class="fa-solid fa-caret-down" style="padding-left: 5px; color: #004d35;"></i></button>
+
+        <div id="index-container" class="text-cell hidden">
+            <hr>
+            <ul>
+                <li><a href="/modulo2/Tema1/Leccion 1/Leccion2_2_1.html">Lección 1: Arquitectura y Propósito de Spark</a></li>
+                <li><a href="#Componentes">Componentes de la pila unificada de Spark</a></li>
+                <li><a href="#Gestores">Tipos de gestores de clústers de Spark</a></li>
+                <li><a href="#RDD">Resilient Distributed Dataset (RDD)</a></li>
+                <li><a href="#Instalacion">Instalación de Spark</a></li>
+                <li><a href="#Ejecucion">Ejecución/uso de las shell de Spark (Scala/Python).</a></li>
+                <li><a href="#Ejemplos">Ejecución de ejemplos de Spark</a></li>
+                <li><a href="#saber-mas">Para saber más</a></li>
+                <li><a href="#ejercicio-propuesto">Ejercicio propuesto</a></li>
+            </ul>
+        </div>
+    </div>
+
+    <section id="Arquitectura">
+
+        <!-- Arquitectura -->
+        <div class="lesson-container">
+            <h3>ARQUITECTURA Y PROPÓSITO DE SPARK</h3>
+            <hr>
+            <div class="text-cell">
+                <p>Apache Spark es un motor de procesamiento de datos de código abierto diseñado para el procesamiento rápido y eficiente de grandes volúmenes de datos. Fue desarrollado inicialmente en la Universidad de California, Berkeley, y se ha convertido en una de las herramientas más populares en el ecosistema de Big Data.</p>
+                <p>La arquitectura de Spark se basa en un modelo de programación distribuida que permite procesar datos en paralelo a través de un clúster de computadoras. Spark utiliza un enfoque de procesamiento en memoria, lo que significa que los datos se cargan en la memoria RAM para acelerar las operaciones, lo que lo hace especialmente adecuado para tareas que requieren iteraciones repetidas sobre los mismos datos, como el aprendizaje automático y el análisis interactivo.</p>
+                <p>El propósito principal de Spark es proporcionar una plataforma unificada para el procesamiento de datos a gran escala, permitiendo a los desarrolladores escribir aplicaciones que pueden ejecutarse tanto en entornos locales como en clústeres distribuidos. Spark es compatible con una amplia variedad de fuentes de datos, incluyendo HDFS, Cassandra, HBase y S3, lo que lo hace versátil para diferentes casos de uso en el ámbito del Big Data.</p>
+            </div>
+        </div>
+    </section>
+      <section id="Componentes">
+
+        <!-- Componentes -->
+        <div class="lesson-container">
+            <h3>COMPONENTES DE LA PILA UNIFICADA DE SPARK</h3>
+            <hr>
+            <div class="text-cell">
+                <p>La pila unificada de Spark se compone de varios componentes clave que trabajan juntos para proporcionar una plataforma completa para el procesamiento de datos. Estos componentes incluyen:</p>
+                <ul>
+                    <li><strong>Spark Core:</strong> Es el núcleo de Spark y proporciona las funcionalidades básicas para la gestión de tareas, la programación distribuida y el manejo de datos en memoria.</li>
+                    <li><strong>Spark SQL:</strong> Permite a los usuarios ejecutar consultas SQL sobre datos estructurados utilizando el motor de Spark, lo que facilita el análisis de datos tabulares.</li>
+                    <li><strong>Spark Streaming:</strong> Proporciona capacidades para procesar flujos de datos en tiempo real, lo que es útil para aplicaciones como la monitorización y el análisis de eventos en tiempo real.</li>
+                    <li><strong>Spark MLlib:</strong> Es una biblioteca de aprendizaje automático que ofrece algoritmos y herramientas para construir modelos de machine learning sobre grandes conjuntos de datos.</li>
+                    <strong>Spark GraphX:</strong> Permite el procesamiento y análisis de grafos, lo que es útil para aplicaciones como la detección de comunidades y el análisis de redes sociales.
+                </ul>
+                <p>Estos componentes trabajan juntos para proporcionar una plataforma unificada que puede manejar una amplia variedad de casos de uso en el ámbito del Big Data, desde el procesamiento por lotes hasta el análisis en tiempo real y el aprendizaje automático.</p>
+            </div>
+        </div>
+      </section>
+      <section id ="Gestores">
+        <!-- Gestores de clústers -->
+        <div class="lesson-container">
+            <h3>TIPOS DE GESTORES DE CLÚSTERS DE SPARK</h3>
+            <hr>
+            <div class="text-cell">
+                <p>Apache Spark es compatible con varios gestores de clústers, lo que permite a los usuarios elegir la opción que mejor se adapte a sus necesidades y entorno de ejecución. Algunos de los gestores de clústers más comunes para Spark incluyen:</p>
+                <ul>
+                    <li><strong>Standalone Cluster Manager:</strong> Es el gestor de clústers nativo de Spark, que permite ejecutar Spark en un clúster dedicado sin necesidad de depender de otros sistemas de gestión.</li>
+                    <li><strong>Apache Mesos:</strong> Es un sistema de gestión de clústers que proporciona una plataforma para ejecutar aplicaciones distribuidas, incluyendo Spark, en un entorno compartido.</li>
+                    <li><strong>Hadoop YARN:</strong> Es el gestor de recursos utilizado por Hadoop, y Spark puede ejecutarse sobre YARN para aprovechar los recursos del clúster Hadoop existente.</li>
+                    <li><strong>Kubernetes:</strong> Es una plataforma de orquestación de contenedores que permite ejecutar Spark en un entorno de contenedores, facilitando la gestión y escalabilidad.</li>
+                </ul>
+                <p>Cada uno de estos gestores tiene sus propias ventajas y desventajas, y la elección del gestor adecuado dependerá del caso de uso específico, la infraestructura disponible y las preferencias del equipo de desarrollo.</p>
+            </div>
+        </div>
+      </section>
+      <section id="RDD">
+        <!-- RDD -->
+        <div class="lesson-container">
+            <h3>RESILIENT DISTRIBUTED DATASET (RDD)</h3>
+            <hr>
+            <div class="text-cell">
+                <p>Un Resilient Distributed Dataset (RDD) es una abstracción fundamental en Apache Spark que representa una colección inmutable de objetos distribuidos a través de un clúster. Los RDDs son la unidad básica de datos en Spark y permiten a los usuarios realizar operaciones de transformación y acción sobre grandes conjuntos de datos de manera eficiente.</p>
+                <p>Los RDDs son resilientes porque pueden recuperarse automáticamente de fallos en el clúster, lo que garantiza la confiabilidad del procesamiento de datos. Además, los RDDs son distribuidos, lo que significa que los datos se dividen en particiones y se procesan en paralelo en diferentes nodos del clúster, lo que mejora el rendimiento y la escalabilidad.</p>
+                <p>En resumen, los RDDs son una parte esencial de la arquitectura de Spark y proporcionan una forma eficiente y confiable de manejar grandes volúmenes de datos distribuidos.</p>
+            </div>
+        </div>
+    </section>
+    <section id="Instalacion">
+
+        <!-- Instalación -->
+        <div class="lesson-container">
+            <h3>INSTALACIÓN DE SPARK</h3>
+            <hr>
+            <div class="text-cell">
+                <p>Para instalar Apache Spark, puedes seguir estos pasos:</p>
+                <ol>
+                    <li>Descarga la última versión de Apache Spark desde el sitio web oficial: <a href="https://spark.apache.org/downloads.html">https://spark.apache.org/downloads.html</a>.</li>
+                    <li>Selecciona la versión de Spark que deseas descargar y elige un paquete precompilado para tu sistema operativo.</li>
+                    <li>Una vez descargado el archivo, descomprímelo en una ubicación de tu elección.</li>
+                    <li>Asegúrate de tener Java instalado en tu sistema, ya que Spark requiere Java para ejecutarse. Puedes verificar la instalación de Java ejecutando el comando `java -version` en tu terminal.</li>
+                    <li>Configura las variables de entorno necesarias para Spark, como `SPARK_HOME` y `PATH`, para facilitar su uso desde la línea de comandos.</li>
+                    <li>Finalmente, puedes iniciar el shell de Spark ejecutando el comando `spark-shell` para Scala o `pyspark` para Python desde la terminal.</li>
+                </ol>
+                <p>Con estos pasos, deberías tener Apache Spark instalado y listo para usar en tu sistema. Asegúrate de consultar la documentación oficial de Spark para obtener información adicional sobre la configuración y el uso de Spark en diferentes entornos.</p>
+            </div>
+        </div>
+    </section>
+    <section id="Ejecucion">
+        <!-- Ejecución -->
+        <div class="lesson-container">
+            <h3>EJECUCIÓN/USO DE LAS SHELL DE SPARK (SCALA/PYTHON)</h3>
+            <hr>
+            <div class="text-cell">
+                <p>Para ejecutar las shell de Spark, puedes seguir estos pasos:</p>
+                <ol>
+                    <li>Abre una terminal en tu sistema.</li>
+                    <li>Navega al directorio donde has instalado Apache Spark.</li>
+                    <li>Para iniciar la shell de Spark en Scala, ejecuta el comando `spark-shell`. Esto abrirá una sesión interactiva de Scala donde podrás escribir y ejecutar código Spark.</li>
+                    <li>Para iniciar la shell de Spark en Python, ejecuta el comando `pyspark`. Esto abrirá una sesión interactiva de Python donde podrás escribir y ejecutar código Spark utilizando la API de PySpark.</li>
+                    <li>Una vez que estés en la shell de Spark, puedes comenzar a escribir código para procesar datos utilizando las funcionalidades de Spark. Puedes cargar datos, realizar transformaciones y acciones, y explorar los resultados directamente desde la shell.</li>
+                </ol>
+                <p>Recuerda que la shell de Spark es una herramienta poderosa para experimentar y aprender sobre el procesamiento de datos con Spark. Puedes utilizarla para probar diferentes operaciones y explorar los resultados en tiempo real.</p>
+            </div>
+        </div>
+     </section>
+    <section id="Ejemplos">
+        <!-- Ejemplos -->
+        <div class="lesson-container">
+            <h3>EJECUCIÓN DE EJEMPLOS DE SPARK</h3>
+            <hr>
+            <div class="text-cell">
+                <p>Para ejecutar ejemplos de Spark, puedes seguir estos pasos:</p>
+                <ol>
+                    <li>Abre una terminal y navega al directorio donde has instalado Apache Spark.</li>
+                    <li>Inicia la shell de Spark en Scala o Python, dependiendo del lenguaje que prefieras utilizar.</li>
+                    <li>Una vez que estés en la shell de Spark, puedes cargar un ejemplo de Spark utilizando el comando `spark-submit` seguido del nombre del archivo del ejemplo. Por ejemplo, si tienes un archivo llamado `example.py`, puedes ejecutarlo con el comando `spark-submit example.py`.</li>
+                    <li>El ejemplo se ejecutará en el clúster de Spark y podrás ver los resultados en la terminal. Asegúrate de revisar la documentación del ejemplo para entender qué hace y cómo funciona.</li>
+                </ol>
+                <p>Ejecutar ejemplos de Spark es una excelente manera de aprender sobre las capacidades de Spark y cómo utilizarlo para procesar datos. Puedes encontrar una variedad de ejemplos en la documentación oficial de Spark o en repositorios de código abierto relacionados con Spark.</p>
+            </div>
+        </div>
+      </section>
+    <section  id="saber-mas">
+         <!-- Para saber más -->
+        <div class="lesson-container indice-modulos">
+            <h3>PARA SABER MÁS</h3>
+            <hr>
+            <div class="text-cell">
+                <ul>
+                    <li>Spak the definitve guide</li>
+                    <li>Mas referencias</li>
+                </ul>
+            </div>
+
+        </div>
+    </section>
+    <section id="ejercicio-propuesto">
+
+        <!-- Ejercicio propuesto -->
+        <div class="lesson-container">
+            <h3>EJERCICIO PROPUESTO</h3>
+            <hr>
+            <div class="text-cell">
+                <p> Enhorabuena! Has llegado al final de la primera lección. Ahora es tu turno. Como ejercicio práctico te proponemos investigar más en profundidad los orígenes del término "Big Data" e identificar
+                    aquellos eventos históricos importantes que lo han llegado a desarrollar.</p>
+                <p> Por último, trata de responder a esta pregunta: ¿Cómo se abordaban los problemas de almacenamiento, procesamiento, análisis
+                    y visualización de datos en el pasado, antes del desarrollo de Big data?</p>
+            </div>
+
+        </div>
+    </section>
+
+  </main>
+
+  <!-- incluye el pie -->
+  <div data-include="/partials/footer.html"></div>
+
+  <!-- loader para los fragmentos -->
+  <script src="/js/include.js"></script>
+
+  <!-- tu script de comportamiento del menú -->
+  <script src="/js/script.js"></script>
+  <div data-include="/partials/footer.html"></div>
+</body>
+</html>

@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../../../css/styles.css">
+    <script src="https://kit.fontawesome.com/d8a0cf358f.js" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <title id="tituloP">01. Leccion 1</title>
+
+</head>
+
+<body>
+<header class="header-section">
+    <div class="header-content">
+        <div class="title">
+            <a href="../../../index.html">
+                <p id="titulo"></p>
+            </a>
+        </div>
+        <div class="logo">
+            <a target="_blank" href="https://www.uned.es/universidad/facultades/informatica.html">
+                <img src="../../../img/logo_informatica.gif" alt="Logo ETSI Informatica UNED">
+            </a>
+        </div>
+    </div>
+
+
+    <div id="menuprincipal"></div>
+
+</header>
+
+
+<main>
+        <!-- Volver arriba Button -->
+    <a href="#" id="scroll" title="Volver Arriba" style="display: none;">Arriba<span></span></a>
+
+    <!-- Titulos -->
+
+    <h3 class="titulos-leccion">Tema 1. Introducción a Big Data</h3>
+    <h2 class="titulos-leccion">Lección 1: Definición y conceptos básicos de Big Data</h2>
+    <br>
+
+    <!-- Indice -->
+    <div class="indice-container">
+        <button id="toggle-index">Mostrar Índice<i class="fa-solid fa-caret-down" style="padding-left: 5px; color: #004d35;"></i></button>
+
+        <div id="index-container" class="text-cell hidden">
+            <hr>
+            <ul>
+                <li><a href="#descripcion">Descripción</a></li>
+                <li><a href="#contenidos">Contenidos</a></li>
+                <li><a href="#saber-mas">Para saber más</a></li>
+                <li><a href="#ejercicio-propuesto">Ejercicio propuesto</a></li>
+            </ul>
+        </div>
+    </div>
+
+    <section id="descripcion">
+
+        <!-- Descripcion -->
+        <div class="lesson-container">
+            <h3>DESCRIPCIÓN</h3>
+            <hr>
+            <div class="text-cell">
+                <p>Bienvenid@s a esta primera lección. El Big data se ha convertido en una herramienta imprescindible tanto para el ámbito público como el sector privado en todos los sectores
+                    ya que permite tomar decisiones fundamentadas a partir de los datos, analizando el impacto de éstos y extrayendo valor de los grandes volúmenes de datos disponibles hoy en día.
+                </p>
+                <p>
+                    En esta lección haremos una breve introducción al término Big Data. Conoceremos su nacimiento y travesía
+                    a través de la historia. Hablaremos del concepto de 'dato' y el mundo de datos en el que nos estamos sumergiendo. Por último, aprenderemos a diferenciar entre los términos Big Data, Machine Learning e Inteligencia Artificial.
+                </p>
+            </div>
+        </div>
+    </section>
+    <section id="contenidos">
+
+         <!-- Contenidos -->
+        <div class="lesson-container">
+
+            <h3>CONTENIDOS</h3>
+            <hr>
+
+            <!-- Blóque con texto -->
+            <div class="text-cell">
+                <h4> ¿Qué es el Big Data? </h4>
+                <p>Podemos definir de manera sencilla el término Big Data como grandes conjuntos de datos de mayor complejidad y tamaño,
+                    especialmente procedente de nuevas fuentes de datos. Estos conjuntos de datos pueden ser estructurados,
+                    semiestructurados o no estructurados como veremos a lo largo de esta lección. La principal característica es que son tan voluminosos
+                    que el software de procesamiento convencional simplemente no es capaz de gestionarlos correctamente.
+                </p>
+            </div>
+
+
+            <div class="varias-columnas">
+                <div class="columna">
+                    <div class="text-cell">
+                        <h4>¿Breve historia del Big Data?</h4>
+                        <p>Aunque la idea de "Big Data" es bastante reciente, los orígenes de los datos masivos se remontan a los años 60 y 70,
+                            cuando estábamos apenas comenzando con los primeros centros de datos y las bases de datos más conocidas, las bases de datos
+                            relacionales.
+                        </p>
+                        <p>En el 2005, la gente se dio cuenta de la locura de datos que estábamos generando en Facebook, YouTube y otras plataformas online.
+                            Fue entonces cuando salió a la luz Hadoop, un sistema abierto diseñado para guardar y analizar grandes cantidades de datos. También en esa época,
+                            las bases de datos NoSQL (No Solo SQL) hicieron sus primeras apariciones
+                        </p>
+                        <p>Los frameworks de código abierto como Hadoop (y más recientemente, Spark) fueron clave para el boom del Big Data, haciendo que manejar
+                            y guardar esa montaña de datos fuera más fácil y barato. Desde entonces, la cantidad de datos ha crecido exponencialmente. Seguimos generando datos a gran velocidad,
+                            pero ahora no solo somos nosotros, ¡sino que hasta las máquinas están en el juego!
+                        </p>
+                        <p>Con la llegada del Internet de las cosas (IoT), hay cada vez más objetos conectados a la red (que nos espían), recopilando datos sobre cómo usamos las cosas
+                            y el rendimiento de los productos. Y no podemos olvidar el auge del aprendizaje automático, que está generando aún más datos.
+                        </p>
+                        <p>Aunque el Big Data ya ha recorrido un largo camino, su verdadero potencial apenas está despertando.
+                            La magia del Cloud Computing ha ampliado las posibilidades del Big Data. En la nube, los desarrolladores pueden escalar cosas de forma ágil y rápida.
+                            Además, las bases de datos de gráficos son cada vez más populares e importantes, mostrando toneladas de datos de forma rápida y completa.
+                        </p>
+                    </div>
+                </div>
+                <div class="columna">
+                    <div class="img-cell">
+                        <img class="img-iframe" src="../img/earth-net.jpg" alt="Imagen de la tierra interconectada por redes">
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="text-cell">
+                <h4>Un mundo de datos</h4>
+                <p>Pero... ¿de dónde se pueden sacar tantos datos? La respuesta la podemos encontrar si miramos atrás en el tiempo y al presente de frente.
+                    Cientos de empresas han ido recopilando datos de sus empleados, clientes, proyectos, etc. a lo largo de los años. Sin embargo, son los datos
+                    generados día a día por los usuarios los que le dan a esta tecnología toda su potencia.
+                </p>
+                <p>Domo's presentó su 11ª edición de Data Never Sleeps, una infografía anual que nos muestra de forma general el inmenso volumen datos existente y su constante evolución.
+                </p>
+                <p>“Los datos impulsan todo lo que hacemos, desde una búsqueda rápida en línea o enviar un correo electrónico, hasta consultar los últimos titulares de camino al trabajo.
+                    Data Never Sleeps, ahora en su undécimo año, muestra cuánto dependemos de los datos y su impacto en nuestra vida diaria en uno de los 525.600 minutos de un año”,
+                    dijo Josh James, fundador y director ejecutivo de Domo.
+                </p>
+
+
+
+                <p class="img-cell">
+                    <img class="img-iframe" src="../img/data-never-sleeps-11.png" alt="Datos generados en 1 minuto en 2023">
+                </p>
+                <p style="text-align: center;">Fuente imagen: <a href="https://www.domo.com/learn/infographic/data-never-sleeps-11">Data Never Sleeps 11</a></p>
+
+                <br>
+                <p>Tal como nos informa Domo's, la población mundial de Internet sigue creciendo de forma significativa año tras año. En noviembre de 2023, Internet representa 5.200 millones de personas,
+                    aproximadamente el 64,6% de la población mundial. No solo eso, sino que la cantidad total de datos que se preveía crear, capturar, copiar y consumir en todo el mundo en 2023 fue de 120 zettabytes,
+                    una cifra que se prevé que aumente hasta los 181 zettabytes en 2025.
+                </p>
+                <p>*1 zettabyte = 1.000.000.000.000 gigabytes</p>
+            </div>
+
+            <div class="text-cell">
+
+                <table class="tabla-IA-ML-BD">
+                    <tbody>
+                        <tr>
+                            <td colspan="3" style="background-color: #ffffff;">
+                                <img class="img-iframe" src="../img/BigData_IA_ML.png" style="max-height: 450px;" alt="Imagen de la relación entre Big Data, Machine Learning e Inteligencia artificial">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <p class="titulo-contenido">BIG DATA</p>
+                                <p>Almacenamiento y procesado de grandes volúmenes de datos</p>
+                            </td>
+                            <td>
+                                <p class="titulo-contenido">MACHINE LEARNING</p>
+                                <p>Conjunto de algoritmos capaces de identificar y aprender patrones en los datos</p>
+                            </td>
+                            <td>
+                                <p class="titulo-contenido">INTELIGENCIA ARTIFICIAL</p>
+                                <p>Resolver problemas mediante máquinas</p>
+                            </td>
+
+                        </tr>
+                    </tbody>
+                </table>
+                <br>
+                <h4>Diferencias entre Big Data, Machine Learning e Inteligencia Artificial</h4>
+                <p>Como podemos observar en el gráfico, el machine learning está dentro de la inteligencia artificial, sin embargo,
+                    no toda inteligencia artifical es machine learning. De la misma forma podemos ver cómo el concepto de Big Data no está dentro de la inteligencia artificial, sino que
+                    tiene otras características. Sin embargo, aquella parte donde confluyen Machine Learning y Big data recibe el nombre de
+                    Big Data Analytics, un concepto relacionado con el dato puesto al servicio del entrenamiento de modelos
+                    con el fin de analizar patrones en los datos, predecir comportamientos, etc.
+                    </p>
+
+                <p>
+                    Big Data Analytics proporciona los datos que la IA y el ML necesitan para aprender y mejorar.
+                    La IA y el ML pueden utilizarse para analizar grandes conjuntos de datos y encontrar patrones y conocimiento oculto.
+                    Este conocimiento puede utilizarse para mejorar los procesos de negocio, desarrollar nuevos productos y servicios
+                    y tomar mejores decisiones. Podemos ver algunos ejemplos de cómo utilizar esta poderosa relación:
+                </p>
+
+                <ul>
+                    <li><strong>Análisis de clientes:</strong> Al analizar los datos de sus clientes para comprender mejor sus necesidades y preferencias.
+                        Esta información puede utilizarse para desarrollar nuevos productos y servicios, mejorar la experiencia del cliente
+                        y aumentar las ventas.
+                    </li>
+                    <li><strong>Detección de fraude:</strong> En el ámbito económico, al analizar las transacciones, se pueden extraer diferentes métricas y detectar
+                        así actividades fraudulentas, blanqueo de capitales, etc.
+                    </li>
+                    <li><strong>Desarrollo de nuevos productos:</strong> Podemos identificar las distintas necesidades de los clientes y crear nuevos productos que
+                        las satisfagan. También en el ámbito de la fidelización de los clientes tiene un alto potencial.
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </section>
+    <section  id="saber-mas">
+         <!-- Para saber más -->
+        <div class="lesson-container indice-modulos">
+            <h3>PARA SABER MÁS</h3>
+            <hr>
+            <div class="text-cell">
+                <ul>
+                    <li><a href="https://www.ibm.com/blog/?q=big+data+definition&lang=en&cc=undefined">IBM - Big Data Definition</a></li>
+                    <li><a href="https://courses.minnalearn.com/es/courses/digital-revolution/big-data-and-beyond/introduction-to-big-data">Introducción al Big Data</a></li>
+                </ul>
+            </div>
+
+        </div>
+    </section>
+    <section id="ejercicio-propuesto">
+
+        <!-- Ejercicio propuesto -->
+        <div class="lesson-container">
+            <h3>EJERCICIO PROPUESTO</h3>
+            <hr>
+            <div class="text-cell">
+                <p> Enhorabuena! Has llegado al final de la primera lección. Ahora es tu turno. Como ejercicio práctico te proponemos investigar más en profundidad los orígenes del término "Big Data" e identificar
+                    aquellos eventos históricos importantes que lo han llegado a desarrollar.</p>
+                <p> Por último, trata de responder a esta pregunta: ¿Cómo se abordaban los problemas de almacenamiento, procesamiento, análisis
+                    y visualización de datos en el pasado, antes del desarrollo de Big data?</p>
+            </div>
+
+        </div>
+    </section>
+
+        <!-- Botones navegacion entre lecciones -->
+        <div>
+            <div class="navigation-buttons">
+                <button onclick="window.location.href='../index.html'">Presentación del curso</button>
+                <button onclick="window.location.href='../leccion02/index.html'">Lección siguiente</button>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <p id="piePagina"></p>
+    </footer>
+
+    <!-- Fichero con las funciones de menú, botón arriba, etc. -->
+    <script src="../../../js/script.js"></script>
+
+</body>
+</html>
