@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>M2T4L1 — Monitorización y configuración de Spark</title>
+  <link rel="stylesheet" href="/css/styles.css" />
+</head>
+<body>
+  <div data-include="/partials/header.html"></div>
+  <main>
+    <nav class="lesson-nav">
+      <a href="M2T4L1.html">L1</a> | <a href="M2T4L2.html">L2</a> | <a href="M2T4L3.html">L3</a>
+      <span style="float:right"><a href="/modulo2/modulo2.html">Volver a Módulo 2</a> • <a href="/modulo2/Tema4/index.html">Índice del Tema</a></span>
+    </nav>
+    <h1>M2T4L1 — Monitorización y configuración de Spark</h1>
+    <p>Introducción a herramientas de monitorización (UI, metrics, logs) y configuración básica.</p>
+
+    <section>
+      <h2>Objetivos</h2>
+      <ul>
+        <li>Conocer las herramientas de monitorización (Spark UI, métricas, logs, Prometheus/Grafana).</li>
+        <li>Aprender parámetros clave de configuración (memoria, paralelismo, tiempo de retención de logs).</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>Spark UI y métricas</h2>
+      <p>La interfaz web de Spark por defecto está disponible en <code>http://[driver-host]:4040</code> mientras la aplicación está ejecutándose. Muestra DAGs, etapas, tareas, tiempos por etapa, y métricas de almacenamiento/ejecutor.</p>
+    </section>
+
+    <section>
+      <h2>Comandos útiles</h2>
+      <pre><code># arrancar master y workers (scripts en $SPARK_HOME/sbin)
+./sbin/start-master.sh
+./sbin/start-slave.sh spark://[master-host]:7077
+
+# ver logs
+tail -f &#36;SPARK_HOME/logs/&#42;
+</code></pre>
+    </section>
+
+    <section>
+      <h2>Notebook</h2>
+      <p>Notebook de apoyo: <a href="/modulo2/Tema4/notebooks/M2T4L1.ipynb">M2T4L1.ipynb</a></p>
+    </section>
+
+  </main>
+  <div data-include="/partials/footer.html"></div>
+  <script src="/js/include.js"></script>
+  <script src="/js/script.js"></script>
+</body>
+</html>

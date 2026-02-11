@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>M2T2L3 — Programación de aplicaciones en Spark</title>
+  <link rel="stylesheet" href="/css/styles.css" />
+</head>
+<body>
+  <div data-include="/partials/header.html"></div>
+  <main>
+    <nav class="lesson-nav">
+      <a href="M2T2L1.html">L1</a> | <a href="M2T2L2.html">L2</a> | <a href="M2T2L3.html">L3</a>
+      <span style="float:right"><a href="/modulo2/modulo2.html">Volver a Módulo 2</a> • <a href="/modulo2/Tema2/index.html">Índice del Tema</a></span>
+    </nav>
+    <h1>M2T2L3 — Creación de sesiones: SparkSession y SparkContext</h1>
+
+    <section>
+      <h2>Objetivos</h2>
+      <ul>
+        <li>Aprender a inicializar SparkSession y comprender su relación con SparkContext.</li>
+        <li>Conocer configuración de builder (appName, master, configs).</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>Ejemplo</h2>
+      <pre><code>from pyspark.sql import SparkSession
+spark = SparkSession.builder
+    .appName('m2t2l3')
+    .config('spark.executor.memory','2g')
+    .getOrCreate()
+sc = spark.sparkContext
+print(sc.master)
+spark.stop()
+</code></pre>
+      <p>Notebook: <a href="/modulo2/Tema2/notebooks/M2T2L3.ipynb">M2T2L3.ipynb</a></p>
+    </section>
+
+    <section>
+      <h2>Buenas prácticas</h2>
+      <ul>
+        <li>Crear una única SparkSession por aplicación.</li>
+        <li>Configurar recursos en función del entorno (local vs cluster).</li>
+      </ul>
+    </section>
+  </main>
+  <div data-include="/partials/footer.html"></div>
+  <script src="/js/include.js"></script>
+  <script src="/js/script.js"></script>
+</body>
+</html>

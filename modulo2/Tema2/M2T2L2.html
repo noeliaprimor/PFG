@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>M2T2L2 — RDDs y DataFrames</title>
+  <link rel="stylesheet" href="/css/styles.css" />
+</head>
+<body>
+  <div data-include="/partials/header.html"></div>
+  <main>
+    <nav class="lesson-nav">
+      <a href="M2T2L1.html">L1</a> | <a href="M2T2L2.html">L2</a> | <a href="M2T2L3.html">L3</a>
+      <span style="float:right"><a href="/modulo2/modulo2.html">Volver a Módulo 2</a> • <a href="/modulo2/Tema2/index.html">Índice del Tema</a></span>
+    </nav>
+    <h1>M2T2L2 — Desarrollo y ejecución de una aplicación Spark</h1>
+
+    <section>
+      <h2>Objetivos</h2>
+      <ul>
+        <li>Conocer la estructura mínima de una aplicación Spark en Python y Scala.</li>
+        <li>Aprender a probar localmente y desplegar con spark-submit.</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>Estructura de proyecto (Python)</h2>
+      <pre><code>my_app/
+  ├─ src/
+  │   └─ app.py
+  ├─ requirements.txt
+  └─ Dockerfile
+
+# app.py
+from pyspark.sql import SparkSession
+if __name__ == '__main__':
+    spark = SparkSession.builder.appName('my_app').getOrCreate()
+    # lógica
+    spark.stop()
+</code></pre>
+    </section>
+
+    <section>
+      <h2>Ejemplo rápido</h2>
+      <pre><code>from pyspark.sql import SparkSession
+spark = SparkSession.builder.appName('m2t2l2').getOrCreate()
+df = spark.createDataFrame([(1,'x'),(2,'y')], ['id','val'])
+df.show()
+spark.stop()
+</code></pre>
+      <p>Notebook: <a href="/modulo2/Tema2/notebooks/M2T2L2.ipynb">M2T2L2.ipynb</a></p>
+    </section>
+
+    <section>
+      <h2>Despliegue</h2>
+      <p>Usar <code>spark-submit</code> o crear una imagen Docker con Spark y lanzar en Kubernetes.</p>
+    </section>
+  </main>
+  <div data-include="/partials/footer.html"></div>
+  <script src="/js/include.js"></script>
+  <script src="/js/script.js"></script>
+</body>
+</html>

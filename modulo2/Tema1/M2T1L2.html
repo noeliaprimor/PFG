@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>M2T1L2 — Componentes de la pila unificada de Spark</title>
+  <link rel="stylesheet" href="/css/styles.css" />
+</head>
+<body>
+  <div data-include="/partials/header.html"></div>
+  <main>
+    <nav class="lesson-nav">
+      <a href="M2T1L1.html">Lección 1</a> | <a href="M2T1L2.html">Lección 2</a> | <a href="M2T1L3.html">Lección 3</a>
+      <span style="float:right"><a href="/modulo2/modulo2.html">Volver a Módulo 2</a> • <a href="/modulo2/Tema1/index.html">Índice del Tema</a></span>
+    </nav>
+    <h1>M2T1L2 — Componentes de la pila unificada de Spark</h1>
+
+<section>
+  <h2>Objetivos</h2>
+  <ul>
+    <li>Conocer Spark Core, Spark SQL, MLlib, GraphX y Structured Streaming.</li>
+    <li>Entender cuándo usar cada librería.</li>
+  </ul>
+</section>
+
+<section>
+  <h2>Resumen</h2>
+  <p>La pila de Spark provee varios módulos para cubrir diferentes necesidades: Core para ejecución, Spark SQL para datos estructurados, MLlib para ML, GraphX para grafos y Structured Streaming para streaming estructurado.</p>
+</section>
+
+<section>
+  <h2>Comparativa de librerías</h2>
+  <ul>
+    <li><strong>Spark Core:</strong> motor de ejecución y APIs RDD.</li>
+    <li><strong>Spark SQL/DataFrames:</strong> APIs declarativas con optimización Catalyst.</li>
+    <li><strong>MLlib:</strong> pipelines y algoritmos de ML.</li>
+    <li><strong>GraphX:</strong> APIs para grafos y procesamiento de redes.</li>
+    <li><strong>Structured Streaming:</strong> procesamiento de streams con semántica exactamente una vez.</li>
+  </ul>
+</section>
+
+<section>
+  <h2>Ejemplo: DataFrame y pipeline simple</h2>
+  <pre><code>from pyspark.sql import SparkSession
+from pyspark.ml.feature import VectorAssembler
+spark = SparkSession.builder.appName('m2t1l2').getOrCreate()
+df = spark.createDataFrame([(0,1.0,3.0),(1,2.0,5.0)], ['id','f1','f2'])
+assembler = VectorAssembler(inputCols=['f1','f2'], outputCol='features')
+vec = assembler.transform(df)
+vec.show()
+</code></pre>
+  <p>Notebook: <a href="/modulo2/Tema1/notebooks/M2T1L2.ipynb">M2T1L2.ipynb</a></p>
+</section>
+
+<section>
+  <h2>Ejercicios y práctica</h2>
+  <ol>
+    <li>Crear un pipeline que normalice datos y entrene un modelo simple.</li>
+    <li>Comparar rendimiento con distintos tamaños de partición.</li>
+  </ol>
+</section>
+
+  </main>
+  <div data-include="/partials/footer.html"></div>
+  <script src="/js/include.js"></script>
+  <script src="/js/script.js"></script>
+</body>
+</html>

@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>M2T1L3 — Tipos gestores de clústeres (YARN, Standalone, Kubernetes)</title>
+  <link rel="stylesheet" href="/css/styles.css" />
+</head>
+<body>
+  <div data-include="/partials/header.html"></div>
+  <main>
+    <nav class="lesson-nav">
+      <a href="M2T1L1.html">Lección 1</a> | <a href="M2T1L2.html">Lección 2</a> | <a href="M2T1L3.html">Lección 3</a>
+      <span style="float:right"><a href="/modulo2/modulo2.html">Volver a Módulo 2</a> • <a href="/modulo2/Tema1/index.html">Índice del Tema</a></span>
+    </nav>
+    <h1>M2T1L3 — Tipos gestores de clústeres (YARN, Standalone, Kubernetes)</h1>
+
+    <section>
+      <h2>Objetivos</h2>
+      <ul>
+        <li>Conocer principales gestores: Standalone, YARN, Mesos y Kubernetes.</li>
+        <li>Entender ventajas y casos de uso para cada uno.</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>Resumen</h2>
+      <p>Spark puede ejecutarse sobre distintos gestores de recursos. Standalone es simple y fácil para entornos dedicados; YARN es común en clusters Hadoop; Kubernetes ofrece flexibilidad con contenedores.</p>
+    </section>
+
+    <section>
+      <h2>Comparativa</h2>
+      <ul>
+        <li><strong>Standalone:</strong> fácil de configurar, buen rendimiento en clústeres dedicados.</li>
+        <li><strong>YARN:</strong> integración con Hadoop, multi-tenant.</li>
+        <li><strong>Kubernetes:</strong> despliegue en contenedores, portabilidad y orquestación.</li>
+        <li><strong>Mesos:</strong> menos usado hoy pero válido para entornos mixtos.</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>Ejemplo: arrancar Spark en modo Standalone</h2>
+      <pre><code># Iniciar master y workers (en directorios spark sbin)
+./sbin/start-master.sh
+./sbin/start-slave.sh spark://<master-host>:7077
+
+# Enviar job
+spark-submit --master spark://<master-host>:7077 my_app.py
+</code></pre>
+    </section>
+
+    <section>
+      <h2>Notebook y ejercicios</h2>
+      <p>Ejecuta el notebook de ejemplo: <a href="/modulo2/Tema1/notebooks/M2T1L3.ipynb">M2T1L3.ipynb</a></p>
+      <ol>
+        <li>Despliega Spark en modo standalone en VMs o contenedores y mide tiempos.</li>
+        <li>Compara con ejecución local y documenta diferencias.</li>
+      </ol>
+    </section>
+  </main>
+  <div data-include="/partials/footer.html"></div>
+  <script src="/js/include.js"></script>
+  <script src="/js/script.js"></script>
+</body>
+</html>

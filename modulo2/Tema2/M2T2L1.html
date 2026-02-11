@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>M2T2L1 — Introducción y contexto de Hadoop</title>
+  <link rel="stylesheet" href="/css/styles.css" />
+</head>
+<body>
+  <div data-include="/partials/header.html"></div>
+  <main>
+    <nav class="lesson-nav">
+      <a href="M2T2L1.html">L1</a> | <a href="M2T2L2.html">L2</a> | <a href="M2T2L3.html">L3</a>
+      <span style="float:right"><a href="/modulo2/modulo2.html">Volver a Módulo 2</a> • <a href="/modulo2/Tema2/index.html">Índice del Tema</a></span>
+    </nav>
+    <h1>M2T2L1 — Entornos de programación de aplicaciones Spark</h1>
+
+    <section>
+      <h2>Objetivos</h2>
+      <ul>
+        <li>Conocer cómo organizar un proyecto Spark (módulos, dependencias).</li>
+        <li>Configurar entornos locales y de producción.</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>Resumen</h2>
+      <p>Al desarrollar aplicaciones Spark es importante estructurar el proyecto, gestionar dependencias (sbt / pip) y preparar el despliegue (spark-submit, contenedores, clusters).</p>
+    </section>
+
+    <section>
+      <h2>Comandos y ejemplos</h2>
+      <pre><code># Crear virtualenv para dependencias Python
+python3 -m venv venv
+source venv/bin/activate
+pip install pyspark
+
+# Ejecutar app
+python my_app.py
+</code></pre>
+    </section>
+
+    <section>
+      <h2>Notebook</h2>
+      <p>Ejemplo: <a href="/modulo2/Tema2/notebooks/M2T2L1.ipynb">M2T2L1.ipynb</a></p>
+    </section>
+
+    <section>
+      <h2>Ejercicios</h2>
+      <ol>
+        <li>Crear una estructura de proyecto y un script minimal que ejecute un job Spark.</li>
+      </ol>
+    </section>
+  </main>
+  <div data-include="/partials/footer.html"></div>
+  <script src="/js/include.js"></script>
+  <script src="/js/script.js"></script>
+</body>
+</html>

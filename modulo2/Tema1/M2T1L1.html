@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Módulo 2 — Tema 1 — Lección 1</title>
+  <link rel="stylesheet" href="/css/styles.css" />
+  <script src="https://kit.fontawesome.com/d8a0cf358f.js" crossorigin="anonymous"></script>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <title id="TituloP">M2T1L1 — Introducción a Apache Spark</title>
+</head>
+<body>
+  <div data-include="/partials/header.html"></div>
+  <main>
+    <nav class="lesson-nav">
+      <a href="M2T1L1.html">Lección 1</a> | <a href="M2T1L2.html">Lección 2</a> | <a href="M2T1L3.html">Lección 3</a>
+      <span style="float:right"><a href="/modulo2/modulo2.html">Volver a Módulo 2</a> • <a href="/modulo2/Tema1/index.html">Índice del Tema</a></span>
+    </nav>
+
+    <h1>M2T1L1 — Introducción a Apache Spark</h1>
+
+    <section>
+      <h2>Objetivos</h2>
+      <ul>
+        <li>Entender qué es Apache Spark y dónde se usa.</li>
+        <li>Conocer su arquitectura básica y componentes principales.</li>
+        <li>Ejecutar un ejemplo mínimo con PySpark.</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>Resumen</h2>
+      <p>Apache Spark es un motor de procesamiento distribuido para big data que ofrece APIs de alto nivel y un optimizador de consultas (Catalyst). Spark soporta batch y stream processing, y provee librerías para SQL, ML, grafos y streaming.</p>
+    </section>
+
+    <section>
+      <h2>Arquitectura (diagrama)</h2>
+      <p>Diagrama simplificado de componentes:</p>
+      <div style="text-align:center">
+        <svg width="720" height="220" viewBox="0 0 720 220" xmlns="http://www.w3.org/2000/svg" aria-label="Diagrama arquitectura Spark">
+          <rect x="20" y="20" width="160" height="60" fill="#e6f2ff" stroke="#004d99" />
+          <text x="100" y="55" font-size="12" text-anchor="middle" fill="#004d99">Driver (App)</text>
+          <rect x="200" y="20" width="480" height="60" fill="#f0f7e6" stroke="#3a7" />
+          <text x="440" y="55" font-size="12" text-anchor="middle" fill="#2a6">Cluster Manager / Executors</text>
+          <rect x="200" y="100" width="480" height="80" fill="#fff3e6" stroke="#d97706" />
+          <text x="440" y="140" font-size="12" text-anchor="middle" fill="#d97706">Storage (HDFS / S3)  —  Compute (Executors)</text>
+        </svg>
+      </div>
+    </section>
+
+    <section>
+      <h2>Comandos: instalación rápida y ejecución</h2>
+      <pre><code># Descargar y descomprimir Spark
+wget https://archive.apache.org/dist/spark/spark-3.4.0/spark-3.4.0-bin-hadoop3.tgz
+tar xzf spark-3.4.0-bin-hadoop3.tgz
+export SPARK_HOME=$PWD/spark-3.4.0-bin-hadoop3
+export PATH=$SPARK_HOME/bin:$PATH
+
+# Ejecutar pyspark local
+pyspark --master local[*]
+
+# Ejecutar script con spark-submit
+spark-submit --master local[*] my_app.py
+</code></pre>
+      <p>Notas: para clúster YARN o Kubernetes ajuste --master y el deployment correspondiente.</p>
+    </section>
+
+    <section>
+      <h2>Ejemplo PySpark (rápido)</h2>
+      <pre><code>from pyspark.sql import SparkSession
+spark = SparkSession.builder.appName('m2t1l1-demo').getOrCreate()
+data = [(1,'Alice', 29),(2,'Bob', 31)]
+df = spark.createDataFrame(data, ['id','name','age'])
+df.show()
+spark.stop()
+</code></pre>
+      <p>Descarga el notebook de ejemplo: <a href="/modulo2/Tema1/notebooks/M2T1L1.ipynb">M2T1L1.ipynb</a></p>
+    </section>
+
+    <section>
+      <h2>Recursos y lecturas</h2>
+      <ul>
+        <li><a href="https://spark.apache.org/docs/latest/">Apache Spark - documentación</a></li>
+        <li><a href="https://www.cloudduggu.com/spark/">CloudDuggu — Guía y tutoriales</a></li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>Ejercicio propuesto</h2>
+      <p>Ejecuta el notebook, modifica el dataset y añade una transformación (filter / groupBy) y documenta tiempos de ejecución.</p>
+    </section>
+
+  </main>
+  <div data-include="/partials/footer.html"></div>
+  <script src="/js/include.js"></script>
+  <script src="/js/script.js"></script>
+</body>
+</html>

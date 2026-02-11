@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>M2T4L2 — Seguridad y despliegue</title>
+  <link rel="stylesheet" href="/css/styles.css" />
+</head>
+<body>
+  <div data-include="/partials/header.html"></div>
+  <main>
+    <nav class="lesson-nav">
+      <a href="M2T4L1.html">L1</a> | <a href="M2T4L2.html">L2</a> | <a href="M2T4L3.html">L3</a>
+      <span style="float:right"><a href="/modulo2/modulo2.html">Volver a Módulo 2</a> • <a href="/modulo2/Tema4/index.html">Índice del Tema</a></span>
+    </nav>
+    <h1>M2T4L2 — Seguridad y despliegue</h1>
+
+    <section>
+      <h2>Objetivos</h2>
+      <ul>
+        <li>Entender autenticación (Kerberos), cifrado TLS y control de acceso en clústeres Spark.</li>
+        <li>Aprender buenas prácticas para empaquetar y desplegar aplicaciones (jar, wheel, Docker).</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>Autenticación y autorización</h2>
+      <p>En entornos corporativos se recomienda integrar Spark con Kerberos y habilitar TLS para comunicaciones seguras entre componentes. Configura <code>spark.network.crypto.enabled</code> y parámetros relacionados cuando sea necesario.</p>
+    </section>
+
+    <section>
+      <h2>Despliegue y empaquetado</h2>
+      <p>Empaqueta dependencias con <code>--packages</code>, jars o construye una imagen Docker que contenga tu aplicación y las dependencias necesarias.</p>
+      <pre><code># ejemplo docker build
+Dockerfile:
+FROM openjdk:11-jre
+COPY my_app.jar /app/
+CMD ["spark-submit","--class","com.example.Main","/app/my_app.jar"]
+</code></pre>
+    </section>
+
+    <section>
+      <h2>Notebook</h2>
+      <p>Apoyo: <a href="/modulo2/Tema4/notebooks/M2T4L2.ipynb">M2T4L2.ipynb</a></p>
+    </section>
+
+  </main>
+  <div data-include="/partials/footer.html"></div>
+  <script src="/js/include.js"></script>
+  <script src="/js/script.js"></script>
+</body>
+</html>

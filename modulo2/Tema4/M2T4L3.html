@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>M2T4L3 — Errores frecuentes y cómo solucionarlos</title>
+  <link rel="stylesheet" href="/css/styles.css" />
+</head>
+<body>
+  <div data-include="/partials/header.html"></div>
+  <main>
+    <nav class="lesson-nav">
+      <a href="M2T4L1.html">L1</a> | <a href="M2T4L2.html">L2</a> | <a href="M2T4L3.html">L3</a>
+      <span style="float:right"><a href="/modulo2/modulo2.html">Volver a Módulo 2</a> • <a href="/modulo2/Tema4/index.html">Índice del Tema</a></span>
+    </nav>
+    <h1>M2T4L3 — Errores frecuentes y cómo solucionarlos</h1>
+
+    <section>
+      <h2>Resumen</h2>
+      <p>En esta lección revisamos problemas típicos: OOM (OutOfMemory), GC, fallos por shuffle, saturación de IO y timeouts, y cómo mitigarlos.</p>
+    </section>
+
+    <section>
+      <h2>Diagnóstico rápido</h2>
+      <ul>
+        <li>Revisar logs del driver y executors.</li>
+        <li>Analizar el DAG en Spark UI para detectar etapas costosas.</li>
+        <li>Usar <code>df.explain(True)</code> para revisar el plan físico.</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>Notebook</h2>
+      <p>Notas y ejercicios: <a href="/modulo2/Tema4/notebooks/M2T4L3.ipynb">M2T4L3.ipynb</a></p>
+    </section>
+
+  </main>
+  <div data-include="/partials/footer.html"></div>
+  <script src="/js/include.js"></script>
+  <script src="/js/script.js"></script>
+</body>
+</html>
