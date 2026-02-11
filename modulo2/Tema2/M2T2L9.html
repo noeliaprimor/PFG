@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Operaciones y optimizaciones sobre DataFrames y Datasets</title>
+  <link rel="stylesheet" href="/css/styles.css" />
+</head>
+<body>
+<div data-include="/partials/header.html"></div>
+<main>
+      <a href="/modulo2/Tema2/M2T2L1.html">1. Entornos de programación de aplicaciones Spark</a> | <a href="/modulo2/Tema2/M2T2L2.html">2. Desarrollo y ejecución de una aplicación Spark</a> | <a href="/modulo2/Tema2/M2T2L3.html">3. Creación de sesiones: SparkSession y SparkContext</a> | <a href="/modulo2/Tema2/M2T2L4.html">4. Inicialización de Spark en Scala y Python</a> | <a href="/modulo2/Tema2/M2T2L5.html">5. Cargar y guardar datos en Spark</a> | <a href="/modulo2/Tema2/M2T2L6.html">6. Colecciones de datos: RDD, DataFrame y Dataset</a> | <a href="/modulo2/Tema2/M2T2L7.html">7. Paralelización de colecciones y particionado</a> | <a href="/modulo2/Tema2/M2T2L8.html">8. Operaciones sobre RDD</a> | <a href="/modulo2/Tema2/M2T2L9.html">9. Operaciones y optimizaciones sobre DataFrames y Datasets</a> | <a href="/modulo2/Tema2/M2T2L10.html">10. El API de Datasets/DataFrames: ejemplos avanzados</a> | <a href="/modulo2/Tema2/M2T2L11.html">11. Recursos y lecturas</a> | <a href="/modulo2/Tema2/M2T2L12.html">12. Ejercicio propuesto</a>
+      <span style="float:right"><a href="/modulo2/modulo2.html">Volver a Módulo 2</a> • <a href="/modulo2/Tema2/index.html">Índice del Tema</a></span>
+
+<h1>M2T2L9 — Operaciones y optimizaciones sobre DataFrames y Datasets</h1>
+
+<section>
+  <h2>Objetivos</h2>
+  <ul>
+    <li>Aprender a optimizar consultas: persistencia, broadcast joins, explain(), cache.</li>
+  </ul>
+</section>
+
+<section>
+  <h2>Ejemplo: cache y persist</h2>
+  <pre><code>df = spark.read.parquet('/data/large.parquet')
+df.cache()
+df.count()
+df.unpersist()
+</code></pre>
+<p>Notebook: <a href="/modulo2/Tema2/notebooks/M2T2L9.ipynb">M2T2L9.ipynb</a></p>
+</section>
+
+<section>
+  <h2>Consejos</h2>
+  <ul>
+    <li>Usa broadcast joins cuando una tabla es pequeña para evitar shuffle.</li>
+    <li>Analiza planes con <code>df.explain(True)</code>.</li>
+  </ul>
+</section>
+
+<section>
+  <h2>Ejercicios propuestos</h2>
+  <ol>
+        <li>Implementar el ejemplo proporcionado.</li>
+        <li>Responder preguntas de reflexión.</li>
+  </ol>
+</section>
+<section>
+  <h2>Referencias</h2>
+  <ul>
+    <li>Documentación oficial: https://spark.apache.org/docs/latest/</li>
+    <li>Tutorial de referencia: https://www.cloudduggu.com/spark/</li>
+  </ul>
+</section>
+</main>
+<div data-include="/partials/footer.html"></div>
+<script src="/js/include.js"></script>
+<script src="/js/script.js"></script>
+</body>
+</html>

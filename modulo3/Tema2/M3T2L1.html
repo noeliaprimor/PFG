@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>M3T2L1 — Adquisición y transmisión de eventos</title>
+  <link rel="stylesheet" href="/css/styles.css" />
+</head>
+<body>
+<div data-include="/partials/header.html"></div>
+<main>
+  <nav class="lesson-nav">
+    <a href="M3T2L1.html">L1</a> | <a href="M3T2L2.html">L2</a> | <a href="M3T2L3.html">L3</a> | <a href="M3T2L4.html">L4</a> | <a href="M3T2L5.html">L5</a>
+    <span style="float:right"><a href="/modulo3/modulo3.html">Volver a Módulo 3</a> • <a href="/modulo3/Tema2/index.html">Índice del Tema</a></span>
+  </nav>
+
+  <h1>M3T2L1 — Adquisición y transmisión de eventos</h1>
+
+  <section>
+    <h2>Objetivos</h2>
+    <ul>
+      <li>Entender cómo se adquieren eventos desde fuentes (sensores, logs, aplicaciones).</li>
+      <li>Conocer patrones de transmisión (batch vs stream) y consideraciones de particionado y retención.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>Resumen</h2>
+    <p>La adquisición de eventos implica capturar datos en el origen y enviarlos a un sistema de mensajería (por ejemplo Kafka). Es importante diseñar el esquema de topics y particiones, así como la estrategia de compresión, retención y replicación para garantizar durabilidad y rendimiento.</p>
+  </section>
+
+  <section>
+    <h2>Ejemplo: productor simple (python)</h2>
+    <pre><code>from kafka import KafkaProducer
+producer = KafkaProducer(bootstrap_servers='localhost:9092')
+producer.send('topic', b'evento de ejemplo')
+producer.flush()
+</code></pre>
+    <p>Notebook: <a href="/modulo3/Tema2/notebooks/M3T2L1.ipynb">M3T2L1.ipynb</a></p>
+  </section>
+
+  <section>
+    <h2>Ejercicio</h2>
+    <p>Diseñar el esquema de topics para una fuente de eventos que tenga distintos tipos de mensajes y picos de tráfico.</p>
+  </section>
+
+</main>
+<div data-include="/partials/footer.html"></div>
+<script src="/js/include.js"></script>
+<script src="/js/script.js"></script>
+</body>
+</html>

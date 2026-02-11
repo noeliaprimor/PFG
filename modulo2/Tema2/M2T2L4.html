@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Inicialización de Spark en Scala y Python</title>
+  <link rel="stylesheet" href="/css/styles.css" />
+</head>
+<body>
+<div data-include="/partials/header.html"></div>
+<main>
+      <a href="/modulo2/Tema2/M2T2L1.html">1. Entornos de programación de aplicaciones Spark</a> | <a href="/modulo2/Tema2/M2T2L2.html">2. Desarrollo y ejecución de una aplicación Spark</a> | <a href="/modulo2/Tema2/M2T2L3.html">3. Creación de sesiones: SparkSession y SparkContext</a> | <a href="/modulo2/Tema2/M2T2L4.html">4. Inicialización de Spark en Scala y Python</a> | <a href="/modulo2/Tema2/M2T2L5.html">5. Cargar y guardar datos en Spark</a> | <a href="/modulo2/Tema2/M2T2L6.html">6. Colecciones de datos: RDD, DataFrame y Dataset</a> | <a href="/modulo2/Tema2/M2T2L7.html">7. Paralelización de colecciones y particionado</a> | <a href="/modulo2/Tema2/M2T2L8.html">8. Operaciones sobre RDD</a> | <a href="/modulo2/Tema2/M2T2L9.html">9. Operaciones y optimizaciones sobre DataFrames y Datasets</a> | <a href="/modulo2/Tema2/M2T2L10.html">10. El API de Datasets/DataFrames: ejemplos avanzados</a> | <a href="/modulo2/Tema2/M2T2L11.html">11. Recursos y lecturas</a> | <a href="/modulo2/Tema2/M2T2L12.html">12. Ejercicio propuesto</a>
+      <span style="float:right"><a href="/modulo2/modulo2.html">Volver a Módulo 2</a> • <a href="/modulo2/Tema2/index.html">Índice del Tema</a></span>
+
+<h1>M2T2L4 — Inicialización de Spark en Scala y Python</h1>
+
+<section>
+  <h2>Objetivos</h2>
+  <ul>
+    <li>Ver ejemplos de inicialización tanto en Scala como en PySpark.</li>
+    <li>Conocer diferencias en la API y en la construcción de aplicaciones.</li>
+  </ul>
+</section>
+
+<section>
+  <h2>Ejemplos</h2>
+  <h4>PySpark</h4>
+  <pre><code>from pyspark.sql import SparkSession
+spark = SparkSession.builder.appName('m2t2l4').getOrCreate()
+spark.stop()
+</code></pre>
+  <h4>Scala (spark-shell)</h4>
+  <pre><code>val spark = org.apache.spark.sql.SparkSession.builder.appName("m2t2l4").getOrCreate()
+import spark.implicits._
+</code></pre>
+  <p>Notebook: <a href="/modulo2/Tema2/notebooks/M2T2L4.ipynb">M2T2L4.ipynb</a></p>
+</section>
+
+<section>
+  <h2>Ejercicios propuestos</h2>
+  <ol>
+        <li>Implementar el ejemplo proporcionado.</li>
+        <li>Responder preguntas de reflexión.</li>
+  </ol>
+</section>
+<section>
+  <h2>Referencias</h2>
+  <ul>
+    <li>Documentación oficial: https://spark.apache.org/docs/latest/</li>
+    <li>Tutorial de referencia: https://www.cloudduggu.com/spark/</li>
+  </ul>
+</section>
+</main>
+<div data-include="/partials/footer.html"></div>
+<script src="/js/include.js"></script>
+<script src="/js/script.js"></script>
+</body>
+</html>

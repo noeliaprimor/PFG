@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>M3T1L2 — Arquitecturas Lambda y Kappa</title>
+  <link rel="stylesheet" href="/css/styles.css" />
+</head>
+<body>
+<div data-include="/partials/header.html"></div>
+<main>
+      <a href="/modulo3/Tema1/M3T1L1.html">1. Introducción a procesamiento en tiempo real</a> | <a href="/modulo3/Tema1/M3T1L2.html">2. Arquitecturas Lambda y Kappa</a> | <a href="/modulo3/Tema1/M3T1L3.html">3. Introducción a Kafka</a> | <a href="/modulo3/Tema1/M3T1L4.html">4. Introducción a Spark Streaming</a> | <a href="/modulo3/Tema1/M3T1L5.html">5. Recursos y lecturas</a> | <a href="/modulo3/Tema1/M3T1L6.html">6. Ejercicio propuesto</a>
+      <span style="float:right"><a href="/modulo3/modulo3.html">Volver a Módulo 3</a> • <a href="/modulo3/Tema1/index.html">Índice del Tema</a></span>
+
+<h1>M3T1L2 — Arquitecturas Lambda y Kappa</h1>
+
+<section>
+  <h2>Objetivos</h2>
+  <ul>
+    <li>Entender la diferencia entre Lambda y Kappa y sus ventajas.</li>
+    <li>Diseñar cuándo usar cada una según requisitos de consistencia y latencia.</li>
+  </ul>
+</section>
+
+<section>
+  <h2>Resumen</h2>
+  <p>La arquitectura Lambda mezcla batch y speed layer: una capa de procesamiento por lotes para procesado histórico y una capa de velocidad para datos recientes. Kappa propone un único pipeline de streaming que reprocese el historial si es necesario usando la misma lógica.</p>
+</section>
+
+<section>
+  <h2>Diagrama conceptual</h2>
+  <div style="text-align:center">
+    <svg width="640" height="180" xmlns="http://www.w3.org/2000/svg" aria-label="Lambda vs Kappa">
+      <rect x="10" y="10" width="200" height="40" fill="#eef" stroke="#33a"/><text x="110" y="35" text-anchor="middle">Ingesta (Kafka)</text>
+      <rect x="10" y="60" width="200" height="40" fill="#efe" stroke="#3a3"/><text x="110" y="85" text-anchor="middle">Batch Layer</text>
+      <rect x="250" y="60" width="200" height="40" fill="#ffe" stroke="#d88"/><text x="350" y="85" text-anchor="middle">Speed Layer</text>
+      <rect x="10" y="120" width="440" height="40" fill="#f7f7f7" stroke="#999"/><text x="230" y="145" text-anchor="middle">Serving Layer / Views</text>
+    </svg>
+  </div>
+</section>
+
+<section>
+  <h2>Notebook y ejercicios</h2>
+  <p>Notebook: <a href="/modulo3/Tema1/notebooks/M3T1L2.ipynb">M3T1L2.ipynb</a></p>
+  <ol>
+    <li>Analiza un caso y decide Lambda o Kappa justificando tu elección.</li>
+  </ol>
+</section>
+
+</main>
+<div data-include="/partials/footer.html"></div>
+<script src="/js/include.js"></script>
+<script src="/js/script.js"></script>
+</body>
+</html>

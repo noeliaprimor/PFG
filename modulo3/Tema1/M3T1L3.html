@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>M3T1L3 — Introducción a Kafka</title>
+  <link rel="stylesheet" href="/css/styles.css" />
+</head>
+<body>
+<div data-include="/partials/header.html"></div>
+<main>
+      <a href="/modulo3/Tema1/M3T1L1.html">1. Introducción a procesamiento en tiempo real</a> | <a href="/modulo3/Tema1/M3T1L2.html">2. Arquitecturas Lambda y Kappa</a> | <a href="/modulo3/Tema1/M3T1L3.html">3. Introducción a Kafka</a> | <a href="/modulo3/Tema1/M3T1L4.html">4. Introducción a Spark Streaming</a> | <a href="/modulo3/Tema1/M3T1L5.html">5. Recursos y lecturas</a> | <a href="/modulo3/Tema1/M3T1L6.html">6. Ejercicio propuesto</a>
+      <span style="float:right"><a href="/modulo3/modulo3.html">Volver a Módulo 3</a> • <a href="/modulo3/Tema1/index.html">Índice del Tema</a></span>
+
+<h1>M3T1L3 — Introducción a Kafka</h1>
+
+<section>
+  <h2>Objetivos</h2>
+  <ul>
+    <li>Conocer la arquitectura básica de Kafka: brokers, topics, particiones y zookeper (o KRaft).</li>
+    <li>Entender productores, consumidores y conceptos de offset y retención.</li>
+  </ul>
+</section>
+
+<section>
+  <h2>Resumen</h2>
+  <p>Kafka es una plataforma de mensajería distribuida diseñada para transmitir grandes volúmenes de datos con alta disponibilidad. Los topics se particionan y replican entre brokers; los consumidores gestionan offsets para garantizar la lectura correcta de eventos.</p>
+</section>
+
+<section>
+  <h2>Comandos básicos (con Kafka instalado)</h2>
+  <pre><code># crear topic
+$KAFKA_HOME/bin/kafka-topics.sh --create --topic prueba --bootstrap-server localhost:9092 --partitions 3 --replication-factor 1
+
+# lanzar consumidor de consola
+$KAFKA_HOME/bin/kafka-console-consumer.sh --topic prueba --bootstrap-server localhost:9092 --from-beginning
+</code></pre>
+
+<p>Notebook: <a href="/modulo3/Tema1/notebooks/M3T1L3.ipynb">M3T1L3.ipynb</a></p>
+</section>
+
+</main>
+<div data-include="/partials/footer.html"></div>
+<script src="/js/include.js"></script>
+<script src="/js/script.js"></script>
+</body>
+</html>

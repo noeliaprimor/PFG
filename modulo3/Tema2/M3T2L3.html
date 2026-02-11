@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>M3T2L3 — Sinks y conectores</title>
+  <link rel="stylesheet" href="/css/styles.css" />
+</head>
+<body>
+<div data-include="/partials/header.html"></div>
+<main>
+  <nav class="lesson-nav">
+    <a href="M3T2L1.html">L1</a> | <a href="M3T2L2.html">L2</a> | <a href="M3T2L3.html">L3</a> | <a href="M3T2L4.html">L4</a> | <a href="M3T2L5.html">L5</a>
+    <span style="float:right"><a href="/modulo3/modulo3.html">Volver a Módulo 3</a> • <a href="/modulo3/Tema2/index.html">Índice del Tema</a></span>
+  </nav>
+
+  <h1>M3T2L3 — Sinks y conectores</h1>
+
+  <section>
+    <h2>Objetivos</h2>
+    <ul>
+      <li>Conocer conectores comunes: Kafka Connect, Flink connectors, y sinks como S3, HDFS, Elasticsearch.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>Resumen</h2>
+    <p>Para integrar sistemas en un pipeline de eventos, Kafka Connect facilita la extracción y carga a destinos (sinks). Existen conectores para S3, HDFS, Elasticsearch, y bases de datos; seleccionado según latencia y formato requerido.</p>
+  </section>
+
+  <section>
+    <h2>Ejemplo: configuración básica de un sink (conceptual)</h2>
+    <pre><code>{
+  "name": "s3-sink",
+  "config": {
+    "connector.class": "io.confluent.connect.s3.S3SinkConnector",
+    "tasks.max": "1",
+    "topics": "topic",
+    "s3.bucket.name": "my-bucket"
+  }
+}
+</code></pre>
+    <p>Notebook: <a href="/modulo3/Tema2/notebooks/M3T2L3.ipynb">M3T2L3.ipynb</a></p>
+  </section>
+
+</main>
+<div data-include="/partials/footer.html"></div>
+<script src="/js/include.js"></script>
+<script src="/js/script.js"></script>
+</body>
+</html>

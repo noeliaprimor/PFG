@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>M3T3L1 — Spark Streaming</title>
+  <link rel="stylesheet" href="/css/styles.css" />
+</head>
+<body>
+<div data-include="/partials/header.html"></div>
+<main>
+  <nav class="lesson-nav">
+    <a href="M3T3L1.html">L1</a> | <a href="M3T3L2.html">L2</a> | <a href="M3T3L3.html">L3</a> | <a href="M3T3L4.html">L4</a> | <a href="M3T3L5.html">L5</a>
+    <span style="float:right"><a href="/modulo3/modulo3.html">Volver a Módulo 3</a> • <a href="/modulo3/Tema3/index.html">Índice del Tema</a></span>
+  </nav>
+
+  <h1>M3T3L1 — Spark Streaming</h1>
+
+  <section>
+    <h2>Objetivos</h2>
+    <ul>
+      <li>Comprender el modelo de Structured Streaming y cómo se integra con sistemas de mensajería.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>Resumen</h2>
+    <p>Spark Structured Streaming permite construir pipelines de procesamiento continuo usando la API de DataFrame/SQL; soporta fuentes como Kafka y sinks variados. Soporta semánticas de procesamiento al menos una vez o exactamente una vez según el sink y la configuración.</p>
+  </section>
+
+  <section>
+    <h2>Ejemplo</h2>
+    <pre><code>from pyspark.sql import SparkSession
+spark = SparkSession.builder.appName('m3t3l1').getOrCreate()
+df = spark.readStream.format('kafka').option('kafka.bootstrap.servers','localhost:9092').option('subscribe','topic').load()
+# transformaciones
+</code></pre>
+    <p>Notebook: <a href="/modulo3/Tema3/notebooks/M3T3L1.ipynb">M3T3L1.ipynb</a></p>
+  </section>
+
+</main>
+<div data-include="/partials/footer.html"></div>
+<script src="/js/include.js"></script>
+<script src="/js/script.js"></script>
+</body>
+</html>

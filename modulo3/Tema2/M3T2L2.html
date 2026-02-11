@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>M3T2L2 — Kafka en detalle</title>
+  <link rel="stylesheet" href="/css/styles.css" />
+</head>
+<body>
+<div data-include="/partials/header.html"></div>
+<main>
+  <nav class="lesson-nav">
+    <a href="M3T2L1.html">L1</a> | <a href="M3T2L2.html">L2</a> | <a href="M3T2L3.html">L3</a> | <a href="M3T2L4.html">L4</a> | <a href="M3T2L5.html">L5</a>
+    <span style="float:right"><a href="/modulo3/modulo3.html">Volver a Módulo 3</a> • <a href="/modulo3/Tema2/index.html">Índice del Tema</a></span>
+  </nav>
+
+  <h1>M3T2L2 — Kafka en detalle</h1>
+
+  <section>
+    <h2>Objetivos</h2>
+    <ul>
+      <li>Entender particiones, replicación, retention y offset management.</li>
+      <li>Conocer configuraciones que impactan en rendimiento y durabilidad.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>Resumen</h2>
+    <p>Kafka organiza mensajes en topics y particiones; cada partición es una secuencia ordenada. El factor de replicación y la configuración de ISR son críticos para disponibilidad. Los consumidores gestionan offsets, que pueden ser commit automáticos o manuales.</p>
+  </section>
+
+  <section>
+    <h2>Comandos útiles</h2>
+    <pre><code># ver topics
+$KAFKA_HOME/bin/kafka-topics.sh --list --bootstrap-server localhost:9092
+
+# describir topic
+$KAFKA_HOME/bin/kafka-topics.sh --describe --topic prueba --bootstrap-server localhost:9092
+</code></pre>
+    <p>Notebook: <a href="/modulo3/Tema2/notebooks/M3T2L2.ipynb">M3T2L2.ipynb</a></p>
+  </section>
+
+</main>
+<div data-include="/partials/footer.html"></div>
+<script src="/js/include.js"></script>
+<script src="/js/script.js"></script>
+</body>
+</html>

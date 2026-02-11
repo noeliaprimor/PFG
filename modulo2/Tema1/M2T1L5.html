@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Instalación y configuración de Spark</title>
+  <link rel="stylesheet" href="/css/styles.css" />
+</head>
+<body>
+<div data-include="/partials/header.html"></div>
+<main>
+      <a href="/modulo2/Tema1/M2T1L1.html">1. Arquitectura y Propósito de Spark</a> | <a href="/modulo2/Tema1/M2T1L2.html">2. Componentes de la pila unificada de Spark</a> | <a href="/modulo2/Tema1/M2T1L3.html">3. Tipos gestores de clústeres (YARN, Standalone, Kubernetes)</a> | <a href="/modulo2/Tema1/M2T1L4.html">4. Resilient Distributed Datasets (RDDs)</a> | <a href="/modulo2/Tema1/M2T1L5.html">5. Instalación y configuración de Spark</a> | <a href="/modulo2/Tema1/M2T1L6.html">6. Ejecución y uso de las shells de Spark (Scala/Python)</a> | <a href="/modulo2/Tema1/M2T1L7.html">7. Ejecución de ejemplos de Spark</a> | <a href="/modulo2/Tema1/M2T1L8.html">8. Recursos y lecturas recomendadas</a> | <a href="/modulo2/Tema1/M2T1L9.html">9. Ejercicio propuesto</a>
+      <span style="float:right"><a href="/modulo2/modulo2.html">Volver a Módulo 2</a> • <a href="/modulo2/Tema1/index.html">Índice del Tema</a></span>
+
+<h1>M2T1L5 — Instalación y configuración de Spark</h1>
+
+<section>
+  <h2>Objetivos</h2>
+  <ul>
+    <li>Instalar Spark en modo local y comprender variables de entorno.</li>
+    <li>Configurar el entorno para ejecutar PySpark y spark-submit.</li>
+  </ul>
+</section>
+
+<section>
+  <h2>Pasos de instalación (resumen)</h2>
+  <ol>
+    <li>Instalar Java (OpenJDK 11+): <code>sudo apt install openjdk-11-jdk</code></li>
+    <li>Descargar Spark precompilado y descomprimir.</li>
+    <li>Configurar <code>SPARK_HOME</code> y añadir <code>$SPARK_HOME/bin</code> al <code>PATH</code>.</li>
+    <li>Probar con <code>pyspark --master local[*]</code>.</li>
+  </ol>
+</section>
+
+<section>
+  <h2>Configuraciones importantes</h2>
+  <ul>
+    <li><code>spark.executor.memory</code> — memoria por executor.</li>
+    <li><code>spark.driver.memory</code> — memoria del driver.</li>
+    <li>Particionado: <code>rdd.repartition(n)</code> o <code>df.repartition(n)</code>.</li>
+  </ul>
+</section>
+
+<section>
+  <h2>Notebook</h2>
+  <p>Notebook de apoyo: <a href="/modulo2/Tema1/notebooks/M2T1L5.ipynb">M2T1L5.ipynb</a></p>
+</section>
+
+<section>
+  <h2>Ejercicio</h2>
+  <p>Instalar Spark en tu máquina virtual y ejecutar el ejemplo del notebook.</p>
+</section>
+
+<section>
+  <h2>Ejercicios propuestos</h2>
+  <ol>
+        <li>Implementar el ejemplo proporcionado.</li>
+        <li>Responder preguntas de reflexión.</li>
+  </ol>
+</section>
+<section>
+  <h2>Referencias</h2>
+  <ul>
+    <li>Documentación oficial: https://spark.apache.org/docs/latest/</li>
+    <li>Tutorial de referencia: https://www.cloudduggu.com/spark/</li>
+  </ul>
+</section>
+</main>
+<div data-include="/partials/footer.html"></div>
+<script src="/js/include.js"></script>
+<script src="/js/script.js"></script>
+</body>
+</html>

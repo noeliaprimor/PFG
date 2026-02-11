@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Resilient Distributed Datasets (RDDs)</title>
+  <link rel="stylesheet" href="/css/styles.css" />
+</head>
+<body>
+<div data-include="/partials/header.html"></div>
+<main>
+      <a href="/modulo2/Tema1/M2T1L1.html">1. Arquitectura y Propósito de Spark</a> | <a href="/modulo2/Tema1/M2T1L2.html">2. Componentes de la pila unificada de Spark</a> | <a href="/modulo2/Tema1/M2T1L3.html">3. Tipos gestores de clústeres (YARN, Standalone, Kubernetes)</a> | <a href="/modulo2/Tema1/M2T1L4.html">4. Resilient Distributed Datasets (RDDs)</a> | <a href="/modulo2/Tema1/M2T1L5.html">5. Instalación y configuración de Spark</a> | <a href="/modulo2/Tema1/M2T1L6.html">6. Ejecución y uso de las shells de Spark (Scala/Python)</a> | <a href="/modulo2/Tema1/M2T1L7.html">7. Ejecución de ejemplos de Spark</a> | <a href="/modulo2/Tema1/M2T1L8.html">8. Recursos y lecturas recomendadas</a> | <a href="/modulo2/Tema1/M2T1L9.html">9. Ejercicio propuesto</a>
+      <span style="float:right"><a href="/modulo2/modulo2.html">Volver a Módulo 2</a> • <a href="/modulo2/Tema1/index.html">Índice del Tema</a></span>
+
+<h1>M2T1L4 — Resilient Distributed Datasets (RDDs)</h1>
+
+<section>
+  <h2>Objetivos</h2>
+  <ul>
+    <li>Entender la abstracción RDD y sus propiedades (inmutabilidad, particionamiento, linage).</li>
+    <li>Practicar transformaciones y acciones básicas.</li>
+  </ul>
+</section>
+
+<section>
+  <h2>Resumen</h2>
+  <p>Los RDDs son colecciones distribuidas inmutables que permiten operaciones paralelas. Son la base histórica de Spark; en muchos casos los DataFrames son preferibles por rendimiento, pero conocer RDDs ayuda a entender el modelo de ejecución.</p>
+</section>
+
+<section>
+  <h2>Ejemplo RDD</h2>
+  <pre><code>from pyspark import SparkContext
+sc = SparkContext()
+rdd = sc.parallelize(range(1,1001), numSlices=8)
+filtered = rdd.filter(lambda x: x%2==0)
+print(filtered.count())
+sc.stop()
+</code></pre>
+  <p>Notebook: <a href="/modulo2/Tema1/notebooks/M2T1L4.ipynb">M2T1L4.ipynb</a></p>
+</section>
+
+<section>
+  <h2>Ejercicios</h2>
+  <ol>
+    <li>Implementar map-reduce simple con RDD (conteo de palabras).</li>
+    <li>Comparar con DataFrame y medir tiempos.</li>
+  </ol>
+</section>
+
+<section>
+  <h2>Referencias</h2>
+  <ul>
+    <li>Documentación oficial: https://spark.apache.org/docs/latest/</li>
+    <li>Tutorial de referencia: https://www.cloudduggu.com/spark/</li>
+  </ul>
+</section>
+</main>
+<div data-include="/partials/footer.html"></div>
+<script src="/js/include.js"></script>
+<script src="/js/script.js"></script>
+</body>
+</html>

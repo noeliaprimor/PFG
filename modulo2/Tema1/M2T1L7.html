@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Ejecución de ejemplos de Spark</title>
+  <link rel="stylesheet" href="/css/styles.css" />
+</head>
+<body>
+<div data-include="/partials/header.html"></div>
+<main>
+      <a href="/modulo2/Tema1/M2T1L1.html">1. Arquitectura y Propósito de Spark</a> | <a href="/modulo2/Tema1/M2T1L2.html">2. Componentes de la pila unificada de Spark</a> | <a href="/modulo2/Tema1/M2T1L3.html">3. Tipos gestores de clústeres (YARN, Standalone, Kubernetes)</a> | <a href="/modulo2/Tema1/M2T1L4.html">4. Resilient Distributed Datasets (RDDs)</a> | <a href="/modulo2/Tema1/M2T1L5.html">5. Instalación y configuración de Spark</a> | <a href="/modulo2/Tema1/M2T1L6.html">6. Ejecución y uso de las shells de Spark (Scala/Python)</a> | <a href="/modulo2/Tema1/M2T1L7.html">7. Ejecución de ejemplos de Spark</a> | <a href="/modulo2/Tema1/M2T1L8.html">8. Recursos y lecturas recomendadas</a> | <a href="/modulo2/Tema1/M2T1L9.html">9. Ejercicio propuesto</a>
+      <span style="float:right"><a href="/modulo2/modulo2.html">Volver a Módulo 2</a> • <a href="/modulo2/Tema1/index.html">Índice del Tema</a></span>
+
+<h1>M2T1L7 — Ejecución de ejemplos de Spark</h1>
+
+<section>
+  <h2>Objetivos</h2>
+  <ul>
+    <li>Aprender a ejecutar aplicaciones con <code>spark-submit</code>.</li>
+    <li>Conocer parámetros comunes (master, deploy-mode, conf).</li>
+  </ul>
+</section>
+
+<section>
+  <h2>Ejecutar ejemplo</h2>
+  <pre><code># Ejecutar script Python
+spark-submit --master local[*] ejemplo.py
+
+# Ejecutar ejemplo en cluster (YARN)
+spark-submit --master yarn --deploy-mode cluster ejemplo.py
+</code></pre>
+</section>
+
+<section>
+  <h2>Notebook</h2>
+  <p>Ejemplo: <a href="/modulo2/Tema1/notebooks/M2T1L7.ipynb">M2T1L7.ipynb</a></p>
+</section>
+
+<section>
+  <h2>Ejercicios</h2>
+  <ol>
+    <li>Usar spark-submit con distintos valores de particiones y medir tiempos.</li>
+    <li>Comparar deploy-mode client vs cluster.</li>
+  </ol>
+</section>
+
+<section>
+  <h2>Referencias</h2>
+  <ul>
+    <li>Documentación oficial: https://spark.apache.org/docs/latest/</li>
+    <li>Tutorial de referencia: https://www.cloudduggu.com/spark/</li>
+  </ul>
+</section>
+</main>
+<div data-include="/partials/footer.html"></div>
+<script src="/js/include.js"></script>
+<script src="/js/script.js"></script>
+</body>
+</html>
