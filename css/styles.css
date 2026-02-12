@@ -261,7 +261,7 @@ nav ul {
   display: block; /* Muestra el submenú */
 }
 
-/* Mejora B: también mostrar el submenú si cualquier <li> que lo contiene recibe hover o focus (teclado/táctil en algunos casos).
+/* mostrar el submenú si cualquier <li> que lo contiene recibe hover o focus (teclado/táctil en algunos casos).
    Esto evita tener que añadir class="dropdown" en el HTML y mejora accesibilidad con :focus-within. */
 nav li:hover > .submenu,
 nav li:focus-within > .submenu,
@@ -499,7 +499,6 @@ hr {
   padding: 5px;
   display: inline-block;
   margin: 10px;
-  padding: 8px;
   background-color: #1a3f33;
   color: white;
 }
@@ -1146,7 +1145,72 @@ textarea {
 
 
 
+.lesson-nav{
+  background-color: #788885;
+  color: #ffffff;
+  padding: 10px 16px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 8px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.12);
+  font-size: 14px;
+  max-width: 100%;
+  overflow: auto;
+}
 
+/* Contenedor de migas */
+.lesson-nav .crumbs{
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+/* Separador */
+.lesson-nav .sep{
+  color: rgba(255,255,255,0.6);
+  margin: 0 8px;
+}
+
+/* Enlaces */
+.lesson-nav a{
+  color: #ffffff;
+  text-decoration: none;
+  padding: 4px 6px;
+  border-radius: 4px;
+}
+
+.lesson-nav a:hover{
+  background: rgba(255,255,255,0.06);
+  text-decoration: underline;
+}
+
+/* Lección actual */
+.lesson-nav a.current{
+  font-weight: 700;
+  text-decoration: underline;
+  cursor: default;
+}
+
+/* Accesibilidad: oculto visualmente, pero accesible para screen readers */
+.sr-only{
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0,0,0,0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Responsive */
+@media (max-width: 600px){
+  .lesson-nav{ font-size: 13px; padding: 8px 10px; }
+}
 
 
 
@@ -1209,7 +1273,7 @@ textarea {
     height: auto;
   }
 
-  .img-evaluacion{
+  .img-evaluacion {
     max-width: 100%;
     margin: 0;
     margin-bottom: 20px;
@@ -1221,11 +1285,11 @@ textarea {
     max-height: 500px;
   }
 
-  .title h1{
+  .title h1 {
     font-size: 25px;
   }
 
-  .text-cell{
+  .text-cell {
     text-align: left;
     padding: 10px;
   }
@@ -1252,11 +1316,11 @@ textarea {
     flex-direction: column;
   }
 
-  .logo{
+  .logo {
     padding-right: 0;
   }
 
-  .title{
+  .title {
     padding-left: 0;
   }
 
@@ -1265,7 +1329,7 @@ textarea {
 
   }
 
-  .navigation-buttons button{
+  .navigation-buttons button {
     margin: 10px 80px 10px 80px;
   }
 
@@ -1281,18 +1345,18 @@ textarea {
 
   }
 
-  .quiz-fieldset{
+  .quiz-fieldset {
     margin: 0px -15px 23px -15px;
   }
 
 
-  .tabla-hadoop-caracteristicas tbody tr td{
+  .tabla-hadoop-caracteristicas tbody tr td {
     width: auto;
     border-bottom: 3px solid white;
 
   }
 
-  .tabla-hadoop-caracteristicas tbody tr{
+  .tabla-hadoop-caracteristicas tbody tr {
     display: flex;
     flex-direction: column;
   }
@@ -1301,13 +1365,13 @@ textarea {
     text-align: center;
   }
 
-  .tabla-des tbody tr td{
+  .tabla-des tbody tr td {
     width: auto;
     border-bottom: 3px solid white;
 
   }
 
-  .tabla-des tbody tr{
+  .tabla-des tbody tr {
     display: flex;
     flex-direction: column;
   }
@@ -1320,12 +1384,12 @@ textarea {
     background-color: #e4c68e;
   }
 
-  .tabla-IA-ML-BD tbody tr{
+  .tabla-IA-ML-BD tbody tr {
     display: flex;
     flex-direction: column;
   }
 
-  .tabla-IA-ML-BD tbody tr td{
+  .tabla-IA-ML-BD tbody tr td {
     width: auto;
     border-bottom: 3px solid white;
   }
@@ -1338,57 +1402,58 @@ textarea {
     background-color: #98d2db;
   }
 
-  .text-descriptivo .cabecera{
+  .text-descriptivo .cabecera {
     text-align: center;
   }
 
   .tabla-batch-stream th {
-    font-size:12px;
+    font-size: 12px;
     padding: 8px
   }
 
-  .tabla-batch-stream th>a {
+  .tabla-batch-stream th > a {
     font-size: 12px
   }
 
-  blockquote{
+  blockquote {
     font-size: larger;
-    padding:1.2em 30px 1.2em 30px;
+    padding: 1.2em 30px 1.2em 30px;
   }
 
-  .img-referencia img{
+  .img-referencia img {
     width: auto;
     padding: 10px;
     border: 1px solid rgb(112, 112, 112);
   }
 
 
-  .ejercicioPropuesto-cell ol{
+  .ejercicioPropuesto-cell ol {
     padding-left: 10px;
   }
 
-  .ejercicioPropuesto-cell ol ul{
+  .ejercicioPropuesto-cell ol ul {
     padding-left: 10px;
   }
 
 
+  /* posicionar respecto al padre */
+  .nav_menu li {
+    position: relative;
+  }
 
-/* posicionar respecto al padre */
-.nav_menu li { position: relative; }
+  /* oculto por defecto */
+  .nav_menu .submenu {
+    display: none;
+    position: absolute;
+    left: 0;
+    top: 100%;
+    min-width: 160px;
+    white-space: nowrap;
+    z-index: 1000;
 
-/* oculto por defecto */
-.nav_menu .submenu {
-  display: none;
-  position: absolute;
-  left: 0;
-  top: 100%;
-  min-width: 160px;
-  white-space: nowrap;
-  z-index: 1000;
-
-  /* transición suave (opcional) usando opacity/visibility) */
-  opacity: 0;
-  visibility: hidden;
-  transition: opacity .15s ease, visibility .15s ease;
+    /* transición suave (opcional) usando opacity/visibility) */
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity .15s ease, visibility .15s ease;
+  }
 }
-

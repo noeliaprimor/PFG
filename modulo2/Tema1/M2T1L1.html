@@ -7,88 +7,127 @@
   <link rel="stylesheet" href="/css/styles.css" />
   <script src="https://kit.fontawesome.com/d8a0cf358f.js" crossorigin="anonymous"></script>
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-  <title id="TituloP">M2T1L1 — Introducción a Apache Spark</title>
 </head>
 <body>
   <div data-include="/partials/header.html"></div>
   <main>
     <nav class="lesson-nav">
-      <a href="M2T1L1.html">Lección 1</a> | <a href="M2T1L2.html">Lección 2</a> | <a href="M2T1L3.html">Lección 3</a>
-      <span style="float:right"><a href="/modulo2/modulo2.html">Volver a Módulo 2</a> • <a href="/modulo2/Tema1/index.html">Índice del Tema</a></span>
-    </nav>
-
-    <h1>M2T1L1 — Introducción a Apache Spark</h1>
-
-    <section>
-      <h2>Objetivos</h2>
-      <ul>
-        <li>Entender qué es Apache Spark y dónde se usa.</li>
-        <li>Conocer su arquitectura básica y componentes principales.</li>
-        <li>Ejecutar un ejemplo mínimo con PySpark.</li>
-      </ul>
-    </section>
-
-    <section>
-      <h2>Resumen</h2>
-      <p>Apache Spark es un motor de procesamiento distribuido para big data que ofrece APIs de alto nivel y un optimizador de consultas (Catalyst). Spark soporta batch y stream processing, y provee librerías para SQL, ML, grafos y streaming.</p>
-    </section>
-
-    <section>
-      <h2>Arquitectura (diagrama)</h2>
-      <p>Diagrama simplificado de componentes:</p>
-      <div style="text-align:center">
-        <svg width="720" height="220" viewBox="0 0 720 220" xmlns="http://www.w3.org/2000/svg" aria-label="Diagrama arquitectura Spark">
-          <rect x="20" y="20" width="160" height="60" fill="#e6f2ff" stroke="#004d99" />
-          <text x="100" y="55" font-size="12" text-anchor="middle" fill="#004d99">Driver (App)</text>
-          <rect x="200" y="20" width="480" height="60" fill="#f0f7e6" stroke="#3a7" />
-          <text x="440" y="55" font-size="12" text-anchor="middle" fill="#2a6">Cluster Manager / Executors</text>
-          <rect x="200" y="100" width="480" height="80" fill="#fff3e6" stroke="#d97706" />
-          <text x="440" y="140" font-size="12" text-anchor="middle" fill="#d97706">Storage (HDFS / S3)  —  Compute (Executors)</text>
-        </svg>
+      <div class="crumbs">
+       <a href="/modulo2/Tema1/index.html">Módulo 2</a>
+         <span class="sep">/</span>
+    <a href="/modulo2/Tema1/index.html">Tema 1</a>
+    <span class="sep">/</span>
+    <a href="/modulo2/Tema1/M2T1L1.html" class="current" aria-current="page">Lección 1</a>
       </div>
+    </nav>
+    <br>
+    <br>
+    <h2 class="titulos-leccion">Arquitectura y propósito de Spark</h2>
+
+    <div class="indice-container">
+        <button id="toggle-index">Mostrar Índice<i class="fa-solid fa-caret-down" style="padding-left: 5px; color: #004d35;"></i></button>
+
+        <div id="index-container" class="text-cell hidden">
+            <hr>
+            <ul>
+                <li><a href="#descripcion">Descripción</a></li>
+                <li><a href="#contenidos">Contenidos</a></li>
+                <li><a href="#saber-mas">Para saber más</a></li>
+                <li><a href="#ejercicio-propuesto">Ejercicio propuesto</a></li>
+            </ul>
+        </div>
+    </div>
+<section id="descripcion">
+     <!-- Descripcion -->
+        <div class="lesson-container">
+            <h3>DESCRIPCIÓN</h3>
+            <hr>
+            <div class="text-cell">
+               <p>Apache Spark es un motor de procesamiento de datos de código abierto diseñado para el procesamiento rápido y eficiente de grandes volúmenes de datos. Fue desarrollado inicialmente en la Universidad de California, Berkeley, y se ha convertido en una de las herramientas más populares en el ecosistema de Big Data.</p>
+                <p>La arquitectura de Spark se basa en un modelo de programación distribuida que permite procesar datos en paralelo a través de un clúster de computadoras. Spark utiliza un enfoque de procesamiento en memoria, lo que significa que los datos se cargan en la memoria RAM para acelerar las operaciones, lo que lo hace especialmente adecuado para tareas que requieren iteraciones repetidas sobre los mismos datos, como el aprendizaje automático y el análisis interactivo.</p>
+                <p>El propósito principal de Spark es proporcionar una plataforma unificada para el procesamiento de datos a gran escala, permitiendo a los desarrolladores escribir aplicaciones que pueden ejecutarse tanto en entornos locales como en clústeres distribuidos. Spark es compatible con una amplia variedad de fuentes de datos, incluyendo HDFS, Cassandra, HBase y S3, lo que lo hace versátil para diferentes casos de uso en el ámbito del Big Data.</p>
+                <p>En esta primera lección vamos a entrar en detalle en la historia, la arquitectura, el funcionamiento y los principales componentes de Spark.</p>
+            </div>
+        </div>
     </section>
+    <section id="contenidos">
 
-    <section>
-      <h2>Comandos: instalación rápida y ejecución</h2>
-      <pre><code># Descargar y descomprimir Spark
-wget https://archive.apache.org/dist/spark/spark-3.4.0/spark-3.4.0-bin-hadoop3.tgz
-tar xzf spark-3.4.0-bin-hadoop3.tgz
-export SPARK_HOME=$PWD/spark-3.4.0-bin-hadoop3
-export PATH=$SPARK_HOME/bin:$PATH
+         <!-- Contenidos -->
+        <div class="lesson-container">
 
-# Ejecutar pyspark local
-pyspark --master local[*]
+            <h3>CONTENIDOS</h3>
+            <hr>
 
-# Ejecutar script con spark-submit
-spark-submit --master local[*] my_app.py
-</code></pre>
-      <p>Notas: para clúster YARN o Kubernetes ajuste --master y el deployment correspondiente.</p>
+            <!-- Blóque con texto -->
+            <div class="text-cell">
+                <h4> Un poco de historia </h4>
+               <p>El comienzo de Apache Spark fue en la Universidad de Berkley, en 2009. En ese año se publicó el proyecto de investigación de Spark: "Spark: Cluster Computing with Working Sets".</p>
+
+            </div>
+           <div class="text-cell"> <h4>¿Qué es Apache Spark?</h4> <p>Tal como se define en el libro de referencia de la asignatura (??), "Spark The Definitive Guide" de Bill Chambers y Matei Aharia, <b>Apache spark is a unified computing engine and a set of libraries for parallel data processing on computer cluster.</b> Partimos de esa definición para esclarecer los conceptos básicos que nos encontraremos durante el Módulo 2 y Módulo 3 de la asignatura de Infraestructuras computacionales para procesamiento de datos Masivos</p>
+           <li> <b>Unified computer engine</b></li>
+  <p>En primer lugar, Spark es un motor de computación unificado, lo que significa que proporciona una plataforma única para realizar diversas tareas de procesamiento de datos. Entre otros: procesamiento por lotes, conexión con APIs, procesamiento en tiempo real, análisis de grafos y aprendizaje automático. Spark nos permite a los desarrolladores escribir aplicaciones que pueden manejar diferentes tipos de trabajo sin necesidad de cambiar a diferentes herramientas o plataformas.</p>
+ <p>Más allá de la teoría, en la práctica esta característica permite desde un único punto, extraer diversas fuentes de datos, transformar la información a través de sus múltiples librerias y conectarse con repositorios externos de información.</p>
+  <li><b>Set of libraries</b></li>
+  <p>Spark está disponible con una gran colección de librerias específicas que le permiten trabajar en tecnologías diversas como, SQL, Dataframes, generación de gráfos, streaming.</p>
+  <p>Citando de nuevo a B. Chamber y M. Aharia: "The Spark core engine itself has changed little since it was first released, but the libraries have grown to provide more an more types of funcionality"</p>
+  <p>En el portal: https://spark-packages.org/ se puede encontrar una amplia colección de librerias externas disponibles</p>
+  <img src="/img/M2T1L1_SparkPakages.png" alt="Spark Libraries" style="width: 100%; max-width: 600px; margin: 20px auto; display: block;">
+  <li><b>Parallel Data processing</b></li>
+  <p>Spark está diseñado para procesar grandes volúmenes de datos de manera eficiente utilizando la computación paralela. Esto significa que puede dividir las tareas de procesamiento en partes más pequeñas y ejecutarlas simultáneamente en un clúster de computadoras, lo que acelera significativamente el tiempo de procesamiento.</p>
+  <li><b>Computer cluster</b></li>
+  <p>Spark permite ejecución desde un simple portátil hasta complejo cluster de servidores, lo que permite aprovechar la capacidad de procesamiento de múltiples máquinas para manejar grandes conjuntos de datos sin perder la versatilidad de ser ejecutado en cualquier ordenador. Esto es especialmente útil en entornos de big data, donde los volúmenes de datos pueden ser demasiado grandes para ser procesados en una sola máquina.</p>
+<p>Spark utiliza un enfoque de procesamiento en memoria, lo que significa que los datos se cargan en la memoria RAM para acelerar las operaciones, lo que lo hace especialmente adecuado para tareas que requieren iteraciones repetidas sobre los mismos datos, como el aprendizaje automático y el análisis interactivo.</p>
+
+
+           </div>
+          <div class"text-cell"><h4>Componentes principales de Apache Spark</h4>
+<p>Los componentes principales de Apache Spark incluyen:</p> <ul> <li><b>Spark Core:</b> Es el motor de procesamiento subyacente que proporciona las funcionalidades básicas de Spark, como la gestión de memoria, la planificación de tareas y la comunicación entre nodos.</li> <li><b>Spark SQL:</b> Permite trabajar con datos estructurados utilizando SQL y DataFrames, proporcionando una interfaz fácil de usar para consultas y análisis de datos.</li> <li><b>Spark Streaming:</b> Permite el procesamiento en tiempo real de flujos de datos, lo que es útil para aplicaciones como análisis de logs, monitoreo en tiempo real y detección de fraudes.</li> <li><b>Spark MLlib:</b> Es una biblioteca de aprendizaje automático que proporciona algoritmos y herramientas para construir modelos predictivos y realizar análisis avanzados.</li> <li><b>Spark GraphX:</b> Permite el procesamiento y análisis de grafos, lo que es útil para aplicaciones como redes sociales, recomendaciones y análisis de relaciones.</li> </ul>
+
+
+            </div>
+
+            </div>
+        </div>
     </section>
+    <section  id="saber-mas">
+         <!-- Para saber más -->
+        <div class="lesson-container indice-modulos">
+            <h3>PARA SABER MÁS</h3>
+            <hr>
+            <div class="text-cell">
+                <ul>
+                    <li><a href="https://spark-packages.org">Indice de externas librerias disponibles</a></li>
+                    <li><a href="https://www.usenix.org/legacy/event/hotcloud10/tech/full_papers/Zaharia.pdf">Proyecto de investigación de Spar</a></li>
+                </ul>
+            </div>
 
-    <section>
-      <h2>Ejemplo PySpark (rápido)</h2>
-      <pre><code>from pyspark.sql import SparkSession
-spark = SparkSession.builder.appName('m2t1l1-demo').getOrCreate()
-data = [(1,'Alice', 29),(2,'Bob', 31)]
-df = spark.createDataFrame(data, ['id','name','age'])
-df.show()
-spark.stop()
-</code></pre>
-      <p>Descarga el notebook de ejemplo: <a href="/modulo2/Tema1/notebooks/M2T1L1.ipynb">M2T1L1.ipynb</a></p>
+        </div>
     </section>
+    <section id="ejercicio-propuesto">
 
-    <section>
-      <h2>Recursos y lecturas</h2>
-      <ul>
-        <li><a href="https://spark.apache.org/docs/latest/">Apache Spark - documentación</a></li>
-        <li><a href="https://www.cloudduggu.com/spark/">CloudDuggu — Guía y tutoriales</a></li>
-      </ul>
-    </section>
+        <!-- Ejercicio propuesto -->
+        <div class="lesson-container">
+            <h3>Ejercicio Propuesto</h3>
+            <hr>
+            <div class="text-cell">
+                <p> Enhorabuena! Has llegado al final de la primera lección. Ahora es tu turno. Como ejercicio práctico te proponemos investigar más en profundidad los orígenes del término "Big Data" e identificar
+                    aquellos eventos históricos importantes que lo han llegado a desarrollar.</p>
+                <p> Por último, trata de responder a esta pregunta: ¿Cómo se abordaban los problemas de almacenamiento, procesamiento, análisis
+                    y visualización de datos en el pasado, antes del desarrollo de Big data?</p>
+            </div>
 
-    <section>
-      <h2>Ejercicio propuesto</h2>
-      <p>Ejecuta el notebook, modifica el dataset y añade una transformación (filter / groupBy) y documenta tiempos de ejecución.</p>
+        </div>
     </section>
+        <div>
+            <div class="navigation-buttons">
+                <button onclick="window.location.href='index.html'">Presentación del curso</button>
+                <button onclick="window.location.href='/modulo2/Tema1/M2T1L2.html'">Lección siguiente</button>
+            </div>
+        </div>
+
+
+
 
   </main>
   <div data-include="/partials/footer.html"></div>
