@@ -474,14 +474,26 @@ hr {
   padding: 15px;
 }
 
-.python-code {
+pre code.python-code,
+code.python-code {
+  display: block;
+  white-space: pre;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, "Roboto Mono", "Courier New", monospace;
+  font-size: 14px;
+  line-height: 1.45;
+  background: #f6f8f7;
+  color: #03332a;
+  padding: 12px 14px;
+  border-radius: 6px;
+  border-left: 4px solid #004d35; /* color solicitado */
+  box-shadow: 0 1px 2px rgba(0,0,0,0.04);
   overflow-x: auto;
-  margin: -20px 0 0 -155px;
-  scrollbar-width: thin;
-  font-size: 0.875rem;
-  display: flex;
+  margin: 0 0 1rem 0;
 }
-
+/* Responsive */
+@media (max-width: 600px){
+  pre code.python-code { font-size: 13px; padding: 10px; }
+}
 .python-code button {
   position: absolute;
   top: 10px;
@@ -1275,8 +1287,7 @@ textarea {
 
   .img-evaluacion {
     max-width: 100%;
-    margin: 0;
-    margin-bottom: 20px;
+    margin: 0 0 20px;
     padding: 0;
   }
 
