@@ -5,6 +5,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Instalación y configuración de Spark</title>
   <link rel="stylesheet" href="/css/styles.css" />
+    <script src="https://kit.fontawesome.com/d8a0cf358f.js" crossorigin="anonymous"></script>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+
 </head>
 <body>
 <div data-include="/partials/header.html"></div>
@@ -17,7 +22,7 @@
          <span class="sep">/</span>
     <a href="/modulo2/Tema1/index.html">Tema 1</a>
     <span class="sep">/</span>
-    <a href="/modulo2/Tema1/M2T1L2.html" class="current" aria-current="page">Lección 1</a>
+    <a href="/modulo2/Tema1/M2T1L5.html" class="current" aria-current="page">Lección 5</a>
       </div>
     </nav>
     <br>
@@ -28,7 +33,7 @@
 
 
 
-    <h2 class="titulos-leccion">Componentes de la pila unificada de Spark</h2>
+    <h2 class="titulos-leccion">Instalación y configuración de Spark</h2>
     <div class="indice-container">
         <button id="toggle-index">Mostrar Índice<i class="fa-solid fa-caret-down" style="padding-left: 5px; color: #004d35;"></i></button>
 
@@ -36,7 +41,8 @@
             <hr>
             <ul>
                 <li><a href="#descripcion">Descripción</a></li>
-                <li><a href="#contenidos">Contenidos</a></li>
+                <li><a href="#standalone">Instalación Standalone</a></li>
+                <li><a href="docker">Instalación en cluster Docker</a></li>
                 <li><a href="#saber-mas">Para saber más</a></li>
                 <li><a href="#ejercicio-propuesto">Ejercicio propuesto</a></li>
             </ul>
@@ -52,18 +58,26 @@
             </div>
         </div>
     </section>
-    <section id="contenidos">
+    <section id="standalone">
 
-         <!-- Contenidos -->
+         <!-- Instalación Standalone -->
         <div class="lesson-container">
 
-            <h3>CONTENIDOS</h3>
+            <h3>Instalación Standalone</h3>
             <hr>
 
             <!-- Blóque con texto -->
             <div class="text-cell">
                 <h4> Comenzamos con los contenidos </h4>
                En esta caja metemos contenidos
+
+              <pre><code class="language-bash bash-code">
+                # Crear entorno y comprobar versión de Spark
+                    python3 -m venv venv
+                    source venv/bin/activate
+                    pip install pyspark
+                    spark-submit --version
+</code></pre>
             </div>
            <div class="text-cell"> <h4>que mas metemos</h4>
              <p>muchos más contenidos</p>
@@ -76,6 +90,16 @@
             </div>
         </div>
     </section>
+      <section id="docker">
+          <!-- Instalación en cluster Docker -->
+          <div class="lesson-container">
+              <h3>Instalación en cluster Docker</h3>
+              <hr>
+              <div class="text-cell">
+                  <p>INSTALACIÓN EN CLUSTER DOCKER</p>
+              </div>
+
+          </div>
     <section  id="saber-mas">
          <!-- Para saber más -->
         <div class="lesson-container indice-modulos">
