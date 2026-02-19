@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>M3T1L6 — Ejercicio propuesto</title>
+  <title>Ejercicio propuesto</title>
   <link rel="stylesheet" href="/css/styles.css" />
   <script src="/js/jquery-3.6.0.min.js"></script>
   <link rel="stylesheet" href="/css/prism-1.29.0.min.css" />
@@ -25,20 +25,18 @@
   <h2 class="titulos-leccion">Ejercicio propuesto</h2>
 
   <div class="indice-container">
-    <button id="toggle-index">Mostrar Índice</button>
-    <div id="index-container" class="text-cell hidden">
-      <hr>
-      <ul>
-        <li><a href="#enunciado">Enunciado</a></li>
-        <li><a href="#pasos">Pasos</a></li>
-        <li><a href="#criterios">Criterios</a></li>
-      </ul>
+    <div id="index-container" class="text-cell">
+        <hr>
+        <ul>
+          <li><a href="#descripcion">Descripción</a></li>
+          <li><a href="#ejercicio">Ejercicio</a></li>
+        </ul>
+      </div>
     </div>
-  </div>
 
-  <section id="enunciado">
+  <section id="descripcion">
     <div class="lesson-container">
-      <h3>ENUNCIADO</h3>
+      <h3>DESCRIPCIÓN</h3>
       <hr>
       <div class="text-cell">
         <p>Construye un pipeline de ingestión que lea eventos desde Kafka, procese con Spark Structured Streaming y escriba resultados a Parquet. Mide latencias y documenta la arquitectura.</p>
@@ -46,9 +44,9 @@
     </div>
   </section>
 
-  <section id="pasos">
+  <section id="ejercicio">
     <div class="lesson-container">
-      <h3>PASOS SUGERIDOS</h3>
+      <h3>Ejercicio</h3>
       <hr>
       <div class="text-cell">
         <ol>
@@ -56,19 +54,6 @@
           <li>Implementa productor/consumidor de prueba.</li>
           <li>Implementa job de Structured Streaming y mide latencias.</li>
         </ol>
-      </div>
-    </div>
-  </section>
-
-  <section id="criterios">
-    <div class="lesson-container">
-      <h3>CRITERIOS</h3>
-      <hr>
-      <div class="text-cell">
-        <ul>
-          <li>Pipeline funcional y documentado.</li>
-          <li>Medidas de latencia y justificación de parámetros.</li>
-        </ul>
       </div>
     </div>
   </section>

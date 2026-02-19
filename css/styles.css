@@ -42,7 +42,15 @@ a:hover {
 
 #index-container{
   font-weight: bold;
+  position: relative; /* asegurar posicionamiento para z-index */
+  z-index: 5; /* aparecer por encima de otros elementos */
+  transition: max-height 320ms ease; /* animación suave al mostrar/ocultar */
+  overflow: hidden; /* asegurar clipping durante la animación */
 }
+
+/* Estados para animación controlados por JS */
+#index-container.collapsed{ max-height: 0; }
+#index-container.expanded{ max-height: 2000px; }
 
 #index-container li::before {
   content: '-'; /* Símbolo antes de cada li */
@@ -110,12 +118,17 @@ a:hover {
 }
 
 #toggle-index{
+  display: inline-block;
   background-color: transparent;
   border: none;
   color: inherit;
   font-size: 16px;
   font-weight: bold;
   cursor: pointer;
+}
+
+.indice-container{
+  z-index: 4; /* asegurar que la caja esté por encima del fondo */
 }
 
 section {

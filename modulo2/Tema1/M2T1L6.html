@@ -27,60 +27,222 @@
     </nav>
     <br>
     <br>
-
-
-
-
-
-
     <h2 class="titulos-leccion">Ejecución y uso de las shells de Spark (Scala/Python)</h2>
     <div class="indice-container">
-        <button id="toggle-index">Mostrar Índice<i class="fa-solid fa-caret-down" style="padding-left: 5px; color: #004d35;"></i></button>
 
-        <div id="index-container" class="text-cell hidden">
-            <hr>
-            <ul>
-                <li><a href="#descripcion">Descripción</a></li>
-                <li><a href="#contenidos">Contenidos</a></li>
-                <li><a href="#saber-mas">Para saber más</a></li>
-                <li><a href="#ejercicio-propuesto">Ejercicio propuesto</a></li>
-            </ul>
-        </div>
-    </div>
+        <div id="index-container" class="text-cell">
+             <hr>
+             <ul>
+                 <li><a href="#descripcion">Descripción</a></li>
+                 <li><a href="#scala">Scala Shell</a></li>
+                <li><a href="#python">PySpark (Python)</a></li>
+               <li><a href="#comparativa">comparativa</a></li>
+                 <li><a href="#saber-mas">Para saber más</a></li>
+                 <li><a href="#ejercicio-propuesto">Ejercicio propuesto</a></li>
+             </ul>
+         </div>
+     </div>
     <section id="descripcion">
     <!-- Descripcion -->
         <div class="lesson-container">
-            <h3>Descripción</h3>
+            <h3>DESCRIPCIÓN</h3>
             <hr>
             <div class="text-cell">
-            <p>DESCRIPCIÓN DE LA LECIÓN</p>
-              <p>Para ejecutar las shell de Spark, puedes seguir estos pasos:</p>
-                <ol>
-                    <li>Abre una terminal en tu sistema.</li>
-                    <li>Navega al directorio donde has instalado Apache Spark.</li>
-                    <li>Para iniciar la shell de Spark en Scala, ejecuta el comando `spark-shell`. Esto abrirá una sesión interactiva de Scala donde podrás escribir y ejecutar código Spark.</li>
-                    <li>Para iniciar la shell de Spark en Python, ejecuta el comando `pyspark`. Esto abrirá una sesión interactiva de Python donde podrás escribir y ejecutar código Spark utilizando la API de PySpark.</li>
-                    <li>Una vez que estés en la shell de Spark, puedes comenzar a escribir código para procesar datos utilizando las funcionalidades de Spark. Puedes cargar datos, realizar transformaciones y acciones, y explorar los resultados directamente desde la shell.</li>
-                </ol>
-                <p>Recuerda que la shell de Spark es una herramienta poderosa para experimentar y aprender sobre el procesamiento de datos con Spark. Puedes utilizarla para probar diferentes operaciones y explorar los resultados en tiempo real.</p>
-            </div>
+             <p>Las shells de Spark son entornos interactivos que permiten ejecutar código sobre Apache Spark sin necesidad de compilar proyectos completos. Son ideales para experimentar, probar consultas, explorar datos y aprender Spark.</p>
+
+                <p>Spark ofrece dos shells principales:</p>
+  <ul>
+    <li>Scala Shell → <code>spark-shell</code></li>
+    <li>Python Shell → <code>pyspark</code></li>
+  </ul>
+
+  <p>Ambas proporcionan un entorno REPL (Read–Eval–Print Loop) con una instancia de <code>SparkSession</code> ya inicializada.</p>
+              <p>En esta lección vamos a profundicar en cada una de ellas, con ejemplos. Al final de la lección hay disponible una comparativa con sus casos de uso.</p>
+
+
+              </div>
         </div>
     </section>
-    <section id="contenidos">
+    <section id="scala">
 
-         <!-- Contenidos -->
+         <!-- Scala Shell -->
         <div class="lesson-container">
 
-            <h3>CONTENIDOS</h3>
+            <h3>SCALA SHELL</h3>
             <hr>
 
             <!-- Blóque con texto -->
             <div class="text-cell">
-                <h4> Comenzamos con los contenidos </h4>
-               En esta caja metemos contenidos
+                <h4> Ejecución </h4>
+               <p>Se inicia en la terminal ejecutando <code>./spark-shell</code></p> desde la carpeta de instalación de Spark. También se pueden añadir configuraciones:</p>
+  <pre><code>spark-shell --master local[4] --executor-memory 4G</code></pre>
+       <img src="/img/M2T2L6_1.png">
             </div>
-           <div class="text-cell"> <h4>que mas metemos</h4>
-             <p>muchos más contenidos</p>
+           <div class="text-cell">
+  <h3>Características principales</h3>
+  <ul>
+    <li>Es la shell nativa de Spark, ya que Spark está escrito en Scala.</li>
+    <li>Ofrece acceso inmediato a:
+      <ul>
+        <li><code>spark</code>: instancia de <code>SparkSession</code></li>
+        <li><code>sc</code>: instancia de <code>SparkContext</code></li>
+      </ul>
+    </li>
+    <li>Permite trabajar con:
+      <ul>
+        <li>RDDs</li>
+        <li>DataFrames</li>
+        <li>Datasets (solo disponibles en Scala y Java)</li>
+      </ul>
+    </li>
+  </ul>
+
+  <h3>Ejemplo básico</h3>
+  <pre><code>val df = spark.read.json("datos.json")
+df.show()</code></pre>
+
+  <h3>Ventajas</h3>
+  <ul>
+    <li>Mejor rendimiento y compatibilidad con todas las APIs.</li>
+    <li>Acceso a Datasets tipados.</li>
+    <li>Ideal para usuarios que trabajan con el ecosistema JVM.</li>
+  </ul>
+
+
+
+           </div>
+
+
+            </div>
+
+            </div>
+        </div>
+    </section>
+    <section  id="python">
+         <!-- Para saber más -->
+        <div class="lesson-container indice-modulos">
+            <h3>PYTHON SHELL</h3>
+            <hr>
+            <div class="text-cell">
+
+
+
+  <h3>Ejecución</h3>
+  <p>Se inicia con:</p>
+  <pre><code>pyspark</code></pre>
+
+  <p>También admite configuraciones:</p>
+  <pre><code>pyspark --master local[*] --packages com.databricks:spark-xml_2.12:0.15.0</code></pre>
+              <img src="/img/M2T2L6_2.png">
+
+  <h3>Características principales</h3>
+  <ul>
+    <li>Permite usar Spark desde Python.</li>
+    <li>Proporciona automáticamente:
+      <ul>
+        <li><code>spark</code>: <code>SparkSession</code></li>
+        <li><code>sc</code>: <code>SparkContext</code></li>
+      </ul>
+    </li>
+    <li>Soporta:
+      <ul>
+        <li>RDDs</li>
+        <li>DataFrames</li>
+        <li>Funciones SQL</li>
+      </ul>
+    </li>
+    <li>No soporta Datasets tipados (solo Scala/Java).</li>
+  </ul>
+
+  <h3>Ejemplo básico</h3>
+  <pre><code>df = spark.read.json("datos.json")
+df.show()</code></pre>
+
+  <h3>Ventajas</h3>
+  <ul>
+    <li>Sintaxis más sencilla y familiar para científicos de datos.</li>
+    <li>Integración con librerías como Pandas, NumPy o Matplotlib.</li>
+    <li>Ideal para análisis exploratorio y prototipado.</li>
+  </ul>
+
+            </div>
+
+        </div>
+    </section>
+    <section id="comparativa">
+
+         <!-- Contenidos -->
+        <div class="lesson-container">
+
+            <h3>COMPARATIVA</h3>
+            <hr>
+
+            <!-- Blóque con texto -->
+            <div class="text-cell">
+              <h3>Comparación rápida</h3>
+
+  <table border="1">
+    <thead>
+      <tr>
+        <th>Aspecto</th>
+        <th>Scala Shell (<code>spark-shell</code>)</th>
+        <th>Python Shell (<code>pyspark</code>)</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Lenguaje</td>
+        <td>Scala</td>
+        <td>Python</td>
+      </tr>
+      <tr>
+        <td>API soportada</td>
+        <td>RDD, DataFrame, Dataset</td>
+        <td>RDD, DataFrame</td>
+      </tr>
+      <tr>
+        <td>Rendimiento</td>
+        <td>Más alto</td>
+        <td>Ligeramente menor</td>
+      </tr>
+      <tr>
+        <td>Facilidad de uso</td>
+        <td>Más técnico</td>
+        <td>Más accesible</td>
+      </tr>
+      <tr>
+        <td>Integración</td>
+        <td>JVM</td>
+        <td>Ecosistema científico de Python</td>
+      </tr>
+      <tr>
+        <td>Uso típico</td>
+        <td>Ingeniería de datos</td>
+        <td>Ciencia de datos / análisis</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3>Casos de uso comunes en ambas shells</h3>
+  <ul>
+    <li>Cargar y explorar datos rápidamente.</li>
+    <li>Probar transformaciones sobre RDDs o DataFrames.</li>
+    <li>Ejecutar consultas SQL.</li>
+    <li>Depurar lógica antes de integrarla en un proyecto.</li>
+    <li>Aprender Spark de forma interactiva.</li>
+  </ul>
+
+  <h3>¿Cuál usar?</h3>
+  <p>Depende del perfil de la persona que lo use:</p>
+  <ul>
+    <li>Si vienes del mundo de la ingeniería de datos o Java/Scala, la shell de Scala es más natural.</li>
+    <li>Si vienes de Python o ciencia de datos, PySpark es la opción más cómoda.</li>
+
+  </ul>
+
+              <p>Durante este curso, siempre que sea posible se utilizara por comodidad pyspark sobre scala, aunque se realizaran
+              ejemplos de los dos.</p>
+
 
            </div>
 
@@ -118,39 +280,11 @@
     </section>
         <div>
             <div class="navigation-buttons">
-                <button onclick="window.location.href='index.html'">Presentación del curso</button>
-                <button onclick="window.location.href='/modulo2/Tema1/M2T1L2.html'">Lección siguiente</button>
+                 <button onclick="window.location.href='M2T1L5.html'">Anterior</button>
+              <button onclick="window.location.href='M2T1L7.html'">Siguiente</button>
             </div>
         </div>
 
-
-<h1>Ejecución y uso de las shells de Spark (Scala/Python)</h1>
-<section>
-  <h2>Objetivos</h2>
-  <ul>
-        <li>Comprender los conceptos clave.</li>
-        <li>Aplicar en ejemplos prácticos.</li>
-  </ul>
-</section>
-<section>
-  <h2>Resumen</h2>
-  <p>Contenido detallado sobre Ejecución y uso de las shells de Spark (Scala/Python).</p>
-</section>
-
-<section>
-  <h2>Ejercicios propuestos</h2>
-  <ol>
-        <li>Implementar el ejemplo proporcionado.</li>
-        <li>Responder preguntas de reflexión.</li>
-  </ol>
-</section>
-<section>
-  <h2>Referencias</h2>
-  <ul>
-    <li>Documentación oficial: https://spark.apache.org/docs/latest/</li>
-    <li>Tutorial de referencia: https://www.cloudduggu.com/spark/</li>
-  </ul>
-</section>
 </main>
 <div data-include="/partials/footer.html"></div>
 <script src="/js/include.js"></script>
