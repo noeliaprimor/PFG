@@ -94,25 +94,24 @@
 
 
               <pre><code class="language-bash bash-code">
-                #Descargar y descomprimir Spark
-                curl -fL -o spark.tgz https://downloads.apache.org/spark/spark-3.5.8/spark-3.5.8-bin-hadoop3.tgz
-                tar -xzf spark.tgz
+#Descargar y descomprimir Spark
+curl -fL -o spark.tgz https://downloads.apache.org/spark/spark-3.5.8/spark-3.5.8-bin-hadoop3.tgz
+tar -xzf spark.tgz
+#Mover a una ubicación permanente
+sudo mv spark-3.5.8-bin-hadoop3 /opt/spark
 
-                #Mover a una ubicación permanente
-                sudo mv spark-3.5.8-bin-hadoop3 /opt/spark
+#Configurar variables de entorno
+echo "export SPARK_HOME=/opt/spark" >> ~/.bashrc
+echo "export PATH=$PATH:$SPARK_HOME/bin" >> ~/.bashrc
+source ~/.bashrc
 
-                #Configurar variables de entorno
-                echo "export SPARK_HOME=/opt/spark" >> ~/.bashrc
-                echo "export PATH=$PATH:$SPARK_HOME/bin" >> ~/.bashrc
-                source ~/.bashrc
-
-                #Comprobamos la instalación y la versión
-                spark-submit --version
-                pyspark --version
+#Comprobamos la instalación y la versión
+spark-submit --version
+pyspark --version
 
 
-                #Probar la instalación
-                pyspark --master local[*]
+#Probar la instalación
+pyspark --master local[*]
 </code></pre>
 
 
@@ -162,86 +161,90 @@
                 <p> En <a href="https://www.docker.com/101-tutorial/">este enlace</a>, hay un tutoarial sencillo sobre la instalación
                 y la puesta en marcha de doker en varios sitemas operativos. Nosotros como en el caso anterior, hemos realizado la
                 instalación en un sistema Ubuntu.</p>
-
-
-
               </div>
 
-           https://docs.docker.com/engine/install/ubuntu/#install-using-the-repository
-Set up Docker's apt repository.
-
-# Add Docker's official GPG key:
-sudo apt update
-sudo apt install ca-certificates curl
-sudo install -m 0755 -d /etc/apt/keyrings
-sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
-sudo chmod a+r /etc/apt/keyrings/docker.asc
-
-# Add the repository to Apt sources:
-sudo tee /etc/apt/sources.list.d/docker.sources <<EOF
-Types: deb
-URIs: https://download.docker.com/linux/ubuntu
-Suites: $(. /etc/os-release && echo "${UBUNTU_CODENAME:-$VERSION_CODENAME}")
-Components: stable
-Signed-By: /etc/apt/keyrings/docker.asc
-EOF
-
-sudo apt update
 <br>
             <p>Una vez instalado comprobamos la instalación ejecutando: <code>$sudo docker run hello-world</code></p>
             <br>
             <img src="/img/M2T2L5_6.png">
-              <div class="text-cell">
-                  <h4>Configuración del cluster Docker</h4>
-                  <p>Para configurar un cluster de Spark utilizando Docker, se puede utilizar el siguiente archivo <code>docker-compose.yml</code>:</p>
+            <p>Se recomienda tambien instalar la versión Docker Deskop para poder acceder de forma visual a los detalles de la herramienta
+            para ello ha que descargar la última versión del paquete de la <a href="https://desktop.docker.com/linux/main/amd64/docker-desktop-amd64.deb?utm_source=docker&utm_medium=webreferral&utm_campaign=docs-driven-download-linux-amd64">Siguiente dirección y ejecutar:</a></p>
+            <pre><code class="language-bash bash-code">
+sudo dpkg -i docker-desktop-amd64.deb
 
-                  <pre><code class="language-yaml yaml-code">
-version: '3'
+#En caso de error con la dependencia,ejecutar:
+sudo apt --fix-broken install
+</code></pre>
+
+            <p>Creamos las carpetas del proyecto:</p>
+            <pre><code class="language-bash bash-code">
+mkdir -p spark-docker/{apps,data,conf}
+cd spark-docker
+
+</code></pre>
+
+            <p>En esta carpeta raiz, generamos un fichero .env con el siguiente contenido:</p>
+            <pre><code class="language-bash bash-code">
+SPARK_WORKERS=2
+SPARK_WORKER_MEMORY=2G
+SPARK_WORKER_CORES=2
+SPARK_MASTER_PORT=7077
+SPARK_MASTER_UI_PORT=8080
+            </code></pre>
+            <p>En esta carpeta nos decargamos l siguiente archivo <a href="docker-compose.yml"><code>docker-compose.yml</code></a></p>
+
+
+            <pre><code class=language-bash bash-code">
 services:
   spark-master:
-    image: bitnami/spark:3.5.8
+    image: apache/spark:3.5.1
     container_name: spark-master
-    environment:
-      - SPARK_MODE=master
-      - SPARK_MASTER_PORT=7077
-      - SPARK_MASTER_WEBUI_PORT=8080
+    hostname: spark-master
+    command: >
+      bash -c "
+      /opt/spark/sbin/start-master.sh &&
+      tail -f /opt/spark/logs/*"
     ports:
       - "7077:7077"
       - "8080:8080"
     volumes:
-      - ./data:/data
-  spark-worker-1:
-    image: bitnami/spark:3.5.8
-    container_name: spark-worker-1
+      - ./apps:/opt/spark-apps
+      - ./data:/opt/spark-data
+
+  spark-worker:
+    image: apache/spark:3.5.1
+    depends_on:
+      - spark-master
+    command: >
+      bash -c "
+      /opt/spark/sbin/start-worker.sh spark://spark-master:7077 &&
+      tail -f /opt/spark/logs/*"
     environment:
-      - SPARK_MODE=worker
-      - SPARK_MASTER=spark://spark-master:7077
-      - SPARK_WORKER_WEBUI_PORT=8081
-    ports:
-      - "8081:8081"
+      - SPARK_WORKER_CORES=2
+      - SPARK_WORKER_MEMORY=2g
     volumes:
-      - ./data:/data
-  spark-worker-2:
-    image: bitnami/spark:3.5.8
-    container_name: spark-worker-2
-    environment:
-      - SPARK_MODE=worker
-      - SPARK_MASTER=spark://spark-master:7077
-      - SPARK_WORKER_WEBUI_PORT=8082
-    ports:
-      - "8082:8082"
-    volumes:
-      - ./data:/data
+      - ./apps:/opt/spark-apps
+      - ./data:/opt/spark-data
+
+
 </code></pre>
+              <div class="text-cell">
+                  <h4>Inicialización del cluster Docker</h4>
+
                   <p>Este archivo define un cluster de Spark con un nodo maestro y dos nodos trabajadores. Para iniciar el cluster, simplemente ejecutamos:</p>
                   <pre><code class="language-bash bash-code">
-docker-compose up -d
+docker compose up -d
+docker compose up -d --scale spark-worker=2
+docker compose ps
+
+
 </code></pre>
+                <img src="/img/M2T2L5_7.png">
+
                   <p>Una vez que el cluster esté en funcionamiento, podemos acceder a la interfaz web
                   del maestro en http://localhost:8080, donde podremos ver el estado de los trabajadores y las aplicaciones en ejecución.</p>
-
-</div>
-
+<img src="/img/M2T2L5_8.png">
+              </div>
             <div class="text-cell">
               <h4>Configuración del clúster</h4>
               <p>Para configurar el cluster de Spark en Docker, es importante tener en cuenta algunos aspectos:</p>
@@ -251,7 +254,7 @@ docker-compose up -d
                   <li><strong>Recursos:</strong> Configura los recursos asignados a cada contenedor para evitar problemas de rendimiento. Puedes limitar la memoria y CPU utilizando las opciones de Docker.</li>
               </ul>
               <stron>Limitación de los recursos del clúster: </stron>
-              <pre><code class="language-yaml yaml-code">
+              <pre><code class="llanguage-bash bash-code">
 services:
   spark-master:
     ...
@@ -280,14 +283,43 @@ services:
             </div>
             <div class="tex-cell">
                 <h4>Ejecutar trabajos en el cluster Docker</h4>
-                <p>Para ejecutar un trabajo en el cluster de Spark, podemos utilizar el comando <code>spark-submit</code> desde el nodo maestro. Por ejemplo, para ejecutar un script de PySpark llamado <code>app.py</code>, podemos usar:</p>
-                <pre><code class="language-bash bash-code">
-docker exec -it spark-master /opt/spark/bin/spark-submit --master spark://spark-master:7077 /data/app.py
-</code></pre>
-                <p>Esto ejecutará el script <code>app.py</code> en el cluster de Spark, utilizando los recursos de los nodos trabajadores. Podemos monitorear el progreso del trabajo a través de la interfaz web del maestro.</p>
+                <p>Para ejecutar un trabajo en el cluster de Spark, podemos utilizar el comando <code>spark-submit</code> desde el nodo maestro. Por ejemplo, para ejecutar un script de PySpark llamado <code>mi_trabajo.py</code>, compuesto por el siguiente codigo python
+                  que se debe almacenar en la carpeta /spark-docker/apps :</p>
+              <pre><code class="python-code">
+from pyspark.sql import SparkSession
+spark = SparkSession.builder.appName("MiTrabajo").getOrCreate()
+data = [("Alicia", 34), ("Beatriz", 45), ("Manolo", 29)]
+df = spark.createDataFrame(data, ["Nombre", "Edad"])
+df.show()
+spark.stop()
 
+              </code>
+
+              </pre>
+
+
+              <pre><code class="language-bash bash-code">
+docker compose exec spark-master
+/opt/spark/bin/spark-submit
+--master spark://spark-master:7077   /opt/spark-apps/mitrabajo.py
+
+
+</code></pre>
+                <p>Esto ejecutará el script <code>mitrabajo.py</code> en el cluster de Spark, utilizando los recursos de los nodos trabajadores. Podemos monitorear el progreso del trabajo a través de la interfaz web del maestro.</p>
+<img src="/img/M2T2L5_9.png">
+              <p>Salida en el master de Spark de la ejecución de la aplicación</p>
+              <img src="/img/M2T2L5_10.png">
+              <p>Salida en la consola, como se puede ver, muesta el Dataframe creado</p>
+
+        <p>Para cerrar el entorno ejecutamos:</p>
+        <pre><code class="language-bash bash-code">
+docker compose down
+
+</code></pre>
               </div>
           </div>
+
+
       </section>
     <section  id="saber-mas">
          <!-- Para saber más -->
@@ -296,8 +328,10 @@ docker exec -it spark-master /opt/spark/bin/spark-submit --master spark://spark-
             <hr>
             <div class="text-cell">
                 <ul>
-                    <li><a href="https://spark-packages.org">Enlaces</a></li>
-                    <li><a href="https://www.usenix.org/legacy/event/hotcloud10/tech/full_papers/Zaharia.pdf">Proyecto de investigación de Spar</a></li>
+                       <li> <a href="https://spark.apache.org/docs/latest/">Documentación oficial de Spark</a></li>
+                        <li><a href="https://www.cloudduggu.com/spark/">Tutorial de referencia</a> </li>
+                        <li><a href="https://docs.docker.com/desktop/setup/install/linux/ubuntu">Instalación de Docker Descktop/</a></li>
+                        <li><a href="https://hub.docker.com/hardened-images/catalog/dhi/spark">Imagen docker de apache spark</a></li>
                 </ul>
             </div>
 
@@ -307,76 +341,75 @@ docker exec -it spark-master /opt/spark/bin/spark-submit --master spark://spark-
 
         <!-- Ejercicio propuesto -->
         <div class="lesson-container">
-            <h3>Ejercicio Propuesto</h3>
+            <h3>Ejercicios Propuestos</h3>
             <hr>
             <div class="text-cell">
-              <p>Ejercicio propuesto</p>
+              <h4>Ejercicio 1 – Escalado del clúster</h4>
+<p>
+Escalar el número de <em>workers</em> a 4:
+</p>
+<pre><code>docker compose up -d --scale spark-worker=4</code></pre>
+<p>
+Analizar:
+</p>
+<ul>
+  <li>¿Cómo cambia la distribución de tareas?</li>
+  <li>¿Se reduce el tiempo de ejecución?</li>
+</ul>
+<hr>
+<h4>Ejercicio 2 – Modificación de recursos</h4>
+<p>
+Reducir la memoria del <em>worker</em> a 512MB y ejecutar un job que requiera más recursos (por ejemplo, leyendo un fichero grande o aumentando el número de particiones).
+</p>
+<p>
+Analizar:
+</p>
+<ul>
+  <li>¿Qué ocurre cuando la memoria asignada no es suficiente?</li>
+  <li>¿Se produce algún error (por ejemplo, out-of-memory) o se degrada el rendimiento?</li>
+</ul>
+<hr>
+<h4>Ejercicio 3 – Análisis de logs</h4>
+<p>
+Ejecutar un job y analizar los logs del clúster:
+</p>
+<pre><code>docker compose logs spark-master</code></pre>
+<p>
+Identificar:
+</p>
+<ul>
+  <li>Inicio del job (submit del trabajo)</li>
+  <li>Asignación de ejecutores y recursos a los workers</li>
+  <li>Finalización del job (éxito o error)</li>
+</ul>
+<hr>
+<h1>Este ejercicio ponerlo más adelante</h1>
+              <h4>Ejercicio 4 – Procesamiento real de datos</h4>
+<p>
+Crear un CSV de prueba dentro de la carpeta <code>data/</code> y desarrollar un script PySpark que realice:
+</p>
+<ul>
+  <li>Lectura del CSV con <code>spark.read.csv</code></li>
+  <li>Filtrado por una condición</li>
+  <li>Agrupación y conteo (groupBy + count)</li>
+</ul>
+<p>
+Evaluar:
+</p>
+<ul>
+  <li>Número de particiones del DataFrame</li>
+  <li>Tiempo de ejecución aproximado</li>
+  <li>Impacto de cambiar el número de workers en el resultado y el rendimiento</li>
+</ul>
             </div>
-
         </div>
     </section>
         <div>
             <div class="navigation-buttons">
                 <button onclick="window.location.href='index.html'">Presentación del curso</button>
-                <button onclick="window.location.href='/modulo2/Tema1/M2T1L2.html'">Lección siguiente</button>
+                <button onclick="window.location.href='/modulo2/Tema1/M2T1L6.html'">Lección siguiente</button>
             </div>
         </div>
-
-
-<h1>M2T1L5 — Instalación y configuración de Spark</h1>
-
-<section>
-  <h2>Objetivos</h2>
-  <ul>
-    <li>Instalar Spark en modo local y comprender variables de entorno.</li>
-    <li>Configurar el entorno para ejecutar PySpark y spark-submit.</li>
-  </ul>
-</section>
-
-<section>
-  <h2>Pasos de instalación (resumen)</h2>
-  <ol>
-    <li>Instalar Java (OpenJDK 11+): <code>sudo apt install openjdk-11-jdk</code></li>
-    <li>Descargar Spark precompilado y descomprimir.</li>
-    <li>Configurar <code>SPARK_HOME</code> y añadir <code>$SPARK_HOME/bin</code> al <code>PATH</code>.</li>
-    <li>Probar con <code>pyspark --master local[*]</code>.</li>
-  </ol>
-</section>
-
-<section>
-  <h2>Configuraciones importantes</h2>
-  <ul>
-    <li><code>spark.executor.memory</code> — memoria por executor.</li>
-    <li><code>spark.driver.memory</code> — memoria del driver.</li>
-    <li>Particionado: <code>rdd.repartition(n)</code> o <code>df.repartition(n)</code>.</li>
-  </ul>
-</section>
-
-<section>
-  <h2>Notebook</h2>
-  <p>Notebook de apoyo: <a href="/modulo2/Tema1/notebooks/M2T1L5.ipynb">M2T1L5.ipynb</a></p>
-</section>
-
-<section>
-  <h2>Ejercicio</h2>
-  <p>Instalar Spark en tu máquina virtual y ejecutar el ejemplo del notebook.</p>
-</section>
-
-<section>
-  <h2>Ejercicios propuestos</h2>
-  <ol>
-        <li>Implementar el ejemplo proporcionado.</li>
-        <li>Responder preguntas de reflexión.</li>
-  </ol>
-</section>
-<section>
-  <h2>Referencias</h2>
-  <ul>
-    <li>Documentación oficial: https://spark.apache.org/docs/latest/</li>
-    <li>Tutorial de referencia: https://www.cloudduggu.com/spark/</li>
-  </ul>
-</section>
-</main>
 <div data-include="/partials/footer.html"></div>
 <script src="/js/include.js"></script>
 <script src="/js/script.js"></script>
