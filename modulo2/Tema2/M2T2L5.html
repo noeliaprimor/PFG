@@ -3,17 +3,19 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Cargar y guardar datos en Spark</title>
+  <title>Módulo 2 — Tema 2 — Lección 5: Cargar y guardar datos en Spark</title>
   <link rel="stylesheet" href="/css/styles.css" />
+  <script src="/js/jquery-3.6.0.min.js"></script>
+  <link rel="stylesheet" href="/css/prism-1.29.0.min.css" />
+  <script src="/js/prism-1.29.0.min.js"></script>
 </head>
 <body>
-<div data-include="/partials/header.html"></div>
-<main>
+  <div data-include="/partials/header.html"></div>
+  <main>
 
-
-   <nav class="lesson-nav">
+ <nav class="lesson-nav">
       <div class="crumbs">
-       <a href="/modulo2/Tema1/index.html">Módulo 2</a>
+       <a href="/modulo2/modulo2.html">Módulo 2</a>
          <span class="sep">/</span>
     <a href="/modulo2/Tema2/index.html">Tema 2</a>
     <span class="sep">/</span>
@@ -21,141 +23,80 @@
       </div>
     </nav>
     <br>
-    <br>
 
+    <h2 class="titulos-leccion">Cargar y guardar datos en Spark</h2>
 
-
-
-
-
-    <h2 class="titulos-leccion">Componentes de la pila unificada de Spark</h2>
     <div class="indice-container">
-        <button id="toggle-index">Mostrar Índice<i class="fa-solid fa-caret-down" style="padding-left: 5px; color: #004d35;"></i></button>
-
+        <button id="toggle-index">Mostrar Índice</button>
         <div id="index-container" class="text-cell hidden">
             <hr>
             <ul>
                 <li><a href="#descripcion">Descripción</a></li>
-                <li><a href="#contenidos">Contenidos</a></li>
-                <li><a href="#saber-mas">Para saber más</a></li>
-                <li><a href="#ejercicio-propuesto">Ejercicio propuesto</a></li>
+                <li><a href="#lectura">Lectura</a></li>
+                <li><a href="#escritura">Escritura</a></li>
+                <li><a href="#formato">Formatos y particionado</a></li>
             </ul>
         </div>
     </div>
+
     <section id="descripcion">
-    <!-- Descripcion -->
-        <div class="lesson-container">
-            <h3>Descripción</h3>
-            <hr>
-            <div class="text-cell">
-            <p>DESCRIPCIÓN DE LA LECIÓN</p>
-            </div>
+      <div class="lesson-container">
+        <h3>DESCRIPCIÓN</h3>
+        <hr>
+        <div class="text-cell">
+          <p>Aprenderemos las APIs para leer/escribir CSV, JSON, Parquet y conectar con HDFS, S3 o bases de datos JDBC, así como buenas prácticas de particionado y esquemas.</p>
         </div>
+      </div>
     </section>
-    <section id="contenidos">
 
-         <!-- Contenidos -->
-        <div class="lesson-container">
-
-            <h3>CONTENIDOS</h3>
-            <hr>
-
-            <!-- Blóque con texto -->
-            <div class="text-cell">
-                <h4> Comenzamos con los contenidos </h4>
-               En esta caja metemos contenidos
-            </div>
-           <div class="text-cell"> <h4>que mas metemos</h4>
-             <p>muchos más contenidos</p>
-
-           </div>
-
-
-            </div>
-
-            </div>
-        </div>
-    </section>
-    <section  id="saber-mas">
-         <!-- Para saber más -->
-        <div class="lesson-container indice-modulos">
-            <h3>Para saber más</h3>
-            <hr>
-            <div class="text-cell">
-                <ul>
-                    <li><a href="https://spark-packages.org">Enlaces</a></li>
-                    <li><a href="https://www.usenix.org/legacy/event/hotcloud10/tech/full_papers/Zaharia.pdf">Proyecto de investigación de Spar</a></li>
-                </ul>
-            </div>
-
-        </div>
-    </section>
-    <section id="ejercicio-propuesto">
-
-        <!-- Ejercicio propuesto -->
-        <div class="lesson-container">
-            <h3>Ejercicio Propuesto</h3>
-            <hr>
-            <div class="text-cell">
-              <p>Ejercicio propuesto</p>
-            </div>
-
-        </div>
-    </section>
-        <div>
-            <div class="navigation-buttons">
-                <button onclick="window.location.href='index.html'">Presentación del curso</button>
-                <button onclick="window.location.href='/modulo2/Tema1/M2T1L2.html'">Lección siguiente</button>
-            </div>
-        </div>
-
-
-<h1>M2T2L5 — Cargar y guardar datos en Spark</h1>
-
-<section>
-  <h2>Objetivos</h2>
-  <ul>
-    <li>Aprender a leer y escribir formatos comunes: CSV, JSON, Parquet.</li>
-    <li>Conocer opciones de lectura/escritura y manejo de esquemas.</li>
-  </ul>
-</section>
-
-<section>
-  <h2>Ejemplo: CSV → Parquet</h2>
-  <pre><code>from pyspark.sql import SparkSession
-spark = SparkSession.builder.appName('m2t2l5').getOrCreate()
-df = spark.read.csv('/data/sample.csv', header=True, inferSchema=True)
-df.write.mode('overwrite').parquet('/data/out.parquet')
-spark.stop()
+    <section id="lectura">
+      <div class="lesson-container">
+        <h3>LECTURA</h3>
+        <hr>
+        <div class="text-cell">
+          <pre><code class="language-python python-code"># CSV
+df = spark.read.option('header', True).csv('/data/my.csv')
+# Parquet
+pq = spark.read.parquet('/data/parquet/')
+# JDBC
+jdbc = spark.read.format('jdbc').option('url','jdbc:postgresql://host/db').option('dbtable','table').option('user','u').option('password','p').load()
 </code></pre>
-  <p>Notebook: <a href="/modulo2/Tema2/notebooks/M2T2L5.ipynb">M2T2L5.ipynb</a></p>
-</section>
+        </div>
+      </div>
+    </section>
 
-<section>
-  <h2>Consejos</h2>
-  <ul>
-    <li>Usa Parquet para almacenamiento columnar eficiente.</li>
-    <li>Define esquemas explícitos cuando sea posible para mejorar rendimiento y seguridad.</li>
-  </ul>
-</section>
+    <section id="escritura">
+      <div class="lesson-container">
+        <h3>ESCRITURA</h3>
+        <hr>
+        <div class="text-cell">
+          <pre><code class="language-python python-code"># escribir Parquet particionado
+df.write.mode('overwrite').partitionBy('year','month').parquet('/out/parquet')
+# escribir CSV
+df.write.mode('overwrite').option('header',True).csv('/out/csv')
+</code></pre>
+        </div>
+      </div>
+    </section>
 
-<section>
-  <h2>Ejercicios propuestos</h2>
-  <ol>
-        <li>Implementar el ejemplo proporcionado.</li>
-        <li>Responder preguntas de reflexión.</li>
-  </ol>
-</section>
-<section>
-  <h2>Referencias</h2>
-  <ul>
-    <li>Documentación oficial: https://spark.apache.org/docs/latest/</li>
-    <li>Tutorial de referencia: https://www.cloudduggu.com/spark/</li>
-  </ul>
-</section>
-</main>
-<div data-include="/partials/footer.html"></div>
-<script src="/js/include.js"></script>
-<script src="/js/script.js"></script>
+    <section id="formato">
+      <div class="lesson-container">
+        <h3>FORMATOS Y PARTICIONADO</h3>
+        <hr>
+        <div class="text-cell">
+          <p>Parquet es preferido por su compresión y esquema. El particionado mejora consultas filtradas pero puede generar demasiados ficheros si los buckets son pequeños.</p>
+        </div>
+      </div>
+    </section>
+
+    <div class="navigation-buttons">
+      <button onclick="window.location.href='M2T2L4.html'">Anterior</button>
+      <button onclick="window.location.href='M2T2L6.html'">Siguiente</button>
+    </div>
+
+  </main>
+  <div data-include="/partials/footer.html"></div>
+  <script src="/js/include.js"></script>
+  <script src="/js/script.js"></script>
 </body>
 </html>

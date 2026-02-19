@@ -5,44 +5,90 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>M3T2L1 — Adquisición y transmisión de eventos</title>
   <link rel="stylesheet" href="/css/styles.css" />
+  <script src="/js/jquery-3.6.0.min.js"></script>
+  <link rel="stylesheet" href="/css/prism-1.29.0.min.css" />
+  <script src="/js/prism-1.29.0.min.js"></script>
 </head>
 <body>
 <div data-include="/partials/header.html"></div>
 <main>
   <nav class="lesson-nav">
-    <a href="M3T2L1.html">L1</a> | <a href="M3T2L2.html">L2</a> | <a href="M3T2L3.html">L3</a> | <a href="M3T2L4.html">L4</a> | <a href="M3T2L5.html">L5</a>
-    <span style="float:right"><a href="/modulo3/modulo3.html">Volver a Módulo 3</a> • <a href="/modulo3/Tema2/index.html">Índice del Tema</a></span>
+    <div class="crumbs">
+      <a href="/modulo3/modulo3.html">Módulo 3</a>
+      <span class="sep">/</span>
+      <a href="/modulo3/Tema2/index.html">Tema 2</a>
+      <span class="sep">/</span>
+      <a href="/modulo3/Tema2/M3T2L1.html" class="current" aria-current="page">Lección 1</a>
+    </div>
   </nav>
 
-  <h1>M3T2L1 — Adquisición y transmisión de eventos</h1>
+  <h2 class="titulos-leccion">Adquisición y transmisión de eventos</h2>
 
-  <section>
-    <h2>Objetivos</h2>
-    <ul>
-      <li>Entender cómo se adquieren eventos desde fuentes (sensores, logs, aplicaciones).</li>
-      <li>Conocer patrones de transmisión (batch vs stream) y consideraciones de particionado y retención.</li>
-    </ul>
+  <div class="indice-container">
+    <button id="toggle-index">Mostrar Índice</button>
+    <div id="index-container" class="text-cell hidden">
+      <hr>
+      <ul>
+        <li><a href="#descripcion">Descripción</a></li>
+        <li><a href="#fuentes">Fuentes de eventos</a></li>
+        <li><a href="#ejemplo">Ejemplo productor (Python)</a></li>
+        <li><a href="#ejercicio">Ejercicio</a></li>
+      </ul>
+    </div>
+  </div>
+
+  <section id="descripcion">
+    <div class="lesson-container">
+      <h3>DESCRIPCIÓN</h3>
+      <hr>
+      <div class="text-cell">
+        <p>Se analizan las distintas fuentes de eventos (sensores, aplicaciones, logs), formatos (JSON, Avro, Protobuf) y mecanismos de transmisión (Kafka, MQTT, Kinesis).</p>
+      </div>
+    </div>
   </section>
 
-  <section>
-    <h2>Resumen</h2>
-    <p>La adquisición de eventos implica capturar datos en el origen y enviarlos a un sistema de mensajería (por ejemplo Kafka). Es importante diseñar el esquema de topics y particiones, así como la estrategia de compresión, retención y replicación para garantizar durabilidad y rendimiento.</p>
+  <section id="fuentes">
+    <div class="lesson-container">
+      <h3>FUENTES DE EVENTOS</h3>
+      <hr>
+      <div class="text-cell">
+        <ul>
+          <li>Sensores / IoT</li>
+          <li>Aplicaciones web (clickstreams)</li>
+          <li>Logs y sistemas transaccionales (CDC)</li>
+        </ul>
+      </div>
+    </div>
   </section>
 
-  <section>
-    <h2>Ejemplo: productor simple (python)</h2>
-    <pre><code>from kafka import KafkaProducer
-producer = KafkaProducer(bootstrap_servers='localhost:9092')
-producer.send('topic', b'evento de ejemplo')
-producer.flush()
-</code></pre>
-    <p>Notebook: <a href="/modulo3/Tema2/notebooks/M3T2L1.ipynb">M3T2L1.ipynb</a></p>
+  <section id="ejemplo">
+    <div class="lesson-container">
+      <h3>EJEMPLO: PRODUCTOR SIMPLE (Python)</h3>
+      <hr>
+      <div class="text-cell">
+        <pre><code class="language-python python-code">from kafka import KafkaProducer
+import json
+producer = KafkaProducer(bootstrap_servers='localhost:9092', value_serializer=lambda v: json.dumps(v).encode('utf-8'))
+producer.send('events', {'ts': 1234567890, 'value': 42})
+producer.flush()</code></pre>
+      </div>
+    </div>
   </section>
 
-  <section>
-    <h2>Ejercicio</h2>
-    <p>Diseñar el esquema de topics para una fuente de eventos que tenga distintos tipos de mensajes y picos de tráfico.</p>
+  <section id="ejercicio">
+    <div class="lesson-container">
+      <h3>EJERCICIO</h3>
+      <hr>
+      <div class="text-cell">
+        <p>Diseña un esquema de topics para una fuente con varios tipos de eventos y justifica particionado y retención.</p>
+      </div>
+    </div>
   </section>
+
+  <div class="navigation-buttons">
+    <button onclick="window.location.href='index.html'">Índice del Tema</button>
+    <button onclick="window.location.href='M3T2L2.html'">Siguiente</button>
+  </div>
 
 </main>
 <div data-include="/partials/footer.html"></div>

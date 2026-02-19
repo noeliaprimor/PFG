@@ -3,147 +3,97 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Seguridad y despliegue</title>
+  <title>Módulo 2 — Tema 4 — Lección 2: Seguridad y despliegue</title>
   <link rel="stylesheet" href="/css/styles.css" />
-     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" />
-<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
-
+  <script src="/js/jquery-3.6.0.min.js"></script>
+  <link rel="stylesheet" href="/css/prism-1.29.0.min.css" />
+  <script src="/js/prism-1.29.0.min.js"></script>
 </head>
 <body>
   <div data-include="/partials/header.html"></div>
   <main>
 
-
  <nav class="lesson-nav">
       <div class="crumbs">
        <a href="/modulo2/modulo2.html">Módulo 2</a>
          <span class="sep">/</span>
-    <a href="/modulo2/Tema3/index.html">Tema 3</a>
+    <a href="/modulo2/Tema4/index.html">Tema 4</a>
     <span class="sep">/</span>
-    <a href="/modulo2/Tema3/M2T3L2.html" class="current" aria-current="page">Lección 2</a>
+    <a href="/modulo2/Tema4/M2T4L2.html" class="current" aria-current="page">Lección 2</a>
       </div>
     </nav>
     <br>
-    <br>
-
-
-
-
-
 
     <h2 class="titulos-leccion">Seguridad y despliegue</h2>
+
     <div class="indice-container">
-        <button id="toggle-index">Mostrar Índice<i class="fa-solid fa-caret-down" style="padding-left: 5px; color: #004d35;"></i></button>
-
-        <div id="index-container" class="text-cell hidden">
-            <hr>
-            <ul>
-                <li><a href="#descripcion">Descripción</a></li>
-                <li><a href="#contenidos">Contenidos</a></li>
-                <li><a href="#saber-mas">Para saber más</a></li>
-                <li><a href="#ejercicio-propuesto">Ejercicio propuesto</a></li>
-            </ul>
-        </div>
+      <button id="toggle-index">Mostrar Índice</button>
+      <div id="index-container" class="text-cell hidden">
+        <hr>
+        <ul>
+          <li><a href="#descripcion">Descripción</a></li>
+          <li><a href="#seguridad">Seguridad (Kerberos, TLS)</a></li>
+          <li><a href="#despliegue">Estrategias de despliegue</a></li>
+          <li><a href="#ejercicio">Ejercicio</a></li>
+        </ul>
+      </div>
     </div>
+
     <section id="descripcion">
-    <!-- Descripcion -->
-        <div class="lesson-container">
-            <h3>Descripción</h3>
-            <hr>
-            <div class="text-cell">
-            <p>DESCRIPCIÓN DE LA LECIÓN</p>
-            </div>
+      <div class="lesson-container">
+        <h3>DESCRIPCIÓN</h3>
+        <hr>
+        <div class="text-cell">
+          <p>Repasaremos cómo securizar un cluster Spark (autenticación con Kerberos, cifrado de comunicaciones con TLS, control de acceso), y estrategias de despliegue (YARN, Kubernetes, docker).</p>
         </div>
+      </div>
     </section>
-    <section id="contenidos">
 
-         <!-- Contenidos -->
-        <div class="lesson-container">
-
-            <h3>CONTENIDOS</h3>
-            <hr>
-
-            <!-- Blóque con texto -->
-            <div class="text-cell">
-                <h4> Comenzamos con los contenidos </h4>
-               En esta caja metemos contenidos
-            </div>
-           <div class="text-cell"> <h4>que mas metemos</h4>
-             <p>muchos más contenidos</p>
-
-           </div>
-
-
-            </div>
-
-            </div>
+    <section id="seguridad">
+      <div class="lesson-container">
+        <h3>SEGURIDAD</h3>
+        <hr>
+        <div class="text-cell">
+          <h4>Kerberos</h4>
+          <p>Integración de Spark con Kerberos para autenticación: configurar principal y keytab, y arrancar procesos con kinit.</p>
+          <h4>TLS / SSL</h4>
+          <p>Habilitar TLS para comunicaciones entre driver y executors y para el REST API si es necesario.</p>
+          <pre><code class="language-bash bash-code"># ejemplo: arrancar con keytab
+kinit -kt /etc/security/keytabs/spark.service.keytab spark/hostname@REALM
+spark-submit --principal user@REALM --keytab /path/to/user.keytab ...</code></pre>
         </div>
+      </div>
     </section>
-    <section  id="saber-mas">
-         <!-- Para saber más -->
-        <div class="lesson-container indice-modulos">
-            <h3>Para saber más</h3>
-            <hr>
-            <div class="text-cell">
-                <ul>
-                    <li><a href="https://spark-packages.org">Enlaces</a></li>
-                    <li><a href="https://www.usenix.org/legacy/event/hotcloud10/tech/full_papers/Zaharia.pdf">Proyecto de investigación de Spar</a></li>
-                </ul>
-            </div>
 
+    <section id="despliegue">
+      <div class="lesson-container">
+        <h3>ESTRATEGIAS DE DESPLIEGUE</h3>
+        <hr>
+        <div class="text-cell">
+          <ul>
+            <li><strong>YARN:</strong> integración con Hadoop y gestión centralizada de recursos.</li>
+            <li><strong>Kubernetes:</strong> despliegue moderno con containers y escalado automático.</li>
+            <li><strong>Standalone:</strong> útil para pruebas y entornos pequeños.</li>
+          </ul>
+          <p>Ejemplo de despliegue en Kubernetes con spark-operator o spark-submit con el driver en cluster mode.</p>
         </div>
+      </div>
     </section>
-    <section id="ejercicio-propuesto">
 
-        <!-- Ejercicio propuesto -->
-        <div class="lesson-container">
-            <h3>Ejercicio Propuesto</h3>
-            <hr>
-            <div class="text-cell">
-              <p>Ejercicio propuesto</p>
-            </div>
-
+    <section id="ejercicio">
+      <div class="lesson-container">
+        <h3>EJERCICIO</h3>
+        <hr>
+        <div class="text-cell">
+          <p>Investiga cómo configurar TLS para el Spark UI y documenta los pasos necesarios para habilitarlo en un cluster de prueba.</p>
         </div>
-    </section>
-        <div>
-            <div class="navigation-buttons">
-                <button onclick="window.location.href='index.html'">Presentación del curso</button>
-                <button onclick="window.location.href='/modulo2/Tema4/M2T4L3.html'">Lección siguiente</button>
-            </div>
-        </div>
-
-
-    <h1>M2T4L2 — Seguridad y despliegue</h1>
-
-    <section>
-      <h2>Objetivos</h2>
-      <ul>
-        <li>Entender autenticación (Kerberos), cifrado TLS y control de acceso en clústeres Spark.</li>
-        <li>Aprender buenas prácticas para empaquetar y desplegar aplicaciones (jar, wheel, Docker).</li>
-      </ul>
+      </div>
     </section>
 
-    <section>
-      <h2>Autenticación y autorización</h2>
-      <p>En entornos corporativos se recomienda integrar Spark con Kerberos y habilitar TLS para comunicaciones seguras entre componentes. Configura <code>spark.network.crypto.enabled</code> y parámetros relacionados cuando sea necesario.</p>
-    </section>
-
-    <section>
-      <h2>Despliegue y empaquetado</h2>
-      <p>Empaqueta dependencias con <code>--packages</code>, jars o construye una imagen Docker que contenga tu aplicación y las dependencias necesarias.</p>
-      <pre><code># ejemplo docker build
-Dockerfile:
-FROM openjdk:11-jre
-COPY my_app.jar /app/
-CMD ["spark-submit","--class","com.example.Main","/app/my_app.jar"]
-</code></pre>
-    </section>
-
-    <section>
-      <h2>Notebook</h2>
-      <p>Apoyo: <a href="/modulo2/Tema4/notebooks/M2T4L2.ipynb">M2T4L2.ipynb</a></p>
-    </section>
+    <div class="navigation-buttons">
+      <button onclick="window.location.href='M2T4L1.html'">Anterior</button>
+      <button onclick="window.location.href='M2T4L3.html'">Siguiente</button>
+    </div>
 
   </main>
   <div data-include="/partials/footer.html"></div>

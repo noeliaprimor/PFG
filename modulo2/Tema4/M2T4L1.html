@@ -3,17 +3,15 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Monitorización y configuración de Spark</title>
+  <title>Módulo 2 — Tema 4 — Lección 1: Monitorización y configuración de Spark</title>
   <link rel="stylesheet" href="/css/styles.css" />
-     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" />
-<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
-
+  <script src="/js/jquery-3.6.0.min.js"></script>
+  <link rel="stylesheet" href="/css/prism-1.29.0.min.css" />
+  <script src="/js/prism-1.29.0.min.js"></script>
 </head>
 <body>
   <div data-include="/partials/header.html"></div>
   <main>
-
 
  <nav class="lesson-nav">
       <div class="crumbs">
@@ -25,126 +23,112 @@
       </div>
     </nav>
     <br>
-    <br>
-
-
-
-
-
 
     <h2 class="titulos-leccion">Monitorización y configuración de Spark</h2>
-    <div class="indice-container">
-        <button id="toggle-index">Mostrar Índice<i class="fa-solid fa-caret-down" style="padding-left: 5px; color: #004d35;"></i></button>
 
+    <div class="indice-container">
+        <button id="toggle-index">Mostrar Índice</button>
         <div id="index-container" class="text-cell hidden">
             <hr>
             <ul>
                 <li><a href="#descripcion">Descripción</a></li>
-                <li><a href="#contenidos">Contenidos</a></li>
-                <li><a href="#saber-mas">Para saber más</a></li>
-                <li><a href="#ejercicio-propuesto">Ejercicio propuesto</a></li>
+                <li><a href="#sparkui">Spark UI y métricas</a></li>
+                <li><a href="#metrics">Sistema de métricas (Prometheus)</a></li>
+                <li><a href="#configuracion">Configuración clave</a></li>
+                <li><a href="#comandos">Comandos útiles</a></li>
+                <li><a href="#ejercicio">Ejercicio</a></li>
             </ul>
         </div>
     </div>
+
     <section id="descripcion">
-    <!-- Descripcion -->
-        <div class="lesson-container">
-            <h3>Descripción</h3>
-            <hr>
-            <div class="text-cell">
-            <p>DESCRIPCIÓN DE LA LECIÓN</p>
-            </div>
+      <div class="lesson-container">
+        <h3>DESCRIPCIÓN</h3>
+        <hr>
+        <div class="text-cell">
+          <p>Aprenderás a monitorizar aplicaciones Spark, interpretar el Spark UI, exportar métricas a sistemas externos (Prometheus/Grafana), configurar parámetros de memoria y CPU, y recoger logs para diagnóstico.</p>
         </div>
+      </div>
     </section>
-    <section id="contenidos">
 
-         <!-- Contenidos -->
-        <div class="lesson-container">
-
-            <h3>CONTENIDOS</h3>
-            <hr>
-
-            <!-- Blóque con texto -->
-            <div class="text-cell">
-                <h4> Comenzamos con los contenidos </h4>
-               En esta caja metemos contenidos
-            </div>
-           <div class="text-cell"> <h4>que mas metemos</h4>
-             <p>muchos más contenidos</p>
-
-           </div>
-
-
-            </div>
-
-            </div>
+    <section id="sparkui">
+      <div class="lesson-container">
+        <h3>SPARK UI</h3>
+        <hr>
+        <div class="text-cell">
+          <p>El Spark UI (por defecto en <code>http://[driver]:4040</code> mientras la app está viva) muestra:</p>
+          <ul>
+            <li>Jobs / Stages / Tasks (tiempos, fallos, shuffle)</li>
+            <li>Storage (RDD/DataFrame cached)</li>
+            <li>Environment (configuración de Spark)</li>
+            <li>Executors (uso de CPU/memoria por executor)</li>
+          </ul>
+          <p>Usa el UI para identificar cuellos de botella: tareas lentas, imbalance de particiones o problemas de GC.</p>
         </div>
+      </div>
     </section>
-    <section  id="saber-mas">
-         <!-- Para saber más -->
-        <div class="lesson-container indice-modulos">
-            <h3>Para saber más</h3>
-            <hr>
-            <div class="text-cell">
-                <ul>
-                    <li><a href="https://spark-packages.org">Enlaces</a></li>
-                    <li><a href="https://www.usenix.org/legacy/event/hotcloud10/tech/full_papers/Zaharia.pdf">Proyecto de investigación de Spar</a></li>
-                </ul>
-            </div>
 
+    <section id="metrics">
+      <div class="lesson-container">
+        <h3>SISTEMA DE MÉTRICAS: Prometheus + Grafana</h3>
+        <hr>
+        <div class="text-cell">
+          <p>Spark puede exportar métricas via Dropwizard -> Prometheus collector. Con Grafana puedes crear dashboards de latencia, throughput y utilización.</p>
+          <pre><code class="language-bash bash-code"># ejemplo de configuración en spark-defaults.conf
+spark.metrics.conf.*.sink.prometheusServlet.class=org.apache.spark.metrics.sink.PrometheusServlet
+spark.metrics.conf.*.sink.prometheusServlet.path=/metrics</code></pre>
         </div>
+      </div>
     </section>
-    <section id="ejercicio-propuesto">
 
-        <!-- Ejercicio propuesto -->
-        <div class="lesson-container">
-            <h3>Ejercicio Propuesto</h3>
-            <hr>
-            <div class="text-cell">
-              <p>Ejercicio propuesto</p>
-            </div>
-
+    <section id="configuracion">
+      <div class="lesson-container">
+        <h3>CONFIGURACIÓN CLAVE</h3>
+        <hr>
+        <div class="text-cell">
+          <ul>
+            <li><code>spark.driver.memory</code> y <code>spark.executor.memory</code> — para ajustar memoria del driver y executors.</li>
+            <li><code>spark.executor.cores</code> — núcleos por executor.</li>
+            <li><code>spark.sql.shuffle.partitions</code> — particiones por defecto tras operaciones de shuffle.</li>
+            <li><code>spark.memory.fraction</code> / <code>spark.memory.storageFraction</code> — control de memoria para ejecución vs cache.</li>
+          </ul>
+          <p>Ejemplo: para un cluster con 8 cores por nodo y 32GB RAM, una configuración típica por executor: <code>--executor-memory 8G --executor-cores 4</code>, y ajustar <code>parallelism</code> a un múltiplo de los cores totales.</p>
         </div>
+      </div>
     </section>
-        <div>
-            <div class="navigation-buttons">
-                <button onclick="window.location.href='index.html'">Presentación del curso</button>
-                <button onclick="window.location.href='/modulo2/Tema4/M2T4L2.html'">Lección siguiente</button>
-            </div>
+
+    <section id="comandos">
+      <div class="lesson-container">
+        <h3>COMANDOS ÚTILES</h3>
+        <hr>
+        <div class="text-cell">
+          <pre><code class="language-bash bash-code"># arrancar master y worker (standalone)
+$SPARK_HOME/sbin/start-master.sh
+$SPARK_HOME/sbin/start-worker.sh spark://$(hostname -f):7077
+
+# ver logs (driver / executor)
+tail -f $SPARK_HOME/logs/*driver*.out
+
+# listar aplicaciones en YARN
+yarn application -list</code></pre>
         </div>
-
-
-    <h1>M2T4L1 — Monitorización y configuración de Spark</h1>
-    <p>Introducción a herramientas de monitorización (UI, metrics, logs) y configuración básica.</p>
-
-    <section>
-      <h2>Objetivos</h2>
-      <ul>
-        <li>Conocer las herramientas de monitorización (Spark UI, métricas, logs, Prometheus/Grafana).</li>
-        <li>Aprender parámetros clave de configuración (memoria, paralelismo, tiempo de retención de logs).</li>
-      </ul>
+      </div>
     </section>
 
-    <section>
-      <h2>Spark UI y métricas</h2>
-      <p>La interfaz web de Spark por defecto está disponible en <code>http://[driver-host]:4040</code> mientras la aplicación está ejecutándose. Muestra DAGs, etapas, tareas, tiempos por etapa, y métricas de almacenamiento/ejecutor.</p>
+    <section id="ejercicio">
+      <div class="lesson-container">
+        <h3>EJERCICIO PROPUESTO</h3>
+        <hr>
+        <div class="text-cell">
+          <p>Despliega una aplicación de ejemplo y monitoriza su ejecución con el Spark UI. Extrae métricas básicas (tiempo total, tiempo por stage) y documenta las configuraciones usadas.</p>
+        </div>
+      </div>
     </section>
 
-    <section>
-      <h2>Comandos útiles</h2>
-      <pre><code># arrancar master y workers (scripts en $SPARK_HOME/sbin)
-./sbin/start-master.sh
-./sbin/start-slave.sh spark://[master-host]:7077
-
-# ver logs
-tail -f &#36;SPARK_HOME/logs/&#42;
-</code></pre>
-    </section>
-
-    <section>
-      <h2>Notebook</h2>
-      <p>Notebook de apoyo: <a href="/modulo2/Tema4/notebooks/M2T4L1.ipynb">M2T4L1.ipynb</a></p>
-    </section>
+    <div class="navigation-buttons">
+      <button onclick="window.location.href='index.html'">Índice del Tema</button>
+      <button onclick="window.location.href='M2T4L2.html'">Siguiente</button>
+    </div>
 
   </main>
   <div data-include="/partials/footer.html"></div>

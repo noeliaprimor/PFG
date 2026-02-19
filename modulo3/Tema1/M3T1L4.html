@@ -5,33 +5,86 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>M3T1L4 — Introducción a Spark Streaming</title>
   <link rel="stylesheet" href="/css/styles.css" />
+  <script src="/js/jquery-3.6.0.min.js"></script>
+  <link rel="stylesheet" href="/css/prism-1.29.0.min.css" />
+  <script src="/js/prism-1.29.0.min.js"></script>
 </head>
 <body>
 <div data-include="/partials/header.html"></div>
 <main>
-      <a href="/modulo3/Tema1/M3T1L1.html">1. Introducción a procesamiento en tiempo real</a> | <a href="/modulo3/Tema1/M3T1L2.html">2. Arquitecturas Lambda y Kappa</a> | <a href="/modulo3/Tema1/M3T1L3.html">3. Introducción a Kafka</a> | <a href="/modulo3/Tema1/M3T1L4.html">4. Introducción a Spark Streaming</a> | <a href="/modulo3/Tema1/M3T1L5.html">5. Recursos y lecturas</a> | <a href="/modulo3/Tema1/M3T1L6.html">6. Ejercicio propuesto</a>
-      <span style="float:right"><a href="/modulo3/modulo3.html">Volver a Módulo 3</a> • <a href="/modulo3/Tema1/index.html">Índice del Tema</a></span>
+  <nav class="lesson-nav">
+    <div class="crumbs">
+      <a href="/modulo3/modulo3.html">Módulo 3</a>
+      <span class="sep">/</span>
+      <a href="/modulo3/Tema1/index.html">Tema 1</a>
+      <span class="sep">/</span>
+      <a href="/modulo3/Tema1/M3T1L4.html" class="current" aria-current="page">Lección 4</a>
+    </div>
+  </nav>
 
-<h1>M3T1L4 — Introducción a Spark Streaming</h1>
+  <h2 class="titulos-leccion">Introducción a Spark Streaming / Structured Streaming</h2>
 
-<section>
-  <h2>Objetivos</h2>
-  <ul>
-    <li>Conocer Structured Streaming y diferencias con DStreams (API antigua).</li>
-    <li>Aprender a leer desde Kafka y escribir a sinks.</li>
-  </ul>
-</section>
+  <div class="indice-container">
+    <button id="toggle-index">Mostrar Índice</button>
+    <div id="index-container" class="text-cell hidden">
+      <hr>
+      <ul>
+        <li><a href="#descripcion">Descripción</a></li>
+        <li><a href="#modelos">Modelos de procesamiento</a></li>
+        <li><a href="#ejemplo">Ejemplo</a></li>
+        <li><a href="#notebook">Notebook</a></li>
+      </ul>
+    </div>
+  </div>
 
-<section>
-  <h2>Ejemplo (conceptual)</h2>
-  <pre><code>from pyspark.sql import SparkSession
+  <section id="descripcion">
+    <div class="lesson-container">
+      <h3>DESCRIPCIÓN</h3>
+      <hr>
+      <div class="text-cell">
+        <p>Presentaremos las diferencias entre DStreams (antiguo) y Structured Streaming (moderno), y las capacidades para ventanas, watermark y semánticas de entrega (al menos una vez / exactamente una vez).</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="modelos">
+    <div class="lesson-container">
+      <h3>MODELOS DE PROCESAMIENTO</h3>
+      <hr>
+      <div class="text-cell">
+        <p>Structured Streaming trata el stream como una tabla en crecimiento; soporta operaciones declarativas y se integra con DataFrame API.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="ejemplo">
+    <div class="lesson-container">
+      <h3>EJEMPLO</h3>
+      <hr>
+      <div class="text-cell">
+        <pre><code class="language-python python-code">from pyspark.sql import SparkSession
 spark = SparkSession.builder.appName('m3t1l4').getOrCreate()
-# leer desde kafka
-df = spark.readStream.format('kafka').option('kafka.bootstrap.servers','localhost:9092').option('subscribe','topic').load()
-# procesar y escribir a sink
+df = spark.readStream.format('kafka').option('kafka.bootstrap.servers','localhost:9092').option('subscribe','events').load()
+# parse, transform, write stream
 </code></pre>
-<p>Notebook: <a href="/modulo3/Tema1/notebooks/M3T1L4.ipynb">M3T1L4.ipynb</a></p>
-</section>
+      </div>
+    </div>
+  </section>
+
+  <section id="notebook">
+    <div class="lesson-container">
+      <h3>NOTEBOOK</h3>
+      <hr>
+      <div class="text-cell">
+        <p>Ejemplo práctico: <a href="/modulo3/Tema1/notebooks/M3T1L4.ipynb">M3T1L4.ipynb</a></p>
+      </div>
+    </div>
+  </section>
+
+  <div class="navigation-buttons">
+    <button onclick="window.location.href='M3T1L3.html'">Anterior</button>
+    <button onclick="window.location.href='M3T1L5.html'">Siguiente</button>
+  </div>
 
 </main>
 <div data-include="/partials/footer.html"></div>

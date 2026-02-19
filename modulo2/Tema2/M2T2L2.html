@@ -3,17 +3,19 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Desarrollo y ejecución de una aplicación Spark</title>
+  <title>Módulo 2 — Tema 2 — Lección 2: Desarrollo y ejecución de una aplicación Spark</title>
   <link rel="stylesheet" href="/css/styles.css" />
+  <script src="/js/jquery-3.6.0.min.js"></script>
+  <link rel="stylesheet" href="/css/prism-1.29.0.min.css" />
+  <script src="/js/prism-1.29.0.min.js"></script>
 </head>
 <body>
   <div data-include="/partials/header.html"></div>
   <main>
 
-
-  <nav class="lesson-nav">
+ <nav class="lesson-nav">
       <div class="crumbs">
-       <a href="/modulo2/Tema1/index.html">Módulo 2</a>
+       <a href="/modulo2/modulo2.html">Módulo 2</a>
          <span class="sep">/</span>
     <a href="/modulo2/Tema2/index.html">Tema 2</a>
     <span class="sep">/</span>
@@ -21,135 +23,112 @@
       </div>
     </nav>
     <br>
-    <br>
-
-
-
-
-
 
     <h2 class="titulos-leccion">Desarrollo y ejecución de una aplicación Spark</h2>
-    <div class="indice-container">
-        <button id="toggle-index">Mostrar Índice<i class="fa-solid fa-caret-down" style="padding-left: 5px; color: #004d35;"></i></button>
 
+    <div class="indice-container">
+        <button id="toggle-index">Mostrar Índice</button>
         <div id="index-container" class="text-cell hidden">
             <hr>
             <ul>
                 <li><a href="#descripcion">Descripción</a></li>
-                <li><a href="#contenidos">Contenidos</a></li>
-                <li><a href="#saber-mas">Para saber más</a></li>
-                <li><a href="#ejercicio-propuesto">Ejercicio propuesto</a></li>
+                <li><a href="#estructura">Estructura del proyecto</a></li>
+                <li><a href="#ejecucion">Ejecución</a></li>
+                <li><a href="#notebook">Notebook</a></li>
+                <li><a href="#ejercicios">Ejercicios</a></li>
             </ul>
         </div>
     </div>
+
     <section id="descripcion">
-    <!-- Descripcion -->
-        <div class="lesson-container">
-            <h3>Descripción</h3>
-            <hr>
-            <div class="text-cell">
-            <p>DESCRIPCIÓN DE LA LECIÓN</p>
-            </div>
+      <div class="lesson-container">
+        <h3>DESCRIPCIÓN</h3>
+        <hr>
+        <div class="text-cell">
+          <p>En esta lección veremos cómo diseñar, probar y desplegar una aplicación Spark, desde el desarrollo local hasta su ejecución en un clúster, con recomendaciones sobre empaquetado, dependencias y buenas prácticas.</p>
         </div>
+      </div>
     </section>
-    <section id="contenidos">
 
-         <!-- Contenidos -->
-        <div class="lesson-container">
-
-            <h3>CONTENIDOS</h3>
-            <hr>
-
-            <!-- Blóque con texto -->
-            <div class="text-cell">
-                <h4> Comenzamos con los contenidos </h4>
-               En esta caja metemos contenidos
-            </div>
-           <div class="text-cell"> <h4>que mas metemos</h4>
-             <p>muchos más contenidos</p>
-
-           </div>
-
-
-            </div>
-
-            </div>
-        </div>
-    </section>
-    <section  id="saber-mas">
-         <!-- Para saber más -->
-        <div class="lesson-container indice-modulos">
-            <h3>Para saber más</h3>
-            <hr>
-            <div class="text-cell">
-                <ul>
-                    <li><a href="https://spark-packages.org">Enlaces</a></li>
-                    <li><a href="https://www.usenix.org/legacy/event/hotcloud10/tech/full_papers/Zaharia.pdf">Proyecto de investigación de Spar</a></li>
-                </ul>
-            </div>
-
-        </div>
-    </section>
-    <section id="ejercicio-propuesto">
-
-        <!-- Ejercicio propuesto -->
-        <div class="lesson-container">
-            <h3>Ejercicio Propuesto</h3>
-            <hr>
-            <div class="text-cell">
-              <p>Ejercicio propuesto</p>
-            </div>
-
-        </div>
-    </section>
-        <div>
-            <div class="navigation-buttons">
-                <button onclick="window.location.href='index.html'">Presentación del curso</button>
-                <button onclick="window.location.href='/modulo2/Tema2/M2T2L3.html'">Lección siguiente</button>
-            </div>
+    <section id="estructura">
+      <div class="lesson-container">
+        <h3>ESTRUCTURA DEL PROYECTO</h3>
+        <hr>
+        <div class="text-cell">
+          <h4>Python (PySpark)</h4>
+          <pre><code class="language-bash bash-code">myapp/
+  app/
+    jobs.py
+  requirements.txt
+  Dockerfile
+  run.sh</code></pre>
+          <p>Incluye un script <code>run.sh</code> para ejecutar en distintos entornos y un <code>requirements.txt</code> para dependencias.</p>
         </div>
 
-
-    <section>
-      <h2>Objetivos</h2>
-      <ul>
-        <li>Conocer la estructura mínima de una aplicación Spark en Python y Scala.</li>
-        <li>Aprender a probar localmente y desplegar con spark-submit.</li>
-      </ul>
+        <div class="text-cell">
+          <h4>Scala (sbt)</h4>
+          <pre><code class="language-bash bash-code">myapp/
+  build.sbt
+  src/main/scala/com/example/MyApp.scala
+  src/main/resources/</code></pre>
+        </div>
+      </div>
     </section>
 
-    <section>
-      <h2>Estructura de proyecto (Python)</h2>
-      <pre><code>my_app/
-  ├─ src/
-  │   └─ app.py
-  ├─ requirements.txt
-  └─ Dockerfile
+    <section id="ejecucion">
+      <div class="lesson-container">
+        <h3>EJECUCIÓN EN LOCAL Y CLÚSTER</h3>
+        <hr>
+        <div class="text-cell">
+          <h4>Modo local (PySpark)</h4>
+          <pre><code class="language-bash bash-code">pyspark --master local[*]
+python app/jobs.py --input data/input.csv --output out/</code></pre>
+        </div>
+        <div class="text-cell">
+          <h4>Uso de spark-submit</h4>
+          <pre><code class="language-bash bash-code">/opt/spark/bin/spark-submit \
+  --master spark://master:7077 \
+  --deploy-mode cluster \
+  --num-executors 4 \
+  --executor-memory 2G \
+  app/jobs.py</code></pre>
+        </div>
 
-# app.py
-from pyspark.sql import SparkSession
-if __name__ == '__main__':
-    spark = SparkSession.builder.appName('my_app').getOrCreate()
-    # lógica
-    spark.stop()
-</code></pre>
+        <div class="text-cell">
+          <h4>Depuración y logs</h4>
+          <p>Usa el UI (por defecto 4040) y configura niveles de log a WARN/INFO en <code>log4j.properties</code>.</p>
+        </div>
+      </div>
     </section>
 
-    <section>
-      <h2>Ejemplo rápido</h2>
-      <pre><code>from pyspark.sql import SparkSession
-spark = SparkSession.builder.appName('m2t2l2').getOrCreate()
-df = spark.createDataFrame([(1,'x'),(2,'y')], ['id','val'])
-df.show()
-spark.stop()
-</code></pre>
-      <p>Notebook: <a href="/modulo2/Tema2/notebooks/M2T2L2.ipynb">M2T2L2.ipynb</a></p>
+    <section id="notebook">
+      <div class="lesson-container">
+        <h3>NOTEBOOK</h3>
+        <hr>
+        <div class="text-cell">
+          <p>Notebook de ejemplo con un pipeline básico: <a href="/modulo2/Tema2/notebooks/M2T2L2.ipynb">M2T2L2.ipynb</a></p>
+        </div>
+      </div>
     </section>
 
-    <section>
-      <h2>Despliegue</h2>
-      <p>Usar <code>spark-submit</code> o crear una imagen Docker con Spark y lanzar en Kubernetes.</p>
+    <section id="ejercicios">
+      <div class="lesson-container">
+        <h3>EJERCICIOS</h3>
+        <hr>
+        <div class="text-cell">
+          <ol>
+            <li>Implementa una aplicación que lea CSVs, aplique transformaciones y escriba Parquet.</li>
+            <li>Ejecuta la misma aplicación en modo local y con <code>spark-submit</code> (simula clúster con Docker si es necesario).</li>
+          </ol>
+        </div>
+      </div>
     </section>
+
+    <div class="navigation-buttons">
+      <button onclick="window.location.href='M2T2L1.html'">Anterior</button>
+      <button onclick="window.location.href='M2T2L3.html'">Siguiente</button>
+    </div>
+
   </main>
   <div data-include="/partials/footer.html"></div>
   <script src="/js/include.js"></script>

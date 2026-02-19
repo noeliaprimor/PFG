@@ -5,45 +5,108 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>M3T1L1 — Introducción a procesamiento en tiempo real</title>
   <link rel="stylesheet" href="/css/styles.css" />
+  <script src="/js/jquery-3.6.0.min.js"></script>
+  <link rel="stylesheet" href="/css/prism-1.29.0.min.css" />
+  <script src="/js/prism-1.29.0.min.js"></script>
 </head>
 <body>
 <div data-include="/partials/header.html"></div>
 <main>
-      <a href="/modulo3/Tema1/M3T1L1.html">1. Introducción a procesamiento en tiempo real</a> | <a href="/modulo3/Tema1/M3T1L2.html">2. Arquitecturas Lambda y Kappa</a> | <a href="/modulo3/Tema1/M3T1L3.html">3. Introducción a Kafka</a> | <a href="/modulo3/Tema1/M3T1L4.html">4. Introducción a Spark Streaming</a> | <a href="/modulo3/Tema1/M3T1L5.html">5. Recursos y lecturas</a> | <a href="/modulo3/Tema1/M3T1L6.html">6. Ejercicio propuesto</a>
-      <span style="float:right"><a href="/modulo3/modulo3.html">Volver a Módulo 3</a> • <a href="/modulo3/Tema1/index.html">Índice del Tema</a></span>
+  <nav class="lesson-nav">
+    <div class="crumbs">
+      <a href="/modulo3/modulo3.html">Módulo 3</a>
+      <span class="sep">/</span>
+      <a href="/modulo3/Tema1/index.html">Tema 1</a>
+      <span class="sep">/</span>
+      <a href="/modulo3/Tema1/M3T1L1.html" class="current" aria-current="page">Lección 1</a>
+    </div>
+  </nav>
 
-<h1>M3T1L1 — Introducción a procesamiento en tiempo real</h1>
+  <h2 class="titulos-leccion">Introducción a procesamiento en tiempo real</h2>
 
-<section>
-  <h2>Objetivos</h2>
-  <ul>
-    <li>Diferenciar procesamiento en batch y en tiempo real.</li>
-    <li>Conocer requisitos típicos (latencia, throughput, tolerancia a fallos).</li>
-  </ul>
-</section>
+  <div class="indice-container">
+    <button id="toggle-index">Mostrar Índice</button>
+    <div id="index-container" class="text-cell hidden">
+      <hr>
+      <ul>
+        <li><a href="#descripcion">Descripción</a></li>
+        <li><a href="#conceptos">Conceptos clave</a></li>
+        <li><a href="#ejemplo">Ejemplo PySpark</a></li>
+        <li><a href="#notebook">Notebook</a></li>
+        <li><a href="#ejercicio">Ejercicio</a></li>
+      </ul>
+    </div>
+  </div>
 
-<section>
-  <h2>Resumen</h2>
-  <p>El procesamiento en tiempo real (stream processing) implica consumir eventos continuamente y procesarlos con baja latencia. A diferencia del batch, donde se procesan grandes volúmenes en ventanas más largas, el streaming se orienta a respuestas rápidas y a menudo requiere arquitectura especializada (mensajería, particionado, procesamiento por ventana).</p>
-</section>
+  <section id="descripcion">
+    <div class="lesson-container">
+      <h3>DESCRIPCIÓN</h3>
+      <hr>
+      <div class="text-cell">
+        <p>Este tema presenta las bases del procesamiento en tiempo real: ingestión continua de eventos, procesamiento con baja latencia y entrega de resultados. Compararemos modelos batch vs stream y veremos requisitos de disponibilidad, latencia y escalabilidad.</p>
+      </div>
+    </div>
+  </section>
 
-<section>
-  <h2>Ejemplo conceptual (PySpark - Structured Streaming)</h2>
-  <pre><code>from pyspark.sql import SparkSession
+  <section id="conceptos">
+    <div class="lesson-container">
+      <h3>CONCEPTOS CLAVE</h3>
+      <hr>
+      <div class="text-cell">
+        <ul>
+          <li><strong>Latencia:</strong> tiempo desde la llegada del evento hasta el resultado.</li>
+          <li><strong>Throughput:</strong> tasa de eventos procesados por segundo.</li>
+          <li><strong>Tolerancia a fallos:</strong> reintentos, checkpoints y retención de estado.</li>
+          <li><strong>Orden de eventos:</strong> ventanas, watermarking y gestión de datos fuera de orden.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section id="ejemplo">
+    <div class="lesson-container">
+      <h3>EJEMPLO CONSTRUCTIVO (PySpark - Structured Streaming)</h3>
+      <hr>
+      <div class="text-cell">
+        <pre><code class="language-python python-code">from pyspark.sql import SparkSession
+from pyspark.sql.functions import explode, split
 spark = SparkSession.builder.appName('m3t1l1').getOrCreate()
 lines = spark.readStream.format('socket').option('host','localhost').option('port',9999).load()
-words = lines.selectExpr('explode(split(value, "\s+")) as word')
+words = lines.select(explode(split(lines.value, '\\s+')).alias('word'))
 counts = words.groupBy('word').count()
 query = counts.writeStream.format('console').outputMode('complete').start()
-# query.awaitTermination()
-</code></pre>
-  <p>Notebook: <a href="/modulo3/Tema1/notebooks/M3T1L1.ipynb">M3T1L1.ipynb</a></p>
-</section>
+# query.awaitTermination()</code></pre>
+      </div>
+    </div>
+  </section>
 
-<section>
-  <h2>Ejercicio propuesto</h2>
-  <p>Piensa en un caso práctico real (p.ej. métricas de sensores) y diseña las necesidades de latencia y almacenamiento: ¿batch, micro-batch o streaming continuo?</p>
-</section>
+  <section id="notebook">
+    <div class="lesson-container">
+      <h3>NOTEBOOK</h3>
+      <hr>
+      <div class="text-cell">
+        <p>Material de apoyo: <a href="/modulo3/Tema1/notebooks/M3T1L1.ipynb">M3T1L1.ipynb</a></p>
+      </div>
+    </div>
+  </section>
+
+  <section id="ejercicio">
+    <div class="lesson-container">
+      <h3>EJERCICIO PROPUESTO</h3>
+      <hr>
+      <div class="text-cell">
+        <ol>
+          <li>Describe un caso real (aplicación) y define los requisitos de latencia y almacenamiento.</li>
+          <li>Propón una arquitectura (componentes y retos) y justifica tus decisiones.</li>
+        </ol>
+      </div>
+    </div>
+  </section>
+
+  <div class="navigation-buttons">
+    <button onclick="window.location.href='index.html'">Índice del Tema</button>
+    <button onclick="window.location.href='M3T1L2.html'">Siguiente</button>
+  </div>
 
 </main>
 <div data-include="/partials/footer.html"></div>

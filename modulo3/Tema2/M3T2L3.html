@@ -5,43 +5,84 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>M3T2L3 — Sinks y conectores</title>
   <link rel="stylesheet" href="/css/styles.css" />
+  <script src="/js/jquery-3.6.0.min.js"></script>
+  <link rel="stylesheet" href="/css/prism-1.29.0.min.css" />
+  <script src="/js/prism-1.29.0.min.js"></script>
 </head>
 <body>
 <div data-include="/partials/header.html"></div>
 <main>
   <nav class="lesson-nav">
-    <a href="M3T2L1.html">L1</a> | <a href="M3T2L2.html">L2</a> | <a href="M3T2L3.html">L3</a> | <a href="M3T2L4.html">L4</a> | <a href="M3T2L5.html">L5</a>
-    <span style="float:right"><a href="/modulo3/modulo3.html">Volver a Módulo 3</a> • <a href="/modulo3/Tema2/index.html">Índice del Tema</a></span>
+    <div class="crumbs">
+      <a href="/modulo3/modulo3.html">Módulo 3</a>
+      <span class="sep">/</span>
+      <a href="/modulo3/Tema2/index.html">Tema 2</a>
+      <span class="sep">/</span>
+      <a href="/modulo3/Tema2/M3T2L3.html" class="current" aria-current="page">Lección 3</a>
+    </div>
   </nav>
 
-  <h1>M3T2L3 — Sinks y conectores</h1>
+  <h2 class="titulos-leccion">Sinks y conectores</h2>
 
-  <section>
-    <h2>Objetivos</h2>
-    <ul>
-      <li>Conocer conectores comunes: Kafka Connect, Flink connectors, y sinks como S3, HDFS, Elasticsearch.</li>
-    </ul>
+  <div class="indice-container">
+    <button id="toggle-index">Mostrar Índice</button>
+    <div id="index-container" class="text-cell hidden">
+      <hr>
+      <ul>
+        <li><a href="#connect">Kafka Connect</a></li>
+        <li><a href="#sinks">Sinks comunes</a></li>
+        <li><a href="#ejemplo">Ejemplo de configuración</a></li>
+      </ul>
+    </div>
+  </div>
+
+  <section id="connect">
+    <div class="lesson-container">
+      <h3>KAFKA CONNECT</h3>
+      <hr>
+      <div class="text-cell">
+        <p>Framework para integrar Kafka con sistemas externos mediante connectors: source (extraen datos) y sink (escriben datos).</p>
+      </div>
+    </div>
   </section>
 
-  <section>
-    <h2>Resumen</h2>
-    <p>Para integrar sistemas en un pipeline de eventos, Kafka Connect facilita la extracción y carga a destinos (sinks). Existen conectores para S3, HDFS, Elasticsearch, y bases de datos; seleccionado según latencia y formato requerido.</p>
+  <section id="sinks">
+    <div class="lesson-container">
+      <h3>SINKS COMUNES</h3>
+      <hr>
+      <div class="text-cell">
+        <ul>
+          <li>S3 / HDFS (almacenamiento en ficheros)</li>
+          <li>JDBC (bases relacionales)</li>
+          <li>Elasticsearch (búsqueda y analítica)</li>
+        </ul>
+      </div>
+    </div>
   </section>
 
-  <section>
-    <h2>Ejemplo: configuración básica de un sink (conceptual)</h2>
-    <pre><code>{
+  <section id="ejemplo">
+    <div class="lesson-container">
+      <h3>EJEMPLO: CONFIGURACIÓN BÁSICA</h3>
+      <hr>
+      <div class="text-cell">
+        <pre><code class="language-json">{
   "name": "s3-sink",
   "config": {
     "connector.class": "io.confluent.connect.s3.S3SinkConnector",
     "tasks.max": "1",
-    "topics": "topic",
+    "topics": "events",
     "s3.bucket.name": "my-bucket"
   }
 }
 </code></pre>
-    <p>Notebook: <a href="/modulo3/Tema2/notebooks/M3T2L3.ipynb">M3T2L3.ipynb</a></p>
+      </div>
+    </div>
   </section>
+
+  <div class="navigation-buttons">
+    <button onclick="window.location.href='M3T2L2.html'">Anterior</button>
+    <button onclick="window.location.href='M3T2L4.html'">Siguiente</button>
+  </div>
 
 </main>
 <div data-include="/partials/footer.html"></div>

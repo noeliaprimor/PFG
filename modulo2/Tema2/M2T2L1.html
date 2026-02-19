@@ -3,17 +3,19 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Entornos de programación de aplicaciones Spark</title>
+  <title>Módulo 2 — Tema 2 — Lección 1: Entornos de programación de aplicaciones Spark</title>
   <link rel="stylesheet" href="/css/styles.css" />
+  <script src="/js/jquery-3.6.0.min.js"></script>
+  <link rel="stylesheet" href="/css/prism-1.29.0.min.css" />
+  <script src="/js/prism-1.29.0.min.js"></script>
 </head>
 <body>
   <div data-include="/partials/header.html"></div>
   <main>
 
-
  <nav class="lesson-nav">
       <div class="crumbs">
-       <a href="/modulo2/Tema1/index.html">Módulo 2</a>
+       <a href="/modulo2/modulo2.html">Módulo 2</a>
          <span class="sep">/</span>
     <a href="/modulo2/Tema2/index.html">Tema 2</a>
     <span class="sep">/</span>
@@ -21,131 +23,109 @@
       </div>
     </nav>
     <br>
-    <br>
-
-
-
-
-
 
     <h2 class="titulos-leccion">Entornos de programación de aplicaciones Spark</h2>
-    <div class="indice-container">
-        <button id="toggle-index">Mostrar Índice<i class="fa-solid fa-caret-down" style="padding-left: 5px; color: #004d35;"></i></button>
 
+    <div class="indice-container">
+        <button id="toggle-index">Mostrar Índice</button>
         <div id="index-container" class="text-cell hidden">
             <hr>
             <ul>
                 <li><a href="#descripcion">Descripción</a></li>
                 <li><a href="#contenidos">Contenidos</a></li>
-                <li><a href="#saber-mas">Para saber más</a></li>
-                <li><a href="#ejercicio-propuesto">Ejercicio propuesto</a></li>
+                <li><a href="#comandos">Comandos</a></li>
+                <li><a href="#notebook">Notebook</a></li>
+                <li><a href="#ejercicios">Ejercicios</a></li>
             </ul>
         </div>
     </div>
+
     <section id="descripcion">
-    <!-- Descripcion -->
         <div class="lesson-container">
-            <h3>Descripción</h3>
+            <h3>DESCRIPCIÓN</h3>
             <hr>
             <div class="text-cell">
-            <p>DESCRIPCIÓN DE LA LECIÓN</p>
+                <p>En esta lección revisamos los entornos de desarrollo y ejecución para aplicaciones Spark: shells interactivas, proyectos empaquetados (sbt/maven para Scala, pip/virtualenv para Python), contenedores y despliegue en clústeres (YARN, Kubernetes, Standalone).</p>
             </div>
         </div>
     </section>
+
     <section id="contenidos">
-
-         <!-- Contenidos -->
         <div class="lesson-container">
-
             <h3>CONTENIDOS</h3>
             <hr>
-
-            <!-- Blóque con texto -->
             <div class="text-cell">
-                <h4> Comenzamos con los contenidos </h4>
-               En esta caja metemos contenidos
-            </div>
-           <div class="text-cell"> <h4>que mas metemos</h4>
-             <p>muchos más contenidos</p>
-
-           </div>
-
-
+                <h4>Entornos locales y remotos</h4>
+                <p>Desarrollo local con <code>pyspark</code> o <code>spark-shell</code> para prototipado. Empaquetado con <code>spark-submit</code> para producción. Uso de contenedores Docker para reproducibilidad.</p>
             </div>
 
-            </div>
-        </div>
-    </section>
-    <section  id="saber-mas">
-         <!-- Para saber más -->
-        <div class="lesson-container indice-modulos">
-            <h3>Para saber más</h3>
-            <hr>
             <div class="text-cell">
-                <ul>
-                    <li><a href="https://spark-packages.org">Enlaces</a></li>
-                    <li><a href="https://www.usenix.org/legacy/event/hotcloud10/tech/full_papers/Zaharia.pdf">Proyecto de investigación de Spar</a></li>
-                </ul>
-            </div>
-
-        </div>
-    </section>
-    <section id="ejercicio-propuesto">
-
-        <!-- Ejercicio propuesto -->
-        <div class="lesson-container">
-            <h3>Ejercicio Propuesto</h3>
-            <hr>
-            <div class="text-cell">
-              <p>Ejercicio propuesto</p>
-            </div>
-
-        </div>
-    </section>
-        <div>
-            <div class="navigation-buttons">
-                <button onclick="window.location.href='index.html'">Presentación del curso</button>
-                <button onclick="window.location.href='/modulo2/Tema2/M2T2L2.html'">Lección siguiente</button>
-            </div>
-        </div>
-
-
-    <section>
-      <h2>Objetivos</h2>
-      <ul>
-        <li>Conocer cómo organizar un proyecto Spark (módulos, dependencias).</li>
-        <li>Configurar entornos locales y de producción.</li>
-      </ul>
-    </section>
-
-    <section>
-      <h2>Resumen</h2>
-      <p>Al desarrollar aplicaciones Spark es importante estructurar el proyecto, gestionar dependencias (sbt / pip) y preparar el despliegue (spark-submit, contenedores, clusters).</p>
-    </section>
-
-    <section>
-      <h2>Comandos y ejemplos</h2>
-      <pre><code># Crear virtualenv para dependencias Python
-python3 -m venv venv
-source venv/bin/activate
-pip install pyspark
-
-# Ejecutar app
-python my_app.py
+                <h4>Estructura de proyecto (Python)</h4>
+                <pre><code class="language-bash bash-code">myproject/
+  app/
+    __init__.py
+    job.py
+  requirements.txt
+  setup.py
+  Dockerfile
 </code></pre>
+            </div>
+
+            <div class="text-cell">
+                <h4>Estructura de proyecto (Scala - sbt)</h4>
+                <pre><code class="language-bash bash-code">project/
+build.sbt
+src/main/scala/com/example/MyApp.scala
+</code></pre>
+            </div>
+        </div>
     </section>
 
-    <section>
-      <h2>Notebook</h2>
-      <p>Ejemplo: <a href="/modulo2/Tema2/notebooks/M2T2L1.ipynb">M2T2L1.ipynb</a></p>
+    <section id="comandos">
+      <div class="lesson-container">
+        <h3>COMANDOS Y EJEMPLOS</h3>
+        <hr>
+        <div class="text-cell">
+          <h4>Instalar PySpark en virtualenv</h4>
+          <pre><code class="language-bash bash-code">python3 -m venv venv
+source venv/bin/activate
+pip install pyspark</code></pre>
+        </div>
+        <div class="text-cell">
+          <h4>Ejecutar con spark-submit</h4>
+          <pre><code class="language-bash bash-code">/opt/spark/bin/spark-submit --master yarn --deploy-mode cluster --conf spark.executor.memory=2g myapp.py</code></pre>
+        </div>
+      </div>
     </section>
 
-    <section>
-      <h2>Ejercicios</h2>
-      <ol>
-        <li>Crear una estructura de proyecto y un script minimal que ejecute un job Spark.</li>
-      </ol>
+    <section id="notebook">
+      <div class="lesson-container">
+        <h3>NOTEBOOK</h3>
+        <hr>
+        <div class="text-cell">
+          <p>Descarga y prueba el notebook de ejemplo: <a href="/modulo2/Tema2/notebooks/M2T2L1.ipynb">M2T2L1.ipynb</a></p>
+        </div>
+      </div>
     </section>
+
+    <section id="ejercicios">
+      <div class="lesson-container">
+        <h3>EJERCICIOS</h3>
+        <hr>
+        <div class="text-cell">
+          <ol>
+            <li>Crea un entorno virtual y ejecuta un script PySpark que cuente líneas de un fichero local.</li>
+            <li>Empaqueta una aplicación Scala con sbt y ejecútala con <code>spark-submit</code> en modo local.</li>
+          </ol>
+        </div>
+      </div>
+    </section>
+
+    <div class="navigation-buttons">
+      <button onclick="window.location.href='index.html'">Índice del Tema</button>
+      <button onclick="window.location.href='/modulo2/Tema2/M2T2L2.html'">Lección siguiente</button>
+    </div>
+
   </main>
   <div data-include="/partials/footer.html"></div>
   <script src="/js/include.js"></script>

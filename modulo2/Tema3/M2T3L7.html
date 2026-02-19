@@ -3,21 +3,19 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Ejercicio propuesto</title>
+  <title>Módulo 2 — Tema 3 — Lección 7: Ejercicio propuesto</title>
   <link rel="stylesheet" href="/css/styles.css" />
-     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" />
-<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
-
+  <script src="/js/jquery-3.6.0.min.js"></script>
+  <link rel="stylesheet" href="/css/prism-1.29.0.min.css" />
+  <script src="/js/prism-1.29.0.min.js"></script>
 </head>
 <body>
-<div data-include="/partials/header.html"></div>
-<main>
-
+  <div data-include="/partials/header.html"></div>
+  <main>
 
  <nav class="lesson-nav">
       <div class="crumbs">
-       <a href="/modulo2/Tema1/index.html">Módulo 2</a>
+       <a href="/modulo2/modulo2.html">Módulo 2</a>
          <span class="sep">/</span>
     <a href="/modulo2/Tema3/index.html">Tema 3</a>
     <span class="sep">/</span>
@@ -25,111 +23,62 @@
       </div>
     </nav>
     <br>
-    <br>
-    <h2 class="titulos-leccion">Ejercicio Propuesto</h2>
+
+    <h2 class="titulos-leccion">Ejercicio propuesto</h2>
+
     <div class="indice-container">
-        <button id="toggle-index">Mostrar Índice<i class="fa-solid fa-caret-down" style="padding-left: 5px; color: #004d35;"></i></button>
-
-        <div id="index-container" class="text-cell hidden">
-            <hr>
-            <ul>
-                <li><a href="#descripcion">Descripción</a></li>
-                <li><a href="#contenidos">Contenidos</a></li>
-                <li><a href="#saber-mas">Para saber más</a></li>
-                <li><a href="#ejercicio-propuesto">Ejercicio propuesto</a></li>
-            </ul>
-        </div>
+      <button id="toggle-index">Mostrar Índice</button>
+      <div id="index-container" class="text-cell hidden">
+        <hr>
+        <ul>
+          <li><a href="#enunciado">Enunciado</a></li>
+          <li><a href="#plantilla">Plantilla</a></li>
+          <li><a href="#criterios">Criterios</a></li>
+        </ul>
+      </div>
     </div>
-    <section id="descripcion">
-    <!-- Descripcion -->
-        <div class="lesson-container">
-            <h3>Descripción</h3>
-            <hr>
-            <div class="text-cell">
-            <p>DESCRIPCIÓN DE LA LECIÓN</p>
-            </div>
+
+    <section id="enunciado">
+      <div class="lesson-container">
+        <h3>ENUNCIADO</h3>
+        <hr>
+        <div class="text-cell">
+          <p>Diseña y desarrolla un mini-proyecto que combine Spark SQL y MLlib: prepara datos, entrena un clasificador sencillo y evalúa resultados. Documenta decisiones de particionado y persistencia.</p>
         </div>
+      </div>
     </section>
-    <section id="contenidos">
 
-         <!-- Contenidos -->
-        <div class="lesson-container">
-
-            <h3>CONTENIDOS</h3>
-            <hr>
-
-            <!-- Blóque con texto -->
-            <div class="text-cell">
-                <h4> Comenzamos con los contenidos </h4>
-               En esta caja metemos contenidos
-            </div>
-           <div class="text-cell"> <h4>que mas metemos</h4>
-             <p>muchos más contenidos</p>
-
-           </div>
-
-
-            </div>
-
-            </div>
+    <section id="plantilla">
+      <div class="lesson-container">
+        <h3>PLANTILLA</h3>
+        <hr>
+        <div class="text-cell">
+          <p>Descarga la plantilla: <a href="/modulo2/Tema3/notebooks/M2T3L7.ipynb">M2T3L7.ipynb</a></p>
         </div>
+      </div>
     </section>
-    <section  id="saber-mas">
-         <!-- Para saber más -->
-        <div class="lesson-container indice-modulos">
-            <h3>Para saber más</h3>
-            <hr>
-            <div class="text-cell">
-                <ul>
-                    <li><a href="https://spark-packages.org">Enlaces</a></li>
-                    <li><a href="https://www.usenix.org/legacy/event/hotcloud10/tech/full_papers/Zaharia.pdf">Proyecto de investigación de Spar</a></li>
-                </ul>
-            </div>
 
+    <section id="criterios">
+      <div class="lesson-container">
+        <h3>CRITERIOS</h3>
+        <hr>
+        <div class="text-cell">
+          <ul>
+            <li>Pipeline funcional.</li>
+            <li>Medidas de rendimiento y justificación de decisiones.</li>
+          </ul>
         </div>
+      </div>
     </section>
-    <section id="ejercicio-propuesto">
 
-        <!-- Ejercicio propuesto -->
-        <div class="lesson-container">
-            <h3>Ejercicio Propuesto</h3>
-            <hr>
-            <div class="text-cell">
-              <p>Ejercicio propuesto</p>
-            </div>
+    <div class="navigation-buttons">
+      <button onclick="window.location.href='M2T3L6.html'">Anterior</button>
+      <button onclick="window.location.href='/modulo2/index.html'">Volver al módulo</button>
+    </div>
 
-        </div>
-    </section>
-        <div>
-            <div class="navigation-buttons">
-                <button onclick="window.location.href='index.html'">Presentación del curso</button>
-
-            </div>
-        </div>
-
-
-<h1>M2T3L7 — Ejercicio propuesto</h1>
-
-<section>
-  <h2>Enunciado</h2>
-  <p>Diseñar un mini-proyecto que combine Spark SQL y MLlib: preparar datos, entrenar un modelo y evaluar resultados. Documentar particionado y optimizaciones.</p>
-</section>
-
-<section>
-  <h2>Plantilla</h2>
-  <p>Descarga la plantilla: <a href="/modulo2/Tema3/notebooks/M2T3L7.ipynb">M2T3L7.ipynb</a></p>
-</section>
-
-<section>
-  <h2>Criterios</h2>
-  <ul>
-    <li>Pipeline funcional.</li>
-    <li>Medidas de rendimiento y justificación de decisiones.</li>
-  </ul>
-</section>
-</main>
-<div data-include="/partials/footer.html"></div>
-<script src="/js/include.js"></script>
-<script src="/js/script.js"></script>
+  </main>
+  <div data-include="/partials/footer.html"></div>
+  <script src="/js/include.js"></script>
+  <script src="/js/script.js"></script>
 </body>
 </html>

@@ -5,20 +5,74 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Índice — Gestión de datos en tiempo real — Arquitecturas Lambda y Kappa</title>
   <link rel="stylesheet" href="/css/styles.css" />
+   <script src="/js/jquery-3.6.0.min.js"></script>
+<link rel="stylesheet" href="/css/prism-1.29.0.min.css" />
+<script src="/js/prism-1.29.0.min.js"></script>
+
 </head>
 <body>
 <div data-include="/partials/header.html"></div>
 <main>
-  <h1>Arquitecturas Lambda y Kappa</h1>
-  <ol>
-      <li><a href="/modulo3/Tema1/M3T1L1.html">Introducción a procesamiento en tiempo real</a></li>
-      <li><a href="/modulo3/Tema1/M3T1L2.html">Arquitecturas Lambda y Kappa</a></li>
-      <li><a href="/modulo3/Tema1/M3T1L3.html">Introducción a Kafka</a></li>
-      <li><a href="/modulo3/Tema1/M3T1L4.html">Introducción a Spark Streaming</a></li>
-      <li><a href="/modulo3/Tema1/M3T1L5.html">Recursos y lecturas</a></li>
-      <li><a href="/modulo3/Tema1/M3T1L6.html">Ejercicio propuesto</a></li>
-  </ol>
-  <p><a href="/modulo3/modulo3.html">Volver al módulo</a></p>
+
+          <a href="#" id="scroll" title="Volver Arriba" style="display: none;">Arriba<span></span></a>
+
+        <!-- Titulos -->
+        <h2 class="title"><a href="/modulo3/modulo3.html">Módulo 3: Gestión de datos en tiempo real</a></h2>
+        <h3 class="title">Tema 1: Arquitecturas Lambda y Kappa</h3>
+        <br>
+
+        <div class="lesson-container indice-modulos">
+            <h3>LISTA DE LECCIONES</h3>
+            <hr>
+            <div class="text-cell">
+                <ul>
+      <li><a href="/modulo3/Tema1/M3T1L1.html">Lección 1: Introducción a procesamiento en tiempo real</a></li>
+      <li><a href="/modulo3/Tema1/M3T1L2.html">Lección 2: Arquitecturas Lambda y Kappa</a></li>
+      <li><a href="/modulo3/Tema1/M3T1L3.html">Lección 3: Introducción a Kafka</a></li>
+      <li><a href="/modulo3/Tema1/M3T1L4.html">Lección 4: Introducción a Spark Streaming</a></li>
+      <li><a href="/modulo3/Tema1/M3T1L5.html">Lección 5: Recursos y lecturas</a></li>
+      <li><a href="/modulo3/Tema1/M3T1L6.html">Lección 6: Ejercicio propuesto</a></li>
+                </ul>
+            </div>
+        </div>
+
+  <div class="lesson-container">
+            <h3>Objetivos de Aprendizaje (PTE):</h3>
+            <hr>
+            <div class="text-cell">
+                <ol>
+                    <li>Entender los patrones arquitectónicos para procesamiento en tiempo real (Lambda vs Kappa).</li>
+                    <li>Conocer las herramientas clave (Kafka y Spark Structured Streaming) y cuándo aplicarlas.</li>
+                    <li>Ser capaz de diseñar un pipeline básico de ingestión y procesamiento de eventos.</li>
+                    <li>Identificar requisitos de latencia, consistencia y tolerancia a fallos para sistemas de streaming.</li>
+                </ol>
+            </div>
+
+        </div>
+   <div class="lesson-container">
+            <h3>PRE-REQUISITOS:(PTE)</h3>
+            <hr>
+            <div class="text-cell">
+                <p>Conocimientos básicos de sistemas distribuidos y fundamentos de Spark/Python. Es recomendable disponer de un entorno con Docker o acceso a un cluster mínimo para prácticas.</p>
+            </div>
+        </div>
+
+        <div>
+            <br>
+            <div class="start-buttons">
+                <button onclick="window.location.href='M3T1L1.html'">Empezar por la Lección 1</button>
+            </div>
+        </div>
+
+        <div>
+            <br>
+            <div class="navigation-buttons">
+                <button onclick="window.location.href='/modulo3/modulo3.html'">Volver al módulo</button>
+                <button onclick="window.location.href='/modulo3/Tema2/index.html'">Tema siguiente</button>
+            </div>
+        </div>
+
+
 </main>
 <div data-include="/partials/footer.html"></div>
 <script src="/js/include.js"></script>

@@ -3,17 +3,19 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Operaciones y optimizaciones sobre DataFrames y Datasets</title>
+  <title>Módulo 2 — Tema 2 — Lección 9: Operaciones y optimizaciones sobre DataFrames y Datasets</title>
   <link rel="stylesheet" href="/css/styles.css" />
+  <script src="/js/jquery-3.6.0.min.js"></script>
+  <link rel="stylesheet" href="/css/prism-1.29.0.min.css" />
+  <script src="/js/prism-1.29.0.min.js"></script>
 </head>
 <body>
-<div data-include="/partials/header.html"></div>
-<main>
+  <div data-include="/partials/header.html"></div>
+  <main>
 
-
-  <nav class="lesson-nav">
+ <nav class="lesson-nav">
       <div class="crumbs">
-       <a href="/modulo2/Tema1/index.html">Módulo 2</a>
+       <a href="/modulo2/modulo2.html">Módulo 2</a>
          <span class="sep">/</span>
     <a href="/modulo2/Tema2/index.html">Tema 2</a>
     <span class="sep">/</span>
@@ -21,139 +23,59 @@
       </div>
     </nav>
     <br>
-    <br>
 
+    <h2 class="titulos-leccion">Operaciones y optimizaciones sobre DataFrames y Datasets</h2>
 
-
-
-
-
-    <h2 class="titulos-leccion">>Operaciones y optimizaciones sobre DataFrames y Datasets</h2>
     <div class="indice-container">
-        <button id="toggle-index">Mostrar Índice<i class="fa-solid fa-caret-down" style="padding-left: 5px; color: #004d35;"></i></button>
-
+        <button id="toggle-index">Mostrar Índice</button>
         <div id="index-container" class="text-cell hidden">
             <hr>
             <ul>
-                <li><a href="#descripcion">Descripción</a></li>
-                <li><a href="#contenidos">Contenidos</a></li>
-                <li><a href="#saber-mas">Para saber más</a></li>
-                <li><a href="#ejercicio-propuesto">Ejercicio propuesto</a></li>
+                <li><a href="#catalyst">Optimizador Catalyst</a></li>
+                <li><a href="#persist">Persistencia</a></li>
+                <li><a href="#broadcast">Broadcast joins</a></li>
             </ul>
         </div>
     </div>
-    <section id="descripcion">
-    <!-- Descripcion -->
-        <div class="lesson-container">
-            <h3>Descripción</h3>
-            <hr>
-            <div class="text-cell">
-            <p>DESCRIPCIÓN DE LA LECIÓN</p>
-            </div>
+
+    <section id="catalyst">
+      <div class="lesson-container">
+        <h3>OPTIMIZADOR CATALYST</h3>
+        <hr>
+        <div class="text-cell">
+          <p>Catalyst aplica reglas de optimización al DAG, reorganiza joins, proyecta columnas y elimina operaciones redundantes. Usar DataFrame API permite aprovechar estas optimizaciones.</p>
         </div>
+      </div>
     </section>
-    <section id="contenidos">
 
-         <!-- Contenidos -->
-        <div class="lesson-container">
-
-            <h3>CONTENIDOS</h3>
-            <hr>
-
-            <!-- Blóque con texto -->
-            <div class="text-cell">
-                <h4> Comenzamos con los contenidos </h4>
-               En esta caja metemos contenidos
-            </div>
-           <div class="text-cell"> <h4>que mas metemos</h4>
-             <p>muchos más contenidos</p>
-
-           </div>
-
-
-            </div>
-
-            </div>
+    <section id="persist">
+      <div class="lesson-container">
+        <h3>PERSISTENCIA Y CACHE</h3>
+        <hr>
+        <div class="text-cell">
+          <p>Usa <code>df.persist()</code> o <code>df.cache()</code> cuando reutilices un conjunto de datos para evitar recomputaciones costosas.</p>
         </div>
+      </div>
     </section>
-    <section  id="saber-mas">
-         <!-- Para saber más -->
-        <div class="lesson-container indice-modulos">
-            <h3>Para saber más</h3>
-            <hr>
-            <div class="text-cell">
-                <ul>
-                    <li><a href="https://spark-packages.org">Enlaces</a></li>
-                    <li><a href="https://www.usenix.org/legacy/event/hotcloud10/tech/full_papers/Zaharia.pdf">Proyecto de investigación de Spar</a></li>
-                </ul>
-            </div>
 
+    <section id="broadcast">
+      <div class="lesson-container">
+        <h3>BROADCAST JOINS</h3>
+        <hr>
+        <div class="text-cell">
+          <p>Para joins entre una gran y una pequeña tabla, usa broadcast para evitar shuffle: <code>broadcast(smallDF)</code>.</p>
         </div>
+      </div>
     </section>
-    <section id="ejercicio-propuesto">
 
-        <!-- Ejercicio propuesto -->
-        <div class="lesson-container">
-            <h3>Ejercicio Propuesto</h3>
-            <hr>
-            <div class="text-cell">
-              <p>Ejercicio propuesto</p>
-            </div>
+    <div class="navigation-buttons">
+      <button onclick="window.location.href='M2T2L8.html'">Anterior</button>
+      <button onclick="window.location.href='M2T2L10.html'">Siguiente</button>
+    </div>
 
-        </div>
-    </section>
-        <div>
-            <div class="navigation-buttons">
-                <button onclick="window.location.href='index.html'">Presentación del curso</button>
-                <button onclick="window.location.href='/modulo2/Tema1/M2T1L2.html'">Lección siguiente</button>
-            </div>
-        </div>
-
-
-<h1>M2T2L9 — Operaciones y optimizaciones sobre DataFrames y Datasets</h1>
-
-<section>
-  <h2>Objetivos</h2>
-  <ul>
-    <li>Aprender a optimizar consultas: persistencia, broadcast joins, explain(), cache.</li>
-  </ul>
-</section>
-
-<section>
-  <h2>Ejemplo: cache y persist</h2>
-  <pre><code>df = spark.read.parquet('/data/large.parquet')
-df.cache()
-df.count()
-df.unpersist()
-</code></pre>
-<p>Notebook: <a href="/modulo2/Tema2/notebooks/M2T2L9.ipynb">M2T2L9.ipynb</a></p>
-</section>
-
-<section>
-  <h2>Consejos</h2>
-  <ul>
-    <li>Usa broadcast joins cuando una tabla es pequeña para evitar shuffle.</li>
-    <li>Analiza planes con <code>df.explain(True)</code>.</li>
-  </ul>
-</section>
-
-<section>
-  <h2>Ejercicios propuestos</h2>
-  <ol>
-        <li>Implementar el ejemplo proporcionado.</li>
-        <li>Responder preguntas de reflexión.</li>
-  </ol>
-</section>
-<section>
-  <h2>Referencias</h2>
-  <ul>
-    <li>Documentación oficial: https://spark.apache.org/docs/latest/</li>
-    <li>Tutorial de referencia: https://www.cloudduggu.com/spark/</li>
-  </ul>
-</section>
-</main>
-<div data-include="/partials/footer.html"></div>
-<script src="/js/include.js"></script>
-<script src="/js/script.js"></script>
+  </main>
+  <div data-include="/partials/footer.html"></div>
+  <script src="/js/include.js"></script>
+  <script src="/js/script.js"></script>
 </body>
 </html>

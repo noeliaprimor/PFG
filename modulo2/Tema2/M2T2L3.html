@@ -3,17 +3,19 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Creación de sesiones SparkSession y SparkContext</title>
+  <title>Módulo 2 — Tema 2 — Lección 3: SparkSession y SparkContext</title>
   <link rel="stylesheet" href="/css/styles.css" />
+  <script src="/js/jquery-3.6.0.min.js"></script>
+  <link rel="stylesheet" href="/css/prism-1.29.0.min.css" />
+  <script src="/js/prism-1.29.0.min.js"></script>
 </head>
 <body>
   <div data-include="/partials/header.html"></div>
   <main>
 
-
-  <nav class="lesson-nav">
+ <nav class="lesson-nav">
       <div class="crumbs">
-       <a href="/modulo2/Tema1/index.html">Módulo 2</a>
+       <a href="/modulo2/modulo2.html">Módulo 2</a>
          <span class="sep">/</span>
     <a href="/modulo2/Tema2/index.html">Tema 2</a>
     <span class="sep">/</span>
@@ -21,124 +23,87 @@
       </div>
     </nav>
     <br>
-    <br>
 
+    <h2 class="titulos-leccion">Creación de sesiones: SparkSession y SparkContext</h2>
 
-
-
-
-
-    <h2 class="titulos-leccion">Creación de sesiones SparkSession y SparkContext</h2>
     <div class="indice-container">
-        <button id="toggle-index">Mostrar Índice<i class="fa-solid fa-caret-down" style="padding-left: 5px; color: #004d35;"></i></button>
-
+        <button id="toggle-index">Mostrar Índice</button>
         <div id="index-container" class="text-cell hidden">
             <hr>
             <ul>
                 <li><a href="#descripcion">Descripción</a></li>
-                <li><a href="#contenidos">Contenidos</a></li>
-                <li><a href="#saber-mas">Para saber más</a></li>
-                <li><a href="#ejercicio-propuesto">Ejercicio propuesto</a></li>
+                <li><a href="#api">API y ejemplos</a></li>
+                <li><a href="#config">Configuración</a></li>
+                <li><a href="#ejercicios">Ejercicios</a></li>
             </ul>
         </div>
     </div>
+
     <section id="descripcion">
-    <!-- Descripcion -->
-        <div class="lesson-container">
-            <h3>Descripción</h3>
-            <hr>
-            <div class="text-cell">
-            <p>DESCRIPCIÓN DE LA LECIÓN</p>
-            </div>
+      <div class="lesson-container">
+        <h3>DESCRIPCIÓN</h3>
+        <hr>
+        <div class="text-cell">
+          <p>Entender la diferencia entre SparkContext (nivel bajo) y SparkSession (API unificada para SQL/DataFrame) y cómo inicializarlas correctamente según entorno (local, cluster).</p>
         </div>
-    </section>
-    <section id="contenidos">
-
-         <!-- Contenidos -->
-        <div class="lesson-container">
-
-            <h3>CONTENIDOS</h3>
-            <hr>
-
-            <!-- Blóque con texto -->
-            <div class="text-cell">
-                <h4> Comenzamos con los contenidos </h4>
-               En esta caja metemos contenidos
-            </div>
-           <div class="text-cell"> <h4>que mas metemos</h4>
-             <p>muchos más contenidos</p>
-
-           </div>
-
-
-            </div>
-
-            </div>
-        </div>
-    </section>
-    <section  id="saber-mas">
-         <!-- Para saber más -->
-        <div class="lesson-container indice-modulos">
-            <h3>Para saber más</h3>
-            <hr>
-            <div class="text-cell">
-                <ul>
-                    <li><a href="https://spark-packages.org">Enlaces</a></li>
-                    <li><a href="https://www.usenix.org/legacy/event/hotcloud10/tech/full_papers/Zaharia.pdf">Proyecto de investigación de Spar</a></li>
-                </ul>
-            </div>
-
-        </div>
-    </section>
-    <section id="ejercicio-propuesto">
-
-        <!-- Ejercicio propuesto -->
-        <div class="lesson-container">
-            <h3>Ejercicio Propuesto</h3>
-            <hr>
-            <div class="text-cell">
-              <p>Ejercicio propuesto</p>
-            </div>
-
-        </div>
-    </section>
-        <div>
-            <div class="navigation-buttons">
-                <button onclick="window.location.href='index.html'">Presentación del curso</button>
-                <button onclick="window.location.href='/modulo2/Tema2/M2T2L4.html'">Lección siguiente</button>
-            </div>
-        </div>
-
-
-    <section>
-      <h2>Objetivos</h2>
-      <ul>
-        <li>Aprender a inicializar SparkSession y comprender su relación con SparkContext.</li>
-        <li>Conocer configuración de builder (appName, master, configs).</li>
-      </ul>
+      </div>
     </section>
 
-    <section>
-      <h2>Ejemplo</h2>
-      <pre><code>from pyspark.sql import SparkSession
-spark = SparkSession.builder
-    .appName('m2t2l3')
-    .config('spark.executor.memory','2g')
+    <section id="api">
+      <div class="lesson-container">
+        <h3>API y ejemplos</h3>
+        <hr>
+        <div class="text-cell">
+          <h4>PySpark — SparkSession</h4>
+          <pre><code class="language-python python-code">from pyspark.sql import SparkSession
+spark = SparkSession.builder \
+    .appName("MiApp") \
+    .config("spark.some.config", "value") \
     .getOrCreate()
-sc = spark.sparkContext
-print(sc.master)
-spark.stop()
+
+# Usar spark para leer un CSV
+df = spark.read.csv('/data/archivo.csv', header=True, inferSchema=True)
+df.show()</code></pre>
+        </div>
+
+        <div class="text-cell">
+          <h4>Scala — SparkContext y SparkSession</h4>
+          <pre><code class="language-scala">import org.apache.spark.sql.SparkSession
+val spark = SparkSession.builder.appName("MiApp").getOrCreate()
+val sc = spark.sparkContext
 </code></pre>
-      <p>Notebook: <a href="/modulo2/Tema2/notebooks/M2T2L3.ipynb">M2T2L3.ipynb</a></p>
+        </div>
+      </div>
     </section>
 
-    <section>
-      <h2>Buenas prácticas</h2>
-      <ul>
-        <li>Crear una única SparkSession por aplicación.</li>
-        <li>Configurar recursos en función del entorno (local vs cluster).</li>
-      </ul>
+    <section id="config">
+      <div class="lesson-container">
+        <h3>CONFIGURACIÓN</h3>
+        <hr>
+        <div class="text-cell">
+          <p>Parámetros clave: <code>spark.executor.memory</code>, <code>spark.driver.memory</code>, <code>spark.executor.cores</code>, y paralelismo por defecto <code>spark.default.parallelism</code>.</p>
+        </div>
+      </div>
     </section>
+
+    <section id="ejercicios">
+      <div class="lesson-container">
+        <h3>EJERCICIOS</h3>
+        <hr>
+        <div class="text-cell">
+          <ol>
+            <li>Inicializa una SparkSession con distintos parámetros y observa el impacto en tiempos de ejecución con un pequeño dataset.</li>
+            <li>Explica por qué SparkSession reemplaza a SparkContext en las APIs modernas.</li>
+          </ol>
+        </div>
+      </div>
+    </section>
+
+    <div class="navigation-buttons">
+      <button onclick="window.location.href='M2T2L2.html'">Anterior</button>
+      <button onclick="window.location.href='M2T2L4.html'">Siguiente</button>
+    </div>
+
   </main>
   <div data-include="/partials/footer.html"></div>
   <script src="/js/include.js"></script>

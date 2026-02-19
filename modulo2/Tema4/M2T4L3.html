@@ -3,17 +3,15 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Errores frecuentes y cómo solucionarlos</title>
+  <title>Módulo 2 — Tema 4 — Lección 3: Errores frecuentes y cómo solucionarlos</title>
   <link rel="stylesheet" href="/css/styles.css" />
-   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" />
-<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
-
+  <script src="/js/jquery-3.6.0.min.js"></script>
+  <link rel="stylesheet" href="/css/prism-1.29.0.min.css" />
+  <script src="/js/prism-1.29.0.min.js"></script>
 </head>
 <body>
   <div data-include="/partials/header.html"></div>
   <main>
-
 
  <nav class="lesson-nav">
       <div class="crumbs">
@@ -25,115 +23,57 @@
       </div>
     </nav>
     <br>
-    <br>
-
-
-
-
-
 
     <h2 class="titulos-leccion">Errores frecuentes y cómo solucionarlos</h2>
+
     <div class="indice-container">
-        <button id="toggle-index">Mostrar Índice<i class="fa-solid fa-caret-down" style="padding-left: 5px; color: #004d35;"></i></button>
-
-        <div id="index-container" class="text-cell hidden">
-            <hr>
-            <ul>
-                <li><a href="#descripcion">Descripción</a></li>
-                <li><a href="#contenidos">Contenidos</a></li>
-                <li><a href="#saber-mas">Para saber más</a></li>
-                <li><a href="#ejercicio-propuesto">Ejercicio propuesto</a></li>
-            </ul>
-        </div>
+      <button id="toggle-index">Mostrar Índice</button>
+      <div id="index-container" class="text-cell hidden">
+        <hr>
+        <ul>
+          <li><a href="#outofmemory">OutOfMemory y GC</a></li>
+          <li><a href="#skew">Data Skew y particionado</a></li>
+          <li><a href="#timeout">Timeouts y fallos de red</a></li>
+        </ul>
+      </div>
     </div>
-    <section id="descripcion">
-    <!-- Descripcion -->
-        <div class="lesson-container">
-            <h3>Descripción</h3>
-            <hr>
-            <div class="text-cell">
-            <p>DESCRIPCIÓN DE LA LECIÓN</p>
-            </div>
+
+    <section id="outofmemory">
+      <div class="lesson-container">
+        <h3>OUT OF MEMORY Y GC</h3>
+        <hr>
+        <div class="text-cell">
+          <p>Diagnóstico: revisar logs del executor y el driver, y el uso de memoria en Spark UI. Soluciones: ajustar <code>spark.executor.memory</code>, persistencia en disco, evitar collect() en grandes datasets y aumentar particionado.</p>
+          <pre><code class="language-bash bash-code"># ajustar memoria en spark-submit
+--executor-memory 4G --driver-memory 2G</code></pre>
         </div>
+      </div>
     </section>
-    <section id="contenidos">
 
-         <!-- Contenidos -->
-        <div class="lesson-container">
-
-            <h3>CONTENIDOS</h3>
-            <hr>
-
-            <!-- Blóque con texto -->
-            <div class="text-cell">
-                <h4> Comenzamos con los contenidos </h4>
-               En esta caja metemos contenidos
-            </div>
-           <div class="text-cell"> <h4>que mas metemos</h4>
-             <p>muchos más contenidos</p>
-
-           </div>
-
-
-            </div>
-
-            </div>
+    <section id="skew">
+      <div class="lesson-container">
+        <h3>DATA SKEW</h3>
+        <hr>
+        <div class="text-cell">
+          <p>Problema: una partición con muchos registros causa tareas largas. Soluciones: aplicar salting, incrementar particiones, usar broadcast join si una tabla es pequeña.</p>
         </div>
+      </div>
     </section>
-    <section  id="saber-mas">
-         <!-- Para saber más -->
-        <div class="lesson-container indice-modulos">
-            <h3>Para saber más</h3>
-            <hr>
-            <div class="text-cell">
-                <ul>
-                    <li><a href="https://spark-packages.org">Enlaces</a></li>
-                    <li><a href="https://www.usenix.org/legacy/event/hotcloud10/tech/full_papers/Zaharia.pdf">Proyecto de investigación de Spar</a></li>
-                </ul>
-            </div>
 
+    <section id="timeout">
+      <div class="lesson-container">
+        <h3>TIMEOUTS Y FALLAS DE RED</h3>
+        <hr>
+        <div class="text-cell">
+          <p>Chequear configuración de timeouts, redes entre nodos y grandes transfers de shuffle. Revisar logs del cluster y sistema gestor (YARN/Kubernetes) para latencias de red.</p>
         </div>
-    </section>
-    <section id="ejercicio-propuesto">
-
-        <!-- Ejercicio propuesto -->
-        <div class="lesson-container">
-            <h3>Ejercicio Propuesto</h3>
-            <hr>
-            <div class="text-cell">
-              <p>Ejercicio propuesto</p>
-            </div>
-
-        </div>
-    </section>
-        <div>
-            <div class="navigation-buttons">
-                <button onclick="window.location.href='index.html'">Presentación del curso</button>
-                <button onclick="window.location.href='/modulo2/Tema4/M2T4L4.html'">Lección siguiente</button>
-            </div>
-        </div>
-
-
-    <h1>M2T4L3 — Errores frecuentes y cómo solucionarlos</h1>
-
-    <section>
-      <h2>Resumen</h2>
-      <p>En esta lección revisamos problemas típicos: OOM (OutOfMemory), GC, fallos por shuffle, saturación de IO y timeouts, y cómo mitigarlos.</p>
+      </div>
     </section>
 
-    <section>
-      <h2>Diagnóstico rápido</h2>
-      <ul>
-        <li>Revisar logs del driver y executors.</li>
-        <li>Analizar el DAG en Spark UI para detectar etapas costosas.</li>
-        <li>Usar <code>df.explain(True)</code> para revisar el plan físico.</li>
-      </ul>
-    </section>
-
-    <section>
-      <h2>Notebook</h2>
-      <p>Notas y ejercicios: <a href="/modulo2/Tema4/notebooks/M2T4L3.ipynb">M2T4L3.ipynb</a></p>
-    </section>
+    <div class="navigation-buttons">
+      <button onclick="window.location.href='M2T4L2.html'">Anterior</button>
+      <button onclick="window.location.href='M2T4L4.html'">Siguiente</button>
+    </div>
 
   </main>
   <div data-include="/partials/footer.html"></div>

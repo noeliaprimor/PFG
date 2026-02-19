@@ -3,21 +3,19 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Procesamiento de flujos: Spark Streaming / Structured Streaming</title>
+  <title>Módulo 2 — Tema 3 — Lección 4: Spark Streaming / Structured Streaming</title>
   <link rel="stylesheet" href="/css/styles.css" />
-   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" />
-<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
-
+  <script src="/js/jquery-3.6.0.min.js"></script>
+  <link rel="stylesheet" href="/css/prism-1.29.0.min.css" />
+  <script src="/js/prism-1.29.0.min.js"></script>
 </head>
 <body>
-<div data-include="/partials/header.html"></div>
-<main>
-
+  <div data-include="/partials/header.html"></div>
+  <main>
 
  <nav class="lesson-nav">
       <div class="crumbs">
-       <a href="/modulo2/Tema1/index.html">Módulo 2</a>
+       <a href="/modulo2/modulo2.html">Módulo 2</a>
          <span class="sep">/</span>
     <a href="/modulo2/Tema3/index.html">Tema 3</a>
     <span class="sep">/</span>
@@ -25,145 +23,66 @@
       </div>
     </nav>
     <br>
-    <br>
 
+    <h2 class="titulos-leccion">Spark Streaming y Structured Streaming</h2>
 
-
-
-
-
-    <h2 class="titulos-leccion">Procesamiento de flujos: Spark Streaming / Structured Streaming</h2>
     <div class="indice-container">
-        <button id="toggle-index">Mostrar Índice<i class="fa-solid fa-caret-down" style="padding-left: 5px; color: #004d35;"></i></button>
-
-        <div id="index-container" class="text-cell hidden">
-            <hr>
-            <ul>
-                <li><a href="#descripcion">Descripción</a></li>
-                <li><a href="#contenidos">Contenidos</a></li>
-                <li><a href="#saber-mas">Para saber más</a></li>
-                <li><a href="#ejercicio-propuesto">Ejercicio propuesto</a></li>
-            </ul>
-        </div>
+      <button id="toggle-index">Mostrar Índice</button>
+      <div id="index-container" class="text-cell hidden">
+        <hr>
+        <ul>
+          <li><a href="#descripcion">Descripción</a></li>
+          <li><a href="#modelos">Modelos de procesamiento</a></li>
+          <li><a href="#ejemplo">Ejemplo PySpark</a></li>
+        </ul>
+      </div>
     </div>
+
     <section id="descripcion">
-    <!-- Descripcion -->
-        <div class="lesson-container">
-            <h3>Descripción</h3>
-            <hr>
-            <div class="text-cell">
-            <p>DESCRIPCIÓN DE LA LECIÓN</p>
-            </div>
+      <div class="lesson-container">
+        <h3>DESCRIPCIÓN</h3>
+        <hr>
+        <div class="text-cell">
+          <p>Spark ofrece APIs antiguas (DStreams) y modernas (Structured Streaming). En este módulo usamos Structured Streaming para su integración con DataFrames y optimizaciones.</p>
         </div>
+      </div>
     </section>
-    <section id="contenidos">
 
-         <!-- Contenidos -->
-        <div class="lesson-container">
-
-            <h3>CONTENIDOS</h3>
-            <hr>
-
-            <!-- Blóque con texto -->
-            <div class="text-cell">
-                <h4> Comenzamos con los contenidos </h4>
-               En esta caja metemos contenidos
-            </div>
-           <div class="text-cell"> <h4>que mas metemos</h4>
-             <p>muchos más contenidos</p>
-
-           </div>
-
-
-            </div>
-
-            </div>
+    <section id="modelos">
+      <div class="lesson-container">
+        <h3>MODELOS</h3>
+        <hr>
+        <div class="text-cell">
+          <p>Micro-batching vs Continuous Processing. Structured Streaming abstrae el stream como una tabla incremental y soporta ventanas, watermarking y semánticas de entrega.</p>
         </div>
+      </div>
     </section>
-    <section  id="saber-mas">
-         <!-- Para saber más -->
-        <div class="lesson-container indice-modulos">
-            <h3>Para saber más</h3>
-            <hr>
-            <div class="text-cell">
-                <ul>
-                    <li><a href="https://spark-packages.org">Enlaces</a></li>
-                    <li><a href="https://www.usenix.org/legacy/event/hotcloud10/tech/full_papers/Zaharia.pdf">Proyecto de investigación de Spar</a></li>
-                </ul>
-            </div>
 
-        </div>
-    </section>
-    <section id="ejercicio-propuesto">
-
-        <!-- Ejercicio propuesto -->
-        <div class="lesson-container">
-            <h3>Ejercicio Propuesto</h3>
-            <hr>
-            <div class="text-cell">
-              <p>Ejercicio propuesto</p>
-            </div>
-
-        </div>
-    </section>
-        <div>
-            <div class="navigation-buttons">
-                <button onclick="window.location.href='index.html'">Presentación del curso</button>
-                <button onclick="window.location.href='/modulo2/Tema3/M2T3L5.html'">Lección siguiente</button>
-            </div>
-        </div>
-
-
-<h1>M2T3L4 — Procesamiento de flujos: Spark Structured Streaming</h1>
-
-<section>
-  <h2>Objetivos</h2>
-  <ul>
-    <li>Comprender el modelo de Structured Streaming y cómo escribir pipelines de ingestión y agregación en tiempo real.</li>
-  </ul>
-</section>
-
-<section>
-  <h2>Ejemplo (socket / netcat)</h2>
-  <pre><code>from pyspark.sql import SparkSession
-from pyspark.sql.functions import explode, split, lower, col
-spark = SparkSession.builder.appName('m2t3l4').getOrCreate()
+    <section id="ejemplo">
+      <div class="lesson-container">
+        <h3>EJEMPLO PYSPARK</h3>
+        <hr>
+        <div class="text-cell">
+          <pre><code class="language-python python-code">from pyspark.sql import SparkSession
+from pyspark.sql.functions import explode, split
+spark = SparkSession.builder.appName('streaming').getOrCreate()
 lines = spark.readStream.format('socket').option('host','localhost').option('port',9999).load()
-words = lines.select(explode(split(col('value'), '\\s+')).alias('word'))
-counts = words.groupBy(lower(col('word')).alias('word')).count()
+words = lines.select(explode(split(lines.value,' ')).alias('word'))
+counts = words.groupBy('word').count()
 query = counts.writeStream.format('console').outputMode('complete').start()
-# query.awaitTermination()
-</code></pre>
-<p>Notebook: <a href="/modulo2/Tema3/notebooks/M2T3L4.ipynb">M2T3L4.ipynb</a></p>
-</section>
+query.awaitTermination()</code></pre>
+        </div>
+      </div>
+    </section>
 
-<section>
-  <h2>Resumen</h2>
-  <p>Contenido detallado sobre Procesamiento de flujos: Spark Streaming / Structured Streaming.</p>
-</section>
+    <div class="navigation-buttons">
+      <button onclick="window.location.href='M2T3L3.html'">Anterior</button>
+      <button onclick="window.location.href='M2T3L5.html'">Siguiente</button>
+    </div>
 
-<section>
-  <h2>Introducción a streaming</h2>
-  <p>Descripción de Structured Streaming y ejemplo breve.</p>
-</section>
-
-<section>
-  <h2>Ejercicios propuestos</h2>
-  <ol>
-        <li>Implementar el ejemplo proporcionado.</li>
-        <li>Responder preguntas de reflexión.</li>
-  </ol>
-</section>
-<section>
-  <h2>Referencias</h2>
-  <ul>
-    <li>Documentación oficial: https://spark.apache.org/docs/latest/</li>
-    <li>Tutorial de referencia: https://www.cloudduggu.com/spark/</li>
-  </ul>
-</section>
-</main>
-<div data-include="/partials/footer.html"></div>
-<script src="/js/include.js"></script>
-<script src="/js/script.js"></script>
+  </main>
+  <div data-include="/partials/footer.html"></div>
+  <script src="/js/include.js"></script>
+  <script src="/js/script.js"></script>
 </body>
 </html>

@@ -5,40 +5,71 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>M3T2L2 — Kafka en detalle</title>
   <link rel="stylesheet" href="/css/styles.css" />
+  <script src="/js/jquery-3.6.0.min.js"></script>
+  <link rel="stylesheet" href="/css/prism-1.29.0.min.css" />
+  <script src="/js/prism-1.29.0.min.js"></script>
 </head>
 <body>
 <div data-include="/partials/header.html"></div>
 <main>
   <nav class="lesson-nav">
-    <a href="M3T2L1.html">L1</a> | <a href="M3T2L2.html">L2</a> | <a href="M3T2L3.html">L3</a> | <a href="M3T2L4.html">L4</a> | <a href="M3T2L5.html">L5</a>
-    <span style="float:right"><a href="/modulo3/modulo3.html">Volver a Módulo 3</a> • <a href="/modulo3/Tema2/index.html">Índice del Tema</a></span>
+    <div class="crumbs">
+      <a href="/modulo3/modulo3.html">Módulo 3</a>
+      <span class="sep">/</span>
+      <a href="/modulo3/Tema2/index.html">Tema 2</a>
+      <span class="sep">/</span>
+      <a href="/modulo3/Tema2/M3T2L2.html" class="current" aria-current="page">Lección 2</a>
+    </div>
   </nav>
 
-  <h1>M3T2L2 — Kafka en detalle</h1>
+  <h2 class="titulos-leccion">Kafka en detalle</h2>
 
-  <section>
-    <h2>Objetivos</h2>
-    <ul>
-      <li>Entender particiones, replicación, retention y offset management.</li>
-      <li>Conocer configuraciones que impactan en rendimiento y durabilidad.</li>
-    </ul>
+  <div class="indice-container">
+    <button id="toggle-index">Mostrar Índice</button>
+    <div id="index-container" class="text-cell hidden">
+      <hr>
+      <ul>
+        <li><a href="#particiones">Particiones y rendimiento</a></li>
+        <li><a href="#replicacion">Replicación y durabilidad</a></li>
+        <li><a href="#offsets">Offsets y consumidores</a></li>
+      </ul>
+    </div>
+  </div>
+
+  <section id="particiones">
+    <div class="lesson-container">
+      <h3>PARTICIONES Y RENDIMIENTO</h3>
+      <hr>
+      <div class="text-cell">
+        <p>Las particiones permiten paralelizar el consumo; el número óptimo depende del número de consumidores y del throughput esperado.</p>
+      </div>
+    </div>
   </section>
 
-  <section>
-    <h2>Resumen</h2>
-    <p>Kafka organiza mensajes en topics y particiones; cada partición es una secuencia ordenada. El factor de replicación y la configuración de ISR son críticos para disponibilidad. Los consumidores gestionan offsets, que pueden ser commit automáticos o manuales.</p>
+  <section id="replicacion">
+    <div class="lesson-container">
+      <h3>REPLICACIÓN Y DURABILIDAD</h3>
+      <hr>
+      <div class="text-cell">
+        <p>El factor de replicación asegura disponibilidad ante fallos de broker; la ISR indica réplicas en sincronía.</p>
+      </div>
+    </div>
   </section>
 
-  <section>
-    <h2>Comandos útiles</h2>
-    <pre><code># ver topics
-$KAFKA_HOME/bin/kafka-topics.sh --list --bootstrap-server localhost:9092
-
-# describir topic
-$KAFKA_HOME/bin/kafka-topics.sh --describe --topic prueba --bootstrap-server localhost:9092
-</code></pre>
-    <p>Notebook: <a href="/modulo3/Tema2/notebooks/M3T2L2.ipynb">M3T2L2.ipynb</a></p>
+  <section id="offsets">
+    <div class="lesson-container">
+      <h3>OFFSETS Y CONSUMIDORES</h3>
+      <hr>
+      <div class="text-cell">
+        <p>Offsets pueden ser gestionados automáticamente o manualmente. Para procesamiento exactamente una vez, coordina offsets y sinks con idempotencia o transacciones.</p>
+      </div>
+    </div>
   </section>
+
+  <div class="navigation-buttons">
+    <button onclick="window.location.href='M3T2L1.html'">Anterior</button>
+    <button onclick="window.location.href='M3T2L3.html'">Siguiente</button>
+  </div>
 
 </main>
 <div data-include="/partials/footer.html"></div>

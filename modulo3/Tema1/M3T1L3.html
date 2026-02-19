@@ -5,39 +5,91 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>M3T1L3 — Introducción a Kafka</title>
   <link rel="stylesheet" href="/css/styles.css" />
+  <script src="/js/jquery-3.6.0.min.js"></script>
+  <link rel="stylesheet" href="/css/prism-1.29.0.min.css" />
+  <script src="/js/prism-1.29.0.min.js"></script>
 </head>
 <body>
 <div data-include="/partials/header.html"></div>
 <main>
-      <a href="/modulo3/Tema1/M3T1L1.html">1. Introducción a procesamiento en tiempo real</a> | <a href="/modulo3/Tema1/M3T1L2.html">2. Arquitecturas Lambda y Kappa</a> | <a href="/modulo3/Tema1/M3T1L3.html">3. Introducción a Kafka</a> | <a href="/modulo3/Tema1/M3T1L4.html">4. Introducción a Spark Streaming</a> | <a href="/modulo3/Tema1/M3T1L5.html">5. Recursos y lecturas</a> | <a href="/modulo3/Tema1/M3T1L6.html">6. Ejercicio propuesto</a>
-      <span style="float:right"><a href="/modulo3/modulo3.html">Volver a Módulo 3</a> • <a href="/modulo3/Tema1/index.html">Índice del Tema</a></span>
+  <nav class="lesson-nav">
+    <div class="crumbs">
+      <a href="/modulo3/modulo3.html">Módulo 3</a>
+      <span class="sep">/</span>
+      <a href="/modulo3/Tema1/index.html">Tema 1</a>
+      <span class="sep">/</span>
+      <a href="/modulo3/Tema1/M3T1L3.html" class="current" aria-current="page">Lección 3</a>
+    </div>
+  </nav>
 
-<h1>M3T1L3 — Introducción a Kafka</h1>
+  <h2 class="titulos-leccion">Introducción a Kafka</h2>
 
-<section>
-  <h2>Objetivos</h2>
-  <ul>
-    <li>Conocer la arquitectura básica de Kafka: brokers, topics, particiones y zookeper (o KRaft).</li>
-    <li>Entender productores, consumidores y conceptos de offset y retención.</li>
-  </ul>
-</section>
+  <div class="indice-container">
+    <button id="toggle-index">Mostrar Índice</button>
+    <div id="index-container" class="text-cell hidden">
+      <hr>
+      <ul>
+        <li><a href="#descripcion">Descripción</a></li>
+        <li><a href="#conceptos">Conceptos clave</a></li>
+        <li><a href="#comandos">Comandos útiles</a></li>
+        <li><a href="#ejercicio">Ejercicio</a></li>
+      </ul>
+    </div>
+  </div>
 
-<section>
-  <h2>Resumen</h2>
-  <p>Kafka es una plataforma de mensajería distribuida diseñada para transmitir grandes volúmenes de datos con alta disponibilidad. Los topics se particionan y replican entre brokers; los consumidores gestionan offsets para garantizar la lectura correcta de eventos.</p>
-</section>
+  <section id="descripcion">
+    <div class="lesson-container">
+      <h3>DESCRIPCIÓN</h3>
+      <hr>
+      <div class="text-cell">
+        <p>Apache Kafka es una plataforma de mensajería distribuida para el manejo de streams de eventos con alta durabilidad y throughput. Se usa como sistema de ingestión y bus de eventos en arquitecturas de streaming.</p>
+      </div>
+    </div>
+  </section>
 
-<section>
-  <h2>Comandos básicos (con Kafka instalado)</h2>
-  <pre><code># crear topic
-$KAFKA_HOME/bin/kafka-topics.sh --create --topic prueba --bootstrap-server localhost:9092 --partitions 3 --replication-factor 1
+  <section id="conceptos">
+    <div class="lesson-container">
+      <h3>CONCEPTOS CLAVE</h3>
+      <hr>
+      <div class="text-cell">
+        <ul>
+          <li><strong>Topic:</strong> canal lógico para mensajes.</li>
+          <li><strong>Partition:</strong> permite paralelismo y orden por partición.</li>
+          <li><strong>Producer/Consumer:</strong> productores envían, consumidores leen offsets.</li>
+          <li><strong>Retention:</strong> periodo de almacenamiento.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
 
-# lanzar consumidor de consola
-$KAFKA_HOME/bin/kafka-console-consumer.sh --topic prueba --bootstrap-server localhost:9092 --from-beginning
-</code></pre>
+  <section id="comandos">
+    <div class="lesson-container">
+      <h3>COMANDOS ÚTILES</h3>
+      <hr>
+      <div class="text-cell">
+        <pre><code class="language-bash bash-code"># listar topics
+$KAFKA_HOME/bin/kafka-topics.sh --list --bootstrap-server localhost:9092
 
-<p>Notebook: <a href="/modulo3/Tema1/notebooks/M3T1L3.ipynb">M3T1L3.ipynb</a></p>
-</section>
+# crear topic
+$KAFKA_HOME/bin/kafka-topics.sh --create --topic ejemplo --partitions 3 --replication-factor 1 --bootstrap-server localhost:9092</code></pre>
+      </div>
+    </div>
+  </section>
+
+  <section id="ejercicio">
+    <div class="lesson-container">
+      <h3>EJERCICIO</h3>
+      <hr>
+      <div class="text-cell">
+        <p>Implementa un pequeño productor en Python que envíe eventos a un topic y un consumer que los consuma; mide latencia y throughput.</p>
+      </div>
+    </div>
+  </section>
+
+  <div class="navigation-buttons">
+    <button onclick="window.location.href='M3T1L2.html'">Anterior</button>
+    <button onclick="window.location.href='M3T1L4.html'">Siguiente</button>
+  </div>
 
 </main>
 <div data-include="/partials/footer.html"></div>

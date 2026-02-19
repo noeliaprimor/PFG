@@ -3,17 +3,19 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Operaciones sobre RDD</title>
+  <title>Módulo 2 — Tema 2 — Lección 8: Operaciones sobre RDD</title>
   <link rel="stylesheet" href="/css/styles.css" />
+  <script src="/js/jquery-3.6.0.min.js"></script>
+  <link rel="stylesheet" href="/css/prism-1.29.0.min.css" />
+  <script src="/js/prism-1.29.0.min.js"></script>
 </head>
 <body>
-<div data-include="/partials/header.html"></div>
-<main>
+  <div data-include="/partials/header.html"></div>
+  <main>
 
-
-   <nav class="lesson-nav">
+ <nav class="lesson-nav">
       <div class="crumbs">
-       <a href="/modulo2/Tema1/index.html">Módulo 2</a>
+       <a href="/modulo2/modulo2.html">Módulo 2</a>
          <span class="sep">/</span>
     <a href="/modulo2/Tema2/index.html">Tema 2</a>
     <span class="sep">/</span>
@@ -21,134 +23,63 @@
       </div>
     </nav>
     <br>
-    <br>
-
-
-
-
-
 
     <h2 class="titulos-leccion">Operaciones sobre RDD</h2>
-    <div class="indice-container">
-        <button id="toggle-index">Mostrar Índice<i class="fa-solid fa-caret-down" style="padding-left: 5px; color: #004d35;"></i></button>
 
+    <div class="indice-container">
+        <button id="toggle-index">Mostrar Índice</button>
         <div id="index-container" class="text-cell hidden">
             <hr>
             <ul>
-                <li><a href="#descripcion">Descripción</a></li>
-                <li><a href="#contenidos">Contenidos</a></li>
-                <li><a href="#saber-mas">Para saber más</a></li>
-                <li><a href="#ejercicio-propuesto">Ejercicio propuesto</a></li>
+                <li><a href="#transform">Transformaciones</a></li>
+                <li><a href="#acciones">Acciones</a></li>
+                <li><a href="#ejemplos">Ejemplos</a></li>
             </ul>
         </div>
     </div>
-    <section id="descripcion">
-    <!-- Descripcion -->
-        <div class="lesson-container">
-            <h3>Descripción</h3>
-            <hr>
-            <div class="text-cell">
-            <p>DESCRIPCIÓN DE LA LECIÓN</p>
-            </div>
+
+    <section id="transform">
+      <div class="lesson-container">
+        <h3>TRANSFORMACIONES</h3>
+        <hr>
+        <div class="text-cell">
+          <p>Lazy: map, filter, flatMap, groupByKey, reduceByKey, join. Construyen el DAG pero no ejecutan hasta una acción.</p>
         </div>
+      </div>
     </section>
-    <section id="contenidos">
 
-         <!-- Contenidos -->
-        <div class="lesson-container">
-
-            <h3>CONTENIDOS</h3>
-            <hr>
-
-            <!-- Blóque con texto -->
-            <div class="text-cell">
-                <h4> Comenzamos con los contenidos </h4>
-               En esta caja metemos contenidos
-            </div>
-           <div class="text-cell"> <h4>que mas metemos</h4>
-             <p>muchos más contenidos</p>
-
-           </div>
-
-
-            </div>
-
-            </div>
+    <section id="acciones">
+      <div class="lesson-container">
+        <h3>ACCIONES</h3>
+        <hr>
+        <div class="text-cell">
+          <p>count, collect, take, reduce, saveAsTextFile: desencadenan la ejecución.</p>
         </div>
+      </div>
     </section>
-    <section  id="saber-mas">
-         <!-- Para saber más -->
-        <div class="lesson-container indice-modulos">
-            <h3>Para saber más</h3>
-            <hr>
-            <div class="text-cell">
-                <ul>
-                    <li><a href="https://spark-packages.org">Enlaces</a></li>
-                    <li><a href="https://www.usenix.org/legacy/event/hotcloud10/tech/full_papers/Zaharia.pdf">Proyecto de investigación de Spar</a></li>
-                </ul>
-            </div>
 
-        </div>
-    </section>
-    <section id="ejercicio-propuesto">
-
-        <!-- Ejercicio propuesto -->
-        <div class="lesson-container">
-            <h3>Ejercicio Propuesto</h3>
-            <hr>
-            <div class="text-cell">
-              <p>Ejercicio propuesto</p>
-            </div>
-
-        </div>
-    </section>
-        <div>
-            <div class="navigation-buttons">
-                <button onclick="window.location.href='index.html'">Presentación del curso</button>
-                <button onclick="window.location.href='/modulo2/Tema1/M2T1L2.html'">Lección siguiente</button>
-            </div>
-        </div>
-
-
-<h1>M2T2L8 — Operaciones sobre RDD</h1>
-
-<section>
-  <h2>Objetivos</h2>
-  <ul>
-    <li>Revisar transformaciones comunes: map, filter, flatMap, reduceByKey, groupByKey.</li>
-  </ul>
-</section>
-
-<section>
-  <h2>Ejemplo</h2>
-  <pre><code>from pyspark import SparkContext
-sc = SparkContext()
-rdd = sc.parallelize(['a b a', 'b c'])
-words = rdd.flatMap(lambda r: r.split())
-counts = words.map(lambda w: (w,1)).reduceByKey(lambda a,b: a+b).collect()
-print(counts)
-sc.stop()
+    <section id="ejemplos">
+      <div class="lesson-container">
+        <h3>EJEMPLOS</h3>
+        <hr>
+        <div class="text-cell">
+          <pre><code class="language-python python-code">rdd = sc.textFile('data/logs.txt')
+words = rdd.flatMap(lambda line: line.split())
+wordCounts = words.map(lambda w: (w,1)).reduceByKey(lambda a,b: a+b)
+wordCounts.take(10)
 </code></pre>
-<p>Notebook: <a href="/modulo2/Tema2/notebooks/M2T2L8.ipynb">M2T2L8.ipynb</a></p>
-</section>
+        </div>
+      </div>
+    </section>
 
-<section>
-  <h2>Ejercicios</h2>
-  <ol>
-    <li>Implementar conteo de palabras a partir de RDD y compararlo con DataFrame.</li>
-  </ol>
-</section>
+    <div class="navigation-buttons">
+      <button onclick="window.location.href='M2T2L7.html'">Anterior</button>
+      <button onclick="window.location.href='M2T2L9.html'">Siguiente</button>
+    </div>
 
-<section>
-  <h2>Referencias</h2>
-  <ul>
-    <li>Documentación oficial: https://spark.apache.org/docs/latest/</li>
-    <li>Tutorial de referencia: https://www.cloudduggu.com/spark/</li>
-  </ul>
-</section>
-</main>
-<div data-include="/partials/footer.html"></div>
-<script src="/js/include.js"></script>
-<script src="/js/script.js"></script>
+  </main>
+  <div data-include="/partials/footer.html"></div>
+  <script src="/js/include.js"></script>
+  <script src="/js/script.js"></script>
 </body>
 </html>
