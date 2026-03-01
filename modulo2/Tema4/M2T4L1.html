@@ -48,6 +48,203 @@
 
     <section id="sparkui">
       <div class="lesson-container">
+
+        <h1>Capítulo X: Monitorización y configuración de Apache Spark</h1>
+
+  <h2>1. Introducción</h2>
+  <p>
+    La monitorización y correcta configuración de Apache Spark son aspectos fundamentales para garantizar
+    rendimiento, estabilidad y eficiencia en entornos de procesamiento distribuido. Una mala configuración
+    puede provocar cuellos de botella, consumo excesivo de memoria, tiempos elevados de ejecución o incluso
+    fallos de aplicación.
+  </p>
+  <p>
+    En entornos académicos y profesionales, comprender cómo ajustar parámetros y cómo interpretar métricas
+    de ejecución resulta clave para optimizar aplicaciones Spark.
+  </p>
+
+  <h2>2. Arquitectura relevante para la monitorización</h2>
+  <p>
+    Spark ejecuta aplicaciones mediante:
+  </p>
+  <ul>
+    <li><strong>Driver</strong>: coordina la ejecución.</li>
+    <li><strong>Executors</strong>: ejecutan tareas en los nodos del clúster.</li>
+    <li><strong>Tasks</strong>: unidades de trabajo dentro de un stage.</li>
+    <li><strong>Stages</strong>: agrupaciones de tareas delimitadas por operaciones de shuffle.</li>
+  </ul>
+  <p>
+    La monitorización se centra en observar el comportamiento de estos componentes durante la ejecución.
+  </p>
+
+  <h2>3. Spark Web UI</h2>
+
+  <h3>3.1 Descripción</h3>
+  <p>
+    Spark proporciona una interfaz web integrada (Spark UI) accesible generalmente en el puerto 4040
+    durante la ejecución de una aplicación.
+  </p>
+
+  <h3>3.2 Secciones principales</h3>
+  <ul>
+    <li><strong>Jobs</strong>: muestra trabajos ejecutados y su estado.</li>
+    <li><strong>Stages</strong>: detalla etapas, tareas, tiempos y shuffles.</li>
+    <li><strong>Storage</strong>: muestra datasets cacheados y uso de memoria.</li>
+    <li><strong>Environment</strong>: configuración activa de Spark.</li>
+    <li><strong>Executors</strong>: uso de CPU, memoria y número de tareas por executor.</li>
+    <li><strong>SQL</strong>: planes de ejecución y métricas de consultas SQL.</li>
+  </ul>
+
+  <h3>3.3 Métricas importantes</h3>
+  <ul>
+    <li>Tiempo total por stage.</li>
+    <li>Shuffle read/write.</li>
+    <li>Skew (desequilibrio entre tareas).</li>
+    <li>Uso de memoria por executor.</li>
+    <li>GC time (tiempo de recolección de basura).</li>
+  </ul>
+
+  <h2>4. Logs y eventos</h2>
+
+  <h3>4.1 Logs de aplicación</h3>
+  <p>
+    Spark utiliza sistemas de logging (por ejemplo, Log4j) para registrar eventos de ejecución.
+  </p>
+
+  <h3>4.2 Event Logs</h3>
+  <p>
+    Puede activarse el historial de aplicaciones:
+  </p>
+  <pre><code>spark.eventLog.enabled=true
+spark.eventLog.dir=/ruta/a/logs</code></pre>
+
+  <p>
+    Posteriormente, estos logs pueden visualizarse mediante el Spark History Server.
+  </p>
+
+  <h2>5. Configuración de Spark</h2>
+
+  <h3>5.1 Formas de configuración</h3>
+  <ul>
+    <li>Parámetros en <code>spark-submit</code>.</li>
+    <li>Archivo <code>spark-defaults.conf</code>.</li>
+    <li>Configuración programática en <code>SparkSession.builder</code>.</li>
+  </ul>
+
+  <h3>5.2 Ejemplo programático</h3>
+  <pre><code>from pyspark.sql import SparkSession
+
+spark = (SparkSession.builder
+    .appName("MiApp")
+    .config("spark.executor.memory", "4g")
+    .config("spark.executor.cores", "2")
+    .config("spark.sql.shuffle.partitions", "200")
+    .getOrCreate())</code></pre>
+
+  <h2>6. Parámetros clave de configuración</h2>
+
+  <h3>6.1 Memoria</h3>
+  <ul>
+    <li><code>spark.executor.memory</code>: memoria por executor.</li>
+    <li><code>spark.driver.memory</code>: memoria del driver.</li>
+    <li><code>spark.memory.fraction</code>: fracción para ejecución y almacenamiento.</li>
+  </ul>
+
+  <h3>6.2 Paralelismo</h3>
+  <ul>
+    <li><code>spark.executor.cores</code>: núcleos por executor.</li>
+    <li><code>spark.default.parallelism</code>: número por defecto de particiones.</li>
+    <li><code>spark.sql.shuffle.partitions</code>: particiones tras operaciones de shuffle.</li>
+  </ul>
+
+  <h3>6.3 Adaptive Query Execution (AQE)</h3>
+  <pre><code>spark.sql.adaptive.enabled=true
+spark.sql.adaptive.skewJoin.enabled=true</code></pre>
+
+  <p>
+    AQE permite optimizar dinámicamente joins y particiones durante la ejecución.
+  </p>
+
+  <h2>7. Optimización del rendimiento</h2>
+
+  <h3>7.1 Gestión de particiones</h3>
+  <pre><code>df.repartition(200)
+df.coalesce(10)</code></pre>
+
+  <p>
+    Repartition aumenta el paralelismo; coalesce reduce particiones sin shuffle completo.
+  </p>
+
+  <h3>7.2 Cache y persistencia</h3>
+  <pre><code>df.cache()
+df.persist()</code></pre>
+
+  <p>
+    Útil cuando un dataset se reutiliza múltiples veces.
+  </p>
+
+  <h3>7.3 Broadcast joins</h3>
+  <pre><code>from pyspark.sql.functions import broadcast
+
+df_join = df1.join(broadcast(df2), "id")</code></pre>
+
+  <h2>8. Monitorización en clúster</h2>
+
+  <h3>8.1 Standalone</h3>
+  <p>
+    Proporciona UI del Master y Workers para visualizar uso de recursos.
+  </p>
+
+  <h3>8.2 YARN</h3>
+  <p>
+    Integración con ResourceManager y ApplicationMaster.
+  </p>
+
+  <h3>8.3 Kubernetes</h3>
+  <p>
+    Monitorización mediante herramientas como kubectl, dashboards y métricas del clúster.
+  </p>
+
+  <h2>9. Buenas prácticas</h2>
+  <ul>
+    <li>Evitar collect() en datasets grandes.</li>
+    <li>Analizar explain(True) para entender planes físicos.</li>
+    <li>Controlar número de particiones tras shuffle.</li>
+    <li>Monitorizar skew en stages largos.</li>
+    <li>Configurar adecuadamente memoria según volumen de datos.</li>
+  </ul>
+
+  <h2>10. Ejercicio propuesto (nivel TFG)</h2>
+
+  <h3>10.1 Objetivo</h3>
+  <p>
+    Analizar el comportamiento de una aplicación Spark variando parámetros de configuración
+    y observando métricas en la Spark UI.
+  </p>
+
+  <h3>10.2 Enunciado</h3>
+  <ol>
+    <li>Ejecutar una aplicación con configuración por defecto.</li>
+    <li>Registrar métricas de tiempo, shuffle y uso de memoria.</li>
+    <li>Modificar <code>spark.sql.shuffle.partitions</code>.</li>
+    <li>Activar AQE.</li>
+    <li>Comparar tiempos y planes físicos.</li>
+    <li>Documentar conclusiones.</li>
+  </ol>
+
+  <h2>11. Conclusión</h2>
+  <p>
+    La monitorización y configuración de Spark son elementos esenciales para obtener un rendimiento óptimo.
+    La comprensión de métricas, configuración de memoria, paralelismo y optimización adaptativa
+    permite ajustar aplicaciones a distintos entornos y cargas de trabajo.
+  </p>
+  <p>
+    En el contexto de un TFG, este conocimiento demuestra dominio práctico del ecosistema Spark,
+    más allá del uso básico de sus APIs.
+  </p>
+
+
+
         <h3>SPARK UI</h3>
         <hr>
         <div class="text-cell">

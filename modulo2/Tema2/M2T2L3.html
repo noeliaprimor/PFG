@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Módulo 2 — Tema 2 — Lección 3: SparkSession y SparkContext</title>
+  <title>SparkSession y SparkContext</title>
   <link rel="stylesheet" href="/css/styles.css" />
   <script src="/js/jquery-3.6.0.min.js"></script>
   <link rel="stylesheet" href="/css/prism-1.29.0.min.css" />
@@ -31,7 +31,12 @@
          <hr>
          <ul>
            <li><a href="#descripcion">Descripción</a></li>
-           <li><a href="#ejemplo">Ejemplo</a></li>
+           <li><a href="#contenido">Contenidos</a></li>
+           <li><a href="#diferencias">Diferencias de coportamiento: Standalone vs Kubernetes</a></li>
+           <li><a href="#caso">Caso Práctico aplicado</a></li>
+           <li><a href="#referencias">Referencias</a></li>
+           <li><a href="#conclusiones">Conclusiones</a></li>
+           <li><a href ="#ejercicios">Ejercicio propuesto</a></li>
          </ul>
        </div>
      </div>
@@ -41,57 +46,646 @@
         <h3>DESCRIPCIÓN</h3>
         <hr>
         <div class="text-cell">
-          <p>Entender la diferencia entre SparkContext (nivel bajo) y SparkSession (API unificada para SQL/DataFrame) y cómo inicializarlas correctamente según entorno (local, cluster).</p>
+           <p>
+    La creación de una sesión constituye el punto de partida de cualquier aplicación desarrollada en Apache Spark.
+    A través de dicha sesión, el programa establece comunicación con el clúster, coordina la ejecución distribuida
+    y gestiona los recursos computacionales necesarios.
+  </p>
+  <p>
+    En las primeras versiones de Spark, el objeto principal de acceso era <strong>SparkContext</strong>, centrado en el
+    procesamiento basado en RDD. Sin embargo, a partir de Spark 2.0 se introduce <strong>SparkSession</strong>, que unifica
+    el acceso a las APIs del ecosistema (Core, SQL, Streaming y MLlib), simplificando el desarrollo y estandarizando el modelo
+    de ejecución.
+  </p>
+
+
         </div>
       </div>
     </section>
 
-    <section id="api">
+    <section id="contenido">
       <div class="lesson-container">
-        <h3>API y ejemplos</h3>
+        <h3>CONTENIDOS</h3>
         <hr>
         <div class="text-cell">
-          <h4>PySpark — SparkSession</h4>
-          <pre><code class="language-python python-code">from pyspark.sql import SparkSession
+
+  <h4>Arquitectura general de una aplicación Spark</h4>
+  <p>
+    Una aplicación Spark se compone, de forma general, de los siguientes elementos:
+  </p>
+  <ul>
+    <li><strong>Driver Program</strong>: proceso principal que ejecuta el código del usuario.</li>
+    <li><strong>Cluster Manager</strong>: gestiona los recursos del clúster (por ejemplo: Standalone, YARN, Kubernetes).</li>
+    <li><strong>Executors</strong>: procesos distribuidos que ejecutan tareas sobre particiones de datos.</li>
+    <li><strong>Tasks</strong>: unidades mínimas de trabajo que se asignan a los executors.</li>
+    <li><strong>Planificación</strong>: componentes internos (DAG Scheduler / Task Scheduler) que organizan la ejecución.</li>
+  </ul>
+  <p>
+    En este contexto, la “sesión” es el mecanismo mediante el cual el Driver se conecta al clúster y coordina la ejecución distribuida.
+  </p>
+          <hr />
+
+  <h4>SparkContext</h4>
+
+  <p>
+    <strong>SparkContext</strong> es el punto de entrada original de Spark Core. Representa la conexión activa entre el programa del
+    usuario y el clúster, y es responsable de inicializar la aplicación, establecer la comunicación con el cluster manager y coordinar
+    la ejecución distribuida.
+
+  </p>
+  <p>Entre sus responsabilidades destacan:</p>
+  <ul>
+    <li>Inicialización de la aplicación y registro en el cluster manager.</li>
+    <li>Creación y gestión de RDDs.</li>
+    <li>Planificación de jobs, stages y tasks (DAG y scheduler).</li>
+    <li>Gestión de memoria distribuida y componentes internos de ejecución.</li>
+  </ul>
+
+
+  <strong>Ejemplo en PySpark:</strong>
+          <pre>
+            <code class="language-python python-code">
+from pyspark import SparkContext
+from pyspark import SparkConf
+
+conf = SparkConf() \
+    .setAppName("AplicacionTFG") \
+    .setMaster("local[*]")
+
+sc = SparkContext(conf=conf)
+            </code>
+          </pre>
+
+  <p>Parámetros principales:</p>
+  <ul>
+    <li><code>setAppName()</code>: nombre lógico de la aplicación.</li>
+    <li><code>setMaster()</code>: modo de ejecución. Ejemplos:
+      <ul>
+        <li><code>local[*]</code>: ejecución local utilizando todos los núcleos.</li>
+        <li><code>spark://host:7077</code>: modo Standalone.</li>
+        <li><code>yarn</code>: clúster Hadoop YARN.</li>
+      </ul>
+    </li>
+  </ul>
+
+  <p>
+    <strong>Nota:</strong> solo puede existir un SparkContext activo por JVM. Intentar crear varios suele producir errores del tipo:
+  </p>
+  <pre><code>ValueError: Cannot run multiple SparkContexts at once</code></pre>
+
+  <strong>Limitaciones del modelo basado únicamente en SparkContext</strong>
+  <p>
+    Antes de Spark 2.0, era común gestionar distintos contextos (por ejemplo, SQLContext o HiveContext) de forma separada.
+    Esto incrementaba la complejidad de aplicaciones híbridas (RDD + SQL) y fragmentaba la configuración. Estas limitaciones
+    motivaron la introducción de SparkSession como punto de entrada unificado.
+    :contentReference[oaicite:3]{index=3}
+  </p>
+            <hr />
+
+  <h4>SparkSession</h4>
+
+
+  <p>
+    <strong>SparkSession</strong> es el punto de entrada unificado introducido en Spark 2.0. Integra en un único objeto el acceso a:
+  </p>
+  <ul>
+    <li>Spark Core (incluyendo SparkContext)</li>
+    <li>DataFrames y Spark SQL</li>
+    <li>Structured Streaming</li>
+    <li>MLlib (APIs de machine learning)</li>
+  </ul>
+  <p>
+    Por este motivo, SparkSession es el modelo recomendado en desarrollos modernos.
+    :contentReference[oaicite:4]{index=4}
+  </p>
+
+  <strong>Creación de una SparkSession</strong>
+  <pre><code class="language-python python-code">
+from pyspark.sql import SparkSession
 spark = SparkSession.builder \
-    .appName("MiApp") \
-    .config("spark.some.config", "value") \
+    .appName("AplicacionTFG") \
+    .master("local[*]") \
+    .getOrCreate()
+</code></pre>
+
+  <p>
+    El método <code>getOrCreate()</code> reutiliza una sesión existente si ya fue creada o crea una nueva si no existe.
+    El SparkContext interno queda accesible así:
+  </p>
+  <pre><code>sc = spark.sparkContext</code></pre>
+
+  <strong>Funcionalidades disponibles desde SparkSession</strong>
+  <table>
+    <thead>
+      <tr>
+        <th>Área</th>
+        <th>Ejemplo de acceso</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>RDD</td>
+        <td><code>spark.sparkContext.parallelize(...)</code></td>
+      </tr>
+      <tr>
+        <td>DataFrame</td>
+        <td><code>spark.read.csv(...)</code></td>
+      </tr>
+      <tr>
+        <td>SQL</td>
+        <td><code>spark.sql("SELECT ...")</code></td>
+      </tr>
+      <tr>
+        <td>Structured Streaming</td>
+        <td><code>spark.readStream(...)</code></td>
+      </tr>
+      <tr>
+        <td>MLlib</td>
+        <td><code>spark.ml</code></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h4>Comparativa técnica: SparkContext vs SparkSession</h4>
+  <table>
+    <thead>
+      <tr>
+        <th>Característica</th>
+        <th>SparkContext</th>
+        <th>SparkSession</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Introducción</td>
+        <td>Spark 1.x</td>
+        <td>Spark 2.0</td>
+      </tr>
+      <tr>
+        <td>API unificada</td>
+        <td>No</td>
+        <td>Sí</td>
+      </tr>
+      <tr>
+        <td>Soporte SQL</td>
+        <td>Limitado / externo</td>
+        <td>Completo</td>
+      </tr>
+      <tr>
+        <td>Soporte DataFrame</td>
+        <td>No directo</td>
+        <td>Sí</td>
+      </tr>
+      <tr>
+        <td>Recomendado actualmente</td>
+        <td>No (uso legacy)</td>
+        <td>Sí</td>
+      </tr>
+      <tr>
+        <td>Nivel de abstracción</td>
+        <td>Bajo</td>
+        <td>Alto</td>
+      </tr>
+    </tbody>
+  </table>
+  <p>
+    En la práctica, incluso cuando se trabaja con RDDs, se recomienda inicializar la aplicación mediante SparkSession y
+    acceder a SparkContext a través de <code>spark.sparkContext</code>.
+
+  </p>
+<hr />
+  <h4>Ciclo de vida de una sesión Spark</h4>
+  <ol>
+    <li>Creación de la SparkSession.</li>
+    <li>Configuración de parámetros (memoria, cores, particiones, etc.).</li>
+    <li>Definición de transformaciones (evaluación perezosa).</li>
+    <li>Construcción del DAG (plan lógico y/o físico, según API utilizada).</li>
+    <li>Ejecución de una acción (por ejemplo: <code>count</code>, <code>collect</code>, <code>write</code>).</li>
+    <li>Planificación de stages y tasks.</li>
+    <li>Ejecución distribuida en executors y obtención de resultados.</li>
+    <li>Finalización y liberación de recursos.</li>
+  </ol>
+
+  <p>Cierre explícito de la sesión:</p>
+  <pre><code>spark.stop()</code></pre>
+               <hr />
+
+  <h4>Configuración avanzada de sesiones</h4>
+  <p>
+    En entornos de clúster (por ejemplo, modo Standalone en Docker), es habitual configurar recursos y parámetros de ejecución
+    desde el builder de SparkSession:
+  </p>
+  <pre><code class="language-python python-code">
+ spark = SparkSession.builder \
+    .appName("Spark-Cluster") \
+    .master("spark://spark-master:7077") \
+    .config("spark.executor.memory", "2g") \
+    .config("spark.executor.cores", "2") \
+    .config("spark.driver.memory", "1g") \
+    .getOrCreate()
+</code></pre>
+
+  <p>Parámetros frecuentes:</p>
+  <ul>
+    <li><code>spark.executor.memory</code>: memoria por executor.</li>
+    <li><code>spark.executor.cores</code>: núcleos por executor.</li>
+    <li><code>spark.driver.memory</code>: memoria del driver.</li>
+    <li><code>spark.sql.shuffle.partitions</code>: número de particiones para operaciones de shuffle (impacto en rendimiento).</li>
+  </ul>
+                <hr />
+
+  <h4>Buenas prácticas en el desarrollo de aplicaciones Spark</h4>
+  <ul>
+    <li>Utilizar siempre SparkSession como punto de entrada.</li>
+    <li>Definir un <code>appName</code> descriptivo.</li>
+    <li>Configurar explícitamente el <code>master</code> según el modo (local, Standalone, etc.).</li>
+    <li>Ajustar memoria y cores acorde a los recursos disponibles.</li>
+    <li>Cerrar la sesión con <code>spark.stop()</code> al finalizar.</li>
+    <li>Evitar crear múltiples sesiones innecesarias.</li>
+  </ul>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+    </section>
+    <section id="diferencias">
+      <div class="lesson-container">
+
+  <h3>DIFERENCIAS DE COMPORTAMIENTO: STANDALONE vs KUBERNETES</h3>
+
+
+  <p>
+    Apache Spark puede ejecutarse sobre distintos cluster managers. Dos opciones habituales son el modo <strong>Standalone</strong>
+    (nativo de Spark) y la ejecución sobre <strong>Kubernetes</strong>. Aunque la creación de la sesión con SparkSession es similar,
+    el comportamiento interno, la asignación de recursos y el modelo operativo presentan diferencias relevantes.
+  </p>
+<HR>
+  <h4>Arquitectura en modo Standalone</h4>
+  <p>En modo Standalone:</p>
+  <ul>
+    <li>Existe un <strong>Spark Master</strong> propio de Spark.</li>
+    <li>Los <strong>Workers</strong> ejecutan los procesos Executor.</li>
+    <li>El Driver se conecta al Master para registrar la aplicación y solicitar recursos.</li>
+    <li>La asignación de recursos es gestionada por Spark (Master/Workers).</li>
+  </ul>
+
+  <h4>Flujo de creación de sesión en Standalone</h4>
+  <pre><code class="language-python python-code">
+    spark = SparkSession.builder \
+    .master("spark://spark-master:7077") \
+    .getOrCreate()
+</code></pre>
+
+  <p>Proceso típico:</p>
+  <ol>
+    <li>El Driver se conecta al Spark Master.</li>
+    <li>Se registra la aplicación.</li>
+    <li>El Master asigna executors en los Workers disponibles.</li>
+    <li>Se reservan CPU/memoria y comienza la ejecución distribuida.</li>
+  </ol>
+
+  <p>Características habituales:</p>
+  <ul>
+    <li>Arquitectura simple y menor sobrecarga.</li>
+    <li>Adecuado para entornos académicos y laboratorios (p. ej., Docker).</li>
+    <li>Escalabilidad y elasticidad más limitadas que Kubernetes.</li>
+  </ul>
+<hr>
+  <h4> Arquitectura en modo Kubernetes</h4>
+  <p>En modo Kubernetes:</p>
+  <ul>
+    <li>El cluster manager es Kubernetes (API Server + Scheduler).</li>
+    <li>Driver y Executors se ejecutan como <strong>Pods</strong>.</li>
+    <li>Kubernetes decide el scheduling en nodos y aplica políticas de aislamiento y recursos.</li>
+    <li>La gestión de ciclo de vida (reinicios, reprogramación) se beneficia del modelo cloud-native.</li>
+  </ul>
+
+  <h4>Flujo de creación de sesión en Kubernetes</h4>
+  <pre><code class="language-python python-code">spark = SparkSession.builder \
+    .master("k8s://https://kubernetes.default.svc") \
+    .config("spark.kubernetes.container.image", "apache/spark:latest") \
+    .getOrCreate()
+</code></pre>
+
+  <p>Proceso típico:</p>
+  <ol>
+    <li>El Driver se despliega como Pod (según modo de despliegue seleccionado).</li>
+    <li>El Driver se comunica con la API de Kubernetes para solicitar executors.</li>
+    <li>Los executors se crean como Pods.</li>
+    <li>Kubernetes programa Pods en nodos según disponibilidad y políticas.</li>
+  </ol>
+        <hr>
+
+  <h4>Comparativa</h4>
+  <table border="1">
+    <thead>
+      <tr>
+        <th>Aspecto</th>
+        <th>Standalone</th>
+        <th>Kubernetes</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Cluster Manager</td>
+        <td>Spark Master</td>
+        <td>API Server + Scheduler</td>
+      </tr>
+      <tr>
+        <td>Driver</td>
+        <td>Proceso (JVM/Python) en un nodo</td>
+        <td>Pod</td>
+      </tr>
+      <tr>
+        <td>Executors</td>
+        <td>Procesos en Workers</td>
+        <td>Pods</td>
+      </tr>
+      <tr>
+        <td>Gestión de recursos</td>
+        <td>Spark</td>
+        <td>Kubernetes (requests/limits)</td>
+      </tr>
+      <tr>
+        <td>Escalabilidad</td>
+        <td>Más manual</td>
+        <td>Más elástica (cloud-native)</td>
+      </tr>
+      <tr>
+        <td>Aislamiento</td>
+        <td>Más limitado</td>
+        <td>Namespaces, Pods, políticas</td>
+      </tr>
+      <tr>
+        <td>Complejidad operativa</td>
+        <td>Menor</td>
+        <td>Mayor</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <strong>Diferencias en asignación de recursos</strong>
+
+  <strong>Standalone</strong>
+  <p>
+    La reserva de recursos se negocia con el Spark Master. Configuraciones típicas:
+  </p>
+  <pre><code class="language-python python-code">.config("spark.executor.instances", "4")
+.config("spark.executor.memory", "4g")
+</code></pre>
+  <p>
+    Si no hay recursos disponibles, la aplicación puede quedarse a la espera hasta que el clúster libere capacidad.
+  </p>
+
+  <strong>Kubernetes</strong>
+  <p>
+    La asignación depende de la capacidad del clúster y de los <em>resource requests/limits</em> asociados a Pods:
+  </p>
+  <pre><code class="language-python python-code">.config("spark.executor.memory", "4g")
+.config("spark.kubernetes.executor.request.cores", "2")
+</code></pre>
+  <p>
+    Kubernetes decide en qué nodo ejecutar cada Pod y puede rechazar el scheduling si no hay capacidad suficiente.
+  </p>
+
+  <strong>Diferencias en escalabilidad y resiliencia</strong>
+  <ul>
+    <li>
+      <strong>Standalone</strong>: escalado más manual (añadir workers, ajustar instancias). Resiliencia dependiente del entorno.
+    </li>
+    <li>
+      <strong>Kubernetes</strong>: mejor integración con estrategias cloud-native (reintentos, reprogramación, autoescalado según políticas e infraestructura).
+    </li>
+  </ul>
+
+  <strong>Implicaciones para el desarrollo de aplicaciones Spark</strong>
+  <p>
+    En una aplicación con despliegue típico en Docker/Standalone, el modo Standalone suele ser el más adecuado por su
+    simplicidad y facilidad de explicación. Kubernetes es especialmente relevante cuando el enfoque se orienta a:
+    despliegues cloud-native, multi-tenant, elasticidad y operación a gran escala.
+  </p>
+
+  <p>
+    Desde el punto de vista del desarrollador, SparkSession actúa como interfaz estable; sin embargo, el backend de orquestación
+    (Standalone vs Kubernetes) cambia el modo en que se aprovisionan recursos, se gestionan procesos (executors) y se aplica
+    resiliencia. En síntesis: Standalone prioriza simplicidad y control; Kubernetes prioriza elasticidad e integración cloud-native.
+  </p>
+
+      </div>
+    </section>
+    <section id="caso">
+      <div class="lesson-container">
+          <h3>CASO PRÁCTICO APLICADO</h3>
+
+  <strong>Objetivo</strong>
+  <p>Construir una aplicación que:</p>
+  <ol>
+    <li>Inicialice una SparkSession.</li>
+    <li>Genere un RDD con números del 1 al 100.</li>
+    <li>Calcule la suma usando <code>reduce</code>.</li>
+    <li>Cree un DataFrame con los mismos datos.</li>
+    <li>Calcule la media usando funciones de agregación.</li>
+    <li>Finalice correctamente la sesión.</li>
+  </ol>
+
+  <strong>Ejemplo completo</strong>
+  <pre><code class="language-python python-code">from pyspark.sql import SparkSession
+from pyspark.sql.functions import avg
+
+spark = SparkSession.builder \
+    .appName("EjemploSesionTFG") \
+    .master("local[*]") \
     .getOrCreate()
 
-# Usar spark para leer un CSV
-df = spark.read.csv('/data/archivo.csv', header=True, inferSchema=True)
-df.show()</code></pre>
-        </div>
+sc = spark.sparkContext
 
-        <div class="text-cell">
-          <h4>Scala — SparkContext y SparkSession</h4>
-          <pre><code class="language-scala">import org.apache.spark.sql.SparkSession
-val spark = SparkSession.builder.appName("MiApp").getOrCreate()
-val sc = spark.sparkContext
+# RDD
+rdd = sc.parallelize(range(1, 101))
+suma = rdd.reduce(lambda a, b: a + b)
+print("Suma:", suma)
+
+# DataFrame
+df = spark.createDataFrame([(i,) for i in range(1, 101)], ["numero"])
+media = df.select(avg("numero")).collect()
+print("Media:", media)
+
+spark.stop()
 </code></pre>
-        </div>
+
       </div>
     </section>
-
-    <section id="config">
+    <section id="referencias">
       <div class="lesson-container">
-        <h3>CONFIGURACIÓN</h3>
-        <hr>
-        <div class="text-cell">
-          <p>Parámetros clave: <code>spark.executor.memory</code>, <code>spark.driver.memory</code>, <code>spark.executor.cores</code>, y paralelismo por defecto <code>spark.default.parallelism</code>.</p>
-        </div>
+        <h3>REFERENCIAS</h3>
+  <ul>
+    <li>Documentación oficial de Apache Spark: <code>https://spark.apache.org/docs/latest/</code></li>
+    <li>Guía de programación Spark SQL / SparkSession: <code>https://spark.apache.org/docs/latest/sql-programming-guide.html</code></li>
+    <li>Referencia PySpark (SparkContext / SparkSession): <code>https://spark.apache.org/docs/latest/api/python/</code></li>
+  </ul>
+
       </div>
     </section>
+    <section id="conclusiones">
+      <div class="lesson-container">
+         <h3>CONCLUSIONES</h3>
+  <p>
+    La creación de sesiones en Apache Spark representa el punto de entrada al procesamiento distribuido. Mientras que SparkContext
+    constituye la base del motor de ejecución, SparkSession introduce una capa de abstracción superior que unifica las capacidades
+    del ecosistema (SQL, DataFrames, Streaming y ML).
+  </p>
+  <p>
+    En desarrollos modernos, SparkSession se considera el estándar debido a la simplificación del modelo de desarrollo, la integración
+    total de APIs y la alineación con la evolución del framework. Comprender la relación entre SparkSession y SparkContext facilita la
+    construcción de aplicaciones más eficientes, escalables y mantenibles.
 
+  </p>
+
+
+      </div>
+    </section>
     <section id="ejercicios">
       <div class="lesson-container">
-        <h3>EJERCICIOS</h3>
+        <h3>EJERCICIO PROPUESTO</h3>
         <hr>
         <div class="text-cell">
-          <ol>
-            <li>Inicializa una SparkSession con distintos parámetros y observa el impacto en tiempos de ejecución con un pequeño dataset.</li>
-            <li>Explica por qué SparkSession reemplaza a SparkContext en las APIs modernas.</li>
-          </ol>
+           <h4>Ejercicio práctico comparativo: SparkSession en Standalone vs Kubernetes</h4>
+
+
+  <p>
+    El objetivo de este ejercicio es analizar el comportamiento de la creación de una SparkSession y la ejecución de una aplicación
+    simple en dos entornos distintos: modo Standalone y modo Kubernetes.
+  </p>
+  <p>
+    El objetivo es que el estudiante comprenda cómo cambia la asignación de recursos,
+    el despliegue de executors y el ciclo de vida del Driver según el cluster manager utilizado.
+  </p>
+
+  <strong>Parte A — Ejecución en modo Standalone</strong>
+
+  <p><strong>1. Crear una SparkSession apuntando al Master Standalone:</strong></p>
+
+  <pre><code class="language-python python-code">from pyspark.sql import SparkSession
+
+spark = SparkSession.builder \
+    .appName("Comparativa-Standalone") \
+    .master("spark://spark-master:7077") \
+    .config("spark.executor.instances", "2") \
+    .config("spark.executor.memory", "1g") \
+    .getOrCreate()
+</code></pre>
+
+  <p><strong>2.  Generar una carga de trabajo:</strong></p>
+
+  <pre><code class="language-python python-code">rdd = spark.sparkContext.parallelize(range(1, 1000000))
+resultado = rdd.map(lambda x: x * 2).filter(lambda x: x % 3 == 0).count()
+print("Resultado:", resultado)
+</code></pre>
+
+  <p><strong>3. Analizar:</strong></p>
+  <ul>
+    <li>¿Cuántos executors se crean?</li>
+    <li>¿En qué Workers se ejecutan?</li>
+    <li>¿Qué ocurre si se reduce la memoria disponible?</li>
+    <li>¿Qué sucede si el Master no tiene recursos suficientes?</li>
+  </ul>
+
+  <p><strong>4. Finalizar la sesión:</strong></p>
+
+  <pre><code class="language-python python-code">spark.stop()</code></pre>
+
+  <strong>Parte B — Ejecución en modo Kubernetes</strong>
+
+  <p><strong>1. Crear una SparkSession configurada para Kubernetes:</strong></p>
+
+  <pre><code class="language-python python-code">spark = SparkSession.builder \
+    .appName("Comparativa-Kubernetes") \
+    .master("k8s://https://kubernetes.default.svc") \
+    .config("spark.kubernetes.container.image", "apache/spark:latest") \
+    .config("spark.executor.instances", "2") \
+    .config("spark.executor.memory", "1g") \
+    .config("spark.kubernetes.executor.request.cores", "1") \
+    .getOrCreate()
+</code></pre>
+
+  <p><strong>2. Ejecutar la misma carga de trabajo:</strong></p>
+
+  <pre><code class="language-python python-code">rdd = spark.sparkContext.parallelize(range(1, 1000000))
+resultado = rdd.map(lambda x: x * 2).filter(lambda x: x % 3 == 0).count()
+print("Resultado:", resultado)
+</code></pre>
+
+  <p><strong>3. Analizar:</strong></p>
+  <ul>
+    <li>¿Se crean Pods para cada executor?</li>
+    <li>¿Cómo decide Kubernetes en qué nodo ejecutar cada Pod?</li>
+    <li>¿Qué ocurre si el clúster no tiene recursos suficientes?</li>
+    <li>¿Qué diferencia observas en el aislamiento respecto a Standalone?</li>
+  </ul>
+
+  <h4>Comparativa reflexiva</h4>
+
+  <p>
+    Completa la siguiente tabla tras realizar ambas ejecuciones:
+  </p>
+
+  <table border="1">
+    <thead>
+      <tr>
+        <th>Criterio</th>
+        <th>Standalone</th>
+        <th>Kubernetes</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Tiempo de inicialización</td>
+        <td></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>Facilidad de configuración</td>
+        <td></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>Elasticidad</td>
+        <td></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>Aislamiento</td>
+        <td></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>Complejidad operativa</td>
+        <td></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h2>Preguntas sobre el ejercicio</h2>
+  <ol>
+    <li>¿Por qué SparkSession no cambia entre ambos entornos aunque el comportamiento interno sí lo haga?</li>
+    <li>¿Qué ventajas ofrece Kubernetes en entornos productivos?</li>
+    <li>¿En qué escenarios sería preferible utilizar Standalone?</li>
+    <li>¿Cómo afecta el cluster manager al ciclo de vida del Driver?</li>
+    <li>¿Qué implicaciones tiene cada entorno en términos de resiliencia?</li>
+  </ol>
+
+  <h2>Ejercicio avanzado</h2>
+  <p>
+    Configura autoescalado en Kubernetes (si el entorno lo permite) y analiza cómo varía el número
+    de executors ante un aumento progresivo de la carga (por ejemplo, aumentando el tamaño del dataset).
+    Documenta el comportamiento observado y compáralo con el modo Standalone.
+  </p>
         </div>
       </div>
     </section>

@@ -53,6 +53,195 @@
         <h3>SEGURIDAD</h3>
         <hr>
         <div class="text-cell">
+ <h1>Capítulo X: Seguridad y despliegue en Apache Spark</h1>
+
+  <h2>1. Introducción</h2>
+  <p>
+    En entornos Big Data, la seguridad y el despliegue adecuado de la infraestructura son aspectos críticos.
+    Apache Spark, como motor distribuido de procesamiento, suele ejecutarse en clústeres compartidos y
+    procesar datos sensibles (financieros, personales o estratégicos), lo que exige mecanismos robustos
+    de autenticación, autorización, cifrado y aislamiento.
+  </p>
+  <p>
+    Este capítulo aborda los principales mecanismos de seguridad disponibles en Spark y los modelos
+    habituales de despliegue en entornos productivos.
+  </p>
+
+  <h2>2. Modelos de despliegue</h2>
+
+  <h3>2.1 Modo Local</h3>
+  <p>
+    Utilizado para desarrollo y pruebas. Spark se ejecuta en una única máquina utilizando múltiples hilos.
+    No es adecuado para producción.
+  </p>
+
+  <h3>2.2 Modo Standalone</h3>
+  <p>
+    Spark incluye su propio gestor de clúster (Spark Master y Workers). Es sencillo de configurar
+    y apropiado para entornos controlados o académicos.
+  </p>
+
+  <h3>2.3 YARN</h3>
+  <p>
+    Permite ejecutar Spark sobre el ecosistema Hadoop, integrándose con el ResourceManager.
+    Es habitual en infraestructuras empresariales tradicionales.
+  </p>
+
+  <h3>2.4 Kubernetes</h3>
+  <p>
+    Permite desplegar Spark como contenedores gestionados por Kubernetes.
+    Es el modelo preferido en arquitecturas cloud-native modernas.
+  </p>
+
+  <h2>3. Seguridad en Apache Spark</h2>
+
+  <h3>3.1 Autenticación</h3>
+  <p>
+    Spark puede configurarse para requerir autenticación entre el driver y los executors:
+  </p>
+  <pre><code>spark.authenticate=true
+spark.authenticate.secret=clave_secreta</code></pre>
+
+  <p>
+    En entornos Hadoop, suele integrarse con Kerberos para autenticación fuerte.
+  </p>
+
+  <h3>3.2 Autorización</h3>
+  <p>
+    Spark permite controlar acceso a la Spark UI mediante listas de control:
+  </p>
+  <pre><code>spark.acls.enable=true
+spark.ui.view.acls=usuario1,usuario2
+spark.modify.acls=admin</code></pre>
+
+  <p>
+    En entornos empresariales, la autorización suele gestionarse a nivel de plataforma
+    (por ejemplo, mediante YARN, Kubernetes o soluciones externas).
+  </p>
+
+  <h3>3.3 Cifrado en tránsito (TLS/SSL)</h3>
+  <p>
+    Para proteger comunicaciones entre nodos, puede habilitarse cifrado:
+  </p>
+  <pre><code>spark.ssl.enabled=true
+spark.ssl.keyStore=/ruta/keystore
+spark.ssl.keyStorePassword=********</code></pre>
+
+  <p>
+    Esto protege datos intercambiados entre driver, executors y servicios auxiliares.
+  </p>
+
+  <h3>3.4 Cifrado en reposo</h3>
+  <p>
+    El cifrado en reposo depende del sistema de almacenamiento subyacente
+    (HDFS, S3, discos locales, etc.).
+  </p>
+  <p>
+    Spark puede cifrar datos temporales (shuffle y spill):
+  </p>
+  <pre><code>spark.io.encryption.enabled=true</code></pre>
+
+  <h2>4. Aislamiento y multi-tenancy</h2>
+  <p>
+    En clústeres compartidos, múltiples usuarios pueden ejecutar aplicaciones simultáneamente.
+    Para evitar interferencias:
+  </p>
+  <ul>
+    <li>Definir límites de CPU y memoria por aplicación.</li>
+    <li>Utilizar colas en YARN.</li>
+    <li>Aplicar namespaces y cuotas en Kubernetes.</li>
+    <li>Separar entornos (desarrollo, preproducción, producción).</li>
+  </ul>
+
+  <h2>5. Seguridad de datos sensibles</h2>
+  <ul>
+    <li>Evitar imprimir datos sensibles en logs.</li>
+    <li>Controlar permisos de lectura/escritura en almacenamiento.</li>
+    <li>Usar variables de entorno seguras para credenciales.</li>
+    <li>No hardcodear claves en el código.</li>
+  </ul>
+
+  <h2>6. Despliegue con spark-submit</h2>
+
+  <h3>6.1 Ejemplo en modo Standalone</h3>
+  <pre><code>spark-submit \
+  --master spark://master:7077 \
+  --deploy-mode cluster \
+  --executor-memory 4g \
+  --executor-cores 2 \
+  app.py</code></pre>
+
+  <h3>6.2 Ejemplo en Kubernetes</h3>
+  <pre><code>spark-submit \
+  --master k8s://https://k8s-api:6443 \
+  --deploy-mode cluster \
+  --conf spark.executor.instances=3 \
+  --conf spark.kubernetes.container.image=spark-image \
+  app.py</code></pre>
+
+  <h2>7. Gestión de dependencias</h2>
+  <ul>
+    <li>Uso de paquetes mediante <code>--packages</code>.</li>
+    <li>Incluir dependencias en un JAR (Scala/Java).</li>
+    <li>Uso de entornos virtuales en PySpark.</li>
+    <li>Construcción de imágenes Docker en entornos Kubernetes.</li>
+  </ul>
+
+  <h2>8. Buenas prácticas de despliegue</h2>
+  <ul>
+    <li>Versionar configuraciones.</li>
+    <li>Separar configuración de código.</li>
+    <li>Automatizar despliegues (CI/CD).</li>
+    <li>Monitorizar recursos tras despliegue.</li>
+    <li>Probar cargas antes de producción.</li>
+  </ul>
+
+  <h2>9. Alta disponibilidad</h2>
+
+  <h3>9.1 Master en modo HA (Standalone)</h3>
+  <p>
+    Puede configurarse más de un master utilizando ZooKeeper para coordinación.
+  </p>
+
+  <h3>9.2 Tolerancia a fallos</h3>
+  <ul>
+    <li>Reintento automático de tareas.</li>
+    <li>Recomputación basada en lineage.</li>
+    <li>Reinicio automático de pods en Kubernetes.</li>
+  </ul>
+
+  <h2>10. Ejercicio propuesto (nivel TFG)</h2>
+
+  <h3>10.1 Objetivo</h3>
+  <p>
+    Diseñar una arquitectura segura de despliegue Spark para un entorno empresarial
+    que procese datos sensibles.
+  </p>
+
+  <h3>10.2 Enunciado</h3>
+  <ol>
+    <li>Seleccionar modelo de despliegue (Standalone, YARN o Kubernetes).</li>
+    <li>Definir mecanismos de autenticación y cifrado.</li>
+    <li>Especificar parámetros de aislamiento de recursos.</li>
+    <li>Describir estrategia de alta disponibilidad.</li>
+    <li>Identificar riesgos y medidas mitigadoras.</li>
+  </ol>
+
+  <h2>11. Conclusión</h2>
+  <p>
+    La seguridad y el despliegue adecuado de Spark son fundamentales para entornos productivos.
+    No basta con desarrollar aplicaciones eficientes; es necesario proteger datos,
+    asegurar comunicaciones y garantizar disponibilidad.
+  </p>
+  <p>
+    La correcta configuración de autenticación, cifrado, aislamiento de recursos
+    y alta disponibilidad permite construir plataformas de datos robustas y alineadas
+    con requisitos empresariales y normativos.
+  </p>
+
+
+
+
           <h4>Kerberos</h4>
           <p>Integración de Spark con Kerberos para autenticación: configurar principal y keytab, y arrancar procesos con kinit.</p>
           <h4>TLS / SSL</h4>

@@ -39,6 +39,193 @@
 
     <section id="outofmemory">
       <div class="lesson-container">
+
+ <h1>Capítulo X: Errores frecuentes en Apache Spark y cómo solucionarlos</h1>
+
+  <h2>1. Introducción</h2>
+  <p>
+    Durante el desarrollo y despliegue de aplicaciones en Apache Spark es habitual encontrarse con errores
+    relacionados con memoria, particionado, configuración del clúster o uso incorrecto de las APIs.
+    Comprender el origen de estos errores y saber interpretarlos correctamente es esencial para
+    desarrollar aplicaciones robustas y optimizadas.
+  </p>
+  <p>
+    Este capítulo recopila los errores más frecuentes en Spark y describe sus causas habituales
+    junto con estrategias prácticas de resolución.
+  </p>
+
+  <h2>2. Errores relacionados con memoria</h2>
+
+  <h3>2.1 OutOfMemoryError (Java heap space)</h3>
+  <p><strong>Causa:</strong></p>
+  <ul>
+    <li>Dataset demasiado grande para la memoria asignada.</li>
+    <li>Uso excesivo de collect() o operaciones que traen datos al driver.</li>
+    <li>Shuffle masivo sin suficiente memoria.</li>
+  </ul>
+
+  <p><strong>Soluciones:</strong></p>
+  <ul>
+    <li>Aumentar <code>spark.executor.memory</code> y/o <code>spark.driver.memory</code>.</li>
+    <li>Evitar collect() en datasets grandes.</li>
+    <li>Revisar número de particiones.</li>
+    <li>Usar persist(StorageLevel.DISK_ONLY) si la memoria es limitada.</li>
+  </ul>
+
+  <h3>2.2 GC Overhead Limit Exceeded</h3>
+  <p><strong>Causa:</strong> exceso de tiempo en recolección de basura debido a presión de memoria.</p>
+
+  <p><strong>Soluciones:</strong></p>
+  <ul>
+    <li>Aumentar memoria del executor.</li>
+    <li>Reducir número de objetos intermedios.</li>
+    <li>Optimizar particionado y evitar estructuras complejas innecesarias.</li>
+  </ul>
+
+  <h2>3. Problemas de particionado y rendimiento</h2>
+
+  <h3>3.1 Tareas muy lentas (Data Skew)</h3>
+  <p><strong>Causa:</strong> distribución desigual de datos entre particiones.</p>
+
+  <p><strong>Soluciones:</strong></p>
+  <ul>
+    <li>Activar Adaptive Query Execution (AQE).</li>
+    <li>Reparticionar los datos (<code>repartition()</code>).</li>
+    <li>Aplicar técnicas de salting en claves con alta frecuencia.</li>
+  </ul>
+
+  <h3>3.2 Demasiadas particiones pequeñas</h3>
+  <p><strong>Causa:</strong> exceso de <code>spark.sql.shuffle.partitions</code>.</p>
+
+  <p><strong>Soluciones:</strong></p>
+  <ul>
+    <li>Ajustar <code>spark.sql.shuffle.partitions</code>.</li>
+    <li>Usar <code>coalesce()</code> antes de escribir resultados.</li>
+  </ul>
+
+  <h2>4. Errores de serialización</h2>
+
+  <h3>4.1 Task not serializable</h3>
+  <p><strong>Causa:</strong> intento de enviar objetos no serializables a los executors.</p>
+
+  <p><strong>Soluciones:</strong></p>
+  <ul>
+    <li>Evitar capturar objetos complejos dentro de funciones lambda.</li>
+    <li>Marcar clases como Serializable (en Scala).</li>
+    <li>Usar variables broadcast para objetos grandes.</li>
+  </ul>
+
+  <h3>4.2 Kryo serialization errors</h3>
+  <p><strong>Causa:</strong> tipos no registrados correctamente en Kryo.</p>
+
+  <p><strong>Solución:</strong> registrar clases personalizadas y habilitar Kryo:</p>
+  <pre><code>spark.serializer=org.apache.spark.serializer.KryoSerializer</code></pre>
+
+  <h2>5. Errores en joins y shuffles</h2>
+
+  <h3>5.1 Shuffle fetch failed</h3>
+  <p><strong>Causa:</strong> fallo en transferencia de datos entre nodos.</p>
+
+  <p><strong>Soluciones:</strong></p>
+  <ul>
+    <li>Revisar conectividad de red.</li>
+    <li>Aumentar memoria y timeout.</li>
+    <li>Reducir tamaño de particiones.</li>
+  </ul>
+
+  <h3>5.2 Broadcast timeout</h3>
+  <p><strong>Causa:</strong> tabla demasiado grande para broadcast.</p>
+
+  <p><strong>Soluciones:</strong></p>
+  <ul>
+    <li>Aumentar <code>spark.sql.broadcastTimeout</code>.</li>
+    <li>Evitar broadcast manual si la tabla es grande.</li>
+  </ul>
+
+  <h2>6. Problemas en Structured Streaming</h2>
+
+  <h3>6.1 Checkpoint corruption</h3>
+  <p><strong>Causa:</strong> interrupción inesperada o almacenamiento inconsistente.</p>
+
+  <p><strong>Solución:</strong></p>
+  <ul>
+    <li>Eliminar directorio de checkpoint (si procede).</li>
+    <li>Usar almacenamiento fiable (HDFS, S3).</li>
+  </ul>
+
+  <h3>6.2 Datos tardíos (late data)</h3>
+  <p><strong>Causa:</strong> eventos fuera de la ventana esperada.</p>
+
+  <p><strong>Solución:</strong> configurar watermark correctamente.</p>
+
+  <h2>7. Errores de configuración y despliegue</h2>
+
+  <h3>7.1 Executor lost</h3>
+  <p><strong>Causa:</strong> falta de recursos o fallo del nodo.</p>
+
+  <p><strong>Soluciones:</strong></p>
+  <ul>
+    <li>Revisar logs del executor.</li>
+    <li>Aumentar recursos.</li>
+    <li>Verificar configuración del cluster manager.</li>
+  </ul>
+
+  <h3>7.2 Cannot allocate memory</h3>
+  <p><strong>Causa:</strong> recursos insuficientes en el nodo.</p>
+
+  <p><strong>Solución:</strong></p>
+  <ul>
+    <li>Ajustar memoria y cores.</li>
+    <li>Reducir paralelismo.</li>
+  </ul>
+
+  <h2>8. Buenas prácticas para evitar errores</h2>
+  <ul>
+    <li>Analizar siempre el plan de ejecución con <code>explain(True)</code>.</li>
+    <li>Monitorizar Spark UI regularmente.</li>
+    <li>Ajustar particiones según tamaño del dataset.</li>
+    <li>Evitar acciones costosas innecesarias.</li>
+    <li>Separar entorno de desarrollo y producción.</li>
+  </ul>
+
+  <h2>9. Estrategia sistemática de diagnóstico</h2>
+  <ol>
+    <li>Revisar mensaje completo del error.</li>
+    <li>Analizar logs del driver y executors.</li>
+    <li>Revisar Spark UI (stages y tareas).</li>
+    <li>Identificar si el problema es de memoria, red, configuración o datos.</li>
+    <li>Aplicar cambios graduales y volver a probar.</li>
+  </ol>
+
+  <h2>10. Ejercicio propuesto (nivel TFG)</h2>
+
+  <h3>10.1 Objetivo</h3>
+  <p>
+    Simular y analizar diferentes errores comunes en Spark, documentando causas y soluciones.
+  </p>
+
+  <h3>10.2 Enunciado</h3>
+  <ol>
+    <li>Provocar un error de memoria reduciendo la memoria del executor.</li>
+    <li>Generar skew mediante una clave altamente repetida.</li>
+    <li>Aplicar repartition o salting y comparar resultados.</li>
+    <li>Analizar métricas en Spark UI.</li>
+    <li>Documentar diagnóstico y solución aplicada.</li>
+  </ol>
+
+  <h2>11. Conclusión</h2>
+  <p>
+    Los errores en Spark suelen estar relacionados con memoria, particionado, serialización o configuración del clúster.
+    Una comprensión profunda del modelo de ejecución y una monitorización adecuada permiten diagnosticar y resolver
+    problemas de forma sistemática.
+  </p>
+  <p>
+    En el contexto de un TFG, demostrar la capacidad de identificar, analizar y corregir errores frecuentes
+    evidencia dominio práctico del ecosistema Spark.
+  </p>
+
+
+
         <h3>OUT OF MEMORY Y GC</h3>
         <hr>
         <div class="text-cell">

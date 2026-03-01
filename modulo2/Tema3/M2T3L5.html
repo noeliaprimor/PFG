@@ -52,6 +52,227 @@
         <h3>PIPELINES</h3>
         <hr>
         <div class="text-cell">
+
+           <h2>1. Introducción</h2>
+  <p>
+    MLlib es la librería de Machine Learning integrada en Apache Spark. Permite entrenar y evaluar modelos de aprendizaje automático
+    sobre grandes volúmenes de datos distribuidos, aprovechando el motor de ejecución de Spark y su capacidad de paralelización.
+  </p>
+  <p>
+    A diferencia de librerías tradicionales que operan en memoria local (por ejemplo, sobre datasets pequeños), MLlib está diseñada
+    para trabajar en entornos Big Data, donde los datos se distribuyen en múltiples nodos del clúster.
+  </p>
+
+  <h2>2. Evolución de MLlib</h2>
+  <p>
+    Históricamente, MLlib ofrecía una API basada en RDD. Sin embargo, en versiones modernas de Spark, el enfoque recomendado es
+    utilizar la API basada en DataFrames dentro del paquete <code>pyspark.ml</code> (o <code>org.apache.spark.ml</code> en Scala).
+  </p>
+  <p>
+    Esta API estructurada se integra con Spark SQL y permite utilizar:
+  </p>
+  <ul>
+    <li>Optimización automática (Catalyst).</li>
+    <li>Pipelines declarativos.</li>
+    <li>Transformers y Estimators reutilizables.</li>
+  </ul>
+
+  <h2>3. Componentes principales de MLlib</h2>
+
+  <h3>3.1 Transformer</h3>
+  <p>
+    Un Transformer es un componente que transforma un DataFrame en otro DataFrame mediante el método <code>transform()</code>.
+    Ejemplo: un modelo entrenado o una normalización.
+  </p>
+
+  <h3>3.2 Estimator</h3>
+  <p>
+    Un Estimator es un algoritmo que se ajusta a datos de entrenamiento mediante el método <code>fit()</code>, generando un modelo
+    (que es un Transformer).
+  </p>
+
+  <h3>3.3 Pipeline</h3>
+  <p>
+    Un Pipeline encadena múltiples etapas (stages) de transformación y entrenamiento, permitiendo definir flujos completos de
+    preparación y modelado.
+  </p>
+
+  <h2>4. Flujo típico de Machine Learning en Spark</h2>
+  <ol>
+    <li>Ingesta y limpieza de datos (DataFrame).</li>
+    <li>Preparación de características (feature engineering).</li>
+    <li>División en entrenamiento y test.</li>
+    <li>Entrenamiento del modelo.</li>
+    <li>Evaluación.</li>
+    <li>Persistencia del modelo.</li>
+  </ol>
+
+  <h2>5. Preparación de datos (Feature Engineering)</h2>
+
+  <h3>5.1 VectorAssembler</h3>
+  <p>
+    MLlib requiere que las variables de entrada estén en una única columna de tipo vector.
+  </p>
+
+  <pre><code>from pyspark.ml.feature import VectorAssembler
+
+assembler = VectorAssembler(
+    inputCols=["edad", "ingresos"],
+    outputCol="features"
+)
+
+df_features = assembler.transform(df)</code></pre>
+
+  <h3>5.2 StringIndexer</h3>
+  <p>
+    Convierte variables categóricas en índices numéricos.
+  </p>
+
+  <pre><code>from pyspark.ml.feature import StringIndexer
+
+indexer = StringIndexer(inputCol="categoria", outputCol="categoria_index")
+df_indexed = indexer.fit(df).transform(df)</code></pre>
+
+  <h3>5.3 StandardScaler</h3>
+  <p>
+    Normaliza variables numéricas para mejorar el rendimiento de ciertos modelos.
+  </p>
+
+  <pre><code>from pyspark.ml.feature import StandardScaler
+
+scaler = StandardScaler(inputCol="features", outputCol="scaledFeatures")
+model_scaler = scaler.fit(df_features)
+df_scaled = model_scaler.transform(df_features)</code></pre>
+
+  <h2>6. Modelos supervisados</h2>
+
+  <h3>6.1 Regresión logística</h3>
+  <pre><code>from pyspark.ml.classification import LogisticRegression
+
+lr = LogisticRegression(featuresCol="features", labelCol="label")
+model = lr.fit(training_data)
+
+predictions = model.transform(test_data)</code></pre>
+
+  <h3>6.2 Árboles de decisión</h3>
+  <pre><code>from pyspark.ml.classification import DecisionTreeClassifier
+
+dt = DecisionTreeClassifier(featuresCol="features", labelCol="label")
+model_dt = dt.fit(training_data)</code></pre>
+
+  <h3>6.3 Random Forest</h3>
+  <pre><code>from pyspark.ml.classification import RandomForestClassifier
+
+rf = RandomForestClassifier(featuresCol="features", labelCol="label")
+model_rf = rf.fit(training_data)</code></pre>
+
+  <h2>7. Modelos no supervisados</h2>
+
+  <h3>7.1 K-Means (Clustering)</h3>
+  <pre><code>from pyspark.ml.clustering import KMeans
+
+kmeans = KMeans(featuresCol="features", k=3)
+model_kmeans = kmeans.fit(df_features)
+
+clusters = model_kmeans.transform(df_features)</code></pre>
+
+  <h2>8. Evaluación de modelos</h2>
+
+  <h3>8.1 Evaluación para clasificación</h3>
+  <pre><code>from pyspark.ml.evaluation import BinaryClassificationEvaluator
+
+evaluator = BinaryClassificationEvaluator(labelCol="label")
+auc = evaluator.evaluate(predictions)</code></pre>
+
+  <h3>8.2 Evaluación para regresión</h3>
+  <pre><code>from pyspark.ml.evaluation import RegressionEvaluator
+
+evaluator = RegressionEvaluator(labelCol="label", metricName="rmse")
+rmse = evaluator.evaluate(predictions)</code></pre>
+
+  <h2>9. Validación cruzada y ajuste de hiperparámetros</h2>
+
+  <pre><code>from pyspark.ml.tuning import CrossValidator, ParamGridBuilder
+
+paramGrid = (ParamGridBuilder()
+    .addGrid(lr.regParam, [0.01, 0.1])
+    .addGrid(lr.elasticNetParam, [0.0, 0.5])
+    .build())
+
+crossval = CrossValidator(
+    estimator=lr,
+    estimatorParamMaps=paramGrid,
+    evaluator=evaluator,
+    numFolds=3)
+
+cvModel = crossval.fit(training_data)</code></pre>
+
+  <h2>10. Pipelines completos</h2>
+
+  <pre><code>from pyspark.ml import Pipeline
+
+pipeline = Pipeline(stages=[indexer, assembler, lr])
+model_pipeline = pipeline.fit(training_data)
+
+predictions = model_pipeline.transform(test_data)</code></pre>
+
+  <p>
+    Los pipelines permiten encapsular todo el flujo de preparación y entrenamiento en un único objeto reproducible.
+  </p>
+
+  <h2>11. Persistencia del modelo</h2>
+
+  <pre><code>model_pipeline.write().overwrite().save("/models/modelo_ml")
+loaded_model = PipelineModel.load("/models/modelo_ml")</code></pre>
+
+  <h2>12. Ventajas de MLlib en entornos Big Data</h2>
+  <ul>
+    <li>Escalabilidad horizontal.</li>
+    <li>Integración directa con ETL en Spark.</li>
+    <li>Pipelines reproducibles.</li>
+    <li>Compatibilidad con batch y streaming estructurado.</li>
+  </ul>
+
+  <h2>13. Limitaciones</h2>
+  <ul>
+    <li>Menor variedad de algoritmos comparado con librerías especializadas (por ejemplo, scikit-learn).</li>
+    <li>Menor flexibilidad en modelos muy personalizados.</li>
+    <li>No sustituye completamente frameworks avanzados de deep learning.</li>
+  </ul>
+
+  <h2>14. Ejercicio propuesto (nivel TFG)</h2>
+
+  <h3>14.1 Objetivo</h3>
+  <p>
+    Implementar un pipeline completo de clasificación binaria utilizando MLlib, incluyendo preparación de datos,
+    entrenamiento, evaluación y ajuste de hiperparámetros.
+  </p>
+
+  <h3>14.2 Enunciado</h3>
+  <ol>
+    <li>Cargar un dataset estructurado (por ejemplo, CSV o Parquet).</li>
+    <li>Aplicar StringIndexer a variables categóricas.</li>
+    <li>Construir la columna "features" con VectorAssembler.</li>
+    <li>Dividir el dataset en entrenamiento y test.</li>
+    <li>Entrenar un modelo de regresión logística.</li>
+    <li>Evaluar el modelo con AUC o accuracy.</li>
+    <li>Aplicar validación cruzada con diferentes hiperparámetros.</li>
+    <li>Guardar el modelo entrenado.</li>
+  </ol>
+
+  <h2>15. Conclusión</h2>
+  <p>
+    MLlib permite integrar Machine Learning dentro del ecosistema Spark de forma escalable y coherente con el resto del pipeline
+    de datos. Su integración con DataFrames y Spark SQL facilita la construcción de modelos reproducibles y optimizados en entornos
+    Big Data.
+  </p>
+  <p>
+    En arquitecturas modernas de datos, MLlib es una herramienta clave cuando se requiere entrenar modelos sobre grandes volúmenes
+    distribuidos, especialmente en contextos donde los datos ya están siendo procesados con Spark.
+  </p>
+
+
+
           <pre><code class="language-python python-code">from pyspark.ml import Pipeline
 from pyspark.ml.feature import StringIndexer, VectorAssembler
 from pyspark.ml.classification import LogisticRegression

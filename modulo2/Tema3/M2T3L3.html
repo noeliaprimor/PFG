@@ -49,6 +49,247 @@
 
     <section id="api">
       <div class="lesson-container">
+
+ <h1>Capítulo X: GraphX — Procesamiento y análisis de grafos en Apache Spark</h1>
+
+  <h2>1. Introducción</h2>
+  <p>
+    GraphX es el módulo de Apache Spark orientado al procesamiento y análisis distribuido de grafos, disponible principalmente en
+    Scala (y de forma más limitada en Java). Permite modelar grafos a gran escala y ejecutar algoritmos de análisis sobre ellos
+    aprovechando el motor distribuido de Spark. GraphX se integra con el ecosistema de Spark mediante RDDs y facilita la construcción
+    de pipelines donde la lógica de grafo puede convivir con fases de preparación y transformación de datos.
+  </p>
+  <p>
+    El análisis de grafos es especialmente relevante en dominios donde las relaciones entre entidades son tan importantes como las
+    entidades en sí (por ejemplo, redes sociales, transacciones, dependencias entre sistemas, recomendación o detección de fraude).
+  </p>
+
+  <h2>2. Conceptos básicos: grafos en Big Data</h2>
+  <p>
+    Un grafo es una estructura compuesta por:
+  </p>
+  <ul>
+    <li><strong>Vértices (vertices)</strong>: representan entidades (usuarios, cuentas, dispositivos, páginas, etc.).</li>
+    <li><strong>Aristas (edges)</strong>: representan relaciones entre entidades (amistad, transferencia, enlace, dependencia, etc.).</li>
+  </ul>
+
+  <p>
+    En entornos Big Data, el modelado como grafo permite explotar patrones de conectividad y propagación, y habilita métricas
+    estructurales que no son sencillas de obtener en modelos tabulares tradicionales.
+  </p>
+
+  <h2>3. Aportación de GraphX dentro de Spark</h2>
+  <p>
+    GraphX aporta un modelo distribuido para grafos dentro de Spark que permite:
+  </p>
+  <ul>
+    <li>Representar grafos a partir de colecciones distribuidas (RDDs).</li>
+    <li>Aplicar operaciones de transformación sobre vértices y aristas (map, filter, joins).</li>
+    <li>Ejecutar algoritmos clásicos de grafos (PageRank, componentes conexas, conteo de triángulos, etc.).</li>
+    <li>Implementar computación iterativa eficiente mediante el modelo de propagación de mensajes inspirado en Pregel.</li>
+  </ul>
+  <p>
+    Dado que GraphX se ejecuta sobre Spark, hereda su escalabilidad, tolerancia a fallos, ejecución en clúster y capacidades de
+    persistencia (cache/persist).
+  </p>
+
+  <h2>4. Modelo de datos en GraphX</h2>
+
+  <h3>4.1 Tipos principales</h3>
+  <ul>
+    <li><strong>VertexId</strong>: identificador del vértice (típicamente un Long).</li>
+    <li><strong>VD (Vertex Data)</strong>: tipo de dato asociado a un vértice (por ejemplo, nombre, categoría o score).</li>
+    <li><strong>ED (Edge Data)</strong>: tipo asociado a una arista (por ejemplo, peso o tipo de relación).</li>
+  </ul>
+
+  <h3>4.2 Representación con RDDs</h3>
+  <p>
+    Conceptualmente, GraphX utiliza:
+  </p>
+  <ul>
+    <li><code>RDD[(VertexId, VD)]</code> para los vértices.</li>
+    <li><code>RDD[Edge[ED]]</code> para las aristas.</li>
+  </ul>
+
+  <h3>4.3 Creación de un grafo</h3>
+  <p>Ejemplo base en Scala:</p>
+  <pre><code>import org.apache.spark.graphx._
+import org.apache.spark.rdd.RDD
+
+val vertices: RDD[(VertexId, String)] = sc.parallelize(Seq(
+  (1L, "A"), (2L, "B"), (3L, "C"), (4L, "D")
+))
+
+val edges: RDD[Edge[Int]] = sc.parallelize(Seq(
+  Edge(1L, 2L, 1),
+  Edge(2L, 3L, 1),
+  Edge(3L, 4L, 1),
+  Edge(1L, 4L, 1)
+))
+
+val graph: Graph[String, Int] = Graph(vertices, edges)</code></pre>
+
+  <h2>5. Operaciones fundamentales (GraphX API)</h2>
+  <p>
+    GraphX proporciona operaciones para transformar y analizar grafos, de forma análoga a como se transforman colecciones distribuidas.
+  </p>
+
+  <h3>5.1 Transformación de atributos de vértices y aristas</h3>
+  <pre><code>val g2 = graph.mapVertices { case (id, attr) =&gt; attr.toLowerCase }
+val g3 = graph.mapEdges(e =&gt; e.attr + 10)</code></pre>
+
+  <h3>5.2 Filtrado de aristas y subgrafos</h3>
+  <p>
+    Un subgrafo puede definirse filtrando aristas (y, de forma indirecta, vértices asociados):
+  </p>
+  <pre><code>val sub = graph.subgraph(epred = e =&gt; e.attr &gt; 0)</code></pre>
+
+  <h3>5.3 Triplets</h3>
+  <p>
+    Los <strong>triplets</strong> ofrecen una vista combinada de vértice origen, arista y vértice destino, útil para cálculos que requieren
+    información de ambos extremos de una relación.
+  </p>
+  <pre><code>graph.triplets.collect.foreach { t =&gt;
+  println(s"${t.srcAttr} -&gt; ${t.dstAttr} (w=${t.attr})")
+}</code></pre>
+
+  <h2>6. Algoritmos habituales en GraphX</h2>
+  <p>
+    GraphX incluye implementaciones de algoritmos clásicos de grafos orientados a métricas estructurales y conectividad.
+  </p>
+
+  <h3>6.1 PageRank</h3>
+  <p>
+    PageRank calcula una métrica de “importancia” en grafos dirigidos basada en la estructura de enlaces. Es útil para ranking y recomendación.
+  </p>
+  <pre><code>val ranks = graph.pageRank(0.0001).vertices</code></pre>
+
+  <h3>6.2 Connected Components (Componentes conexas)</h3>
+  <p>
+    Determina grupos de vértices que están conectados entre sí, lo que permite identificar comunidades o agrupaciones en redes.
+  </p>
+  <pre><code>val cc = graph.connectedComponents().vertices</code></pre>
+
+  <h3>6.3 Triangle Counting (Conteo de triángulos)</h3>
+  <p>
+    Cuenta triángulos (subgrafos de tres nodos conectados entre sí), una métrica relevante en análisis de redes sociales y cohesión estructural.
+  </p>
+  <pre><code>val tc = graph.triangleCount().vertices</code></pre>
+
+  <h3>6.4 Rutas más cortas (Shortest Paths) y algoritmos personalizados</h3>
+  <p>
+    Dependiendo de la versión y utilidades disponibles, pueden existir implementaciones o ejemplos para rutas más cortas. Alternativamente,
+    este tipo de algoritmos puede implementarse mediante el modelo iterativo Pregel, propagando distancias y actualizando estados de vértices.
+  </p>
+
+  <h2>7. Pregel en GraphX: computación iterativa por mensajes</h2>
+  <p>
+    Muchos algoritmos de grafos requieren múltiples iteraciones (por ejemplo, propagación de scores, distancias o etiquetas). GraphX incorpora
+    un modelo inspirado en Pregel basado en intercambio de mensajes:
+  </p>
+  <ul>
+    <li>Cada vértice mantiene un estado (atributo).</li>
+    <li>En cada iteración (superstep), el vértice puede recibir mensajes, actualizar su estado y enviar nuevos mensajes a vecinos.</li>
+    <li>El proceso termina al converger (no hay mensajes) o al alcanzar un número máximo de iteraciones.</li>
+  </ul>
+
+  <p>Ejemplo conceptual (simplificado):</p>
+  <pre><code>val initialMsg = 0
+val gPregel = graph.pregel(initialMsg, maxIterations = 10)(
+  vprog = (id, attr, msg) =&gt; attr,          // actualización del vértice con el mensaje
+  sendMsg = triplet =&gt; Iterator.empty,      // envío de mensajes a vecinos
+  mergeMsg = (a, b) =&gt; a                    // combinación de mensajes
+)</code></pre>
+
+  <p>
+    En un contexto académico, Pregel es especialmente importante para explicar cómo GraphX soporta algoritmos iterativos distribuidos
+    de forma eficiente sobre particiones.
+  </p>
+
+  <h2>8. Rendimiento: particionado, persistencia y skew</h2>
+  <p>
+    Dado que GraphX ejecuta sobre Spark, el rendimiento depende de factores habituales del procesamiento distribuido:
+  </p>
+  <ul>
+    <li><strong>Particionado</strong>: cómo se distribuyen vértices y aristas afecta al paralelismo y al coste de comunicación.</li>
+    <li><strong>Iteraciones</strong>: algoritmos iterativos multiplican el coste; conviene minimizar trabajo por iteración.</li>
+    <li><strong>Skew</strong>: presencia de “supernodos” (vértices con grado muy alto) puede concentrar carga en ciertas particiones.</li>
+    <li><strong>Persistencia</strong>: cache/persist reduce recomputaciones si el grafo se usa repetidamente.</li>
+  </ul>
+
+  <p>Buenas prácticas habituales:</p>
+  <ul>
+    <li>Usar <code>cache()</code> o <code>persist()</code> si se reutiliza el grafo en varias etapas o algoritmos.</li>
+    <li>Revisar particionado y distribución de grados para detectar desequilibrios.</li>
+    <li>Reducir shuffles y operaciones costosas en fases previas de ETL del grafo.</li>
+    <li>Evitar operaciones que requieran traer resultados masivos al driver.</li>
+  </ul>
+
+  <h2>9. Limitaciones de GraphX y alternativas</h2>
+  <p>
+    Aunque GraphX es una herramienta potente, presenta algunas limitaciones prácticas:
+  </p>
+  <ul>
+    <li>API orientada principalmente a Scala; no existe un soporte equivalente nativo en PySpark.</li>
+    <li>Se basa en un enfoque “RDD-centric”, lo que puede ser menos natural en pipelines modernos basados en DataFrames.</li>
+  </ul>
+
+  <p>
+    Como alternativa, en algunos proyectos se utiliza <strong>GraphFrames</strong>, una librería basada en DataFrames que facilita la integración
+    con Spark SQL. También existen motores de grafos especializados (por ejemplo, bases de datos de grafos) que pueden ser apropiados según el caso.
+  </p>
+
+  <h2>10. Ejercicio propuesto (nivel TFG)</h2>
+
+  <h3>10.1 Objetivo</h3>
+  <p>
+    Construir un grafo sencillo y aplicar algoritmos clásicos para interpretar métricas estructurales y conectividad, justificando resultados
+    en base a la estructura del grafo.
+  </p>
+
+  <h3>10.2 Enunciado</h3>
+  <ol>
+    <li>Construir un grafo de ejemplo (vértices: usuarios; aristas: relaciones entre usuarios).</li>
+    <li>Calcular:
+      <ul>
+        <li>Componentes conexas (<code>connectedComponents</code>).</li>
+        <li>PageRank (<code>pageRank</code>).</li>
+        <li>Conteo de triángulos (<code>triangleCount</code>).</li>
+      </ul>
+    </li>
+    <li>Para cada algoritmo:
+      <ul>
+        <li>Explicar qué mide y para qué se utiliza.</li>
+        <li>Interpretar resultados (por ejemplo, nodo más relevante en PageRank o comunidades detectadas).</li>
+      </ul>
+    </li>
+    <li>(Opcional) Modificar el grafo añadiendo o eliminando aristas y analizar cómo cambian las métricas.</li>
+  </ol>
+
+  <h3>10.3 Entregables</h3>
+  <ul>
+    <li>Código de creación del grafo (vértices y aristas).</li>
+    <li>Resultados de los tres algoritmos y una interpretación razonada.</li>
+    <li>Conclusión breve sobre el comportamiento de las métricas ante cambios en la estructura del grafo.</li>
+  </ul>
+
+  <h2>11. Conclusión</h2>
+  <p>
+    GraphX permite ejecutar análisis de grafos a gran escala dentro del ecosistema Spark, representando grafos como colecciones distribuidas y
+    ofreciendo transformaciones y algoritmos listos para usar. Su modelo de computación iterativa basado en Pregel facilita la implementación de
+    algoritmos que requieren propagación de información a través de relaciones.
+  </p>
+  <p>
+    En el contexto de un TFG, GraphX resulta especialmente útil para explicar cómo se ejecutan algoritmos de grafos en un entorno distribuido,
+    cómo influyen particionado y skew en el rendimiento, y cómo se aplican métricas estructurales para resolver problemas reales como
+    detección de comunidades, ranking e identificación de patrones de conectividad.
+  </p>
+
+
+
+
+
+
         <h3>API BÁSICA (Scala)</h3>
         <hr>
         <div class="text-cell">

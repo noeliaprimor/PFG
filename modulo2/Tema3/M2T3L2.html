@@ -42,6 +42,11 @@
         <h3>DESCRIPCIÓN</h3>
         <hr>
         <div class="text-cell">
+
+
+
+
+
           <p>Spark SQL proporciona la abstracción de DataFrame y un motor SQL optimizado (Catalyst). Permite ejecutar consultas SQL y combinar el poder de las APIs declarativas con las optimizaciones internas.</p>
         </div>
       </div>
@@ -52,6 +57,263 @@
         <h3>DATAFRAMES</h3>
         <hr>
         <div class="text-cell">
+
+          h1>Capítulo X: Spark SQL — Gestión de datos estructurados</h1>
+
+  <h2>1. Introducción</h2>
+  <p>
+    Spark SQL es el módulo de Apache Spark especializado en la gestión y el procesamiento de datos estructurados (y, en muchos casos,
+    semi-estructurados). Proporciona un motor SQL distribuido y un modelo unificado basado en DataFrames y Datasets, permitiendo consultar,
+    transformar y gobernar datos como si fuesen tablas, pero a escala Big Data.
+  </p>
+  <p>
+    En la práctica, Spark SQL actúa como la capa que habilita gran parte del procesamiento analítico moderno dentro de Spark, incluyendo
+    operaciones de tipo ETL, agregaciones, joins y funciones de ventana, beneficiándose de optimización automática para mejorar el rendimiento.
+  </p>
+
+  <h2>2. ¿Qué es Spark SQL y por qué es clave?</h2>
+  <p>
+    Spark SQL aporta tres capacidades principales:
+  </p>
+  <ol>
+    <li>
+      <strong>SQL distribuido</strong>: ejecución de consultas SQL (ANSI SQL con extensiones) sobre grandes volúmenes de datos.
+    </li>
+    <li>
+      <strong>API estructurada</strong>: uso de DataFrames y Datasets como abstracciones para operar con datos en batch (y también en streaming).
+    </li>
+    <li>
+      <strong>Integración de datos</strong>: lectura y escritura desde múltiples fuentes, formatos y catálogos (Parquet, ORC, JSON, CSV, Hive, JDBC, etc.).
+    </li>
+  </ol>
+  <p>
+    Estas capacidades permiten desarrollar pipelines declarativos y optimizados, donde el desarrollador expresa qué resultado desea y Spark decide
+    cómo ejecutarlo de forma eficiente.
+  </p>
+
+  <h2>3. Modelo de datos: tablas, vistas y DataFrames</h2>
+  <p>
+    Spark SQL trabaja con estructuras tabulares que representan datos organizados en columnas con un esquema:
+  </p>
+  <ul>
+    <li><strong>Tabla</strong>: objeto persistente, gestionado por Spark o externo (dependiendo del catálogo y el formato).</li>
+    <li><strong>Vista temporal</strong>: definición lógica sobre un DataFrame; no persistente y limitada al ciclo de vida de la sesión.</li>
+    <li><strong>Vista global</strong>: visible entre sesiones dentro de la misma aplicación Spark.</li>
+  </ul>
+
+  <p>Ejemplo de vista temporal:</p>
+  <pre><code>df.createOrReplaceTempView("empleados")
+res = spark.sql("SELECT departamento, COUNT(*) n FROM empleados GROUP BY departamento")</code></pre>
+
+  <h2>4. Data Sources API: lectura y escritura estructurada</h2>
+  <p>
+    Spark SQL se apoya en conectores (“data sources”) para acceder a datos alojados en distintos sistemas. El acceso se realiza mediante:
+  </p>
+  <ul>
+    <li><strong>DataFrameReader</strong> (lectura): <code>spark.read</code></li>
+    <li><strong>DataFrameWriter</strong> (escritura): <code>df.write</code></li>
+  </ul>
+
+  <h3>4.1 Lectura (DataFrameReader)</h3>
+  <pre><code>df_parquet = spark.read.parquet("/data/ventas.parquet")
+df_csv = spark.read.option("header", True).csv("/data/clientes.csv")
+df_json = spark.read.json("/data/eventos.json")</code></pre>
+
+  <h3>4.2 Escritura (DataFrameWriter)</h3>
+  <pre><code>df_parquet.write.mode("overwrite").parquet("/out/ventas")
+df_csv.write.mode("overwrite").option("header", True).csv("/out/clientes")</code></pre>
+
+  <p>
+    Consideración importante: al escribir, Spark suele crear un directorio con múltiples ficheros <code>part-xxxxx</code> (uno por partición),
+    lo cual es normal en entornos distribuidos.
+  </p>
+
+  <h2>5. Esquema (Schema) y tipado</h2>
+  <p>
+    La gestión del <strong>schema</strong> es crítica porque determina tipos de datos, validaciones, compatibilidad y rendimiento. Definir el esquema
+    correctamente evita inferencias costosas y reduce errores asociados a conversiones automáticas de tipo.
+  </p>
+
+  <h3>5.1 Inferencia vs esquema explícito</h3>
+  <p>
+    La inferencia es útil en prototipos, pero en escenarios de producción suele preferirse un esquema explícito.
+  </p>
+
+  <p>Inferencia (en prototipos):</p>
+  <pre><code>df = spark.read.option("header", True).option("inferSchema", True).csv("/data/datos.csv")</code></pre>
+
+  <p>Esquema explícito (buena práctica):</p>
+  <pre><code>from pyspark.sql.types import StructType, StructField, StringType, IntegerType
+
+schema = StructType([
+  StructField("id", StringType(), True),
+  StructField("edad", IntegerType(), True),
+])
+
+df = spark.read.schema(schema).option("header", True).csv("/data/datos.csv")</code></pre>
+
+  <h2>6. Catalyst Optimizer: optimización automática</h2>
+  <p>
+    Spark SQL utiliza el optimizador <strong>Catalyst</strong> para transformar consultas (SQL o API DataFrame) en planes eficientes.
+    El proceso se basa en la construcción de planes lógicos y su posterior optimización y traducción a planes físicos.
+  </p>
+
+  <p>Fases generales:</p>
+  <ol>
+    <li><strong>Logical Plan</strong>: representación del cálculo solicitado.</li>
+    <li><strong>Optimized Logical Plan</strong>: aplicación de reglas de optimización.</li>
+    <li><strong>Physical Plan</strong>: selección de operadores concretos y estrategias de ejecución.</li>
+    <li><strong>Ejecución</strong>: distribución en stages y tasks sobre el clúster.</li>
+  </ol>
+
+  <p>Ejemplos de optimizaciones habituales:</p>
+  <ul>
+    <li><strong>Predicate pushdown</strong>: empujar filtros al origen cuando el conector lo soporta.</li>
+    <li><strong>Column pruning</strong>: leer solo columnas necesarias.</li>
+    <li><strong>Selección de estrategia de join</strong>: broadcast join, sort-merge join, etc.</li>
+    <li><strong>Constant folding</strong>: precálculo de expresiones constantes.</li>
+  </ul>
+
+  <p>Inspección del plan:</p>
+  <pre><code>df.explain(True)</code></pre>
+
+  <h2>7. Tungsten y ejecución eficiente</h2>
+  <p>
+    Además de Catalyst, Spark SQL se beneficia de mejoras de ejecución orientadas a rendimiento y eficiencia de memoria, asociadas
+    habitualmente al motor Tungsten. Estas mejoras incluyen representación interna más compacta, mejor gestión de memoria y generación
+    de código para reducir overhead.
+  </p>
+  <p>
+    Como resultado, en datos estructurados, las operaciones con DataFrames/SQL suelen superar a enfoques equivalentes con RDD en rendimiento
+    y escalabilidad.
+  </p>
+
+  <h2>8. Catálogo, metastore y gestión de tablas</h2>
+  <p>
+    Spark SQL proporciona un catálogo para gestionar metadatos (tablas, vistas, funciones) y puede integrarse con un metastore (por ejemplo,
+    Hive metastore) u otros catálogos según la plataforma. Esto facilita la gobernanza del dato mediante:
+  </p>
+  <ul>
+    <li>Registro de tablas con nombres lógicos y metadatos.</li>
+    <li>Reutilización de datasets en múltiples procesos.</li>
+    <li>Definición de ubicaciones (LOCATION) y particiones.</li>
+    <li>Gestión coherente de formatos y estructuras de almacenamiento.</li>
+  </ul>
+
+  <p>Ejemplo: crear una tabla externa sobre Parquet:</p>
+  <pre><code>spark.sql("""
+CREATE TABLE IF NOT EXISTS ventas
+USING PARQUET
+LOCATION '/data/ventas_parquet'
+""")</code></pre>
+
+  <h2>9. Particionamiento y rendimiento</h2>
+  <p>
+    Spark SQL aprovecha el particionamiento en almacenamiento para acelerar consultas mediante <em>partition pruning</em>. Al particionar por una columna,
+    los datos se organizan en directorios por valor, reduciendo lecturas innecesarias al filtrar por dicha columna.
+  </p>
+
+  <h3>9.1 Particionamiento al escribir</h3>
+  <pre><code>df.write.mode("overwrite").partitionBy("pais").parquet("/out/ventas_part")</code></pre>
+
+  <p>
+    Beneficio principal: si se filtra por <code>pais</code>, Spark puede leer solo las particiones necesarias en lugar de escanear el dataset completo.
+  </p>
+
+  <h2>10. Spark SQL en pipelines ETL</h2>
+  <p>
+    Spark SQL encaja de forma natural en procesos ETL, donde se combinan lectura, limpieza, enriquecimiento, agregación y escritura:
+  </p>
+  <ol>
+    <li>Ingesta (read)</li>
+    <li>Limpieza y tipado (select, filter, cast)</li>
+    <li>Enriquecimiento (joins)</li>
+    <li>Agregación (groupBy, ventanas)</li>
+    <li>Persistencia (write)</li>
+  </ol>
+
+  <p>Ejemplo simplificado de ETL:</p>
+  <pre><code>from pyspark.sql import functions as F
+
+ventas = spark.read.parquet("/data/ventas")
+clientes = spark.read.parquet("/data/clientes")
+
+out = (ventas
+  .join(clientes, "cliente_id", "left")
+  .filter(F.col("importe") &gt; 0)
+  .groupBy("pais")
+  .agg(F.sum("importe").alias("ventas_total"))
+)
+
+out.write.mode("overwrite").parquet("/out/ventas_pais")</code></pre>
+
+  <h2>11. Ejercicio propuesto (nivel TFG)</h2>
+
+  <h3>11.1 Objetivo</h3>
+  <p>
+    Comparar el uso de SQL y DataFrame API para implementar la misma lógica de transformación, analizando el plan de ejecución y el impacto
+    del particionamiento al persistir resultados.
+  </p>
+
+  <h3>11.2 Enunciado</h3>
+  <ol>
+    <li>Crear dos DataFrames (ventas y clientes) desde ficheros CSV o Parquet.</li>
+    <li>Registrar ambos como vistas temporales.</li>
+    <li>Implementar la misma transformación:
+      <ul>
+        <li>Una vez con SQL (<code>spark.sql</code>).</li>
+        <li>Otra con API DataFrame (<code>select</code>, <code>join</code>, <code>groupBy</code>).</li>
+      </ul>
+    </li>
+    <li>Comparar:
+      <ul>
+        <li>Plan de ejecución (<code>explain(True)</code>).</li>
+        <li>Tiempos aproximados de ejecución (por ejemplo, midiendo acciones como <code>count()</code>).</li>
+      </ul>
+    </li>
+    <li>Guardar el resultado en Parquet particionado por una columna (por ejemplo, <code>pais</code>).</li>
+  </ol>
+
+  <h3>11.3 Pista de implementación</h3>
+  <pre><code>from pyspark.sql import functions as F
+
+ventas = spark.read.parquet("/data/ventas")
+clientes = spark.read.parquet("/data/clientes")
+
+ventas.createOrReplaceTempView("ventas")
+clientes.createOrReplaceTempView("clientes")
+
+sql_res = spark.sql("""
+SELECT v.pais, SUM(v.importe) AS ventas_total
+FROM ventas v
+LEFT JOIN clientes c ON v.cliente_id = c.cliente_id
+WHERE v.importe &gt; 0
+GROUP BY v.pais
+""")
+
+df_res = (ventas
+  .join(clientes, "cliente_id", "left")
+  .filter(F.col("importe") &gt; 0)
+  .groupBy("pais")
+  .agg(F.sum("importe").alias("ventas_total"))
+)
+
+sql_res.explain(True)
+df_res.explain(True)
+
+df_res.write.mode("overwrite").partitionBy("pais").parquet("/out/ventas_pais_part")</code></pre>
+
+  <h2>12. Conclusión</h2>
+  <p>
+    Spark SQL es el componente clave de Spark para gestionar datos estructurados a gran escala. Su combinación de SQL distribuido, API
+    estructurada y conectores de datos permite implementar pipelines ETL y analítica con un enfoque declarativo y optimizado. Las optimizaciones
+    de Catalyst y las mejoras de ejecución (asociadas a Tungsten) permiten mejorar el rendimiento frente a enfoques de bajo nivel, mientras que
+    el uso de catálogos, tablas y particionamiento facilita la gobernanza y eficiencia en consultas.
+  </p>
+
+
+
+
           <p>Los DataFrames representan tablas con esquema. Son inmutables y permiten aplicar transformaciones declarativas que Catalyst optimizará.</p>
           <pre><code class="language-python python-code">df = spark.read.option('header',True).csv('/data/my.csv')
 df.printSchema()

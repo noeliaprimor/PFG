@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Módulo 2 — Tema 2 — Lección 5: Cargar y guardar datos en Spark</title>
+  <title>Cargar y guardar datos en Spark</title>
   <link rel="stylesheet" href="/css/styles.css" />
   <script src="/js/jquery-3.6.0.min.js"></script>
   <link rel="stylesheet" href="/css/prism-1.29.0.min.css" />
@@ -31,9 +31,10 @@
              <hr>
              <ul>
                  <li><a href="#descripcion">Descripción</a></li>
-                 <li><a href="#lectura">Lectura</a></li>
-                 <li><a href="#escritura">Escritura</a></li>
-                 <li><a href="#formato">Formatos y particionado</a></li>
+                 <li><a href="#cargar">Cargar Datos en Spark</a></li>
+                 <li><a href="#guardar">Guardar Datos en Spark</a></li>
+                 <li><a href="#buenaspracticas">Buenas prácticas en el desarrollo de aplicaciones Spark</a></li>
+                 <li><a href ="#ejercicio">Ejercicio Propuesto</a></li>
              </ul>
          </div>
      </div>
@@ -43,48 +44,406 @@
         <h3>DESCRIPCIÓN</h3>
         <hr>
         <div class="text-cell">
-          <p>Aprenderemos las APIs para leer/escribir CSV, JSON, Parquet y conectar con HDFS, S3 o bases de datos JDBC, así como buenas prácticas de particionado y esquemas.</p>
+<p>
+    Una de las funcionalidades más importantes de Apache Spark es su capacidad para leer y escribir datos desde múltiples
+    fuentes de almacenamiento de forma distribuida. Spark no solo procesa datos en memoria, sino que está diseñado para
+    integrarse con diferentes sistemas y formatos, como sistemas de archivos locales, sistemas distribuidos (HDFS),
+    almacenamiento en la nube (S3, Azure Blob, GCS), bases de datos relacionales (vía JDBC) y formatos optimizados como
+    Parquet u ORC.
+  </p>
+  <p>
+    La lectura y escritura eficiente de datos es clave para el rendimiento y la escalabilidad de cualquier aplicación Big Data,
+    ya que determina tanto el coste computacional como el volumen de datos transferido y almacenado.
+  </p>
+                   <p>
+    Spark utiliza dos componentes principales para interactuar con datos en forma de DataFrames:
+  </p>
+  <ul>
+    <li><strong>DataFrameReader</strong>: para cargar datos desde una fuente externa.</li>
+    <li><strong>DataFrameWriter</strong>: para guardar resultados hacia un destino de almacenamiento.</li>
+  </ul>
+  <p>
+    Ambos se utilizan mediante las propiedades:
+  </p>
+  <pre><code class="language-python python-code">spark.read   # Para cargar
+df.write     # Para guardar</code></pre>
+  <p>
+    El flujo general habitual en escenarios de procesamiento es:
+  </p>
+  <ol>
+    <li>Leer datos desde una fuente externa (ingestión).</li>
+    <li>Aplicar transformaciones (ETL/ELT).</li>
+    <li>Escribir los resultados en un almacenamiento destino.</li>
+  </ol>
+
         </div>
       </div>
     </section>
 
-    <section id="lectura">
+    <section id="cargar">
       <div class="lesson-container">
-        <h3>LECTURA</h3>
+        <h3>CARGAR DATOS EN SPARK</h3>
         <hr>
         <div class="text-cell">
-          <pre><code class="language-python python-code"># CSV
-df = spark.read.option('header', True).csv('/data/my.csv')
-# Parquet
-pq = spark.read.parquet('/data/parquet/')
-# JDBC
-jdbc = spark.read.format('jdbc').option('url','jdbc:postgresql://host/db').option('dbtable','table').option('user','u').option('password','p').load()
-</code></pre>
+
+
+
+  <h4> Lectura de archivos CSV</h4>
+  <p>
+    El formato CSV es común en intercambios de datos, aunque no es el más eficiente para analítica a gran escala. Un ejemplo de lectura:
+  </p>
+  <pre><code class="language-python python-code">df = spark.read \
+    .option("header", "true") \
+    .option("inferSchema", "true") \
+    .csv("datos.csv")</code></pre>
+
+  <p>Opciones frecuentes al leer CSV:</p>
+  <table border="1">
+    <thead>
+      <tr>
+        <th>Opción</th>
+        <th>Descripción</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><code>header</code></td>
+        <td>Indica si el fichero contiene cabecera con nombres de columnas.</td>
+      </tr>
+      <tr>
+        <td><code>inferSchema</code></td>
+        <td>Detecta automáticamente tipos de datos (útil en pruebas, más costoso en producción).</td>
+      </tr>
+      <tr>
+        <td><code>delimiter</code></td>
+        <td>Permite definir un separador distinto de coma (por ejemplo, punto y coma).</td>
+      </tr>
+      <tr>
+        <td><code>quote</code>, <code>escape</code></td>
+        <td>Controlan caracteres de comillas y escape para casos con texto complejo.</td>
+      </tr>
+    </tbody>
+  </table>
+          <HR>
+
+  <h4>Lectura de JSON</h4>
+  <p>
+    JSON es un formato semiestructurado habitual en APIs y logs. Spark puede inferir el esquema si los registros son consistentes:
+  </p>
+  <pre><code class="language-python python-code">df = spark.read.json("datos.json")</code></pre>
+  <p>
+    En JSON es especialmente importante mantener consistencia de tipos y estructura para evitar columnas con tipos ambiguos
+    o estructuras anidadas inconsistentes.
+  </p>
+<HR>
+  <h4>Lectura de Parquet</h4>
+  <p>
+    Parquet es un formato columnar optimizado para analítica y es el estándar recomendado en la mayoría de casos Big Data:
+  </p>
+  <pre><code class="language-python python-code">df = spark.read.parquet("datos.parquet")</code></pre>
+  <p>Ventajas habituales de Parquet:</p>
+  <ul>
+    <li>Compresión eficiente (reducción de tamaño en disco).</li>
+    <li>Lectura selectiva de columnas (mejora de rendimiento en consultas).</li>
+    <li>Mejor integración con motores analíticos y catálogos de datos.</li>
+  </ul>
+          <HR>
+
+  <h4>Lectura desde bases de datos relacionales (JDBC)</h4>
+  <p>
+    Spark permite leer desde bases de datos mediante JDBC. Ejemplo con PostgreSQL:
+  </p>
+  <pre><code class="language-python python-code">df = spark.read \
+    .format("jdbc") \
+    .option("url", "jdbc:postgresql://localhost:5432/mi_db") \
+    .option("dbtable", "empleados") \
+    .option("user", "usuario") \
+    .option("password", "password") \
+    .load()</code></pre>
+
+  <p>
+    Para escalar la lectura y evitar cuellos de botella (lectura serial), es posible paralelizar configurando:
+  </p>
+  <ul>
+    <li><code>partitionColumn</code></li>
+    <li><code>lowerBound</code></li>
+    <li><code>upperBound</code></li>
+    <li><code>numPartitions</code></li>
+  </ul>
+  <p>
+    Esto permite dividir la tabla en rangos y leerlos en paralelo (siempre que exista una columna adecuada para particionar).
+  </p>
+          <hr>
+
+  <h4>Lectura desde almacenamiento en la nube (ejemplo S3)</h4>
+  <p>
+    Spark puede leer desde almacenamiento en la nube usando conectores adecuados. Ejemplo con S3:
+  </p>
+  <pre><code class="language-python python-code">df = spark.read.parquet("s3a://mi-bucket/datos/")</code></pre>
+  <p>
+    En entornos cloud, suele requerirse configurar credenciales y endpoints (IAM roles, variables de entorno o secrets).
+  </p>
+
+
         </div>
       </div>
     </section>
 
-    <section id="escritura">
+    <section id="guardar">
       <div class="lesson-container">
-        <h3>ESCRITURA</h3>
+        <h3>GUARDAR DATOS EN SPARK</h3>
         <hr>
         <div class="text-cell">
-          <pre><code class="language-python python-code"># escribir Parquet particionado
-df.write.mode('overwrite').partitionBy('year','month').parquet('/out/parquet')
-# escribir CSV
-df.write.mode('overwrite').option('header',True).csv('/out/csv')
-</code></pre>
+          <h4>Escritura en CSV</h4>
+  <p>
+    Al escribir en CSV, Spark genera típicamente un directorio con múltiples ficheros <code>part-xxxxx</code> (uno por partición):
+  </p>
+  <pre><code  class="language-python python-code">df.write \
+    .mode("overwrite") \
+    .option("header", "true") \
+    .csv("salida_csv")</code></pre>
+<hr>
+  <h4> Escritura en Parquet</h4>
+  <p>
+    Parquet es el formato recomendado para persistir resultados en escenarios analíticos:
+  </p>
+  <pre><code  class="language-python python-code">df.write \
+    .mode("overwrite") \
+    .parquet("salida_parquet")</code></pre>
+<hr>
+  <h4>Escritura en JSON</h4>
+  <pre><code  class="language-python python-code">df.write.json("salida_json")</code></pre>
+<hr>
+  <h4>Escritura en base de datos (JDBC)</h4>
+  <p>
+    Para escribir en una base de datos relacional mediante JDBC:
+  </p>
+  <pre><code  class="language-python python-code">df.write \
+    .format("jdbc") \
+    .option("url", "jdbc:postgresql://localhost:5432/mi_db") \
+    .option("dbtable", "empleados_procesados") \
+    .option("user", "usuario") \
+    .option("password", "password") \
+    .mode("append") \
+    .save()</code></pre>
+<hr>
+  <h3>Modos de escritura</h3>
+  <p>
+    Spark define diferentes modos de escritura para controlar el comportamiento cuando el destino ya existe:
+  </p>
+  <table border="1">
+    <thead>
+      <tr>
+        <th>Modo</th>
+        <th>Descripción</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><code>overwrite</code></td>
+        <td>Sobrescribe los datos existentes (puede borrar el destino).</td>
+      </tr>
+      <tr>
+        <td><code>append</code></td>
+        <td>Añade nuevos datos al destino.</td>
+      </tr>
+      <tr>
+        <td><code>ignore</code></td>
+        <td>No realiza ninguna acción si el destino existe.</td>
+      </tr>
+      <tr>
+        <td><code>error</code> / <code>errorifexists</code></td>
+        <td>Lanza un error si el destino ya existe.</td>
+      </tr>
+    </tbody>
+  </table>
+          <hr>
+
+  <h3>Diferencias entre formatos: CSV vs JSON vs Parquet</h3>
+  <p>
+    La elección del formato impacta en tamaño, rendimiento y coste de almacenamiento/lectura:
+  </p>
+  <table border="1">
+    <thead>
+      <tr>
+        <th>Característica</th>
+        <th>CSV</th>
+        <th>JSON</th>
+        <th>Parquet</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Estructura</td>
+        <td>Tabular simple</td>
+        <td>Semiestructurado</td>
+        <td>Columnar</td>
+      </tr>
+      <tr>
+        <td>Tamaño típico</td>
+        <td>Alto</td>
+        <td>Alto</td>
+        <td>Bajo (con compresión)</td>
+      </tr>
+      <tr>
+        <td>Rendimiento analítico</td>
+        <td>Medio</td>
+        <td>Medio</td>
+        <td>Alto</td>
+      </tr>
+      <tr>
+        <td>Compresión</td>
+        <td>No nativa</td>
+        <td>No nativa</td>
+        <td>Sí (nativa y eficiente)</td>
+      </tr>
+      <tr>
+        <td>Optimizado para Big Data</td>
+        <td>No</td>
+        <td>Parcial</td>
+        <td>Sí</td>
+      </tr>
+    </tbody>
+  </table>
+  <p>
+    En producción, Parquet suele ser el estándar en procesos de analítica y ETL por su eficiencia y compatibilidad.
+  </p>
+
+  <h3>Particionamiento al guardar</h3>
+  <p>
+    Spark permite escribir datos particionados en disco, creando una estructura de carpetas por valores de una o varias columnas:
+  </p>
+  <pre><code  class="language-python python-code">df.write \
+    .partitionBy("departamento") \
+    .parquet("salida_particionada")</code></pre>
+
+  <p>La salida generada típicamente se organiza como:</p>
+  <pre><code  class="language-python python-code">salida_particionada/
+  departamento=IT/
+  departamento=HR/
+  ...</code></pre>
+
+  <p>Ventajas del particionamiento:</p>
+  <ul>
+    <li>Mejora el rendimiento en lecturas filtradas (pruning de particiones).</li>
+    <li>Reduce lectura innecesaria al acceder solo a particiones relevantes.</li>
+    <li>Facilita organización lógica de datasets grandes.</li>
+  </ul>
+<hr>
+  <h3>Carga y guardado con RDD</h3>
+  <p>
+    Aunque actualmente el uso de DataFrames es lo más común, Spark también permite cargar y guardar datos con RDD:
+  </p>
+  <pre><code  class="language-python python-code">rdd = spark.sparkContext.textFile("datos.txt")
+rdd.saveAsTextFile("salida_rdd")</code></pre>
+
+  <p>
+    Este enfoque ofrece control de bajo nivel, pero carece de optimizaciones del motor SQL (por ejemplo, Catalyst), por lo que
+    suele reservarse para casos muy específicos.
+  </p>
+
         </div>
       </div>
     </section>
 
-    <section id="formato">
+    <section id="buenaspracticas">
       <div class="lesson-container">
-        <h3>FORMATOS Y PARTICIONADO</h3>
+        <h3>BUENAS PRÁCTICAS EN EL DESARROLLO DE APLICACIONES SPARK</h3>
         <hr>
         <div class="text-cell">
+
+  <ul>
+    <li>Priorizar formatos columnar (Parquet/ORC) frente a formatos de texto (CSV/JSON) cuando sea posible.</li>
+    <li>Usar <code>inferSchema</code> solo en pruebas; en producción conviene definir esquemas explícitos.</li>
+    <li>Controlar particiones con <code>repartition</code> o <code>coalesce</code> antes de escribir para evitar demasiados ficheros pequeños.</li>
+    <li>Evitar <code>collect()</code> con grandes volúmenes, ya que puede saturar la memoria del Driver.</li>
+    <li>Ajustar <code>spark.sql.shuffle.partitions</code> para operaciones con shuffle según el tamaño real de los datos.</li>
+    <li>En Docker, validar rutas y permisos de volúmenes montados para lectura/escritura.</li>
+  </ul>
+
+
+
+  <h3>Conclusión</h3>
+  <p>
+    La carga y guardado de datos en Spark es un componente esencial del procesamiento distribuido. El uso de
+    DataFrameReader y DataFrameWriter permite integrar Spark con múltiples sistemas y formatos, mientras que la elección
+    adecuada del formato (especialmente Parquet) y estrategias como el particionamiento impactan directamente en rendimiento,
+    escalabilidad y costes de almacenamiento.
+  </p>
+  <p>
+    Dominar estas técnicas es fundamental para desarrollar pipelines Big Data eficientes, reproducibles y alineados con buenas
+    prácticas tanto en entornos académicos como en producción.
+  </p>
           <p>Parquet es preferido por su compresión y esquema. El particionado mejora consultas filtradas pero puede generar demasiados ficheros si los buckets son pequeños.</p>
         </div>
+      </div>
+    </section>
+    <section id="ejercicio">
+      <div class="lesson-container">
+          <h3>EJERCICIO PROPUESTO</h3>
+        <hr>
+        <div class="text-cell">
+
+
+  <p>
+    El objetivo de este ejercicio es comparar el impacto de formato y particionamiento en el rendimiento de lectura/escritura mediante un flujo sencillo:
+    CSV &rarr; transformación &rarr; Parquet particionado.
+  </p>
+
+  <strong>Requisitos del ejercicio</strong>
+  <ul>
+    <li>Un fichero CSV con al menos 100.000 registros (puede ser un dataset público o generado).</li>
+    <li>Una columna categórica para particionar (por ejemplo: <code>departamento</code>, <code>pais</code> o <code>categoria</code>).</li>
+  </ul>
+
+  <strong>Pasos</strong>
+  <ol>
+    <li>
+      <strong>Cargar el CSV</strong> con cabecera e inferencia de esquema (solo para la primera carga):
+      <pre><code class="language-python python-code">df = spark.read \
+  .option("header", "true") \
+  .option("inferSchema", "true") \
+  .csv("datos.csv")</code></pre>
+    </li>
+    <li>
+      <strong>Aplicar una transformación</strong> (por ejemplo, filtrar registros o crear una nueva columna):
+      <pre><code class="language-python python-code">from pyspark.sql.functions import col
+
+df2 = df.filter(col("importe") &gt; 0)</code></pre>
+    </li>
+    <li>
+      <strong>Guardar en Parquet</strong> (sin particionar) y medir tamaño en disco:
+      <pre><code class="language-python python-code">df2.write.mode("overwrite").parquet("salida_parquet_no_part")</code></pre>
+    </li>
+    <li>
+      <strong>Guardar en Parquet particionado</strong> por una columna categórica:
+      <pre><code class="language-python python-code">df2.write \
+  .mode("overwrite") \
+  .partitionBy("categoria") \
+  .parquet("salida_parquet_part")</code></pre>
+    </li>
+    <li>
+      <strong>Comparar tamaños</strong> entre el CSV original, el Parquet no particionado y el Parquet particionado.</li>
+    <li>
+      <strong>Comparar tiempos de lectura</strong> ejecutando:
+      <ul>
+        <li>Lectura completa del dataset</li>
+        <li>Lectura filtrando por una sola categoría/partición</li>
+      </ul>
+      <p>Ejemplo de lectura filtrando por partición:</p>
+      <pre><code class="language-python python-code">df_part = spark.read.parquet("salida_parquet_part")
+df_filtrado = df_part.filter(col("categoria") == "A")
+df_filtrado.count()</code></pre>
+    </li>
+  </ol>
+
+  <strong>Entregables</strong>
+  <ul>
+    <li>Tabla con tamaños (MB) de cada formato.</li>
+    <li>Tabla con tiempos aproximados de lectura (completa vs filtrada).</li>
+    <li>Conclusión breve (5-10 líneas) justificando qué formato/estrategia es más eficiente y por qué.</li>
+  </ul>
+</div>
       </div>
     </section>
 

@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Módulo 2 — Tema 2 — Lección 2: Desarrollo y ejecución de una aplicación Spark</title>
+  <title>Desarrollo y ejecución de una aplicación Spark</title>
   <link rel="stylesheet" href="/css/styles.css" />
   <script src="/js/jquery-3.6.0.min.js"></script>
   <link rel="stylesheet" href="/css/prism-1.29.0.min.css" />
@@ -61,6 +61,7 @@ principal y procesos de trabajo.
 
 
 <h4>Componentes principales</h4>
+        <p>Los componentes principales durante la ejecución de una aplicación en Spark son:</p>
 <ul>
   <li>
     <strong>Driver</strong>: proceso principal. Ejecuta el programa (por ejemplo, el <em>main</em>), crea la sesión de Spark,
@@ -83,7 +84,7 @@ principal y procesos de trabajo.
   </li>
 </ul>
 
-<hr />
+<hr/>
 
 <h4>Desarrollo: del problema al pipeline</h4>
 <p>
@@ -108,7 +109,7 @@ En Spark, la mayoría de transformaciones son <strong>lazy</strong> (perezosas):
 sino que Spark construye un plan. La ejecución real comienza al invocar una <strong>acción</strong>.
 </p>
 
-<h3>2.2 Transformaciones y acciones</h3>
+<strong>Transformaciones y acciones</strong>
 <ul>
   <li>
     <strong>Transformaciones (lazy)</strong>: definen cómo se transforman los datos sin ejecutarlo todavía.
@@ -122,13 +123,13 @@ sino que Spark construye un plan. La ejecución real comienza al invocar una <st
 
 <hr />
 
-<h2>3. Ciclo de ejecución de una aplicación Spark</h2>
+<h4>Ciclo de ejecución de una aplicación Spark</h4>
 <p>
 El ciclo de ejecución describe qué ocurre desde que se lanza la aplicación (por ejemplo con <em>spark-submit</em>)
 hasta que el job termina. Este ciclo es clave para comprender el rendimiento y el comportamiento del pipeline.
 </p>
 
-<h3>3.1 Arranque y creación del contexto</h3>
+<strong>Arranque y creación del contexto</strong>
 <ol>
   <li>
     <strong>Lanzamiento de la aplicación</strong>: el usuario ejecuta la aplicación (típicamente con <em>spark-submit</em>).
@@ -144,7 +145,7 @@ hasta que el job termina. Este ciclo es clave para comprender el rendimiento y e
   </li>
 </ol>
 
-<h3>3.2 Construcción de planes (antes de ejecutar)</h3>
+<strong>Construcción de planes (antes de ejecutar)</strong>
 <p>
 Cuando el código define transformaciones (por ejemplo, una cadena de select/filter/join/groupBy), Spark construye
 representaciones internas del trabajo:
@@ -165,7 +166,7 @@ representaciones internas del trabajo:
     <strong>Plan físico</strong>: decide cómo ejecutar realmente (estrategias de join, agregación, lectura, etc.).</li>
 </ul>
 
-<h3>3.3 Acción &rarr; creación del Job y del DAG</h3>
+<strong>Acción &rarr; creación del Job y del DAG</strong>
 <p>
 Cuando se invoca una <strong>acción</strong> (por ejemplo, escribir un DataFrame), Spark:
 </p>
@@ -175,7 +176,7 @@ Cuando se invoca una <strong>acción</strong> (por ejemplo, escribir un DataFram
   <li>Divide el job en <strong>Stages</strong> según los límites de <strong>shuffle</strong>.</li>
 </ol>
 
-<h3>3.4 Stages, Tasks y Shuffle</h3>
+<strong>Stages, Tasks y Shuffle</strong>
 <p>
 La ejecución se organiza en etapas (stages) y tareas (tasks). Un elemento crítico es el <strong>shuffle</strong>, que implica
 redistribución de datos entre nodos para reagrupar o alinear datos por clave.
@@ -194,14 +195,14 @@ Un shuffle suele ser costoso porque implica E/S (datos intermedios), uso de red 
 Por ello, muchos problemas de rendimiento en pipelines Spark están asociados a shuffles innecesarios o desbalanceados.
 </p>
 
-<h3>3.5 Ejecución distribuida</h3>
+<strong>Ejecución distribuida</strong>
 <ol>
   <li>El driver planifica <strong>tasks</strong> (normalmente una por partición) y las asigna a executors.</li>
   <li>Los executors leen particiones, aplican operadores y generan resultados intermedios o finales.</li>
   <li>Al finalizar, los resultados se devuelven al driver (si aplica) o se escriben en un sistema de almacenamiento.</li>
 </ol>
 
-<h3>3.6 Finalización de la aplicación</h3>
+<strong>Finalización de la aplicación</strong>
 <ul>
   <li>El job finaliza cuando todas las stages y tasks completan correctamente.</li>
   <li>Se liberan recursos (dependiendo del modo de despliegue y configuración).</li>
@@ -210,9 +211,9 @@ Por ello, muchos problemas de rendimiento en pipelines Spark están asociados a 
 
 <hr />
 
-<h2>4. Pipeline en profundidad: diseño, materialización y optimización</h2>
+<h4>Pipeline en profundidad: diseño, materialización y optimización</h4>
 
-<h3>4.1 Pipeline conceptual por fases</h3>
+<strong>Pipeline conceptual por fases</strong>
 <ol>
   <li><strong>Ingesta</strong>: lectura desde fuentes y selección de formatos adecuados (por ejemplo, Parquet para analítica).</li>
   <li><strong>Limpieza y normalización</strong>: tipado, tratamiento de nulos, deduplicación, normalización de cadenas.</li>
@@ -222,7 +223,7 @@ Por ello, muchos problemas de rendimiento en pipelines Spark están asociados a 
   <li><strong>Observabilidad</strong>: conteos, validaciones, trazabilidad, métricas de latencia y calidad.</li>
 </ol>
 
-<h3>4.2 Cache, persistencia y checkpoints</h3>
+<strong>Cache, persistencia y checkpoints</strong>
 <ul>
   <li>
     <strong>cache/persist</strong>: materializa datos para reutilizarlos en varias acciones, evitando recomputaciones.
@@ -234,7 +235,7 @@ Por ello, muchos problemas de rendimiento en pipelines Spark están asociados a 
   </li>
 </ul>
 
-<h3>4.3 Repartition vs Coalesce</h3>
+<strong>Repartition vs Coalesce</strong>
 <ul>
   <li>
     <strong>repartition(n)</strong>: redistribuye datos y suele implicar shuffle; útil para equilibrar particiones o cambiar paralelismo.
@@ -244,7 +245,7 @@ Por ello, muchos problemas de rendimiento en pipelines Spark están asociados a 
   </li>
 </ul>
 
-<h3>4.4 Estrategias de join (visión práctica)</h3>
+<strong>Estrategias de join (visión práctica)</strong>
 <ul>
   <li>
     <strong>Broadcast join</strong>: cuando una tabla es pequeña, se replica en executors y se evita un shuffle grande.
@@ -256,7 +257,7 @@ Por ello, muchos problemas de rendimiento en pipelines Spark están asociados a 
 
 <hr />
 
-<h2>5. Riesgos y errores comunes en ejecución de pipelines</h2>
+<h4>Riesgos y errores comunes en ejecución de pipelines</h4>
 <ul>
   <li>
     <strong>Usar collect() en datasets grandes</strong>: puede saturar memoria del driver.
@@ -275,43 +276,7 @@ Por ello, muchos problemas de rendimiento en pipelines Spark están asociados a 
 
 <hr />
 
-<h2>6. Ejercicio propuesto</h2>
 
-<h3>Enunciado</h3>
-<p>
-Se dispone de un pipeline (a nivel conceptual) con los siguientes pasos:
-</p>
-<ol>
-  <li>Leer un dataset de transacciones (<strong>transactions</strong>) particionado por fecha.</li>
-  <li>Filtrar transacciones del último mes y seleccionar solo columnas necesarias (id_cliente, fecha, importe, pais).</li>
-  <li>Leer una tabla de clientes (<strong>customers</strong>) con (id_cliente, segmento, alta_fecha).</li>
-  <li>Realizar un join transactions &larr; customers por id_cliente para añadir el segmento.</li>
-  <li>Calcular el importe total y número de transacciones por (segmento, pais).</li>
-  <li>Ordenar el resultado por importe_total descendente.</li>
-  <li>Escribir el resultado final en Parquet.</li>
-</ol>
-
-<h3>Preguntas</h3>
-<ol>
-  <li>
-    Indica qué pasos son <strong>transformaciones</strong> y cuáles son <strong>acciones</strong>. Justifica brevemente.
-  </li>
-  <li>
-    Señala en qué pasos es <strong>probable</strong> que aparezca un <strong>shuffle</strong> y explica por qué.
-  </li>
-  <li>
-    Asumiendo que <strong>customers</strong> es una tabla pequeña, propone una optimización para el join y explica
-    qué efecto tendría sobre el shuffle.
-  </li>
-  <li>
-    Propón una estrategia de particionado de salida (por ejemplo, por fecha o por país) y argumenta
-    cuándo sería útil.
-  </li>
-  <li>
-    Describe dos métricas de observabilidad que registrarías para validar que el pipeline funciona correctamente
-    (por ejemplo, conteos de entrada/salida, porcentaje de nulos, latencia por etapa, etc.).
-  </li>
-</ol>
 
 <h3>Criterios de evaluación (orientativos)</h3>
 <ul>
@@ -391,10 +356,43 @@ python app/jobs.py --input data/input.csv --output out/</code></pre>
         <h3>EJERCICIOS</h3>
         <hr>
         <div class="text-cell">
-          <ol>
-            <li>Implementa una aplicación que lea CSVs, aplique transformaciones y escriba Parquet.</li>
-            <li>Ejecuta la misma aplicación en modo local y con <code>spark-submit</code> (simula clúster con Docker si es necesario).</li>
-          </ol>
+         <h2>6. Ejercicio propuesto</h2>
+
+<h3>Enunciado</h3>
+<p>
+Se dispone de un pipeline (a nivel conceptual) con los siguientes pasos:
+</p>
+<ol>
+  <li>Leer un dataset de transacciones (<strong>transactions</strong>) particionado por fecha.</li>
+  <li>Filtrar transacciones del último mes y seleccionar solo columnas necesarias (id_cliente, fecha, importe, pais).</li>
+  <li>Leer una tabla de clientes (<strong>customers</strong>) con (id_cliente, segmento, alta_fecha).</li>
+  <li>Realizar un join transactions &larr; customers por id_cliente para añadir el segmento.</li>
+  <li>Calcular el importe total y número de transacciones por (segmento, pais).</li>
+  <li>Ordenar el resultado por importe_total descendente.</li>
+  <li>Escribir el resultado final en Parquet.</li>
+</ol>
+
+<h3>Preguntas</h3>
+<ol>
+  <li>
+    Indica qué pasos son <strong>transformaciones</strong> y cuáles son <strong>acciones</strong>. Justifica brevemente.
+  </li>
+  <li>
+    Señala en qué pasos es <strong>probable</strong> que aparezca un <strong>shuffle</strong> y explica por qué.
+  </li>
+  <li>
+    Asumiendo que <strong>customers</strong> es una tabla pequeña, propone una optimización para el join y explica
+    qué efecto tendría sobre el shuffle.
+  </li>
+  <li>
+    Propón una estrategia de particionado de salida (por ejemplo, por fecha o por país) y argumenta
+    cuándo sería útil.
+  </li>
+  <li>
+    Describe dos métricas de observabilidad que registrarías para validar que el pipeline funciona correctamente
+    (por ejemplo, conteos de entrada/salida, porcentaje de nulos, latencia por etapa, etc.).
+  </li>
+</ol>
         </div>
       </div>
     </section>

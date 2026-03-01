@@ -48,6 +48,229 @@
 
     <section id="componentes">
       <div class="lesson-container">
+
+  <h1>Capítulo X: Librerías disponibles en Apache Spark</h1>
+
+  <h2>1. Introducción</h2>
+  <p>
+    Apache Spark es un framework unificado para procesamiento distribuido que integra múltiples librerías especializadas dentro
+    de un mismo ecosistema. Estas librerías permiten abordar diferentes tipos de cargas de trabajo, incluyendo procesamiento batch,
+    streaming, machine learning, análisis de grafos y consultas SQL, además de facilitar la integración con múltiples fuentes de datos.
+  </p>
+  <p>
+    Una de las principales ventajas de Spark es que todas estas librerías comparten el mismo motor de ejecución, el mismo planificador
+    y un modelo común de despliegue sobre distintos cluster managers, permitiendo construir pipelines completos sin cambiar de tecnología.
+  </p>
+
+  <h2>2. Spark Core</h2>
+
+  <h3>2.1 Descripción</h3>
+  <p>
+    Spark Core es la base del sistema. Proporciona las capacidades fundamentales de ejecución distribuida y tolerancia a fallos,
+    sobre las cuales se construyen el resto de módulos del ecosistema.
+  </p>
+
+  <h3>2.2 Funcionalidades principales</h3>
+  <ul>
+    <li>API basada en RDD (Resilient Distributed Datasets).</li>
+    <li>Gestión del paralelismo y particiones.</li>
+    <li>Planificación de tareas (DAG scheduler y task scheduler).</li>
+    <li>Gestión de memoria, caché y persistencia.</li>
+    <li>Tolerancia a fallos mediante recomputación basada en linaje (lineage).</li>
+    <li>Soporte para ejecución en distintos cluster managers (Standalone, YARN, Kubernetes, entre otros).</li>
+  </ul>
+
+  <h2>3. Spark SQL</h2>
+
+  <h3>3.1 Descripción</h3>
+  <p>
+    Spark SQL es el módulo encargado del procesamiento estructurado. Introduce el modelo basado en DataFrames y Datasets e integra
+    un motor SQL que permite ejecutar consultas declarativas sobre datos distribuidos.
+  </p>
+
+  <h3>3.2 Capacidades</h3>
+  <ul>
+    <li>Consultas SQL estándar sobre datos estructurados.</li>
+    <li>Uso de DataFrames y Datasets como abstracciones principales.</li>
+    <li>Integración con Hive (metastore, tablas y formatos).</li>
+    <li>Lectura y escritura de múltiples formatos (Parquet, ORC, JSON, CSV, Avro mediante dependencias, etc.).</li>
+  </ul>
+
+  <h3>3.3 Componentes clave</h3>
+  <ul>
+    <li><strong>Catalyst Optimizer</strong>: optimización de planes lógicos.</li>
+    <li><strong>Tungsten</strong>: mejoras de ejecución y gestión eficiente de memoria.</li>
+    <li>Planificación lógica y física: selección de operadores y estrategias de ejecución.</li>
+  </ul>
+
+  <h3>3.4 Ejemplo</h3>
+  <pre><code>df.createOrReplaceTempView("empleados")
+spark.sql("SELECT departamento, COUNT(*) FROM empleados GROUP BY departamento")</code></pre>
+
+  <h2>4. Spark Structured Streaming</h2>
+
+  <h3>4.1 Descripción</h3>
+  <p>
+    Spark Structured Streaming permite el procesamiento de datos en tiempo real utilizando el mismo API estructurado que en batch
+    (DataFrames/Datasets). Su modelo se basa principalmente en micro-batches, aunque se apoya en planificación incremental y gestión
+    de estado para proporcionar consistencia.
+  </p>
+
+  <h3>4.2 Características</h3>
+  <ul>
+    <li>API unificada batch/streaming: la misma lógica puede aplicarse a datos históricos y a datos en tiempo real.</li>
+    <li>Soporte de fuentes y sinks: Kafka, ficheros, sockets, entre otros (dependiendo de conectores).</li>
+    <li>Gestión de estado para operaciones con agregaciones y ventanas.</li>
+    <li>Garantías de consistencia (dependen del origen/sink y del modo de escritura).</li>
+  </ul>
+
+  <h3>4.3 Ejemplo básico (conceptual)</h3>
+  <pre><code>stream_df = spark.readStream.format("kafka").option("subscribe", "topic").load()
+
+query = (stream_df
+    .writeStream
+    .format("console")
+    .start())</code></pre>
+
+  <h2>5. MLlib (Machine Learning Library)</h2>
+
+  <h3>5.1 Descripción</h3>
+  <p>
+    MLlib es la librería de aprendizaje automático de Spark. Está orientada a construir pipelines de ML escalables sobre grandes volúmenes
+    de datos distribuidos, integrándose de forma natural con DataFrames mediante la API de <em>pipelines</em>.
+  </p>
+
+  <h3>5.2 Capacidades</h3>
+  <ul>
+    <li>Clasificación (por ejemplo, regresión logística, árboles, etc.).</li>
+    <li>Regresión (lineal, regularizada, etc.).</li>
+    <li>Clustering (por ejemplo, K-Means).</li>
+    <li>Reducción de dimensionalidad y extracción de características.</li>
+    <li>Evaluación y validación cruzada.</li>
+    <li>Pipelines de ML (estimators, transformers y evaluadores).</li>
+  </ul>
+
+  <h3>5.3 Ejemplo simple</h3>
+  <pre><code>from pyspark.ml.classification import LogisticRegression
+
+lr = LogisticRegression(featuresCol="features", labelCol="label")
+model = lr.fit(training_data)</code></pre>
+
+  <h2>6. GraphX</h2>
+
+  <h3>6.1 Descripción</h3>
+  <p>
+    GraphX es la librería para procesamiento de grafos de Spark, disponible principalmente en Scala. Permite representar grafos mediante
+    colecciones distribuidas de vértices y aristas y ejecutar algoritmos de análisis de grafos a escala.
+  </p>
+
+  <h3>6.2 Capacidades</h3>
+  <ul>
+    <li>Algoritmos clásicos: PageRank, Connected Components, Triangle Counting.</li>
+    <li>Análisis de redes sociales y grafos de relaciones.</li>
+    <li>Transformaciones sobre grafos basadas en operaciones distribuidas.</li>
+  </ul>
+
+  <h3>6.3 Ejemplo conceptual (Scala)</h3>
+  <pre><code>val graph = Graph(vertices, edges)
+val ranks = graph.pageRank(0.0001).vertices</code></pre>
+
+  <h2>7. Integración con ecosistemas externos y conectores</h2>
+  <p>
+    Spark puede integrarse con múltiples tecnologías externas mediante conectores y la Data Sources API. Algunas integraciones comunes incluyen:
+  </p>
+  <ul>
+    <li>Hadoop (HDFS) y ecosistema (por ejemplo, Hive).</li>
+    <li>Kafka (ingesta y salida en streaming).</li>
+    <li>Bases NoSQL como Cassandra (mediante conectores).</li>
+    <li>Sistemas de búsqueda como Elasticsearch (mediante conectores).</li>
+    <li>Almacenamiento cloud: AWS S3, Azure Data Lake/Blob, Google Cloud Storage.</li>
+    <li>Acceso a bases de datos relacionales mediante JDBC.</li>
+  </ul>
+  <p>
+    Estas integraciones permiten utilizar Spark como motor de procesamiento sobre datos alojados en múltiples plataformas sin necesidad
+    de moverlos a un sistema único.
+  </p>
+
+  <h2>8. Comparativa de librerías principales</h2>
+  <table border="1">
+    <thead>
+      <tr>
+        <th>Librería</th>
+        <th>Propósito</th>
+        <th>Nivel de API</th>
+        <th>Lenguajes</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Spark Core</td>
+        <td>Procesamiento distribuido base (RDD, scheduling, memoria)</td>
+        <td>Bajo</td>
+        <td>Scala, Java, Python, R</td>
+      </tr>
+      <tr>
+        <td>Spark SQL</td>
+        <td>Procesamiento estructurado (DataFrames/Datasets, SQL)</td>
+        <td>Alto</td>
+        <td>Scala, Java, Python, R</td>
+      </tr>
+      <tr>
+        <td>Structured Streaming</td>
+        <td>Procesamiento en tiempo real con API estructurada</td>
+        <td>Alto</td>
+        <td>Scala, Java, Python, R</td>
+      </tr>
+      <tr>
+        <td>MLlib</td>
+        <td>Machine Learning distribuido y pipelines</td>
+        <td>Medio/Alto</td>
+        <td>Scala, Java, Python, R</td>
+      </tr>
+      <tr>
+        <td>GraphX</td>
+        <td>Procesamiento de grafos</td>
+        <td>Medio</td>
+        <td>Scala</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h2>9. Arquitectura unificada del ecosistema</h2>
+  <p>
+    Una característica clave de Spark es que todas las librerías del ecosistema:
+  </p>
+  <ul>
+    <li>Comparten el mismo motor de ejecución distribuida.</li>
+    <li>Utilizan el mismo planificador y modelo de tareas.</li>
+    <li>Operan sobre el mismo modelo de particiones.</li>
+    <li>Permiten combinar batch, streaming y ML dentro de un mismo pipeline.</li>
+  </ul>
+
+  <p>Ejemplo conceptual de pipeline unificado:</p>
+  <ol>
+    <li>Ingesta en streaming (Structured Streaming).</li>
+    <li>Limpieza y normalización (DataFrames / Spark SQL).</li>
+    <li>Agregación y preparación de features (Spark SQL / DataFrames).</li>
+    <li>Entrenamiento o scoring (MLlib).</li>
+    <li>Persistencia de resultados en almacenamiento distribuido (Parquet, bases de datos, etc.).</li>
+  </ol>
+
+  <h2>10. Conclusión</h2>
+  <p>
+    El ecosistema de librerías de Spark convierte a la plataforma en una solución integral de procesamiento de datos distribuidos.
+    La combinación de Spark Core, Spark SQL, Structured Streaming, MLlib y GraphX permite abordar arquitecturas completas de datos,
+    desde la ingesta hasta el análisis avanzado, compartiendo infraestructura y modelo de ejecución.
+  </p>
+  <p>
+    En entornos académicos y profesionales, esta unificación facilita el desarrollo y despliegue de soluciones escalables, reduciendo
+    la complejidad tecnológica y permitiendo reutilización de código entre distintos tipos de cargas (batch y streaming) y fases del
+    ciclo de vida del dato.
+  </p>
+
+
+
+
         <h3>COMPONENTES PRINCIPALES</h3>
         <hr>
         <div class="text-cell">
