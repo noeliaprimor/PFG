@@ -31,7 +31,7 @@
          <hr>
          <ul>
            <li><a href="#descripcion">Descripción</a></li>
-           <li><a href="#fuentes">Fuentes</a></li>
+           <li><a href="#contenidos">Instalación y Configuración de Pycharm</a></li>
          </ul>
        </div>
      </div>
@@ -41,65 +41,55 @@
             <h3>DESCRIPCIÓN</h3>
             <hr>
             <div class="text-cell">
-                <p>En esta lección revisamos los entornos de desarrollo y ejecución para aplicaciones Spark: shells interactivas, proyectos empaquetados (sbt/maven para Scala, pip/virtualenv para Python), contenedores y despliegue en clústeres (YARN, Kubernetes, Standalone).</p>
+               <p>Hay muchas maneras de programar en Spark, hay APIs enriquecidas en Java, Scala, Python y R. Además,
+                se puede ejecutar en diversor entornos como hemos visto, en <a href =/modulo2/Tema1/M2T1L3.html"> esta lección.</a>
+                </p>
+              <p>Además, podemos ejecutarlo, desde la consola, o un entorno de desarrollo específico.
+              La elección del entorno de desarrollo depende del perfil del usuario, el caso de uso y el entorno de ejecución.
+                A continuación se muestra una tabla con recomendaciones para diferentes perfiles:</p>
+
+            <table>
+              <thead>
+              <tr>
+                <th>Perfil</th>
+                <th>Entorno ideal</th>
+              </tr>
+              </thead>
+              <tbody>
+              <tr>
+                <td>Científico de datos</td>
+                <td>      PySpark + Jupyter/Databricks</td>
+              </tr> <tr> <td>Ingeniero de datos</td>
+                <td>      Scala + JetBrains + Spark SQL</td>
+              </tr> <tr> <td>Analista</td>
+                <td>      Spark SQL + Notebooks</td> </tr> <tr>
+              <td>Arquitecto cloud</td>
+              <td>Spark en Kubernetes o Dataproc/EMR</td> </tr> </tbody> </table>
+
+              <p>En nuestro caso, y aprovechando la licencia de estudiante que nos proporciona Uned a traves de github vamos a instalar Pychar de jetBrains.</p>
+
             </div>
         </div>
     </section>
 
     <section id="contenidos">
         <div class="lesson-container">
-            <h3>CONTENIDOS</h3>
+            <h3>INSTALACIÓN Y CONFIGURACIÓN DE PYCHARM</h3>
             <hr>
+          <img src="/img/M2T2L1_1.png">
             <div class="text-cell">
-                <h4>Entornos locales y remotos</h4>
-                <p>Desarrollo local con <code>pyspark</code> o <code>spark-shell</code> para prototipado. Empaquetado con <code>spark-submit</code> para producción. Uso de contenedores Docker para reproducibilidad.</p>
-            </div>
 
-            <div class="text-cell">
-                <h4>Estructura de proyecto (Python)</h4>
-                <pre><code class="language-bash bash-code">myproject/
-  app/
-    __init__.py
-    job.py
-  requirements.txt
-  setup.py
-  Dockerfile
-</code></pre>
-            </div>
-
-            <div class="text-cell">
-                <h4>Estructura de proyecto (Scala - sbt)</h4>
-                <pre><code class="language-bash bash-code">project/
-build.sbt
-src/main/scala/com/example/MyApp.scala
-</code></pre>
-            </div>
-        </div>
     </section>
 
-    <section id="comandos">
-      <div class="lesson-container">
-        <h3>COMANDOS Y EJEMPLOS</h3>
-        <hr>
-        <div class="text-cell">
-          <h4>Instalar PySpark en virtualenv</h4>
-          <pre><code class="language-bash bash-code">python3 -m venv venv
-source venv/bin/activate
-pip install pyspark</code></pre>
-        </div>
-        <div class="text-cell">
-          <h4>Ejecutar con spark-submit</h4>
-          <pre><code class="language-bash bash-code">/opt/spark/bin/spark-submit --master yarn --deploy-mode cluster --conf spark.executor.memory=2g myapp.py</code></pre>
-        </div>
-      </div>
-    </section>
 
     <section id="notebook">
       <div class="lesson-container">
-        <h3>NOTEBOOK</h3>
+        <h3>Para saber más</h3>
         <hr>
         <div class="text-cell">
-          <p>Descarga y prueba el notebook de ejemplo: <a href="/modulo2/Tema2/notebooks/M2T2L1.ipynb">M2T2L1.ipynb</a></p>
+          <p> <a href="https://education.github.com/pack">GitHub Student Developer Pack</a></p>
+          <p><a href="https://www.jetbrains.com/pycharm/">Pycharm</a></p>
+          <p><a href="https://plugins.jetbrains.com/plugin/21700-spark">Spark pluging</a></p>
         </div>
       </div>
     </section>
@@ -110,8 +100,9 @@ pip install pyspark</code></pre>
         <hr>
         <div class="text-cell">
           <ol>
-            <li>Crea un entorno virtual y ejecuta un script PySpark que cuente líneas de un fichero local.</li>
-            <li>Empaqueta una aplicación Scala con sbt y ejecútala con <code>spark-submit</code> en modo local.</li>
+            <li>Prepara el entorno de programación de PyCharm</li>
+            <li>comprueba que puedes ejecutar el notebook de la anterior Lección sin errores en un nuevo proyecto.</li>
+            <li>Clona el proyecto en un repositorio Github</li>
           </ol>
         </div>
       </div>

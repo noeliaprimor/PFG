@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Ejecución de ejemplos de Spark</title>
+  <title>Ejecución de ejemplo de Spark</title>
   <link rel="stylesheet" href="/css/styles.css" />
 </head>
 <body>
@@ -23,26 +23,28 @@
     <br>
     <br>
 
-    <h2 class="titulos-leccion">Ejecución de ejemplos de Spark</h2>
+    <h2 class="titulos-leccion">Ejecución de ejemplo de Spark</h2>
     <div class="indice-container">
 
         <div id="index-container" class="text-cell">
              <hr>
              <ul>
                  <li><a href="#descripcion">Descripción</a></li>
-                 <li><a href="#contenidos">Contenidos</a></li>
+                 <li><a href="#contenidos">Ejemplo de Ejecución de Spark</a></li>
                  <li><a href="#saber-mas">Para saber más</a></li>
-                 <li><a href="#ejercicio-propuesto">Ejercicio propuesto</a></li>
+
              </ul>
          </div>
      </div>
     <section id="descripcion">
     <!-- Descripcion -->
         <div class="lesson-container">
-            <h3>Descripción</h3>
+            <h3>DESCRIPCIÓN</h3>
             <hr>
             <div class="text-cell">
-            <p>DESCRIPCIÓN DE LA LECIÓN</p>
+            <p>Vamos a ejecutar un ejemplo sencilo de Spark a través de la consola de PySpark. Para ello nos vamos a
+            descargar el fichero <a href="heart.csv">heart.csv </a> que contiene datos medicos de enfermedades del
+            corazon. Este fichero forma parte del <a href="https://www.kaggle.com/datasets/algozee/heart-decices?resource=download">siguiente dataset.</a></p>
             </div>
         </div>
     </section>
@@ -51,18 +53,47 @@
          <!-- Contenidos -->
         <div class="lesson-container">
 
-            <h3>CONTENIDOS</h3>
+            <h3>EJEMPLO DE EJECUCIÓN SPARK</h3>
             <hr>
 
             <!-- Blóque con texto -->
             <div class="text-cell">
-                <h4> Comenzamos con los contenidos </h4>
-               En esta caja metemos contenidos
-            </div>
-           <div class="text-cell"> <h4>que mas metemos</h4>
-             <p>muchos más contenidos</p>
+                <h4> Creación del Dataframe</h4>
+              <p>
+              Para crear un dataframe a partir de un fichero csv, lo primero que tenemos que hacer es iniciar la consola de PySpark. Para ello, desde la terminal, ejecutamos el comando <code>pyspark</code>. Esto iniciará la consola y nos permitirá ejecutar código Python sobre <Spark class=""></Spark>
+              </p>
+              <img src="/img/M2T2L7_1.png">
+              <p>
+                Ahora creamos el dataset a partir del fichero csv. Para ello, ejecutamos el siguiente código:
+              </p>
+              <pre><code class="language-python python-code">
+df=spark.read.csv("heart.csv", header=True, inferSchema=True)
+df.show(5)
+              </pre></code>
+          <img src="/img/M2T2L7_2.png">
+            <p>Podemos mostrar el esquema del dataframe con el siguiente código:</p>
+              <pre><code class="language-python python-code">
+df.printSchema()
+              </code></pre>
+              <img src="/img/M2T2L7_3.png">
+              <p>Y podemos realizar operaciones sobre el dataframe, agrupar los datos por la columna "Age":</p>
+              <pre><code class="language-python python-code">
+df.groupBy("Age").count().show()
+              </code></pre>
+              <img src="/img/M2T2L7_4.png">
+              <p>Incluso podemos realizar filtros sobre los datos:</p>
+              <pre><code class="language-python python-code">
+df.filter(df.Age > 65).show(5)
+              </code></pre>
+              <img src="/img/M2T2L7_5.png">
+              <p>Podemos mostrar estadisticas descriptivas y numericas:</p>
+              <pre><code class="language-python python-code">
+df.describe().show()
+numeric_cols = ["Age", "Sex", "BP", "Cholesterol"]
+df.select(numeric_cols).describe().show()
 
-           </div>
+              </code></pre>
+              <img src="/img/M2T2L7_6.png">
 
 
             </div>
@@ -76,26 +107,22 @@
             <h3>Para saber más</h3>
             <hr>
             <div class="text-cell">
-                <ul>
-                    <li><a href="https://spark-packages.org">Enlaces</a></li>
-                    <li><a href="https://www.usenix.org/legacy/event/hotcloud10/tech/full_papers/Zaharia.pdf">Proyecto de investigación de Spar</a></li>
-                </ul>
+              <p><stron>Jupyter Notebook </stron> es una tecnología que permite trabajar en general con python
+              y en particular con pyspark a traves de un entorno virtual de manera muy intuitiva.
+              </p>
+
+              <p>En el   <a href="https://www.datacamp.com/tutorial/installing-jupyter-notebook?utm_cid=19589720821&utm_aid=157156374671&utm_campaign=230119_1-ps-other~dsa-tofu~all_2-b2c_3-emea_4-prc_5-na_6-na_7-le_8-pdsh-go_9-nb-e_10-na_11-na&utm_loc=9211638-&utm_mtd=-c&utm_kw=&utm_source=google&utm_medium=paid_search&utm_content=ps-other~emea-en~dsa~tofu~tutorial~data-science&gad_source=1&gad_campaignid=19589720821&gclid=CjwKCAiAkvDMBhBMEiwAnUA9BVeg4EOcpsqflrIOQYZIntnCLspl-JuZBGwryMmAHFjskDNFVSG4exoC-pwQAvD_BwE">siguiente enlace</a>
+              se puede encontrar un tutorial de como configurar Jupyter Notebook
+              </p>
+
+              <p>El ejemplo de ejecución de esta lección esta disponible <a href="Ejercicio2-1.ipynb"> aqui. </a>
+              </p>
+
             </div>
 
         </div>
     </section>
-    <section id="ejercicio-propuesto">
 
-        <!-- Ejercicio propuesto -->
-        <div class="lesson-container">
-            <h3>Ejercicio Propuesto</h3>
-            <hr>
-            <div class="text-cell">
-              <p>Ejercicio propuesto</p>
-            </div>
-
-        </div>
-    </section>
         <div>
             <div class="navigation-buttons">
                 <button onclick="window.location.href='M2T1L6.html'">Anterior</button>

@@ -31,7 +31,7 @@
          <hr>
          <ul>
            <li><a href="#descripcion">Descripción</a></li>
-           <li><a href="#estructura">Estructura del proyecto</a></li>
+           <li><a href="#contenido">Contenido</a></li>
            <li><a href="#ejecucion">Ejecución</a></li>
            <li><a href="#notebook">Notebook</a></li>
            <li><a href="#ejercicios">Ejercicios</a></li>
@@ -44,17 +44,293 @@
         <h3>DESCRIPCIÓN</h3>
         <hr>
         <div class="text-cell">
-          <p>En esta lección veremos cómo diseñar, probar y desplegar una aplicación Spark, desde el desarrollo local hasta su ejecución en un clúster, con recomendaciones sobre empaquetado, dependencias y buenas prácticas.</p>
+        <p> En Apache Spark, una <strong>aplicación</strong> es el conjunto completo que se ejecuta bajo un único
+<strong>SparkSession</strong> (y, por debajo, un <strong>SparkContext</strong>) y que puede incluir uno o varios
+<strong>jobs</strong>. Una aplicación se distribuye en un clúster y se ejecuta coordinadamente entre un proceso
+principal y procesos de trabajo.
+</p>
         </div>
       </div>
     </section>
 
-    <section id="estructura">
+    <section id="contenido">
       <div class="lesson-container">
-        <h3>ESTRUCTURA DEL PROYECTO</h3>
+        <h3>CONTENIDO</h3>
+
+
+
+
+<h4>Componentes principales</h4>
+<ul>
+  <li>
+    <strong>Driver</strong>: proceso principal. Ejecuta el programa (por ejemplo, el <em>main</em>), crea la sesión de Spark,
+    construye planes de ejecución (DAG) y coordina la distribución del trabajo.
+  </li>
+  <li>
+    <strong>Executors</strong>: procesos distribuidos en los nodos del clúster. Ejecutan tareas sobre particiones de datos
+    y pueden almacenar datos en caché.
+  </li>
+  <li>
+    <strong>Cluster Manager</strong>: gestiona recursos y despliegue (por ejemplo, Standalone, YARN o Kubernetes).
+  </li>
+  <li>
+    <strong>Job, Stage y Task</strong>:
+    <ul>
+      <li><strong>Job</strong>: se crea cada vez que se ejecuta una <strong>acción</strong> (por ejemplo, count, collect, write).</li>
+      <li><strong>Stage</strong>: parte del job separada por límites de <strong>shuffle</strong> (redistribución de datos).</li>
+      <li><strong>Task</strong>: unidad mínima de trabajo; normalmente, una task procesa una <strong>partición</strong>.</li>
+    </ul>
+  </li>
+</ul>
+
+<hr />
+
+<h4>Desarrollo: del problema al pipeline</h4>
+<p>
+El desarrollo de una aplicación Spark consiste en diseñar un flujo de procesamiento distribuido que transforma datos
+desde una o varias fuentes hasta un resultado final (escritura, cálculo de métricas o consumo por otro sistema).
+Este flujo se conoce como <strong>pipeline</strong>.
+</p>
+
+<strong>Definición de pipeline en Spark</strong>
+<p>
+Un <strong>pipeline</strong> en Spark es un flujo declarativo compuesto por:
+</p>
+<ol>
+  <li><strong>Lectura / ingesta</strong> (fuentes de datos).</li>
+  <li><strong>Transformaciones</strong> (ETL/ELT): selección, filtrado, joins, agregaciones, enriquecimientos.</li>
+  <li><strong>Acciones / salidas</strong>: materialización (escritura), métricas, o resultados para el driver.</li>
+  <li><strong>Controles transversales</strong>: calidad de datos, observabilidad, trazabilidad y gestión de errores.</li>
+</ol>
+
+<p>
+En Spark, la mayoría de transformaciones son <strong>lazy</strong> (perezosas): no se ejecutan en el momento de definirse,
+sino que Spark construye un plan. La ejecución real comienza al invocar una <strong>acción</strong>.
+</p>
+
+<h3>2.2 Transformaciones y acciones</h3>
+<ul>
+  <li>
+    <strong>Transformaciones (lazy)</strong>: definen cómo se transforman los datos sin ejecutarlo todavía.
+    Ejemplos: select, filter, withColumn, join, groupBy, map, flatMap, repartition.
+  </li>
+  <li>
+    <strong>Acciones</strong>: desencadenan el cómputo y generan un resultado o una salida.
+    Ejemplos: count, collect, take, show, write.
+  </li>
+</ul>
+
+<hr />
+
+<h2>3. Ciclo de ejecución de una aplicación Spark</h2>
+<p>
+El ciclo de ejecución describe qué ocurre desde que se lanza la aplicación (por ejemplo con <em>spark-submit</em>)
+hasta que el job termina. Este ciclo es clave para comprender el rendimiento y el comportamiento del pipeline.
+</p>
+
+<h3>3.1 Arranque y creación del contexto</h3>
+<ol>
+  <li>
+    <strong>Lanzamiento de la aplicación</strong>: el usuario ejecuta la aplicación (típicamente con <em>spark-submit</em>).
+  </li>
+  <li>
+    <strong>Inicio del Driver</strong>: se inicia el proceso del driver, que crea <strong>SparkSession</strong> y establece la configuración.
+  </li>
+  <li>
+    <strong>Negociación de recursos</strong>: el driver solicita recursos al Cluster Manager (executors, memoria y CPU).
+  </li>
+  <li>
+    <strong>Creación de Executors</strong>: el clúster lanza ejecutores donde se ejecutarán las tareas.
+  </li>
+</ol>
+
+<h3>3.2 Construcción de planes (antes de ejecutar)</h3>
+<p>
+Cuando el código define transformaciones (por ejemplo, una cadena de select/filter/join/groupBy), Spark construye
+representaciones internas del trabajo:
+</p>
+<ul>
+  <li>
+    <strong>Plan lógico</strong>: representa qué operaciones se quieren realizar (a nivel de operaciones sobre datos).
+  </li>
+  <li>
+    <strong>Optimización</strong>: el optimizador reescribe el plan para hacerlo más eficiente, por ejemplo:
+    <ul>
+      <li><strong>Predicate pushdown</strong>: empujar filtros hacia el origen de datos para leer menos.</li>
+      <li><strong>Column pruning</strong>: leer solo las columnas necesarias.</li>
+      <li>Simplificación de expresiones y reordenación de operaciones cuando es posible.</li>
+    </ul>
+  </li>
+  <li>
+    <strong>Plan físico</strong>: decide cómo ejecutar realmente (estrategias de join, agregación, lectura, etc.).</li>
+</ul>
+
+<h3>3.3 Acción &rarr; creación del Job y del DAG</h3>
+<p>
+Cuando se invoca una <strong>acción</strong> (por ejemplo, escribir un DataFrame), Spark:
+</p>
+<ol>
+  <li>Crea un <strong>Job</strong>.</li>
+  <li>Genera un <strong>DAG</strong> (grafo acíclico dirigido) de ejecución a partir del plan.</li>
+  <li>Divide el job en <strong>Stages</strong> según los límites de <strong>shuffle</strong>.</li>
+</ol>
+
+<h3>3.4 Stages, Tasks y Shuffle</h3>
+<p>
+La ejecución se organiza en etapas (stages) y tareas (tasks). Un elemento crítico es el <strong>shuffle</strong>, que implica
+redistribución de datos entre nodos para reagrupar o alinear datos por clave.
+</p>
+
+<p><strong>Operaciones típicas que generan shuffle</strong>:</p>
+<ul>
+  <li>groupBy, distinct</li>
+  <li>orderBy/sort</li>
+  <li>joins grandes (cuando no se puede usar broadcast de una tabla pequeña)</li>
+  <li>repartition</li>
+</ul>
+
+<p>
+Un shuffle suele ser costoso porque implica E/S (datos intermedios), uso de red y sincronización entre tareas.
+Por ello, muchos problemas de rendimiento en pipelines Spark están asociados a shuffles innecesarios o desbalanceados.
+</p>
+
+<h3>3.5 Ejecución distribuida</h3>
+<ol>
+  <li>El driver planifica <strong>tasks</strong> (normalmente una por partición) y las asigna a executors.</li>
+  <li>Los executors leen particiones, aplican operadores y generan resultados intermedios o finales.</li>
+  <li>Al finalizar, los resultados se devuelven al driver (si aplica) o se escriben en un sistema de almacenamiento.</li>
+</ol>
+
+<h3>3.6 Finalización de la aplicación</h3>
+<ul>
+  <li>El job finaliza cuando todas las stages y tasks completan correctamente.</li>
+  <li>Se liberan recursos (dependiendo del modo de despliegue y configuración).</li>
+  <li>Se registran logs, métricas y, en su caso, se almacenan resultados finales.</li>
+</ul>
+
+<hr />
+
+<h2>4. Pipeline en profundidad: diseño, materialización y optimización</h2>
+
+<h3>4.1 Pipeline conceptual por fases</h3>
+<ol>
+  <li><strong>Ingesta</strong>: lectura desde fuentes y selección de formatos adecuados (por ejemplo, Parquet para analítica).</li>
+  <li><strong>Limpieza y normalización</strong>: tipado, tratamiento de nulos, deduplicación, normalización de cadenas.</li>
+  <li><strong>Enriquecimiento</strong>: joins con dimensiones o tablas auxiliares; derivación de nuevas columnas.</li>
+  <li><strong>Agregación / cálculo de métricas</strong>: groupBy y ventanas; generación de indicadores y features.</li>
+  <li><strong>Salida</strong>: escritura particionada, modos de escritura y control de idempotencia.</li>
+  <li><strong>Observabilidad</strong>: conteos, validaciones, trazabilidad, métricas de latencia y calidad.</li>
+</ol>
+
+<h3>4.2 Cache, persistencia y checkpoints</h3>
+<ul>
+  <li>
+    <strong>cache/persist</strong>: materializa datos para reutilizarlos en varias acciones, evitando recomputaciones.
+    Debe usarse cuando el mismo dataset se consume varias veces y cabe razonablemente en memoria/disco.
+  </li>
+  <li>
+    <strong>checkpoint</strong>: corta el lineage (cadena de dependencias) para pipelines muy largos o streaming,
+    reduciendo recomputación y aumentando estabilidad.
+  </li>
+</ul>
+
+<h3>4.3 Repartition vs Coalesce</h3>
+<ul>
+  <li>
+    <strong>repartition(n)</strong>: redistribuye datos y suele implicar shuffle; útil para equilibrar particiones o cambiar paralelismo.
+  </li>
+  <li>
+    <strong>coalesce(n)</strong>: reduce particiones con menos movimiento de datos; útil para compactar antes de escribir.
+  </li>
+</ul>
+
+<h3>4.4 Estrategias de join (visión práctica)</h3>
+<ul>
+  <li>
+    <strong>Broadcast join</strong>: cuando una tabla es pequeña, se replica en executors y se evita un shuffle grande.
+  </li>
+  <li>
+    <strong>Sort-merge join</strong> (u otras variantes): común cuando ambas tablas son grandes; suele implicar shuffle y ordenación.
+  </li>
+</ul>
+
+<hr />
+
+<h2>5. Riesgos y errores comunes en ejecución de pipelines</h2>
+<ul>
+  <li>
+    <strong>Usar collect() en datasets grandes</strong>: puede saturar memoria del driver.
+    Alternativas: escribir a almacenamiento, usar limit/take o procesar por particiones.
+  </li>
+  <li>
+    <strong>Shuffles innecesarios</strong>: repartir/reparticionar sin necesidad penaliza rendimiento.
+  </li>
+  <li>
+    <strong>Desbalanceo (data skew)</strong>: claves muy frecuentes en groupBy/join generan tareas lentas y cuellos de botella.
+  </li>
+  <li>
+    <strong>Uso excesivo de UDFs</strong>: puede limitar optimizaciones del motor; preferir funciones nativas de Spark SQL cuando sea posible.
+  </li>
+</ul>
+
+<hr />
+
+<h2>6. Ejercicio propuesto</h2>
+
+<h3>Enunciado</h3>
+<p>
+Se dispone de un pipeline (a nivel conceptual) con los siguientes pasos:
+</p>
+<ol>
+  <li>Leer un dataset de transacciones (<strong>transactions</strong>) particionado por fecha.</li>
+  <li>Filtrar transacciones del último mes y seleccionar solo columnas necesarias (id_cliente, fecha, importe, pais).</li>
+  <li>Leer una tabla de clientes (<strong>customers</strong>) con (id_cliente, segmento, alta_fecha).</li>
+  <li>Realizar un join transactions &larr; customers por id_cliente para añadir el segmento.</li>
+  <li>Calcular el importe total y número de transacciones por (segmento, pais).</li>
+  <li>Ordenar el resultado por importe_total descendente.</li>
+  <li>Escribir el resultado final en Parquet.</li>
+</ol>
+
+<h3>Preguntas</h3>
+<ol>
+  <li>
+    Indica qué pasos son <strong>transformaciones</strong> y cuáles son <strong>acciones</strong>. Justifica brevemente.
+  </li>
+  <li>
+    Señala en qué pasos es <strong>probable</strong> que aparezca un <strong>shuffle</strong> y explica por qué.
+  </li>
+  <li>
+    Asumiendo que <strong>customers</strong> es una tabla pequeña, propone una optimización para el join y explica
+    qué efecto tendría sobre el shuffle.
+  </li>
+  <li>
+    Propón una estrategia de particionado de salida (por ejemplo, por fecha o por país) y argumenta
+    cuándo sería útil.
+  </li>
+  <li>
+    Describe dos métricas de observabilidad que registrarías para validar que el pipeline funciona correctamente
+    (por ejemplo, conteos de entrada/salida, porcentaje de nulos, latencia por etapa, etc.).
+  </li>
+</ol>
+
+<h3>Criterios de evaluación (orientativos)</h3>
+<ul>
+  <li>Identificación correcta de acciones y transformaciones.</li>
+  <li>Comprensión del concepto de shuffle y sus causas.</li>
+  <li>Propuesta razonable de optimización (por ejemplo, broadcast join si aplica).</li>
+  <li>Justificación del particionado de salida y su impacto en consultas posteriores.</li>
+  <li>Selección de métricas útiles y bien justificadas.</li>
+</ul>
+
+
+
+
+
         <hr>
         <div class="text-cell">
           <h4>Python (PySpark)</h4>
+          <p>poner estructura de una aplicación spark y ciclo de ejecución</p>
+
           <pre><code class="language-bash bash-code">myapp/
   app/
     jobs.py
