@@ -33,7 +33,7 @@
            <li><a href="#descripcion">Descripción</a></li>
            <li><a href="#paralizacion">Paralización</a></li>
            <li><a href="#particionado">Particionado</a></li>
-           <li><a href="#practica">Práctica</a></li>
+           <li><a href="#practica">Ejercicio Práctico</a></li>
          </ul>
        </div>
      </div>
@@ -181,19 +181,19 @@ rdd_part = rdd_kv.partitionBy(4)</code></pre>
   </p>
   <pre><code  class="language-python python-code">df2 = df.repartition("columna")</code></pre>
   <p>
-    Esto puede mejorar el rendimiento de operaciones como <code>groupBy</code> o <code  class="language-python python-code">join</code>, aunque suele implicar shuffle.
+    Esto puede mejorar el rendimiento de operaciones como <code>groupBy</code> o <code>join</code>, aunque suele implicar shuffle.
   </p>
 
-  <h2>7. Shuffle y su relación con el particionado</h2>
+  <h>Shuffle y su relación con el particionado</h>
   <p>
     Un <strong>shuffle</strong> es el proceso por el cual Spark redistribuye datos entre particiones, normalmente a través de la red.
     Ocurre, por ejemplo, cuando se realizan:
   </p>
   <ul>
-    <li><code  class="language-python python-code">groupBy</code> / <code  class="language-python python-code">groupByKey</code></li>
-    <li><code  class="language-python python-code">join</code></li>
-    <li><code  class="language-python python-code">repartition</code></li>
-    <li>Algunas ordenaciones (<code  class="language-python python-code">orderBy</code>)</li>
+    <li><code>groupBy</code> / <code>groupByKey</code></li>
+    <li><code>join</code></li>
+    <li><code>repartition</code></li>
+    <li>Algunas ordenaciones (<code>orderBy</code>)</li>
   </ul>
   <p>
     Durante un shuffle:
@@ -207,30 +207,30 @@ rdd_part = rdd_kv.partitionBy(4)</code></pre>
     El shuffle es uno de los costes más relevantes en Spark, por lo que debe optimizarse y minimizarse cuando sea posible.
   </p>
 
-  <h2>8. Relación entre particiones y rendimiento</h2>
+  <h4>Relación entre particiones y rendimiento</h4>
 
-  <h3>8.1 Pocas particiones</h3>
+  <strong>Pocas particiones</strong>
   <ul>
     <li>Infrautilización de CPU: menos tareas concurrentes que núcleos disponibles.</li>
     <li>Tareas más largas (cada una procesa más datos).</li>
     <li>Riesgo de cuellos de botella por falta de paralelismo.</li>
   </ul>
 
-  <h3>8.2 Demasiadas particiones</h3>
+  <strong>Demasiadas particiones</strong>
   <ul>
     <li>Mayor overhead de planificación (más tasks a gestionar).</li>
     <li>Más metadata y coste de scheduling.</li>
     <li>Riesgo de generar muchos ficheros pequeños al escribir resultados.</li>
   </ul>
 
-  <h3>8.3 Regla práctica orientativa</h3>
+  <strong>Regla práctica orientativa</strong>
   <p>
     Una regla empírica utilizada en muchos escenarios es configurar entre <strong>2 y 4 particiones por núcleo</strong>,
     ajustando según volumen de datos, coste de shuffle y tipo de operaciones. En cualquier caso, la decisión debe basarse en
     mediciones y observación de la ejecución (por ejemplo, usando Spark UI).
   </p>
 
-  <h2>9. Particionado al escribir datos</h2>
+  <h4>Particionado al escribir datos</h4>
   <p>
     Spark permite particionar la salida al escribir, creando directorios por valores de una columna:
   </p>
@@ -249,7 +249,7 @@ rdd_part = rdd_kv.partitionBy(4)</code></pre>
     <li>Organización lógica más clara para datasets grandes.</li>
   </ul>
 
-  <h2>10. Skew (desequilibrio de particiones)</h2>
+  <h4>Skew (desequilibrio de particiones)</h4>
   <p>
     El <strong>skew</strong> ocurre cuando la distribución de datos por particiones es desigual. Por ejemplo, si una clave concentra
     la mayoría de registros, una partición puede volverse mucho más pesada y convertirse en cuello de botella.
@@ -269,7 +269,7 @@ rdd_part = rdd_kv.partitionBy(4)</code></pre>
     <li>Ajuste de particiones y diseño de joins/agregaciones para reducir concentración.</li>
   </ul>
 
-  <h2>11. Configuración relevante</h2>
+  <h4>Configuraciones relevantes</h4>
   <p>
     Existen parámetros de configuración que influyen directamente en el particionado y el paralelismo:
   </p>
@@ -278,14 +278,14 @@ spark.conf.set("spark.default.parallelism", 8)</code></pre>
 
   <ul>
     <li>
-      <code  class="language-python python-code">spark.sql.shuffle.partitions</code>: número de particiones por defecto tras operaciones con shuffle en Spark SQL (DataFrames).
+      <code>spark.sql.shuffle.partitions</code>: número de particiones por defecto tras operaciones con shuffle en Spark SQL (DataFrames).
     </li>
     <li>
-      <code  class="language-python python-code">spark.default.parallelism</code>: paralelismo por defecto, especialmente relevante para operaciones RDD.
+      <code>spark.default.parallelism</code>: paralelismo por defecto, especialmente relevante para operaciones RDD.
     </li>
   </ul>
 
-  <h2>12. Diferencias entre RDD y DataFrame respecto al particionado</h2>
+  <h4> Diferencias entre RDD y DataFrame respecto al particionado</h4>
   <table border="1">
     <thead>
       <tr>
@@ -308,7 +308,7 @@ spark.conf.set("spark.default.parallelism", 8)</code></pre>
       <tr>
         <td>Ajustes típicos de shuffle</td>
         <td>Más manual (según operación)</td>
-        <td>Configurable vía <code  class="language-python python-code">spark.sql.shuffle.partitions</code></td>
+        <td>Configurable vía <code>spark.sql.shuffle.partitions</code></td>
       </tr>
       <tr>
         <td>Partition pruning</td>
@@ -318,17 +318,46 @@ spark.conf.set("spark.default.parallelism", 8)</code></pre>
     </tbody>
   </table>
 
-  <h2>13. Ejercicio práctico (nivel TFG)</h2>
 
-  <h3>13.1 Objetivo</h3>
+  <h4>Conclusión</h4>
+  <p>
+    La paralelización y el particionado son elementos críticos para el rendimiento en Spark. El grado de paralelismo depende
+    directamente del número de particiones, mientras que el shuffle introduce un coste relevante al redistribuir datos entre
+    nodos. Ajustar correctamente el número de particiones, minimizar shuffles innecesarios y aplicar estrategias de mitigación
+    de skew permite diseñar aplicaciones distribuidas más eficientes y escalables.
+  </p>
+
+          <p>Métodos: <code >repartition(n)</code>, <code>coalesce(n)</code>. Repartition fuerza shuffle; coalesce intenta evitarlo cuando reduce particiones.</p>
+          <pre><code class="language-python python-code">rdd = sc.parallelize(range(1000), 4)
+rdd.getNumPartitions()
+rdd2 = rdd.repartition(8)</code></pre>
+
+
+
+
+
+
+        </div>
+      </div>
+    </section>
+
+    <section id="practica">
+      <div class="lesson-container">
+        <h3>EJERCICIO PRÁCTICO</h3>
+        <hr>
+        <div class="text-cell">
+          <ol>
+
+
+  <h4>Objetivo</h4>
   <p>
     Evaluar cómo el número de particiones afecta al rendimiento y observar el impacto de un shuffle en un DataFrame.
   </p>
 
-  <h3>13.2 Parte A: Experimento con RDD</h3>
+  <h4>Parte A: Experimento con RDD</h4>
   <ol>
     <li>Crear un RDD con 1 millón de registros y 2 particiones.</li>
-    <li>Ejecutar <code  class="language-python python-code">count()</code> y medir el tiempo aproximado.</li>
+    <li>Ejecutar <code>count()</code> y medir el tiempo aproximado.</li>
     <li>Repetir el experimento con 8 particiones.</li>
     <li>Repetir con 32 particiones.</li>
     <li>Comparar resultados y justificar el comportamiento observado.</li>
@@ -345,12 +374,12 @@ t1 = time.time()
 
 print("Count:", c, "Tiempo:", t1 - t0)</code></pre>
 
-  <h3>13.3 Parte B: Experimento con DataFrame y shuffle</h3>
+  <h3>Parte B: Experimento con DataFrame y shuffle</h3>
   <ol>
     <li>Cargar un DataFrame (CSV o Parquet) con una columna categórica.</li>
-    <li>Aplicar <code  class="language-python python-code">repartition(10)</code> y ejecutar una acción (por ejemplo, <code  class="language-python python-code">count()</code>).</li>
-    <li>Ejecutar un <code  class="language-python python-code">groupBy</code> sobre la columna categórica y observar stages en Spark UI.</li>
-    <li>Ajustar <code  class="language-python python-code">spark.sql.shuffle.partitions</code> a un valor inferior y repetir el <code  class="language-python python-code">groupBy</code>.</li>
+    <li>Aplicar <code >repartition(10)</code> y ejecutar una acción (por ejemplo, <code>count()</code>).</li>
+    <li>Ejecutar un <code>groupBy</code> sobre la columna categórica y observar stages en Spark UI.</li>
+    <li>Ajustar <code>spark.sql.shuffle.partitions</code> a un valor inferior y repetir el <code>groupBy</code>.</li>
     <li>Comparar el número de tareas y el tiempo de ejecución aproximado.</li>
   </ol>
 
@@ -364,49 +393,13 @@ df2 = df.repartition(10)
 
 df2.groupBy(col("categoria")).count().show()</code></pre>
 
-  <h3>13.4 Entregables</h3>
+  <h3>Preguntas</h3>
   <ul>
-    <li>Tabla con tiempos medidos para cada número de particiones en RDD (2, 8, 32).</li>
+    <li>Cual es el tiempo medio para cada número de particiones en RDD (2, 8, 32).</li>
     <li>Captura o descripción del número de stages/tasks observados en Spark UI para el caso DataFrame.</li>
     <li>Conclusión razonada (10-15 líneas) sobre el impacto del particionado y el shuffle.</li>
   </ul>
 
-  <h2>14. Conclusión</h2>
-  <p>
-    La paralelización y el particionado son elementos críticos para el rendimiento en Spark. El grado de paralelismo depende
-    directamente del número de particiones, mientras que el shuffle introduce un coste relevante al redistribuir datos entre
-    nodos. Ajustar correctamente el número de particiones, minimizar shuffles innecesarios y aplicar estrategias de mitigación
-    de skew permite diseñar aplicaciones distribuidas más eficientes y escalables.
-  </p>
-
-
-
-
-
-
-
-
-          <p>Métodos: <code  class="language-python python-code">repartition(n)</code>, <code  class="language-python python-code">coalesce(n)</code>. Repartition fuerza shuffle; coalesce intenta evitarlo cuando reduce particiones.</p>
-          <pre><code class="language-python python-code">rdd = sc.parallelize(range(1000), 4)
-rdd.getNumPartitions()
-rdd2 = rdd.repartition(8)</code></pre>
-
-
-
-
-
-
-        </div>
-      </div>
-    </section>
-
-    <section id="practica">
-      <div class="lesson-container">
-        <h3>PRÁCTICA</h3>
-        <hr>
-        <div class="text-cell">
-          <ol>
-            <li>Experimenta con distintas particiones y mide tiempos de una operación que implique shuffle (groupBy, join).</li>
           </ol>
         </div>
       </div>
