@@ -31,6 +31,7 @@
          <hr>
          <ul>
            <li><a href="#descripcion">Descripción</a></li>
+           <li><a href="#paralizacion">Paralización</a></li>
            <li><a href="#particionado">Particionado</a></li>
            <li><a href="#practica">Práctica</a></li>
          </ul>
@@ -54,13 +55,12 @@
       </div>
     </section>
 
-    <section id="particionado">
+    <section id="paralizacion">
       <div class="lesson-container">
-        <h3>PARTICIONADO</h3>
+        <h3>PARALELIZACIÓN</h3>
         <hr>
         <div class="text-cell">
 
-<h2>2. Concepto de paralelización</h2>
   <p>
     Paralelizar una colección significa dividir un conjunto de datos en múltiples particiones para que puedan ejecutarse tareas
     en paralelo. En Spark, la unidad mínima de paralelismo es la <strong>partición</strong>.
@@ -69,38 +69,43 @@
     En términos operativos, Spark programa el trabajo como un conjunto de tareas (<em>tasks</em>) que procesan particiones de datos.
     De forma general:
   </p>
-  <pre><code>1 partición = 1 task (en un stage dado)</code></pre>
+  <pre><code  class="language-python python-code">1 partición = 1 task (en un stage dado)</code></pre>
 
-  <h2>3. Paralelización de colecciones locales (RDD)</h2>
+  <h4>Paralelización de colecciones locales (RDD)</h4>
 
-  <h3>3.1 Creación mediante parallelize()</h3>
+  <strong>Creación mediante parallelize()</strong>
   <p>
     Spark permite convertir una colección local (por ejemplo, una lista en Python) en un RDD distribuido:
   </p>
-  <pre><code>rdd = spark.sparkContext.parallelize([1, 2, 3, 4, 5])</code></pre>
+  <pre><code  class="language-python python-code">rdd = spark.sparkContext.parallelize([1, 2, 3, 4, 5])</code></pre>
   <p>
     Internamente, Spark divide la colección en particiones; cada partición puede ejecutarse en un executor distinto (o en hilos
     distintos en modo local), permitiendo paralelismo durante el procesamiento.
   </p>
 
-  <h3>3.2 Especificar el número de particiones</h3>
+  <strong>Especificar el número de particiones</strong>
   <p>
     Es posible indicar explícitamente cuántas particiones se desean al paralelizar una colección:
   </p>
-  <pre><code>rdd = spark.sparkContext.parallelize(range(1, 1001), 4)</code></pre>
+  <pre><code  class="language-python python-code">rdd = spark.sparkContext.parallelize(range(1, 1001), 4)</code></pre>
   <p>
     En este caso se crean <strong>4 particiones</strong>. Si no se especifica, Spark utiliza un valor por defecto asociado al
     paralelismo del entorno:
   </p>
-  <pre><code>spark.default.parallelism</code></pre>
+  <pre><code  class="language-python python-code">spark.default.parallelism</code></pre>
   <p>
     Habitualmente, este valor se relaciona con el número total de núcleos disponibles en el clúster (o en local), aunque puede
     variar según el cluster manager y la configuración.
   </p>
+</div>
+      </div>
+        </section>
+    <section id="particionado">
+      <div class="lesson-container">
+                <h3>PARTICIONADO</h3>
+        <hr>
+        <div class="text-cell">
 
-  <h2>4. Particionado en Spark</h2>
-
-  <h3>4.1 ¿Qué es una partición?</h3>
   <p>
     Una <strong>partición</strong> es un bloque lógico de datos que Spark procesa de forma independiente. Cada partición:
   </p>
@@ -114,9 +119,9 @@
     y el tamaño de cada unidad de trabajo.
   </p>
 
-  <h2>5. Tipos de particionado y ajustes de particiones</h2>
+  <h4>Tipos de particionado y ajustes de particiones</h4>
 
-  <h3>5.1 Particionado por defecto al cargar datos</h3>
+  <strong>1. Particionado por defecto al cargar datos</strong>
   <p>
     Cuando se cargan datos desde un sistema de archivos, Spark crea particiones en función de factores como:
   </p>
@@ -128,17 +133,17 @@
   <p>
     Por ejemplo, al leer un CSV:
   </p>
-  <pre><code>df = spark.read.csv("datos.csv")</code></pre>
+  <pre><code  class="language-python python-code">df = spark.read.csv("datos.csv")</code></pre>
   <p>
     El número de particiones resultante dependerá del origen y de cómo Spark y el conector dividan el trabajo.
   </p>
 
-  <h3>5.2 Repartition()</h3>
+  <strong>2 Repartition()</strong>
   <p>
     El método <code>repartition(n)</code> redefine el número de particiones y redistribuye los datos de forma más uniforme,
     pero implica un <strong>shuffle</strong> (reorganización de datos):
   </p>
-  <pre><code>df2 = df.repartition(10)</code></pre>
+  <pre><code  class="language-python python-code">df2 = df.repartition(10)</code></pre>
   <p>Características principales:</p>
   <ul>
     <li>Redistribución más equilibrada.</li>
@@ -146,11 +151,11 @@
     <li>Útil cuando se requiere balanceo de carga o paralelismo adicional.</li>
   </ul>
 
-  <h3>5.3 Coalesce()</h3>
+  <strong>3 Coalesce()</strong>
   <p>
     El método <code>coalesce(n)</code> reduce el número de particiones intentando evitar un shuffle completo:
   </p>
-  <pre><code>df2 = df.coalesce(2)</code></pre>
+  <pre><code  class="language-python python-code">df2 = df.coalesce(2)</code></pre>
   <p>Características principales:</p>
   <ul>
     <li>Más eficiente que repartition para reducir particiones.</li>
@@ -158,25 +163,25 @@
     <li>Muy utilizado antes de escribir resultados para evitar muchos ficheros pequeños.</li>
   </ul>
 
-  <h2>6. Particionado por clave</h2>
+  <h4>Particionado por clave</h4>
 
-  <h3>6.1 Particionado por clave en RDD</h3>
+  <strong>Particionado por clave en RDD</strong>
   <p>
     En RDDs de pares clave-valor, se puede controlar el particionado para que claves iguales vayan a la misma partición:
   </p>
-  <pre><code>rdd_kv = spark.sparkContext.parallelize([("A", 1), ("B", 2), ("A", 3)])
+  <pre><code  class="language-python python-code">rdd_kv = spark.sparkContext.parallelize([("A", 1), ("B", 2), ("A", 3)])
 rdd_part = rdd_kv.partitionBy(4)</code></pre>
   <p>
     Este enfoque es especialmente útil para operaciones por clave como agregaciones, joins o reduceByKey.
   </p>
 
-  <h3>6.2 Particionado por columna en DataFrame</h3>
+  <strong>Particionado por columna en DataFrame</strong>
   <p>
     En DataFrames, se puede repartir el dataset por una o varias columnas para agrupar valores iguales en las mismas particiones:
   </p>
-  <pre><code>df2 = df.repartition("columna")</code></pre>
+  <pre><code  class="language-python python-code">df2 = df.repartition("columna")</code></pre>
   <p>
-    Esto puede mejorar el rendimiento de operaciones como <code>groupBy</code> o <code>join</code>, aunque suele implicar shuffle.
+    Esto puede mejorar el rendimiento de operaciones como <code>groupBy</code> o <code  class="language-python python-code">join</code>, aunque suele implicar shuffle.
   </p>
 
   <h2>7. Shuffle y su relación con el particionado</h2>
@@ -185,10 +190,10 @@ rdd_part = rdd_kv.partitionBy(4)</code></pre>
     Ocurre, por ejemplo, cuando se realizan:
   </p>
   <ul>
-    <li><code>groupBy</code> / <code>groupByKey</code></li>
-    <li><code>join</code></li>
-    <li><code>repartition</code></li>
-    <li>Algunas ordenaciones (<code>orderBy</code>)</li>
+    <li><code  class="language-python python-code">groupBy</code> / <code  class="language-python python-code">groupByKey</code></li>
+    <li><code  class="language-python python-code">join</code></li>
+    <li><code  class="language-python python-code">repartition</code></li>
+    <li>Algunas ordenaciones (<code  class="language-python python-code">orderBy</code>)</li>
   </ul>
   <p>
     Durante un shuffle:
@@ -229,10 +234,10 @@ rdd_part = rdd_kv.partitionBy(4)</code></pre>
   <p>
     Spark permite particionar la salida al escribir, creando directorios por valores de una columna:
   </p>
-  <pre><code>df.write.partitionBy("categoria").parquet("salida")</code></pre>
+  <pre><code  class="language-python python-code">df.write.partitionBy("categoria").parquet("salida")</code></pre>
 
   <p>La estructura de salida resultante suele ser:</p>
-  <pre><code>salida/
+  <pre><code  class="language-python python-code">salida/
   categoria=A/
   categoria=B/
   ...</code></pre>
@@ -251,7 +256,7 @@ rdd_part = rdd_kv.partitionBy(4)</code></pre>
   </p>
 
   <p>Ejemplo conceptual:</p>
-  <pre><code>df.groupBy("pais").count()</code></pre>
+  <pre><code  class="language-python python-code">df.groupBy("pais").count()</code></pre>
 
   <p>
     Si el 90% de registros pertenece a un único país, las particiones asociadas a esa clave serán desproporcionadas.
@@ -268,15 +273,15 @@ rdd_part = rdd_kv.partitionBy(4)</code></pre>
   <p>
     Existen parámetros de configuración que influyen directamente en el particionado y el paralelismo:
   </p>
-  <pre><code>spark.conf.set("spark.sql.shuffle.partitions", 200)
+  <pre><code  class="language-python python-code">spark.conf.set("spark.sql.shuffle.partitions", 200)
 spark.conf.set("spark.default.parallelism", 8)</code></pre>
 
   <ul>
     <li>
-      <code>spark.sql.shuffle.partitions</code>: número de particiones por defecto tras operaciones con shuffle en Spark SQL (DataFrames).
+      <code  class="language-python python-code">spark.sql.shuffle.partitions</code>: número de particiones por defecto tras operaciones con shuffle en Spark SQL (DataFrames).
     </li>
     <li>
-      <code>spark.default.parallelism</code>: paralelismo por defecto, especialmente relevante para operaciones RDD.
+      <code  class="language-python python-code">spark.default.parallelism</code>: paralelismo por defecto, especialmente relevante para operaciones RDD.
     </li>
   </ul>
 
@@ -303,7 +308,7 @@ spark.conf.set("spark.default.parallelism", 8)</code></pre>
       <tr>
         <td>Ajustes típicos de shuffle</td>
         <td>Más manual (según operación)</td>
-        <td>Configurable vía <code>spark.sql.shuffle.partitions</code></td>
+        <td>Configurable vía <code  class="language-python python-code">spark.sql.shuffle.partitions</code></td>
       </tr>
       <tr>
         <td>Partition pruning</td>
@@ -323,14 +328,14 @@ spark.conf.set("spark.default.parallelism", 8)</code></pre>
   <h3>13.2 Parte A: Experimento con RDD</h3>
   <ol>
     <li>Crear un RDD con 1 millón de registros y 2 particiones.</li>
-    <li>Ejecutar <code>count()</code> y medir el tiempo aproximado.</li>
+    <li>Ejecutar <code  class="language-python python-code">count()</code> y medir el tiempo aproximado.</li>
     <li>Repetir el experimento con 8 particiones.</li>
     <li>Repetir con 32 particiones.</li>
     <li>Comparar resultados y justificar el comportamiento observado.</li>
   </ol>
 
   <p>Ejemplo base en PySpark:</p>
-  <pre><code>import time
+  <pre><code  class="language-python python-code">import time
 
 rdd = spark.sparkContext.parallelize(range(1, 1000001), 2)
 
@@ -343,14 +348,14 @@ print("Count:", c, "Tiempo:", t1 - t0)</code></pre>
   <h3>13.3 Parte B: Experimento con DataFrame y shuffle</h3>
   <ol>
     <li>Cargar un DataFrame (CSV o Parquet) con una columna categórica.</li>
-    <li>Aplicar <code>repartition(10)</code> y ejecutar una acción (por ejemplo, <code>count()</code>).</li>
-    <li>Ejecutar un <code>groupBy</code> sobre la columna categórica y observar stages en Spark UI.</li>
-    <li>Ajustar <code>spark.sql.shuffle.partitions</code> a un valor inferior y repetir el <code>groupBy</code>.</li>
+    <li>Aplicar <code  class="language-python python-code">repartition(10)</code> y ejecutar una acción (por ejemplo, <code  class="language-python python-code">count()</code>).</li>
+    <li>Ejecutar un <code  class="language-python python-code">groupBy</code> sobre la columna categórica y observar stages en Spark UI.</li>
+    <li>Ajustar <code  class="language-python python-code">spark.sql.shuffle.partitions</code> a un valor inferior y repetir el <code  class="language-python python-code">groupBy</code>.</li>
     <li>Comparar el número de tareas y el tiempo de ejecución aproximado.</li>
   </ol>
 
   <p>Ejemplo orientativo:</p>
-  <pre><code>from pyspark.sql.functions import col
+  <pre><code  class="language-python python-code">from pyspark.sql.functions import col
 
 spark.conf.set("spark.sql.shuffle.partitions", 50)
 
@@ -381,7 +386,7 @@ df2.groupBy(col("categoria")).count().show()</code></pre>
 
 
 
-          <p>Métodos: <code>repartition(n)</code>, <code>coalesce(n)</code>. Repartition fuerza shuffle; coalesce intenta evitarlo cuando reduce particiones.</p>
+          <p>Métodos: <code  class="language-python python-code">repartition(n)</code>, <code  class="language-python python-code">coalesce(n)</code>. Repartition fuerza shuffle; coalesce intenta evitarlo cuando reduce particiones.</p>
           <pre><code class="language-python python-code">rdd = sc.parallelize(range(1000), 4)
 rdd.getNumPartitions()
 rdd2 = rdd.repartition(8)</code></pre>
