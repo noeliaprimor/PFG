@@ -31,22 +31,18 @@
          <hr>
          <ul>
            <li><a href="#descripcion">Descripción</a></li>
-           <li><a href="#contenido">Contenido</a></li>
+           <li><a href="#ejemplos">Ejemplos Avanzados</a></li>
          </ul>
        </div>
      </div>
 
-    <section id="window">
+    <section id="descripcion">
       <div class="lesson-container">
-        <h3>FUNCIONES DE VENTANA</h3>
+        <h3>DESCRIPCIÓN</h3>
         <hr>
         <div class="text-cell">
 
-  <h1>Capítulo X: El API de DataFrames y Datasets en Apache Spark — Introducción y ejemplos avanzados</h1>
 
-  <h2>1. Introducción al API de DataFrames y Datasets</h2>
-
-  <h3>1.1 Contexto y evolución</h3>
   <p>
     En Apache Spark, el modelo de programación ha evolucionado desde la abstracción inicial basada en RDD hacia un enfoque más
     declarativo y optimizado mediante <strong>DataFrames</strong> y <strong>Datasets</strong>. Mientras que los RDD proporcionan
@@ -58,17 +54,17 @@
     debido a su eficiencia, expresividad y capacidad para adaptar la ejecución a distintos entornos de clúster.
   </p>
 
-  <h3>1.2 ¿Qué es un DataFrame?</h3>
+  <h4>¿Qué es un DataFrame?</h4>
   <p>
     Un <strong>DataFrame</strong> es una colección distribuida de datos organizada en columnas, asociada a un <em>schema</em>
     (esquema) que define nombres y tipos. Conceptualmente, es comparable a una tabla relacional o una vista SQL, y su diseño permite
     que Spark optimice la ejecución de forma automática.
   </p>
   <p>Ejemplo básico en PySpark:</p>
-  <pre><code>df = spark.read.csv("datos.csv", header=True, inferSchema=True)
+  <pre><code  class="language-python python-code">df = spark.read.csv("datos.csv", header=True, inferSchema=True)
 df.select("nombre", "edad").filter("edad &gt; 30")</code></pre>
 
-  <h3>1.3 ¿Qué es un Dataset?</h3>
+  <h4>¿Qué es un Dataset?</h4>
   <p>
     Un <strong>Dataset</strong> extiende el concepto de DataFrame añadiendo tipado fuerte en lenguajes como Scala y Java. En términos
     prácticos:
@@ -80,25 +76,25 @@ df.select("nombre", "edad").filter("edad &gt; 30")</code></pre>
   </ul>
 
   <p>Ejemplo en Scala:</p>
-  <pre><code>case class Persona(nombre: String, edad: Int)
+  <pre><code  class="language-python python-code">case class Persona(nombre: String, edad: Int)
 val ds = spark.read.json("personas.json").as[Persona]</code></pre>
 
-  <h3>1.4 Principios fundamentales del API estructurado</h3>
+  <h4>Principios fundamentales del API estructurado</h4>
 
-  <h4>1.4.1 Programación declarativa</h4>
+  <strong>Programación declarativa</strong>
   <p>
     El desarrollador describe <em>qué</em> resultado desea, no <em>cómo</em> ejecutarlo físicamente. Spark decide la estrategia
     de ejecución:
   </p>
-  <pre><code>df.groupBy("departamento").count()</code></pre>
+  <pre><code  class="language-python python-code">df.groupBy("departamento").count()</code></pre>
 
-  <h4>1.4.2 Optimización automática</h4>
+  <strong>Optimización automática</strong>
   <p>
     Mediante el optimizador Catalyst, Spark puede reordenar operaciones, empujar filtros hacia el origen (cuando el conector lo
     soporta), eliminar columnas innecesarias y optimizar joins.
   </p>
 
-  <h4>1.4.3 Planificación lógica y física</h4>
+  <strong>Planificación lógica y física</strong>
   <p>
     Cada operación se traduce a un conjunto de planes:
   </p>
@@ -109,7 +105,7 @@ val ds = spark.read.json("personas.json").as[Persona]</code></pre>
     <li>Ejecución distribuida (stages y tasks)</li>
   </ol>
 
-  <h3>1.5 Ventajas frente a RDD</h3>
+  <h4>Ventajas frente a RDD</h4>
   <table border="1">
     <thead>
       <tr>
@@ -147,7 +143,7 @@ val ds = spark.read.json("personas.json").as[Persona]</code></pre>
     </tbody>
   </table>
 
-  <h3>1.6 Casos de uso típicos</h3>
+  <h>Casos de uso típicos</h>
   <ul>
     <li>Procesos ETL (limpieza, normalización, enriquecimiento).</li>
     <li>Analítica exploratoria y agregaciones masivas.</li>
@@ -155,25 +151,34 @@ val ds = spark.read.json("personas.json").as[Persona]</code></pre>
     <li>Procesamiento batch y streaming estructurado.</li>
   </ul>
 
-  <h3>1.7 Relación con el motor interno</h3>
+  <h4>Relación con el motor interno</h4>
   <p>
     Aunque el desarrollador trabaja a alto nivel, la ejecución final se materializa como tareas sobre particiones distribuidas:
   </p>
-  <pre><code>Dataset → DataFrame → Logical Plan → Physical Plan → RDD → Tasks</code></pre>
+  <pre><code  class="language-python python-code">Dataset → DataFrame → Logical Plan → Physical Plan → RDD → Tasks</code></pre>
 
-  <h3>1.8 Conclusión introductoria</h3>
+  <h4>Conclusión</h4>
   <p>
     El API de DataFrames y Datasets representa la evolución del modelo de programación de Spark hacia un paradigma declarativo,
     optimizado y orientado al procesamiento de datos estructurados a gran escala. En entornos modernos de Big Data, constituye el
     estándar recomendado para desarrollar aplicaciones escalables y eficientes.
   </p>
 
-  <h2>2. Ejemplos avanzados del API de DataFrames (PySpark) y Datasets (Scala/Java)</h2>
+        </div>
+      </div>
+    </section>
 
-  <h2>2.1 Ventanas avanzadas (Window Functions)</h2>
+    <section id="ejempos">
+      <div class="lesson-container">
+        <h3>EJEMPLOS AVANZADOS DEL API DE DATAFRAMES(PYSPARK) Y DATASETS (SCALA/JAVA)</h3>
+        <hr>
+        <div class="text-cell">
 
-  <h3>2.1.1 Top-N por grupo (row_number / dense_rank)</h3>
-  <pre><code>from pyspark.sql import functions as F
+
+  <h4>1. Ventanas avanzadas (Window Functions)</h4>
+
+  <strong>Top-N por grupo (row_number / dense_rank)</strong>
+  <pre><code  class="language-python python-code">from pyspark.sql import functions as F
 from pyspark.sql.window import Window
 
 w = Window.partitionBy("departamento").orderBy(F.desc("salario"))
@@ -184,9 +189,9 @@ df_top = (df
   .drop("rn")
 )</code></pre>
 
-  <h3>2.1.2 Métricas móviles (rolling) con rangeBetween</h3>
+  <strong>Métricas móviles (rolling) con rangeBetween</strong>
   <p>Ejemplo: media móvil por usuario en los últimos 7 días (si <code>ts</code> es timestamp).</p>
-  <pre><code>from pyspark.sql import functions as F
+  <pre><code  class="language-python python-code">from pyspark.sql import functions as F
 from pyspark.sql.window import Window
 
 w7d = (Window
@@ -197,8 +202,8 @@ w7d = (Window
 
 df_roll = df.withColumn("avg_7d", F.avg("importe").over(w7d))</code></pre>
 
-  <h3>2.1.3 Sessionization con lag + sum acumulado</h3>
-  <pre><code>from pyspark.sql import functions as F
+  <strong>Sessionization con lag + sum acumulado</strong>
+  <pre><code  class="language-python python-code">from pyspark.sql import functions as F
 from pyspark.sql.window import Window
 
 w = Window.partitionBy("user_id").orderBy("ts")
@@ -211,31 +216,31 @@ df_sess = (df
   .drop("prev_ts", "gap_min", "new_sess")
 )</code></pre>
 
-  <h2>2.2 Joins avanzados</h2>
+  <h4>2. Joins avanzados</h4>
 
-  <h3>2.2.1 Anti join / Semi join</h3>
-  <pre><code># Usuarios que NO tienen transacciones (left_anti)
+  <strong> Anti join / Semi join</strong>
+  <pre><code  class="language-python python-code"># Usuarios que NO tienen transacciones (left_anti)
 df_no_tx = users.join(tx.select("user_id").distinct(), "user_id", "left_anti")
 
 # Usuarios que SÍ tienen transacciones (left_semi)
 df_has_tx = users.join(tx.select("user_id").distinct(), "user_id", "left_semi")</code></pre>
 
-  <h3>2.2.2 Join con condición no equi-join (rangos)</h3>
-  <pre><code>cond = (
+  <strong>Join con condición no equi-join (rangos)</strong>
+  <pre><code  class="language-python python-code">cond = (
   (tx["ts"] &gt;= promo["start_ts"]) &
   (tx["ts"] &lt;  promo["end_ts"])
 )
 tx_promo = tx.join(promo, cond, "left")</code></pre>
 
-  <h3>2.2.3 Join optimizado con broadcast (tabla pequeña)</h3>
-  <pre><code>from pyspark.sql import functions as F
+  <strong>Join optimizado con broadcast (tabla pequeña)</strong>
+  <pre><code  class="language-python python-code">from pyspark.sql import functions as F
 
 tx_enriched = tx.join(F.broadcast(dim_productos), "product_id", "left")</code></pre>
 
-  <h2>2.3 Agregaciones avanzadas: pivot, rollup, cube, grouping sets</h2>
+  <h4>3 Agregaciones avanzadas: pivot, rollup, cube, grouping sets</h4>
 
-  <h3>2.3.1 Pivot</h3>
-  <pre><code>from pyspark.sql import functions as F
+  <strong>Pivot</strong>
+  <pre><code  class="language-python python-code">from pyspark.sql import functions as F
 
 df_pivot = (df
   .groupBy("pais")
@@ -243,14 +248,14 @@ df_pivot = (df
   .agg(F.sum("importe").alias("ventas"))
 )</code></pre>
 
-  <h3>2.3.2 Rollup / Cube</h3>
-  <pre><code>from pyspark.sql import functions as F
+  <strong>Rollup / Cube</strong>
+  <pre><code  class="language-python python-code">from pyspark.sql import functions as F
 
 roll = df.rollup("pais", "ciudad").agg(F.sum("importe").alias("ventas"))
 cube = df.cube("pais", "canal").agg(F.sum("importe").alias("ventas"))</code></pre>
 
-  <h3>2.3.3 Grouping sets vía SQL</h3>
-  <pre><code>df.createOrReplaceTempView("t")
+  <strong>Grouping sets vía SQL</strong>
+  <pre><code  class="language-python python-code">df.createOrReplaceTempView("t")
 spark.sql("""
 SELECT pais, ciudad, canal, SUM(importe) ventas
 FROM t
@@ -261,17 +266,17 @@ GROUP BY GROUPING SETS (
 )
 """)</code></pre>
 
-  <h2>2.4 Manejo avanzado de estructuras complejas (arrays, maps, structs)</h2>
+  <h3>4 Manejo avanzado de estructuras complejas (arrays, maps, structs)</h3>
 
-  <h3>2.4.1 explode / posexplode (arrays)</h3>
-  <pre><code>from pyspark.sql import functions as F
+  <strong>explode / posexplode (arrays)</strong>
+  <pre><code  class="language-python python-code">from pyspark.sql import functions as F
 
 df_ex = (df
   .withColumn("tag", F.explode("tags"))
 )</code></pre>
 
-  <h3>2.4.2 transform / filter / size en arrays (expresiones)</h3>
-  <pre><code>from pyspark.sql import functions as F
+  <strong>transform / filter / size en arrays (expresiones)</strong>
+  <pre><code  class="language-python python-code">from pyspark.sql import functions as F
 
 df_arr = (df
   .withColumn("tags_upper", F.expr("transform(tags, x -&gt; upper(x))"))
@@ -279,8 +284,8 @@ df_arr = (df
   .withColumn("n_tags", F.expr("size(tags)"))
 )</code></pre>
 
-  <h3>2.4.3 structs y acceso a campos</h3>
-  <pre><code>from pyspark.sql import functions as F
+  <strong>structs y acceso a campos</strong>
+  <pre><code  class="language-python python-code">from pyspark.sql import functions as F
 
 df_struct = df.select(
   "id",
@@ -289,18 +294,18 @@ df_struct = df.select(
 
 df_struct.select("persona.nombre", "persona.edad")</code></pre>
 
-  <h3>2.4.4 map_keys / map_values</h3>
-  <pre><code>from pyspark.sql import functions as F
+  <strong>map_keys / map_values</strong>
+  <pre><code  class="language-python python-code">from pyspark.sql import functions as F
 
 df_map = (df
   .withColumn("map_keys", F.map_keys("atributos"))
   .withColumn("map_vals", F.map_values("atributos"))
 )</code></pre>
 
-  <h2>2.5 Deduplicación avanzada</h2>
+  <h4>5 Deduplicación avanzada</h4>
 
-  <h3>2.5.1 Mantener el registro más reciente por clave</h3>
-  <pre><code>from pyspark.sql import functions as F
+  <strong>Mantener el registro más reciente por clave</strong>
+  <pre><code  class="language-python python-code">from pyspark.sql import functions as F
 from pyspark.sql.window import Window
 
 w = Window.partitionBy("id").orderBy(F.desc("updated_at"))
@@ -311,8 +316,8 @@ df_latest = (df
   .drop("rn")
 )</code></pre>
 
-  <h3>2.5.2 CDC simple (detección de cambios entre snapshots)</h3>
-  <pre><code>from pyspark.sql import functions as F
+  <strong>CDC simple (detección de cambios entre snapshots)</strong>
+  <pre><code  class="language-python python-code">from pyspark.sql import functions as F
 
 cols = ["id", "campo1", "campo2"]
 
@@ -332,10 +337,10 @@ changes = (new.alias("n")
   )
 )</code></pre>
 
-  <h2>2.6 UDF avanzada (y alternativa recomendada)</h2>
+  <h4>6 UDF avanzada (y alternativa recomendada)</h4>
 
-  <h3>2.6.1 UDF (limita optimización)</h3>
-  <pre><code>from pyspark.sql import functions as F
+  <strong>UDF (limita optimización)</strong>
+  <pre><code  class="language-python python-code">from pyspark.sql import functions as F
 from pyspark.sql.types import IntegerType
 
 @F.udf(returnType=IntegerType())
@@ -344,64 +349,64 @@ def score(x):
 
 df2 = df.withColumn("score", score(F.col("importe")))</code></pre>
 
-  <h3>2.6.2 Alternativa nativa (recomendada)</h3>
-  <pre><code>from pyspark.sql import functions as F
+  <strong>Alternativa nativa (recomendada)</strong>
+  <pre><code  class="language-python python-code">from pyspark.sql import functions as F
 
 df2 = df.withColumn("score", F.when(F.col("importe") &gt; 10, 1).otherwise(0))</code></pre>
 
-  <h2>2.7 Optimización práctica: AQE, skew y particiones de shuffle</h2>
+  <h4>7 Optimización práctica: AQE, skew y particiones de shuffle</h4>
 
-  <h3>2.7.1 Activar Adaptive Query Execution (AQE)</h3>
-  <pre><code>spark.conf.set("spark.sql.adaptive.enabled", "true")
+  <stong>Activar Adaptive Query Execution (AQE)</stong>
+  <pre><code  class="language-python python-code">spark.conf.set("spark.sql.adaptive.enabled", "true")
 spark.conf.set("spark.sql.adaptive.skewJoin.enabled", "true")</code></pre>
 
-  <h3>2.7.2 Ajustar particiones de shuffle</h3>
-  <pre><code>spark.conf.set("spark.sql.shuffle.partitions", "200")</code></pre>
+  <strong>Ajustar particiones de shuffle</strong>
+  <pre><code  class="language-python python-code">spark.conf.set("spark.sql.shuffle.partitions", "200")</code></pre>
 
-  <h3>2.7.3 Inspeccionar plan de ejecución</h3>
-  <pre><code>df_join.explain(True)</code></pre>
+  <strong>Inspeccionar plan de ejecución</strong>
+  <pre><code  class="language-python python-code">df_join.explain(True)</code></pre>
 
-  <h2>2.8 Dataset tipado (Scala): operaciones por clave y agregación tipada</h2>
+  <h4>8 Dataset tipado (Scala): operaciones por clave y agregación tipada</h4>
   <p>
     Nota: en PySpark no existe Dataset tipado; este patrón es propio de Scala/Java.
   </p>
-  <pre><code>case class Tx(userId: String, amount: Double, ts: java.sql.Timestamp)
+  <pre><code  class="language-python python-code">case class Tx(userId: String, amount: Double, ts: java.sql.Timestamp)
 
 val ds = spark.read.parquet("tx.parquet").as[Tx]
 
 val byUser = ds.groupByKey(_.userId)
 val agg = byUser.agg(org.apache.spark.sql.expressions.scalalang.typed.sum[Tx](_.amount))</code></pre>
 
-  <h2>2.9 Patrón avanzado de ETL: Bronze → Silver → Gold</h2>
+  <h4>9 Patrón avanzado de ETL: Bronze → Silver → Gold</h4>
 
-  <h3>2.9.1 Bronze (raw)</h3>
-  <pre><code>bronze = spark.read.json("s3a://bucket/raw/events/")</code></pre>
+  <strong>1 Bronze (raw)</strong>
+  <pre><code  class="language-python python-code">bronze = spark.read.json("s3a://bucket/raw/events/")</code></pre>
 
-  <h3>2.9.2 Silver (limpio + normalizado)</h3>
-  <pre><code>from pyspark.sql import functions as F
+  <strong>Silver (limpio + normalizado)</strong>
+  <pre><code  class="language-python python-code">from pyspark.sql import functions as F
 
 silver = (bronze
   .withColumn("ts", F.to_timestamp("event_time"))
   .dropna(subset=["user_id", "ts"])
 )</code></pre>
 
-  <h3>2.9.3 Gold (agregado para BI)</h3>
-  <pre><code>from pyspark.sql import functions as F
+  <strong> Gold (agregado para BI)</strong>
+  <pre><code  class="language-python python-code">from pyspark.sql import functions as F
 
 gold = (silver
   .groupBy(F.window("ts", "1 day").alias("day"), "country")
   .agg(F.count("*").alias("events"))
 )</code></pre>
 
-  <h2>3. Mini-lab propuesto (nivel TFG)</h2>
+  <h2>Mini-lab propuesto (nivel TFG)</h2>
 
-  <h3>3.1 Objetivo</h3>
+  <h3>1 Objetivo</h3>
   <p>
     Aplicar operaciones avanzadas (join, ventanas, deduplicación) y comparar decisiones del optimizador (plan físico),
     utilizando <code>explain(True)</code> y técnicas como broadcast join.
   </p>
 
-  <h3>3.2 Enunciado</h3>
+  <h3>2 Enunciado</h3>
   <ol>
     <li>Cargar un dataset de transacciones y una dimensión pequeña (productos o clientes).</li>
     <li>Realizar un join normal y analizar el plan con <code>explain(True)</code>.</li>
@@ -411,8 +416,8 @@ gold = (silver
     <li>Escribir la salida en Parquet particionada por una columna (por ejemplo, país o categoría).</li>
   </ol>
 
-  <h3>3.3 Pistas de implementación</h3>
-  <pre><code>from pyspark.sql import functions as F
+  <h3>3  Pistas de implementación</h3>
+  <pre><code  class="language-python python-code">from pyspark.sql import functions as F
 from pyspark.sql.window import Window
 
 # 1) Join normal vs broadcast
@@ -455,30 +460,11 @@ latest.write.mode("overwrite").partitionBy("pais").parquet("salida_gold")</code>
 from pyspark.sql.functions import row_number
 w = Window.partitionBy('user').orderBy('timestamp')
 df = df.withColumn('rn', row_number().over(w))
-</code></pre>
-        </div>
+</code></pre>        </div>
       </div>
     </section>
 
-    <section id="udf">
-      <div class="lesson-container">
-        <h3>UDFS Y UDAFS</h3>
-        <hr>
-        <div class="text-cell">
-          <p>Crear funciones definidas por el usuario para transformaciones complejas y agregaciones personalizadas (usar UDF con precaución por rendimiento).</p>
-        </div>
-      </div>
-    </section>
 
-    <section id="streaming">
-      <div class="lesson-container">
-        <h3>INTEGRACIÓN CON STREAMING</h3>
-        <hr>
-        <div class="text-cell">
-          <p>DataFrames son compatibles con Structured Streaming; muchas operaciones y optimizaciones se aplican a pipelines continuos.</p>
-        </div>
-      </div>
-    </section>
 
     <div class="navigation-buttons">
       <button onclick="window.location.href='M2T2L9.html'">Anterior</button>

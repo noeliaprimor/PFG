@@ -31,8 +31,9 @@
          <hr>
          <ul>
            <li><a href="#descripcion">Descripción</a></li>
-           <li><a href="#modelos">Modelos</a></li>
-           <li><a href="#ejemplo">Ejemplo</a></li>
+           <li><a href="#contenido">Contenido</a></li>
+           <li><a href="#conclusion">Conclusion</a></li>
+           <li><a href="#ejercicio">Ejercicio Propuesto</a></li>
          </ul>
        </div>
      </div>
@@ -89,7 +90,7 @@
   </ul>
 
   <h3>2.3 Ejemplo básico (Scala)</h3>
-  <pre><code>import org.apache.spark.streaming._
+  <pre><code  class="language-python python-code">import org.apache.spark.streaming._
 import org.apache.spark.streaming.socket._
 
 val ssc = new StreamingContext(sc, Seconds(5))
@@ -137,7 +138,7 @@ ssc.awaitTermination()</code></pre>
   </p>
 
   <h3>3.3 Ejemplo básico (PySpark con Kafka)</h3>
-  <pre><code>from pyspark.sql import SparkSession
+  <pre><code  class="language-python python-code">from pyspark.sql import SparkSession
 
 spark = SparkSession.builder.appName("StreamingExample").getOrCreate()
 
@@ -165,7 +166,7 @@ query.awaitTermination()</code></pre>
   </ul>
 
   <p>Ejemplo con agregación:</p>
-  <pre><code>from pyspark.sql.functions import count
+  <pre><code  class="language-python python-code">from pyspark.sql.functions import count
 
 agg_df = stream_df.groupBy("key").agg(count("*").alias("total"))
 
@@ -178,7 +179,7 @@ query = (agg_df
   <h2>5. Ventanas temporales y gestión de estado</h2>
 
   <h3>5.1 Ventanas por tiempo</h3>
-  <pre><code>from pyspark.sql.functions import window
+  <pre><code  class="language-python python-code">from pyspark.sql.functions import window
 
 windowed = (stream_df
     .groupBy(window(stream_df.timestamp, "10 minutes"))
@@ -188,7 +189,7 @@ windowed = (stream_df
   <p>
     Permite gestionar datos tardíos (late data) definiendo un umbral temporal para aceptar eventos atrasados.
   </p>
-  <pre><code>stream_df.withWatermark("timestamp", "5 minutes")</code></pre>
+  <pre><code  class="language-python python-code">stream_df.withWatermark("timestamp", "5 minutes")</code></pre>
 
   <h2>6. Comparativa: Spark Streaming vs Structured Streaming</h2>
 

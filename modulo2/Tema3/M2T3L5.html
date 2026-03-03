@@ -114,7 +114,7 @@
     MLlib requiere que las variables de entrada estén en una única columna de tipo vector.
   </p>
 
-  <pre><code>from pyspark.ml.feature import VectorAssembler
+  <pre><code  class="language-python python-code">from pyspark.ml.feature import VectorAssembler
 
 assembler = VectorAssembler(
     inputCols=["edad", "ingresos"],
@@ -128,7 +128,7 @@ df_features = assembler.transform(df)</code></pre>
     Convierte variables categóricas en índices numéricos.
   </p>
 
-  <pre><code>from pyspark.ml.feature import StringIndexer
+  <pre><code  class="language-python python-code">from pyspark.ml.feature import StringIndexer
 
 indexer = StringIndexer(inputCol="categoria", outputCol="categoria_index")
 df_indexed = indexer.fit(df).transform(df)</code></pre>
@@ -138,7 +138,7 @@ df_indexed = indexer.fit(df).transform(df)</code></pre>
     Normaliza variables numéricas para mejorar el rendimiento de ciertos modelos.
   </p>
 
-  <pre><code>from pyspark.ml.feature import StandardScaler
+  <pre><code  class="language-python python-code">from pyspark.ml.feature import StandardScaler
 
 scaler = StandardScaler(inputCol="features", outputCol="scaledFeatures")
 model_scaler = scaler.fit(df_features)
@@ -147,7 +147,7 @@ df_scaled = model_scaler.transform(df_features)</code></pre>
   <h2>6. Modelos supervisados</h2>
 
   <h3>6.1 Regresión logística</h3>
-  <pre><code>from pyspark.ml.classification import LogisticRegression
+  <pre><code  class="language-python python-code">from pyspark.ml.classification import LogisticRegression
 
 lr = LogisticRegression(featuresCol="features", labelCol="label")
 model = lr.fit(training_data)
@@ -155,13 +155,13 @@ model = lr.fit(training_data)
 predictions = model.transform(test_data)</code></pre>
 
   <h3>6.2 Árboles de decisión</h3>
-  <pre><code>from pyspark.ml.classification import DecisionTreeClassifier
+  <pre><code  class="language-python python-code">from pyspark.ml.classification import DecisionTreeClassifier
 
 dt = DecisionTreeClassifier(featuresCol="features", labelCol="label")
 model_dt = dt.fit(training_data)</code></pre>
 
   <h3>6.3 Random Forest</h3>
-  <pre><code>from pyspark.ml.classification import RandomForestClassifier
+  <pre><code  class="language-python python-code">from pyspark.ml.classification import RandomForestClassifier
 
 rf = RandomForestClassifier(featuresCol="features", labelCol="label")
 model_rf = rf.fit(training_data)</code></pre>
@@ -169,7 +169,7 @@ model_rf = rf.fit(training_data)</code></pre>
   <h2>7. Modelos no supervisados</h2>
 
   <h3>7.1 K-Means (Clustering)</h3>
-  <pre><code>from pyspark.ml.clustering import KMeans
+  <pre><code  class="language-python python-code">from pyspark.ml.clustering import KMeans
 
 kmeans = KMeans(featuresCol="features", k=3)
 model_kmeans = kmeans.fit(df_features)
@@ -179,20 +179,20 @@ clusters = model_kmeans.transform(df_features)</code></pre>
   <h2>8. Evaluación de modelos</h2>
 
   <h3>8.1 Evaluación para clasificación</h3>
-  <pre><code>from pyspark.ml.evaluation import BinaryClassificationEvaluator
+  <pre><code  class="language-python python-code">from pyspark.ml.evaluation import BinaryClassificationEvaluator
 
 evaluator = BinaryClassificationEvaluator(labelCol="label")
 auc = evaluator.evaluate(predictions)</code></pre>
 
   <h3>8.2 Evaluación para regresión</h3>
-  <pre><code>from pyspark.ml.evaluation import RegressionEvaluator
+  <pre><code  class="language-python python-code">from pyspark.ml.evaluation import RegressionEvaluator
 
 evaluator = RegressionEvaluator(labelCol="label", metricName="rmse")
 rmse = evaluator.evaluate(predictions)</code></pre>
 
   <h2>9. Validación cruzada y ajuste de hiperparámetros</h2>
 
-  <pre><code>from pyspark.ml.tuning import CrossValidator, ParamGridBuilder
+  <pre><code  class="language-python python-code">from pyspark.ml.tuning import CrossValidator, ParamGridBuilder
 
 paramGrid = (ParamGridBuilder()
     .addGrid(lr.regParam, [0.01, 0.1])
@@ -209,7 +209,7 @@ cvModel = crossval.fit(training_data)</code></pre>
 
   <h2>10. Pipelines completos</h2>
 
-  <pre><code>from pyspark.ml import Pipeline
+  <pre><code  class="language-python python-code">from pyspark.ml import Pipeline
 
 pipeline = Pipeline(stages=[indexer, assembler, lr])
 model_pipeline = pipeline.fit(training_data)
@@ -222,7 +222,7 @@ predictions = model_pipeline.transform(test_data)</code></pre>
 
   <h2>11. Persistencia del modelo</h2>
 
-  <pre><code>model_pipeline.write().overwrite().save("/models/modelo_ml")
+  <pre><code  class="language-python python-code">model_pipeline.write().overwrite().save("/models/modelo_ml")
 loaded_model = PipelineModel.load("/models/modelo_ml")</code></pre>
 
   <h2>12. Ventajas de MLlib en entornos Big Data</h2>
