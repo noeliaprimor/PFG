@@ -22,58 +22,205 @@
     </div>
   </nav>
 
-  <h2 class="titulos-leccion">Casos prácticos con Spark Streaming</h2>
+  <h4 class="titulos-leccion">Casos prácticos con Spark Streaming</h4>
 
   <div class="indice-container">
     <div id="index-container" class="text-cell">
       <hr>
       <ul>
-        <li><a href="#ventanas">Agregación por ventana</a></li>
-        <li><a href="#joins">Joins con tablas estáticas</a></li>
-        <li><a href="#ejemplo">Ejemplo práctico</a></li>
+        <li><a href="#descripcion">Descripción</a></li>
+        <li><a href="#contenido">Contenido</a></li>
+        <li><a href="/modulo3/Tema3/M3T3L3.html#conclusion">Conclusión</a></li>
+        <li><a href="/modulo3/Tema3/M3T3L3.html#ejercicio">Ejercicio</a></li>
       </ul>
     </div>
   </div>
 
-  <section id="ventanas">
+  <section id="descripcion">
     <div class="lesson-container">
-      <h3>AGREGACIÓN POR VENTANA</h3>
+      <strong>DESCRIPCIÓN</strong>
       <hr>
       <div class="text-cell">
-        <pre><code class="language-python python-code">from pyspark.sql.functions import window
-counts = df.groupBy(window(df.timestamp, '1 minute'), df.word).count()</code></pre>
+        <p>Casos prácticos de Structured Streaming: patrones de ingestión desde Kafka, agregaciones por ventana, joins con tablas estáticas, y pipelines Bronze→Silver.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="contenido">
+    <div class="lesson-container">
+      <strong>CONTENIDO</strong>
+      <hr>
+      <div class="text-cell">
+
+  <h1>Casos prácticos con Structured Streaming: Kafka como fuente y Parquet como almacenamiento</h1>
+
+  <h4>Introducción</h4>
+  <p>
+    En este capítulo se presentan casos prácticos implementables con Apache Spark Structured Streaming utilizando
+    <strong>Apache Kafka</strong> como fuente de eventos y <strong>Parquet</strong> como almacenamiento de salida (data lake).
+  </p>
+
+  <h4>Lectura y parseo desde Kafka</h4>
+  <pre><code  class="language-python python-code">from pyspark.sql import SparkSession
+from pyspark.sql.functions import col, from_json
+from pyspark.sql.types import StructType, StructField, StringType, TimestampType, DoubleType
+
+spark = SparkSession.builder.appName("TFG-Streaming-Kafka-Parquet").getOrCreate()
+
+bootstrap_servers = "kafka:9092"
+
+raw = (spark.readStream
+       .format("kafka")
+       .option("kafka.bootstrap.servers", bootstrap_servers)
+       .option("subscribe", "mi_topic")
+       .option("startingOffsets", "latest")
+       .load())
+
+schema = StructType([
+    StructField("ts", TimestampType(), True),
+    StructField("id", StringType(), True),
+    StructField("value", DoubleType(), True),
+    StructField("type", StringType(), True)
+])
+
+events = (raw.select(from_json(col("value").cast("string"), schema).alias("e"))
+          .select("e.*"))</code></pre>
+
+  <h4>Caso práctico 1: Clickstream (usuarios activos y top URLs)</h4>
+  <pre><code  class="language-python python-code">from pyspark.sql.functions import window, approx_count_distinct
+
+active_users_1m = (events
+  .withWatermark("ts", "10 minutes")
+  .groupBy(window(col("ts"), "1 minute"))
+  .agg(approx_count_distinct("userId").alias("active_users")))
+
+urls_5m = (events
+  .withWatermark("ts", "10 minutes")
+  .groupBy(window(col("ts"), "5 minutes"), col("url"))
+  .count())
+
+q1 = (active_users_1m.writeStream
+      .outputMode("append")
+      .format("parquet")
+      .option("path", "/data/out/case1_active_users_1m")
+      .option("checkpointLocation", "/data/chk/case1_active_users_1m")
+      .start())
+
+q2 = (urls_5m.writeStream
+      .outputMode("append")
+      .format("parquet")
+      .option("path", "/data/out/case1_top_urls_5m")
+      .option("checkpointLocation", "/data/chk/case1_top_urls_5m")
+      .start())
+
+spark.streams.awaitAnyTermination()</code></pre>
+
+  <h4>Caso práctico 2: Detección de fraude (picos de transacciones)</h4>
+  <pre><code  class="language-python python-code">from pyspark.sql.functions import lit
+
+N = 10
+alerts = (tx
+  .withWatermark("ts", "15 minutes")
+  .groupBy(window(col("ts"), "2 minutes", "30 seconds"), col("cardId"))
+  .count()
+  .filter(col("count") &gt;= lit(N))
+  .withColumn("rule", lit("BURST_TX_COUNT"))
+  .withColumn("threshold", lit(N)))
+
+q = (alerts.writeStream
+     .outputMode("append")
+     .format("parquet")
+     .option("path", "/data/out/case2_fraud_alerts")
+     .option("checkpointLocation", "/data/chk/case2_fraud_alerts")
+     .start())
+
+q.awaitTermination()</code></pre>
+
+  <h4>Caso práctico 3: ETL continuo Bronze → Silver con foreachBatch</h4>
+  <pre><code  class="language-python python-code">def process_batch(batch_df, batch_id: int):
+    clean = (batch_df
+             .dropna(subset=["ts", "id", "source", "value"])
+             .dropDuplicates(["id"])
+             .withColumn("date", col("ts").cast("date")))
+
+    (clean.write
+     .mode("append")
+     .partitionBy("date")
+     .parquet("/data/out/case3_silver_metrics"))
+
+q = (events.writeStream
+     .foreachBatch(process_batch)
+     .option("checkpointLocation", "/data/chk/case3_bronze_to_silver")
+     .start())
+
+q.awaitTermination()</code></pre>
+
+  <h4>Buenas prácticas</h4>
+  <p>Checkpointing, watermarks, elección de modo de salida y ajustes de rendimiento.</p>
+
+  <h4>Referencias</h4>
+  <ul>
+    <li>Documentación oficial de Apache Spark: Structured Streaming y fuente Kafka.</li>
+    <li>Documentación oficial de Apache Kafka: topics, offsets y retención.</li>
+    <li>Materiales técnicos sobre diseño de data lakes y formatos columnar (Parquet).</li>
+  </ul>
+
       </div>
     </div>
   </section>
 
   <section id="joins">
     <div class="lesson-container">
-      <h3>JOINS CON TABLAS ESTÁTICAS</h3>
-      <hr>
-      <div class="text-cell">
-        <p>Enriquecer eventos en streaming con tablas de referencia mediante joins estáticos o broadcast joins.</p>
-      </div>
-    </div>
-  </section>
+-      <h3>JOINS CON TABLAS ESTÁTICAS</h3>
++      <strong>JOINS CON TABLAS ESTÁTICAS</strong>
+       <hr>
+       <div class="text-cell">
+         <p>Enriquecer eventos en streaming con tablas de referencia mediante joins estáticos o broadcast joins.</p>
+       </div>
+     </div>
+   </section>
 
-  <section id="ejemplo">
-    <div class="lesson-container">
-      <h3>EJEMPLO PRÁCTICO</h3>
-      <hr>
-      <div class="text-cell">
-        <p>Implementar pipeline que agregue métricas por minuto y escriba resultados a un sink.</p>
-      </div>
-    </div>
-  </section>
+   <section id="ejemplo">
+     <div class="lesson-container">
+-      <h3>EJEMPLO PRÁCTICO</h3>
++      <strong>EJEMPLO PRÁCTICO</strong>
+       <hr>
+       <div class="text-cell">
+         <p>Implementar pipeline que agregue métricas por minuto y escriba resultados a un sink.</p>
+       </div>
+     </div>
+   </section>
 
-  <div class="navigation-buttons">
-    <button onclick="window.location.href='M3T3L2.html'">Anterior</button>
-    <button onclick="window.location.href='M3T3L4.html'">Siguiente</button>
-  </div>
++  <a id="conclusion"></a>
+   <section id="conclusion">
+     <div class="lesson-container">
+       <strong>CONCLUSIÓN</strong>
+       <hr>
+       <div class="text-cell">
+         <p>Los casos prácticos muestran patrones recurrentes: uso de watermarks para datos tardíos, particionado adecuado para paralelismo y checkpoints para tolerancia a fallos. Documentar y medir (latencia, throughput) es clave en un TFG.</p>
+       </div>
+     </div>
+   </section>
 
-</main>
-<div data-include="/partials/footer.html"></div>
-<script src="/js/include.js"></script>
-<script src="/js/script.js"></script>
-</body>
-</html>
++  <a id="ejercicio"></a>
+   <section id="ejercicio">
+     <div class="lesson-container">
+       <strong>EJERCICIO</strong>
+       <hr>
+       <div class="text-cell">
+         <p>Implementa uno de los casos prácticos (Clickstream o Fraud Burst), ejecuta en un entorno de pruebas y documenta configuración, métricas y observaciones.</p>
+       </div>
+     </div>
+   </section>
+
+   <div class="navigation-buttons">
+     <button onclick="window.location.href='M3T3L2.html'">Anterior</button>
+     <button onclick="window.location.href='M3T3L4.html'">Siguiente</button>
+   </div>
+
+ </main>
+ <div data-include="/partials/footer.html"></div>
+ <script src="/js/include.js"></script>
+ <script src="/js/script.js"></script>
+ </body>
+ </html>

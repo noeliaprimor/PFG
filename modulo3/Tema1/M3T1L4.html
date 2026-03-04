@@ -22,60 +22,86 @@
     </div>
   </nav>
 
-  <h2 class="titulos-leccion">Introducción a Spark Streaming / Structured Streaming</h2>
+  <h4 class="titulos-leccion">Introducción a Spark Streaming / Structured Streaming</h4>
 
   <div class="indice-container">
     <div id="index-container" class="text-cell">
       <hr>
       <ul>
         <li><a href="#descripcion">Descripción</a></li>
-        <li><a href="#modelos">Modelos de procesamiento</a></li>
-        <li><a href="#ejemplo">Ejemplo</a></li>
-        <li><a href="#notebook">Notebook</a></li>
+        <li><a href="#contenido">Contenido</a></li>
+        <li><a href="#conclusion">Conclusión</a></li>
+        <li><a href="#ejercicio">Ejercicio</a></li>
       </ul>
     </div>
   </div>
 
   <section id="descripcion">
     <div class="lesson-container">
-      <h3>DESCRIPCIÓN</h3>
+      <strong>DESCRIPCIÓN</strong>
       <hr>
       <div class="text-cell">
-        <p>Presentaremos las diferencias entre DStreams (antiguo) y Structured Streaming (moderno), y las capacidades para ventanas, watermark y semánticas de entrega (al menos una vez / exactamente una vez).</p>
+        <p>Comparativa entre Spark Streaming (DStreams) y Structured Streaming; introducción a modelos, ventanas y watermark.</p>
       </div>
     </div>
   </section>
 
-  <section id="modelos">
+  <section id="contenido">
     <div class="lesson-container">
-      <h3>MODELOS DE PROCESAMIENTO</h3>
+      <strong>CONTENIDO</strong>
       <hr>
       <div class="text-cell">
-        <p>Structured Streaming trata el stream como una tabla en crecimiento; soporta operaciones declarativas y se integra con DataFrame API.</p>
+
+  <h1>Capítulo X: Introducción a Spark Streaming y Structured Streaming</h1>
+
+  <h4>Introducción</h4>
+  <p>El procesamiento de datos en tiempo real se ha convertido en un componente esencial en arquitecturas modernas de Big Data.</p>
+
+  <h4>Spark Streaming vs Structured Streaming</h4>
+  <p>Structured Streaming es la evolución moderna y recomendada; ofrece optimizaciones y API unificada.</p>
+
+  <h4>Ejemplo básico</h4>
+  <pre><code  class="language-python python-code">from pyspark.sql import SparkSession
+
+spark = SparkSession.builder.appName("StreamingExample").getOrCreate()
+
+stream_df = (spark
+    .readStream
+    .format("socket")
+    .option("host", "localhost")
+    .option("port", 9999)
+    .load())
+
+result = stream_df.groupBy("value").count()
+
+query = (result
+    .writeStream
+    .outputMode("complete")
+    .format("console")
+    .start())
+
+query.awaitTermination()</code></pre>
+
       </div>
     </div>
   </section>
 
-  <section id="ejemplo">
+  <section id="conclusion">
     <div class="lesson-container">
-      <h3>EJEMPLO</h3>
+      <strong>CONCLUSIÓN</strong>
       <hr>
       <div class="text-cell">
-        <pre><code class="language-python python-code">from pyspark.sql import SparkSession
-spark = SparkSession.builder.appName('m3t1l4').getOrCreate()
-df = spark.readStream.format('kafka').option('kafka.bootstrap.servers','localhost:9092').option('subscribe','events').load()
-# parse, transform, write stream
-</code></pre>
+        <p>Structured Streaming proporciona una API unificada y optimizaciones que facilitan el desarrollo de pipelines de streaming robustos.</p>
       </div>
     </div>
   </section>
 
-  <section id="notebook">
+  <section id="ejercicio">
     <div class="lesson-container">
-      <h3>NOTEBOOK</h3>
+      <strong>EJERCICIO</strong>
       <hr>
       <div class="text-cell">
-        <p>Ejemplo práctico: <a href="/modulo3/Tema1/notebooks/M3T1L4.ipynb">M3T1L4.ipynb</a></p>
+        <p>Implementar una pequeña aplicación en Structured Streaming, probar ventanas y watermark.</p>
       </div>
     </div>
   </section>

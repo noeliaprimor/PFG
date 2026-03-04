@@ -22,45 +22,86 @@
     </div>
   </nav>
 
-  <h2 class="titulos-leccion">Kafka en detalle</h2>
+  <h4 class="titulos-leccion">Kafka en detalle</h4>
 
   <div class="indice-container">
     <div id="index-container" class="text-cell">
         <hr>
         <ul>
-          <li><a href="#particiones">Particiones</a></li>
-          <li><a href="#replicacion">Replicación</a></li>
-          <li><a href="#offsets">Offsets</a></li>
+          <li><a href="#descripcion">Descripción</a></li>
+          <li><a href="#contenido">Contenido</a></li>
+          <li><a href="#conclusion">Conclusión</a></li>
+          <li><a href="#ejercicio">Ejercicio</a></li>
         </ul>
       </div>
     </div>
 
-  <section id="particiones">
+  <section id="descripcion">
     <div class="lesson-container">
-      <h3>PARTICIONES Y RENDIMIENTO</h3>
+      <strong>DESCRIPCIÓN</strong>
       <hr>
       <div class="text-cell">
-        <p>Las particiones permiten paralelizar el consumo; el número óptimo depende del número de consumidores y del throughput esperado.</p>
+        <p>Profundización en conceptos internos de Kafka: particiones, replicación, offsets, y buenas prácticas para integración con Spark.</p>
       </div>
     </div>
   </section>
 
-  <section id="replicacion">
+  <section id="contenido">
     <div class="lesson-container">
-      <h3>REPLICACIÓN Y DURABILIDAD</h3>
+      <strong>CONTENIDO</strong>
       <hr>
       <div class="text-cell">
-        <p>El factor de replicación asegura disponibilidad ante fallos de broker; la ISR indica réplicas en sincronía.</p>
+
+  <h1>Capítulo X: Apache Kafka en detalle</h1>
+
+  <h4>Introducción</h4>
+  <p>
+    Apache Kafka es una plataforma distribuida de streaming diseñada para construir pipelines
+    de datos en tiempo real y aplicaciones basadas en eventos.
+  </p>
+
+  <h4>Arquitectura interna</h4>
+
+  <strong>Brokers</strong>
+  <p>Un clúster Kafka está compuesto por uno o más brokers responsables de almacenar datos y atender peticiones.</p>
+
+  <strong>Topics y particiones</strong>
+  <p>Los topics se dividen en particiones que permiten paralelismo y orden por partición.</p>
+
+  <h4>Modelo de almacenamiento</h4>
+  <pre><code  class="language-python python-code">stream_df = (spark
+    .readStream
+    .format("kafka")
+    .option("kafka.bootstrap.servers", "localhost:9092")
+    .option("subscribe", "mi_topic")
+    .load())</code></pre>
+
+  <h4>Productores y consumidores</h4>
+  <p>Configuración de acks, idempotencia y manejo de offsets.</p>
+
+  <h4>Seguridad y monitorización</h4>
+  <p>Autenticación (SASL), TLS y métricas de lag/throughput.</p>
+
       </div>
     </div>
   </section>
 
-  <section id="offsets">
+  <section id="conclusion">
     <div class="lesson-container">
-      <h3>OFFSETS Y CONSUMIDORES</h3>
+      <strong>CONCLUSIÓN</strong>
       <hr>
       <div class="text-cell">
-        <p>Offsets pueden ser gestionados automáticamente o manualmente. Para procesamiento exactamente una vez, coordina offsets y sinks con idempotencia o transacciones.</p>
+        <p>Kafka proporciona un backbone robusto para arquitecturas en streaming; su diseño permite escalabilidad, durabilidad y reprocesamiento controlado.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="ejercicio">
+    <div class="lesson-container">
+      <strong>EJERCICIO</strong>
+      <hr>
+      <div class="text-cell">
+        <p>Diseñar un clúster Kafka para un sistema financiero que procese 10.000 eventos por segundo (detallar brokers, particiones y replicación).</p>
       </div>
     </div>
   </section>

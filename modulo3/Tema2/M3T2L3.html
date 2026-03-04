@@ -22,57 +22,114 @@
     </div>
   </nav>
 
-  <h2 class="titulos-leccion">Sinks y conectores</h2>
+  <h4 class="titulos-leccion">Sinks y conectores</h4>
 
   <div class="indice-container">
     <div id="index-container" class="text-cell">
         <hr>
         <ul>
           <li><a href="#descripcion">Descripción</a></li>
-          <li><a href="#ejemplos">Ejemplos</a></li>
+          <li><a href="#contenido">Contenido</a></li>
+          <li><a href="#conclusion">Conclusión</a></li>
+          <li><a href="#ejercicio">Ejercicio</a></li>
         </ul>
       </div>
     </div>
 
-  <section id="connect">
+  <section id="descripcion">
     <div class="lesson-container">
-      <h3>KAFKA CONNECT</h3>
+      <strong>DESCRIPCIÓN</strong>
       <hr>
       <div class="text-cell">
-        <p>Framework para integrar Kafka con sistemas externos mediante connectors: source (extraen datos) y sink (escriben datos).</p>
+        <p>Frameworks y sinks que permiten integrar Spark con sistemas externos; ejemplos y buenas prácticas.</p>
       </div>
     </div>
   </section>
 
-  <section id="sinks">
+  <section id="contenido">
     <div class="lesson-container">
-      <h3>SINKS COMUNES</h3>
+      <strong>CONTENIDO</strong>
       <hr>
       <div class="text-cell">
-        <ul>
-          <li>S3 / HDFS (almacenamiento en ficheros)</li>
-          <li>JDBC (bases relacionales)</li>
-          <li>Elasticsearch (búsqueda y analítica)</li>
-        </ul>
+
+  <h1>Capítulo X: Sinks y conectores en Apache Spark</h1>
+
+  <h4>Introducción</h4>
+  <p>
+    En una arquitectura de datos, los <strong>conectores</strong> permiten integrar Spark con
+    sistemas externos, mientras que los <strong>sinks</strong> representan los destinos donde
+    se almacenan o envían los resultados del procesamiento.
+  </p>
+
+  <h4>Conceptos fundamentales</h4>
+
+  <strong>Conector</strong>
+  <p>Componente que permite a Spark leer o escribir datos desde o hacia sistemas externos.</p>
+
+  <strong>Sink</strong>
+  <p>Destino final donde se escriben los datos procesados.</p>
+
+  <h4>Conectores en Batch</h4>
+  <pre><code  class="language-python python-code">df = (spark.read
+    .format("jdbc")
+    .option("url", "jdbc:postgresql://host:5432/db")
+    .option("dbtable", "tabla")
+    .option("user", "usuario")
+    .option("password", "password")
+    .load())</code></pre>
+
+  <h4>Conectores en Structured Streaming</h4>
+  <pre><code  class="language-python python-code">stream_df = (spark
+    .readStream
+    .format("kafka")
+    .option("kafka.bootstrap.servers", "localhost:9092")
+    .option("subscribe", "mi_topic")
+    .load())</code></pre>
+
+  <h4>Sinks comunes</h4>
+  <pre><code  class="language-python python-code">query = (df
+    .writeStream
+    .format("console")
+    .start())</code></pre>
+
+  <pre><code  class="language-python python-code">query = (df
+    .writeStream
+    .format("parquet")
+    .option("path", "/output")
+    .option("checkpointLocation", "/checkpoint")
+    .start())</code></pre>
+
+  <pre><code  class="language-python python-code">query = (df
+    .writeStream
+    .format("kafka")
+    .option("kafka.bootstrap.servers", "localhost:9092")
+    .option("topic", "output_topic")
+    .option("checkpointLocation", "/checkpoint")
+    .start())</code></pre>
+
+  <h4>Checkpointing</h4>
+  <pre><code  class="language-python python-code">.option("checkpointLocation", "/ruta/checkpoint")</code></pre>
+
       </div>
     </div>
   </section>
 
-  <section id="ejemplo">
+  <section id="conclusion">
     <div class="lesson-container">
-      <h3>EJEMPLO: CONFIGURACIÓN BÁSICA</h3>
+      <strong>CONCLUSIÓN</strong>
       <hr>
       <div class="text-cell">
-        <pre><code class="language-json">{
-  "name": "s3-sink",
-  "config": {
-    "connector.class": "io.confluent.connect.s3.S3SinkConnector",
-    "tasks.max": "1",
-    "topics": "events",
-    "s3.bucket.name": "my-bucket"
-  }
-}
-</code></pre>
+        <p>Los conectores y sinks son piezas clave para integrar Spark en pipelines completos; su configuración define fiabilidad y rendimiento.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="ejercicio">
+    <div class="lesson-container">
+      <strong>EJERCICIO</strong>
+      <hr>
+      <div class="text-cell">
+        <p>Diseñar un pipeline con Kafka y sink Parquet, detallando checkpoint y particionado.</p>
       </div>
     </div>
   </section>

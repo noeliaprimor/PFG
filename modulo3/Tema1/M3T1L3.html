@@ -22,15 +22,15 @@
     </div>
   </nav>
 
-  <h2 class="titulos-leccion">Introducción a Kafka</h2>
+  <h4 class="titulos-leccion">Introducción a Kafka</h4>
 
   <div class="indice-container">
     <div id="index-container" class="text-cell">
       <hr>
       <ul>
         <li><a href="#descripcion">Descripción</a></li>
-        <li><a href="#conceptos">Conceptos clave</a></li>
-        <li><a href="#comandos">Comandos útiles</a></li>
+        <li><a href="#contenido">Contenido</a></li>
+        <li><a href="#conclusion">Conclusión</a></li>
         <li><a href="#ejercicio">Ejercicio</a></li>
       </ul>
     </div>
@@ -38,7 +38,7 @@
 
   <section id="descripcion">
     <div class="lesson-container">
-      <h3>DESCRIPCIÓN</h3>
+      <strong>DESCRIPCIÓN</strong>
       <hr>
       <div class="text-cell">
         <p>Apache Kafka es una plataforma de mensajería distribuida para el manejo de streams de eventos con alta durabilidad y throughput. Se usa como sistema de ingestión y bus de eventos en arquitecturas de streaming.</p>
@@ -46,38 +46,77 @@
     </div>
   </section>
 
-  <section id="conceptos">
+  <section id="contenido">
     <div class="lesson-container">
-      <h3>CONCEPTOS CLAVE</h3>
+      <strong>CONTENIDO</strong>
       <hr>
       <div class="text-cell">
-        <ul>
-          <li><strong>Topic:</strong> canal lógico para mensajes.</li>
-          <li><strong>Partition:</strong> permite paralelismo y orden por partición.</li>
-          <li><strong>Producer/Consumer:</strong> productores envían, consumidores leen offsets.</li>
-          <li><strong>Retention:</strong> periodo de almacenamiento.</li>
-        </ul>
+
+  <h1>Capítulo X: Introducción a Apache Kafka</h1>
+
+  <h4>Introducción</h4>
+  <p>
+    Apache Kafka es una plataforma distribuida de mensajería y streaming diseñada para manejar
+    grandes volúmenes de datos en tiempo real de forma escalable y tolerante a fallos.
+    Se utiliza comúnmente como sistema de ingesta y transporte de eventos en arquitecturas modernas de datos.
+  </p>
+
+  <h4>Conceptos fundamentales</h4>
+
+  <strong>Evento</strong>
+  <p>Unidad básica de información transmitida en Kafka. Un evento contiene una clave, un valor y metadatos (timestamp, offset, etc.).</p>
+
+  <strong>Topic</strong>
+  <p>Canal lógico donde se publican los eventos. Los productores escriben en topics y los consumidores leen desde ellos.</p>
+
+  <strong>Partición</strong>
+  <p>Cada topic se divide en particiones que permiten paralelismo y escalabilidad. Cada partición es una secuencia ordenada de eventos.</p>
+
+  <strong>Offset</strong>
+  <p>Identificador único de cada evento dentro de una partición. Permite a los consumidores controlar su posición de lectura.</p>
+
+  <strong>Broker</strong>
+  <p>Servidor que almacena y gestiona datos Kafka. Un clúster Kafka está compuesto por múltiples brokers.</p>
+
+  <strong>Producer / Consumer / Consumer Group</strong>
+  <p>Roles en el ecosistema Kafka: productores envían eventos, consumidores los leen y los consumer groups permiten paralelismo.</p>
+
+  <h4>Ejemplo conceptual de flujo con Spark</h4>
+  <pre><code  class="language-python python-code">spark.readStream
+    .format("kafka")
+    .option("kafka.bootstrap.servers", "localhost:9092")
+    .option("subscribe", "mi_topic")
+    .load()</code></pre>
+
+  <h4>Casos de uso habituales</h4>
+  <ul>
+    <li>Streaming de logs.</li>
+    <li>Ingesta de eventos de aplicaciones web.</li>
+    <li>Procesamiento financiero en tiempo real.</li>
+    <li>IoT y sensores.</li>
+    <li>Integración entre microservicios.</li>
+  </ul>
+
+  <h4>Conclusión</h4>
+  <p>Apache Kafka es una pieza fundamental en arquitecturas modernas de datos, actuando como backbone de eventos en tiempo real; su integración con Spark permite pipelines escalables y resilientes.</p>
+
       </div>
     </div>
   </section>
 
-  <section id="comandos">
+  <section id="conclusion">
     <div class="lesson-container">
-      <h3>COMANDOS ÚTILES</h3>
+      <strong>CONCLUSIÓN</strong>
       <hr>
       <div class="text-cell">
-        <pre><code class="language-bash bash-code"># listar topics
-$KAFKA_HOME/bin/kafka-topics.sh --list --bootstrap-server localhost:9092
-
-# crear topic
-$KAFKA_HOME/bin/kafka-topics.sh --create --topic ejemplo --partitions 3 --replication-factor 1 --bootstrap-server localhost:9092</code></pre>
+        <p>Resumen: Kafka proporciona durabilidad, escalabilidad y capacidades de re-procesamiento que lo hacen ideal como backbone para pipelines de streaming.</p>
       </div>
     </div>
   </section>
 
   <section id="ejercicio">
     <div class="lesson-container">
-      <h3>EJERCICIO</h3>
+      <strong>EJERCICIO</strong>
       <hr>
       <div class="text-cell">
         <p>Implementa un pequeño productor en Python que envíe eventos a un topic y un consumer que los consuma; mide latencia y throughput.</p>

@@ -31,8 +31,9 @@
          <hr>
          <ul>
            <li><a href="#descripcion">Descripción</a></li>
-           <li><a href="#pipeline">Pipelines</a></li>
-           <li><a href="#ejemplo">Ejemplo</a></li>
+           <li><a href="#contenido">Contenido</a></li>
+           <li><a href="#conclusion">Conclusion</a></li>
+           <li><a href="#ejercicio">Ejercicio Propuesto</a></li>
          </ul>
        </div>
      </div>
@@ -42,7 +43,53 @@
         <h3>DESCRIPCIÓN</h3>
         <hr>
         <div class="text-cell">
-          <p>MLlib provee transformadores, estimadores y evaluadores. Las pipelines facilitan encadenar preprocesado, extracción de features y modelos entrenables.</p>
+   MLlib es la librería de Machine Learning integrada en Apache Spark. Permite entrenar y evaluar modelos de aprendizaje automático
+    sobre grandes volúmenes de datos distribuidos, aprovechando el motor de ejecución de Spark y su capacidad de paralelización.
+  </p>
+  <p>
+    A diferencia de librerías tradicionales que operan en memoria local (por ejemplo, sobre datasets pequeños), MLlib está diseñada
+    para trabajar en entornos Big Data, donde los datos se distribuyen en múltiples nodos del clúster.
+  </p>
+
+  <h4>Evolución de MLlib</h4>
+  <p>
+    Históricamente, MLlib ofrecía una API basada en RDD. Sin embargo, en versiones modernas de Spark, el enfoque recomendado es
+    utilizar la API basada en DataFrames dentro del paquete <code>pyspark.ml</code> (o <code>org.apache.spark.ml</code> en Scala).
+  </p>
+  <p>
+    Esta API estructurada se integra con Spark SQL y permite utilizar:
+  </p>
+  <ul>
+    <li>Optimización automática (Catalyst).</li>
+    <li>Pipelines declarativos.</li>
+    <li>Transformers y Estimators reutilizables.</li>
+  </ul>        </div>
+      </div>
+    </section>
+    <section id="contenido">
+      <div class="lesson-container">
+        <h3>CONTENIDO</h3>
+        <hr>
+        <div class="text-cell">
+          <p>MLlib es la librería de Machine Learning integrada en Apache Spark. Permite entrenar y evaluar modelos de aprendizaje automático sobre grandes volúmenes de datos distribuidos, aprovechando el motor de ejecución de Spark y su capacidad de paralelización.</p>
+        </div>
+      </div>
+    </section>
+    <section id="conclusion">
+      <div class="lesson-container">
+        <h3>CONCLUSIÓN</h3>
+        <hr>
+        <div class="text-cell">
+          <p>MLlib permite integrar Machine Learning dentro del ecosistema Spark de forma escalable y coherente con el resto del pipeline de datos. Su integración con DataFrames y Spark SQL facilita la construcción de modelos reproducibles y optimizados en entornos Big Data.</p>
+        </div>
+      </div>
+    </section>
+    <section id="ejercicio">
+      <div class="lesson-container">
+        <h3>EJERCICIO PROPUESTO</h3>
+        <hr>
+        <div class="text-cell">
+          <p>Implementar un pipeline completo de clasificación binaria utilizando MLlib, incluyendo preparación de datos, entrenamiento, evaluación y ajuste de hiperparámetros.</p>
         </div>
       </div>
     </section>
@@ -55,27 +102,7 @@
 
            <h2>1. Introducción</h2>
   <p>
-    MLlib es la librería de Machine Learning integrada en Apache Spark. Permite entrenar y evaluar modelos de aprendizaje automático
-    sobre grandes volúmenes de datos distribuidos, aprovechando el motor de ejecución de Spark y su capacidad de paralelización.
-  </p>
-  <p>
-    A diferencia de librerías tradicionales que operan en memoria local (por ejemplo, sobre datasets pequeños), MLlib está diseñada
-    para trabajar en entornos Big Data, donde los datos se distribuyen en múltiples nodos del clúster.
-  </p>
 
-  <h2>2. Evolución de MLlib</h2>
-  <p>
-    Históricamente, MLlib ofrecía una API basada en RDD. Sin embargo, en versiones modernas de Spark, el enfoque recomendado es
-    utilizar la API basada en DataFrames dentro del paquete <code>pyspark.ml</code> (o <code>org.apache.spark.ml</code> en Scala).
-  </p>
-  <p>
-    Esta API estructurada se integra con Spark SQL y permite utilizar:
-  </p>
-  <ul>
-    <li>Optimización automática (Catalyst).</li>
-    <li>Pipelines declarativos.</li>
-    <li>Transformers y Estimators reutilizables.</li>
-  </ul>
 
   <h2>3. Componentes principales de MLlib</h2>
 

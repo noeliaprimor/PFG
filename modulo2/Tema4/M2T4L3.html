@@ -24,25 +24,25 @@
     </nav>
     <br>
 
-    <h2 class="titulos-leccion">Errores frecuentes y cómo solucionarlos</h2>
+    <h4 class="titulos-leccion">Errores frecuentes y cómo solucionarlos</h4>
 
     <div class="indice-container">
       <div id="index-container" class="text-cell">
          <hr>
          <ul>
-           <li><a href="#outofmemory">OutOfMemory y GC</a></li>
-           <li><a href="#skew">Data Skew y particionado</a></li>
-           <li><a href="#timeout">Timeouts y fallos de red</a></li>
+           <li><a href="#descripcion">Descripción</a></li>
+           <li><a href="#contenido">Contenido</a></li>
+           <li><a href="#conclusion">Conclusión</a></li>
+           <li><a href="#ejercicio">Ejercicio</a></li>
          </ul>
        </div>
      </div>
 
-    <section id="outofmemory">
+    <section id="descripcion">
       <div class="lesson-container">
-
- <h1>Capítulo X: Errores frecuentes en Apache Spark y cómo solucionarlos</h1>
-
-  <h2>1. Introducción</h2>
+        <strong>DESCRIPCIÓN</strong>
+        <hr>
+        <div class="text-cell">
   <p>
     Durante el desarrollo y despliegue de aplicaciones en Apache Spark es habitual encontrarse con errores
     relacionados con memoria, particionado, configuración del clúster o uso incorrecto de las APIs.
@@ -50,13 +50,24 @@
     desarrollar aplicaciones robustas y optimizadas.
   </p>
   <p>
-    Este capítulo recopila los errores más frecuentes en Spark y describe sus causas habituales
+    Esta lección recopila los errores más frecuentes en Spark y describe sus causas habituales
     junto con estrategias prácticas de resolución.
   </p>
+        </div>
+      </div>
+    </section>
 
-  <h2>2. Errores relacionados con memoria</h2>
+    <section id="contenido">
+      <div class="lesson-container">
+        <strong>CONTENIDO</strong>
+        <hr>
+        <div class="text-cell">
 
-  <h3>2.1 OutOfMemoryError (Java heap space)</h3>
+  <h1>Capítulo X: Errores frecuentes en Apache Spark y cómo solucionarlos</h1>
+
+  <h4>Errores relacionados con memoria</h4>
+
+  <strong>OutOfMemoryError (Java heap space)</strong>
   <p><strong>Causa:</strong></p>
   <ul>
     <li>Dataset demasiado grande para la memoria asignada.</li>
@@ -72,7 +83,7 @@
     <li>Usar persist(StorageLevel.DISK_ONLY) si la memoria es limitada.</li>
   </ul>
 
-  <h3>2.2 GC Overhead Limit Exceeded</h3>
+  <strong>GC Overhead Limit Exceeded</strong>
   <p><strong>Causa:</strong> exceso de tiempo en recolección de basura debido a presión de memoria.</p>
 
   <p><strong>Soluciones:</strong></p>
@@ -82,9 +93,9 @@
     <li>Optimizar particionado y evitar estructuras complejas innecesarias.</li>
   </ul>
 
-  <h2>3. Problemas de particionado y rendimiento</h2>
+  <h4>Problemas de particionado y rendimiento</h4>
 
-  <h3>3.1 Tareas muy lentas (Data Skew)</h3>
+  <strong>Tareas muy lentas (Data Skew)</strong>
   <p><strong>Causa:</strong> distribución desigual de datos entre particiones.</p>
 
   <p><strong>Soluciones:</strong></p>
@@ -94,7 +105,7 @@
     <li>Aplicar técnicas de salting en claves con alta frecuencia.</li>
   </ul>
 
-  <h3>3.2 Demasiadas particiones pequeñas</h3>
+  <strong>Demasiadas particiones pequeñas</strong>
   <p><strong>Causa:</strong> exceso de <code>spark.sql.shuffle.partitions</code>.</p>
 
   <p><strong>Soluciones:</strong></p>
@@ -103,9 +114,9 @@
     <li>Usar <code>coalesce()</code> antes de escribir resultados.</li>
   </ul>
 
-  <h2>4. Errores de serialización</h2>
+  <h4>Errores de serialización</h4>
 
-  <h3>4.1 Task not serializable</h3>
+  <strong>Task not serializable</strong>
   <p><strong>Causa:</strong> intento de enviar objetos no serializables a los executors.</p>
 
   <p><strong>Soluciones:</strong></p>
@@ -115,15 +126,15 @@
     <li>Usar variables broadcast para objetos grandes.</li>
   </ul>
 
-  <h3>4.2 Kryo serialization errors</h3>
+  <strong>Kryo serialization errors</strong>
   <p><strong>Causa:</strong> tipos no registrados correctamente en Kryo.</p>
 
   <p><strong>Solución:</strong> registrar clases personalizadas y habilitar Kryo:</p>
-  <pre><code>spark.serializer=org.apache.spark.serializer.KryoSerializer</code></pre>
+  <pre><code  class="language-python python-code">spark.serializer=org.apache.spark.serializer.KryoSerializer</code></pre>
 
-  <h2>5. Errores en joins y shuffles</h2>
+  <h4>Errores en joins y shuffles</h4>
 
-  <h3>5.1 Shuffle fetch failed</h3>
+  <strong>Shuffle fetch failed</strong>
   <p><strong>Causa:</strong> fallo en transferencia de datos entre nodos.</p>
 
   <p><strong>Soluciones:</strong></p>
@@ -133,7 +144,7 @@
     <li>Reducir tamaño de particiones.</li>
   </ul>
 
-  <h3>5.2 Broadcast timeout</h3>
+  <strong>Broadcast timeout</strong>
   <p><strong>Causa:</strong> tabla demasiado grande para broadcast.</p>
 
   <p><strong>Soluciones:</strong></p>
@@ -142,9 +153,9 @@
     <li>Evitar broadcast manual si la tabla es grande.</li>
   </ul>
 
-  <h2>6. Problemas en Structured Streaming</h2>
+  <h4>Problemas en Structured Streaming</h4>
 
-  <h3>6.1 Checkpoint corruption</h3>
+  <strong>Checkpoint corruption</strong>
   <p><strong>Causa:</strong> interrupción inesperada o almacenamiento inconsistente.</p>
 
   <p><strong>Solución:</strong></p>
@@ -153,14 +164,14 @@
     <li>Usar almacenamiento fiable (HDFS, S3).</li>
   </ul>
 
-  <h3>6.2 Datos tardíos (late data)</h3>
+  <strong>Datos tardíos (late data)</strong>
   <p><strong>Causa:</strong> eventos fuera de la ventana esperada.</p>
 
   <p><strong>Solución:</strong> configurar watermark correctamente.</p>
 
-  <h2>7. Errores de configuración y despliegue</h2>
+  <h4>Errores de configuración y despliegue</h4>
 
-  <h3>7.1 Executor lost</h3>
+  <strong>Executor lost</strong>
   <p><strong>Causa:</strong> falta de recursos o fallo del nodo.</p>
 
   <p><strong>Soluciones:</strong></p>
@@ -170,7 +181,7 @@
     <li>Verificar configuración del cluster manager.</li>
   </ul>
 
-  <h3>7.2 Cannot allocate memory</h3>
+  <strong>Cannot allocate memory</strong>
   <p><strong>Causa:</strong> recursos insuficientes en el nodo.</p>
 
   <p><strong>Solución:</strong></p>
@@ -179,7 +190,7 @@
     <li>Reducir paralelismo.</li>
   </ul>
 
-  <h2>8. Buenas prácticas para evitar errores</h2>
+  <h4>Buenas prácticas para evitar errores</h4>
   <ul>
     <li>Analizar siempre el plan de ejecución con <code>explain(True)</code>.</li>
     <li>Monitorizar Spark UI regularmente.</li>
@@ -188,7 +199,7 @@
     <li>Separar entorno de desarrollo y producción.</li>
   </ul>
 
-  <h2>9. Estrategia sistemática de diagnóstico</h2>
+  <h4>Estrategia sistemática de diagnóstico</h4>
   <ol>
     <li>Revisar mensaje completo del error.</li>
     <li>Analizar logs del driver y executors.</li>
@@ -197,14 +208,14 @@
     <li>Aplicar cambios graduales y volver a probar.</li>
   </ol>
 
-  <h2>10. Ejercicio propuesto (nivel TFG)</h2>
+  <h4>Ejercicio propuesto (nivel TFG)</h4>
 
-  <h3>10.1 Objetivo</h3>
+  <strong>Objetivo</strong>
   <p>
     Simular y analizar diferentes errores comunes en Spark, documentando causas y soluciones.
   </p>
 
-  <h3>10.2 Enunciado</h3>
+  <strong>Enunciado</strong>
   <ol>
     <li>Provocar un error de memoria reduciendo la memoria del executor.</li>
     <li>Generar skew mediante una clave altamente repetida.</li>
@@ -213,45 +224,36 @@
     <li>Documentar diagnóstico y solución aplicada.</li>
   </ol>
 
-  <h2>11. Conclusión</h2>
-  <p>
-    Los errores en Spark suelen estar relacionados con memoria, particionado, serialización o configuración del clúster.
-    Una comprensión profunda del modelo de ejecución y una monitorización adecuada permiten diagnosticar y resolver
-    problemas de forma sistemática.
-  </p>
-  <p>
-    En el contexto de un TFG, demostrar la capacidad de identificar, analizar y corregir errores frecuentes
-    evidencia dominio práctico del ecosistema Spark.
-  </p>
+        </div>
+      </div>
+    </section>
 
-
-
-        <h3>OUT OF MEMORY Y GC</h3>
+    <section id="conclusion">
+      <div class="lesson-container">
+        <strong>CONCLUSIÓN</strong>
         <hr>
         <div class="text-cell">
-          <p>Diagnóstico: revisar logs del executor y el driver, y el uso de memoria en Spark UI. Soluciones: ajustar <code>spark.executor.memory</code>, persistencia en disco, evitar collect() en grandes datasets y aumentar particionado.</p>
-          <pre><code class="language-bash bash-code"># ajustar memoria en spark-submit
+          <p>
+            Los errores en Spark suelen estar relacionados con memoria, particionado, serialización o configuración del clúster.
+            Una comprensión profunda del modelo de ejecución y una monitorización adecuada permiten diagnosticar y resolver
+            problemas de forma sistemática.
+          </p>
+          <p>
+            En el contexto de un TFG, demostrar la capacidad de identificar, analizar y corregir errores frecuentes
+            evidencia dominio práctico del ecosistema Spark.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section id="ejercicio">
+      <div class="lesson-container">
+        <strong>EJERCICIO</strong>
+        <hr>
+        <div class="text-cell">
+          <p>Probar el diagnóstico y aplicar las soluciones indicadas; documentar los resultados y conclusiones.</p>
+          <pre><code  class="language-bash bash-code"># ajustar memoria en spark-submit
 --executor-memory 4G --driver-memory 2G</code></pre>
-        </div>
-      </div>
-    </section>
-
-    <section id="skew">
-      <div class="lesson-container">
-        <h3>DATA SKEW</h3>
-        <hr>
-        <div class="text-cell">
-          <p>Problema: una partición con muchos registros causa tareas largas. Soluciones: aplicar salting, incrementar particiones, usar broadcast join si una tabla es pequeña.</p>
-        </div>
-      </div>
-    </section>
-
-    <section id="timeout">
-      <div class="lesson-container">
-        <h3>TIMEOUTS Y FALLAS DE RED</h3>
-        <hr>
-        <div class="text-cell">
-          <p>Chequear configuración de timeouts, redes entre nodos y grandes transfers de shuffle. Revisar logs del cluster y sistema gestor (YARN/Kubernetes) para latencias de red.</p>
         </div>
       </div>
     </section>

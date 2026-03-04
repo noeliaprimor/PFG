@@ -22,15 +22,15 @@
     </div>
   </nav>
 
-  <h2 class="titulos-leccion">Adquisición y transmisión de eventos</h2>
+  <h4 class="titulos-leccion">Adquisición y transmisión de eventos</h4>
 
   <div class="indice-container">
     <div id="index-container" class="text-cell">
       <hr>
       <ul>
         <li><a href="#descripcion">Descripción</a></li>
-        <li><a href="#fuentes">Fuentes de eventos</a></li>
-        <li><a href="#ejemplo">Ejemplo productor (Python)</a></li>
+        <li><a href="#contenido">Contenido</a></li>
+        <li><a href="#conclusion">Conclusión</a></li>
         <li><a href="#ejercicio">Ejercicio</a></li>
       </ul>
     </div>
@@ -38,7 +38,7 @@
 
   <section id="descripcion">
     <div class="lesson-container">
-      <h3>DESCRIPCIÓN</h3>
+      <strong>DESCRIPCIÓN</strong>
       <hr>
       <div class="text-cell">
         <p>Se analizan las distintas fuentes de eventos (sensores, aplicaciones, logs), formatos (JSON, Avro, Protobuf) y mecanismos de transmisión (Kafka, MQTT, Kinesis).</p>
@@ -46,37 +46,96 @@
     </div>
   </section>
 
-  <section id="fuentes">
+  <section id="contenido">
     <div class="lesson-container">
-      <h3>FUENTES DE EVENTOS</h3>
+      <strong>CONTENIDO</strong>
       <hr>
       <div class="text-cell">
-        <ul>
-          <li>Sensores / IoT</li>
-          <li>Aplicaciones web (clickstreams)</li>
-          <li>Logs y sistemas transaccionales (CDC)</li>
-        </ul>
+
+  <h4>Introducción</h4>
+  <p>
+    En arquitecturas modernas de datos, la adquisición y transmisión de eventos constituyen la primera
+    fase del procesamiento en tiempo real. Antes de que un motor como Spark Structured Streaming pueda
+    analizar la información, los eventos deben ser capturados desde su origen y transportados de forma
+    fiable hacia el sistema de procesamiento.
+  </p>
+  <p>
+    Esta fase es crítica, ya que impacta directamente en la latencia, consistencia,
+    escalabilidad y resiliencia de la solución completa.
+  </p>
+
+  <h4>¿Qué es un evento?</h4>
+  <p>
+    Un evento es una unidad de información que describe algo que ha ocurrido en un sistema.
+    Generalmente incluye:
+  </p>
+  <ul>
+    <li>Identificador o clave.</li>
+    <li>Payload o contenido (datos del evento).</li>
+    <li>Timestamp (momento en que ocurrió).</li>
+    <li>Metadatos adicionales.</li>
+  </ul>
+
+  <p>Ejemplos de eventos:</p>
+  <ul>
+    <li>Una transacción financiera.</li>
+    <li>Un clic en una aplicación web.</li>
+    <li>Una lectura de sensor IoT.</li>
+    <li>Un log generado por un servidor.</li>
+  </ul>
+
+  <h4>Fuentes de eventos</h4>
+  <ul>
+    <li>Aplicaciones web y móviles.</li>
+    <li>Microservicios.</li>
+    <li>Sistemas financieros.</li>
+    <li>Sensores IoT.</li>
+    <li>Sistemas legacy.</li>
+  </ul>
+
+  <p>
+    Las fuentes pueden generar eventos de forma continua y a gran velocidad,
+    lo que requiere sistemas intermedios capaces de absorber picos de carga.
+  </p>
+
+  <h4>Sistemas de transmisión</h4>
+  <strong>Sistemas de mensajería</strong>
+  <p>Plataformas como Apache Kafka permiten desacoplar productores y consumidores, garantizando almacenamiento persistente y distribución escalable.</p>
+
+  <h4>Flujo típico</h4>
+  <ol>
+    <li>Generación del evento en la fuente.</li>
+    <li>Envío al sistema de mensajería (por ejemplo, Kafka).</li>
+    <li>Almacenamiento temporal en particiones.</li>
+    <li>Consumo por parte del motor de procesamiento (Spark).</li>
+    <li>Transformación y persistencia del resultado.</li>
+  </ol>
+
+  <h4>Integración con Spark Structured Streaming</h4>
+  <pre><code  class="language-python python-code">stream_df = (spark
+    .readStream
+    .format("kafka")
+    .option("kafka.bootstrap.servers", "localhost:9092")
+    .option("subscribe", "mi_topic")
+    .load())</code></pre>
+
       </div>
     </div>
   </section>
 
-  <section id="ejemplo">
+  <section id="conclusion">
     <div class="lesson-container">
-      <h3>EJEMPLO: PRODUCTOR SIMPLE (Python)</h3>
+      <strong>CONCLUSIÓN</strong>
       <hr>
       <div class="text-cell">
-        <pre><code class="language-python python-code">from kafka import KafkaProducer
-import json
-producer = KafkaProducer(bootstrap_servers='localhost:9092', value_serializer=lambda v: json.dumps(v).encode('utf-8'))
-producer.send('events', {'ts': 1234567890, 'value': 42})
-producer.flush()</code></pre>
+        <p>La adquisición es crítica para la latencia y fiabilidad; diseñar correctamente particiones, claves y retenciones es esencial.</p>
       </div>
     </div>
   </section>
 
   <section id="ejercicio">
     <div class="lesson-container">
-      <h3>EJERCICIO</h3>
+      <strong>EJERCICIO</strong>
       <hr>
       <div class="text-cell">
         <p>Diseña un esquema de topics para una fuente con varios tipos de eventos y justifica particionado y retención.</p>

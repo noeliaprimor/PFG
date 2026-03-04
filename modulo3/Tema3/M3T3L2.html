@@ -22,48 +22,97 @@
     </div>
   </nav>
 
-  <h2 class="titulos-leccion">Integración con Kafka</h2>
+  <h4 class="titulos-leccion">Integración con Kafka</h4>
 
   <div class="indice-container">
     <div id="index-container" class="text-cell">
       <hr>
       <ul>
-        <li><a href="#leer">Leer desde Kafka</a></li>
-        <li><a href="#parsear">Parsear JSON</a></li>
-        <li><a href="#ejemplo">Ejemplo</a></li>
+        <li><a href="#descripcion">Descripción</a></li>
+        <li><a href="#contenido">Contenido</a></li>
+        <li><a href="#conclusion">Conclusión</a></li>
+        <li><a href="#ejercicio">Ejercicio</a></li>
       </ul>
     </div>
   </div>
 
-  <section id="leer">
+  <section id="descripcion">
     <div class="lesson-container">
-      <h3>LEER DESDE KAFKA</h3>
+      <strong>DESCRIPCIÓN</strong>
       <hr>
       <div class="text-cell">
-        <p>Usar <code>spark.readStream.format('kafka')</code> y configurar bootstrap.servers y topics. El campo <code>value</code> viene en binario y debe convertirse a string o bytes y parsearse.</p>
+        <p>Guía para integrar Spark Structured Streaming con Kafka: lectura, parseo, escritura y gestión de offsets.</p>
       </div>
     </div>
   </section>
 
-  <section id="parsear">
+  <section id="contenido">
     <div class="lesson-container">
-      <h3>PARSEAR JSON</h3>
+      <strong>CONTENIDO</strong>
       <hr>
       <div class="text-cell">
-        <pre><code class="language-python python-code">from pyspark.sql.functions import from_json, col
-schema = 'id INT, value STRING'
-df2 = df.selectExpr("CAST(value AS STRING) as json_str")
-df_parsed = df2.select(from_json(col('json_str'), schema).alias('data')).select('data.*')</code></pre>
+
+  <h1>Capítulo X: Integración de Apache Spark con Apache Kafka</h1>
+
+  <h4>Arquitectura típica</h4>
+  <ol>
+    <li>Productores envían eventos a un topic Kafka.</li>
+    <li>Kafka almacena eventos en particiones distribuidas.</li>
+    <li>Spark Structured Streaming consume eventos.</li>
+    <li>Los datos se transforman y agregan.</li>
+    <li>Resultados se escriben en un sink (Data Lake, base de datos, Kafka, etc.).</li>
+  </ol>
+
+  <h4>Dependencias y lectura</h4>
+  <pre><code  class="language-python python-code">--packages org.apache.spark:spark-sql-kafka-0-10_2.12:3.x.x</code></pre>
+
+  <pre><code  class="language-python python-code">stream_df = (spark
+    .readStream
+    .format("kafka")
+    .option("kafka.bootstrap.servers", "localhost:9092")
+    .option("subscribe", "mi_topic")
+    .option("startingOffsets", "latest")
+    .load())</code></pre>
+
+  <h4>Parseo de JSON</h4>
+  <pre><code  class="language-python python-code">from pyspark.sql.functions import col
+
+parsed_df = stream_df.selectExpr("CAST(value AS STRING)")</code></pre>
+
+  <h4>Escritura hacia Kafka</h4>
+  <pre><code  class="language-python python-code">query = (df
+    .selectExpr("CAST(key AS STRING)", "CAST(value AS STRING)")
+    .writeStream
+    .format("kafka")
+    .option("kafka.bootstrap.servers", "localhost:9092")
+    .option("topic", "output_topic")
+    .option("checkpointLocation", "/checkpoint")
+    .start())</code></pre>
+
+  <h4>Gestión de offsets y seguridad</h4>
+  <pre><code  class="language-python python-code">.option("kafka.security.protocol", "SASL_SSL")
+.option("kafka.sasl.mechanism", "SCRAM-SHA-256")</code></pre>
+
       </div>
     </div>
   </section>
 
-  <section id="ejemplo">
+  <section id="conclusion">
     <div class="lesson-container">
-      <h3>EJEMPLO</h3>
+      <strong>CONCLUSIÓN</strong>
       <hr>
       <div class="text-cell">
-        <p>Ejecuta un job que lea desde Kafka, agregue en ventanas y escriba a Parquet/S3.</p>
+        <p>La integración Kafka-Spark es un patrón probado que, bien configurado, permite construir pipelines robustos y escalables.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="ejercicio">
+    <div class="lesson-container">
+      <strong>EJERCICIO</strong>
+      <hr>
+      <div class="text-cell">
+        <p>Crea un pipeline que lea desde Kafka, parse los eventos y escriba a Parquet; documenta los checkpoints y el comportamiento ante reinicios.</p>
       </div>
     </div>
   </section>
