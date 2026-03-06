@@ -22,7 +22,7 @@
     </div>
   </nav>
 
-  <h4 class="titulos-leccion">Spark Streaming</h4>
+  <h2 class="titulos-leccion">Spark Streaming</h2>
 
   <div class="indice-container">
     <div id="index-container" class="text-cell">
@@ -31,30 +31,15 @@
         <li><a href="#descripcion">Descripción</a></li>
         <li><a href="#contenido">Contenido</a></li>
         <li><a href="#conclusion">Conclusión</a></li>
-        <li><a href="#ejercicio">Ejercicio</a></li>
       </ul>
     </div>
   </div>
 
   <section id="descripcion">
     <div class="lesson-container">
-      <strong>DESCRIPCIÓN</strong>
+      <h3>DESCRIPCIÓN</h3>
       <hr>
       <div class="text-cell">
-        <p>Revisamos el modelo de Structured Streaming, garantías y cómo integrarlo con Kafka y sinks. Hablamos de ventanas, watermark y semánticas.</p>
-      </div>
-    </div>
-  </section>
-
-  <section id="contenido">
-    <div class="lesson-container">
-      <strong>CONTENIDO</strong>
-      <hr>
-      <div class="text-cell">
-
-  <h1>Capítulo X: Spark Streaming</h1>
-
-  <h4>Introducción</h4>
   <p>
     Spark Streaming fue la primera solución de procesamiento en tiempo real incorporada en Apache Spark.
     Permite procesar flujos continuos de datos mediante un modelo basado en micro-batches,
@@ -63,18 +48,55 @@
   <p>
     Aunque en versiones actuales se recomienda Structured Streaming,
     comprender Spark Streaming es importante desde una perspectiva histórica y arquitectónica.
-  </p>
+  </p>      </div>
+    </div>
+  </section>
 
-  <h4>Modelo de programación</h4>
+  <section id="contenido">
+    <div class="lesson-container">
+      <h3>CONTENIDO</h3>
+      <hr>
+      <div class="text-cell">
+
+
+
+
+  <h3>Modelo de programación</h3>
+
   <strong>DStream (Discretized Stream)</strong>
-  <p>La abstracción principal en Spark Streaming es el DStream, que representa una secuencia de RDDs generados a intervalos regulares.</p>
+  <p>
+    La abstracción principal en Spark Streaming es el <strong>DStream</strong>,
+    que representa una secuencia de RDDs generados a intervalos regulares.
+  </p>
   <p>
     Cada intervalo (por ejemplo, 5 segundos) genera un RDD que contiene los datos recibidos
     en ese periodo.
   </p>
 
-  <h4>Ejemplo</h4>
-  <pre><code  class="language-python python-code">import org.apache.spark._
+  <strong>Micro-batch</strong>
+  <p>
+    En lugar de procesar cada evento individualmente,
+    Spark Streaming agrupa eventos en pequeños lotes temporales.
+  </p>
+
+  <h3>Arquitectura de ejecución</h3>
+
+  <ol>
+    <li>Recepción de datos desde una fuente.</li>
+    <li>Creación de RDD por intervalo.</li>
+    <li>Aplicación de transformaciones.</li>
+    <li>Ejecución distribuida en el clúster.</li>
+    <li>Escritura de resultados.</li>
+  </ol>
+
+  <p>
+    El procesamiento sigue el modelo DAG habitual de Spark,
+    pero aplicado a cada micro-batch.
+  </p>
+
+  <h3>Creación de una aplicación básica</h3>
+
+  <pre><code class="language-python python-code">import org.apache.spark._
 import org.apache.spark.streaming._
 
 val conf = new SparkConf().setAppName("StreamingApp").setMaster("local[2]")
@@ -90,15 +112,94 @@ counts.print()
 ssc.start()
 ssc.awaitTermination()</code></pre>
 
-  <h4>Ventanas temporales</h4>
-  <pre><code  class="language-python python-code">val windowedCounts = pairs.reduceByKeyAndWindow(
+  <h3>Transformaciones en DStreams</h3>
+
+  <ul>
+    <li><strong>map</strong></li>
+    <li><strong>flatMap</strong></li>
+    <li><strong>filter</strong></li>
+    <li><strong>reduceByKey</strong></li>
+    <li><strong>join</strong></li>
+    <li><strong>window</strong></li>
+  </ul>
+
+  <p>
+    Las transformaciones aplicadas a DStreams se ejecutan internamente sobre los RDDs de cada micro-batch.
+  </p>
+
+  <h3>Ventanas temporales</h3>
+
+  <p>
+    Spark Streaming permite definir ventanas sobre múltiples micro-batches.
+  </p>
+
+  <pre><code class="language-python python-code">val windowedCounts = pairs.reduceByKeyAndWindow(
   (a:Int, b:Int) =&gt; a + b,
   Seconds(30),
   Seconds(10)
 )</code></pre>
 
-  <h4>Checkpointing</h4>
-  <pre><code  class="language-python python-code">ssc.checkpoint("/ruta/checkpoint")</code></pre>
+  <p>
+    Este ejemplo calcula conteos sobre una ventana de 30 segundos actualizada cada 10 segundos.
+  </p>
+
+  <h3>Gestión del estado</h3>
+
+  <p>
+    Se puede mantener estado entre micro-batches utilizando funciones como:
+  </p>
+
+  <ul>
+    <li><code>updateStateByKey</code></li>
+    <li><code>mapWithState</code></li>
+  </ul>
+
+  <h3>Fuentes soportadas</h3>
+
+  <ul>
+    <li>Socket</li>
+    <li>Kafka</li>
+    <li>Flume</li>
+    <li>Archivos</li>
+    <li>HDFS</li>
+  </ul>
+
+  <h3>Checkpointing</h3>
+
+  <p>
+    Para tolerancia a fallos y recuperación de estado,
+    es necesario habilitar checkpointing.
+  </p>
+
+  <pre><code class="language-python python-code">ssc.checkpoint("/ruta/checkpoint")</code></pre>
+
+  <h3>Ventajas</h3>
+
+  <ul>
+    <li>Integración directa con el ecosistema Spark.</li>
+    <li>Modelo sencillo basado en RDD.</li>
+    <li>Escalabilidad horizontal.</li>
+  </ul>
+
+  <h3>Limitaciones</h3>
+
+  <ul>
+    <li>Basado en RDD, menor optimización que DataFrames.</li>
+    <li>Mayor latencia comparado con sistemas puramente event-driven.</li>
+    <li>Menor integración con Spark SQL.</li>
+  </ul>
+
+
+
+  <h3>Casos de uso</h3>
+
+  <ul>
+    <li>Procesamiento de logs.</li>
+    <li>Monitorización básica.</li>
+    <li>Prototipos de streaming.</li>
+  </ul>
+
+
 
         </div>
       </div>
@@ -106,46 +207,21 @@ ssc.awaitTermination()</code></pre>
 
     <section id="conclusion">
       <div class="lesson-container">
-        <strong>CONCLUSIÓN</strong>
+        <h3>CONCLUSIÓN</h3>
         <hr>
         <div class="text-cell">
-          <p>Spark Streaming introdujo micro-batches y los DStreams; hoy Structured Streaming es la recomendación, pero conocer ambos ayuda a entender la evolución.</p>
+ <p>
+    Spark Streaming permitió extender el modelo batch de Spark hacia el procesamiento en tiempo real
+    mediante micro-batches y DStreams.
+  </p>
+  <p>
+    Aunque hoy Structured Streaming es la solución recomendada,
+    Spark Streaming constituye un paso fundamental en la evolución
+    del procesamiento distribuido de datos en tiempo real.
+  </p>
         </div>
       </div>
     </section>
-
-    <section id="ejercicio">
-      <div class="lesson-container">
-        <strong>EJERCICIO</strong>
-        <hr>
-        <div class="text-cell">
-          <p>Implementar una aplicación Spark Streaming que procese datos desde un socket y calcule conteos por ventana.</p>
-        </div>
-      </div>
-    </section>
-
-    <section id="api">
-    <div class="lesson-container">
-      <h3>API Y EJEMPLOS</h3>
-      <hr>
-      <div class="text-cell">
-        <pre><code class="language-python python-code">from pyspark.sql import SparkSession
-spark = SparkSession.builder.appName('m3t3l1').getOrCreate()
-df = spark.readStream.format('kafka').option('kafka.bootstrap.servers','localhost:9092').option('subscribe','events').load()
-# parse value, apply transformations, writeStream</code></pre>
-      </div>
-    </div>
-  </section>
-
-  <section id="notebook">
-    <div class="lesson-container">
-      <h3>NOTEBOOK</h3>
-      <hr>
-      <div class="text-cell">
-        <p>Notebook: <a href="/modulo3/Tema3/notebooks/M3T3L1.ipynb">M3T3L1.ipynb</a></p>
-      </div>
-    </div>
-  </section>
 
   <div class="navigation-buttons">
     <button onclick="window.location.href='index.html'">Índice del Tema</button>

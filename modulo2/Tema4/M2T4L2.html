@@ -33,40 +33,32 @@
           <li><a href="#descripcion">Descripción</a></li>
           <li><a href="#contenido">Contenido</a></li>
           <li><a href="#conclusion">Conclusión</a></li>
-          <li><a href="#ejercicio">Ejercicio</a></li>
         </ul>
       </div>
     </div>
 
     <section id="descripcion">
       <div class="lesson-container">
-        <strong>DESCRIPCIÓN</strong>
+        <h3>DESCRIPCIÓN</h3>
         <hr>
-        <div class="text-cell">
-          <p>Repasaremos cómo securizar un cluster Spark (autenticación con Kerberos, cifrado de comunicaciones con TLS, control de acceso), y estrategias de despliegue (YARN, Kubernetes, docker).</p>
-        </div>
-      </div>
-    </section>
-
-    <!-- CONTENIDO: seguridad + despliegue -->
-    <section id="contenido">
-      <div class="lesson-container">
-        <strong>CONTENIDO</strong>
-        <hr>
-        <div class="text-cell">
- <h1>Capítulo X: Seguridad y despliegue en Apache Spark</h1>
-
-  <h4>Introducción</h4>
-  <p>
+        <div class="text-cell"><p>
     En entornos Big Data, la seguridad y el despliegue adecuado de la infraestructura son aspectos críticos.
     Apache Spark, como motor distribuido de procesamiento, suele ejecutarse en clústeres compartidos y
     procesar datos sensibles (financieros, personales o estratégicos), lo que exige mecanismos robustos
     de autenticación, autorización, cifrado y aislamiento.
   </p>
   <p>
-    Este capítulo aborda los principales mecanismos de seguridad disponibles en Spark y los modelos
-    habituales de despliegue en entornos productivos.
-  </p>
+    Esta lección aborda los principales mecanismos de seguridad disponibles en Spark y los modelos
+    habituales de despliegue en entornos productivos.        </div>
+      </div>
+    </section>
+
+    <section id="contenido">
+      <div class="lesson-container">
+        <h3>CONTENIDO</h3>
+        <hr>
+        <div class="text-cell">
+
 
   <h4>Modelos de despliegue</h4>
 
@@ -211,40 +203,14 @@ spark.ssl.keyStorePassword=********</code></pre>
     <li>Reinicio automático de pods en Kubernetes.</li>
   </ul>
 
-  <h4>Ejercicio propuesto (nivel TFG)</h4>
 
-  <strong>Objetivo</strong>
-  <p>
-    Diseñar una arquitectura segura de despliegue Spark para un entorno empresarial
-    que procese datos sensibles.
-  </p>
-
-  <strong>Enunciado</strong>
-  <ol>
-    <li>Seleccionar modelo de despliegue (Standalone, YARN o Kubernetes).</li>
-    <li>Definir mecanismos de autenticación y cifrado.</li>
-    <li>Especificar parámetros de aislamiento de recursos.</li>
-    <li>Describir estrategia de alta disponibilidad.</li>
-    <li>Identificar riesgos y medidas mitigadoras.</li>
-  </ol>
-
-
-
-          <h4>Kerberos</h4>
-          <p>Integración de Spark con Kerberos para autenticación: configurar principal y keytab, y arrancar procesos con kinit.</p>
-          <h4>TLS / SSL</h4>
-          <p>Habilitar TLS para comunicaciones entre driver y executors y para el REST API si es necesario.</p>
-          <pre><code class="language-bash bash-code"># ejemplo: arrancar con keytab
-kinit -kt /etc/security/keytabs/spark.service.keytab spark/hostname@REALM
-spark-submit --principal user@REALM --keytab /path/to/user.keytab ...</code></pre>
         </div>
       </div>
     </section>
 
-    <!-- Sección CONCLUSIÓN separada -->
     <section id="conclusion">
       <div class="lesson-container">
-        <strong>CONCLUSIÓN</strong>
+        <h3>CONCLUSIÓN</h3>
         <hr>
         <div class="text-cell">
           <p>
@@ -261,16 +227,7 @@ spark-submit --principal user@REALM --keytab /path/to/user.keytab ...</code></pr
       </div>
     </section>
 
-    <!-- EJERCICIO final -->
-    <section id="ejercicio">
-      <div class="lesson-container">
-        <strong>EJERCICIO</strong>
-        <hr>
-        <div class="text-cell">
-          <p>Investiga cómo configurar TLS para el Spark UI y documenta los pasos necesarios para habilitarlo en un cluster de prueba.</p>
-        </div>
-      </div>
-    </section>
+
 
     <div class="navigation-buttons">
       <button onclick="window.location.href='M2T4L1.html'">Anterior</button>

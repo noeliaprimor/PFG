@@ -22,7 +22,7 @@
     </div>
   </nav>
 
-  <h4 class="titulos-leccion">Integración con Kafka</h4>
+  <h2 class="titulos-leccion">Integración con Kafka</h2>
 
   <div class="indice-container">
     <div id="index-container" class="text-cell">
@@ -31,30 +31,39 @@
         <li><a href="#descripcion">Descripción</a></li>
         <li><a href="#contenido">Contenido</a></li>
         <li><a href="#conclusion">Conclusión</a></li>
-        <li><a href="#ejercicio">Ejercicio</a></li>
       </ul>
     </div>
   </div>
 
   <section id="descripcion">
     <div class="lesson-container">
-      <strong>DESCRIPCIÓN</strong>
+      <h3>DESCRIPCIÓN</h3>
       <hr>
       <div class="text-cell">
-        <p>Guía para integrar Spark Structured Streaming con Kafka: lectura, parseo, escritura y gestión de offsets.</p>
-      </div>
+  <p>
+    La integración entre Apache Spark y Apache Kafka es uno de los patrones más utilizados
+    en arquitecturas modernas de procesamiento en tiempo real. Kafka actúa como sistema
+    de adquisición y transporte de eventos, mientras que Spark Structured Streaming
+    se encarga de su procesamiento distribuido.
+  </p>
+  <p>
+    Esta combinación permite construir pipelines escalables, tolerantes a fallos
+    y con baja latencia.
+  </p>      </div>
     </div>
   </section>
 
   <section id="contenido">
     <div class="lesson-container">
-      <strong>CONTENIDO</strong>
+      <h3>CONTENIDO</h3>
       <hr>
       <div class="text-cell">
 
-  <h1>Capítulo X: Integración de Apache Spark con Apache Kafka</h1>
 
-  <h4>Arquitectura típica</h4>
+
+
+  <h3>Arquitectura típica</h3>
+
   <ol>
     <li>Productores envían eventos a un topic Kafka.</li>
     <li>Kafka almacena eventos en particiones distribuidas.</li>
@@ -63,10 +72,21 @@
     <li>Resultados se escriben en un sink (Data Lake, base de datos, Kafka, etc.).</li>
   </ol>
 
-  <h4>Dependencias y lectura</h4>
-  <pre><code  class="language-python python-code">--packages org.apache.spark:spark-sql-kafka-0-10_2.12:3.x.x</code></pre>
+  <h3>Dependencias necesarias</h3>
 
-  <pre><code  class="language-python python-code">stream_df = (spark
+  <p>
+    Para utilizar Kafka con Spark se requiere incluir el paquete:
+  </p>
+
+  <pre><code class="language-python python-code">--packages org.apache.spark:spark-sql-kafka-0-10_2.12:3.x.x</code></pre>
+
+  <p>
+    La versión debe coincidir con la versión instalada de Spark.
+  </p>
+
+  <h3>Lectura desde Kafka (Structured Streaming)</h3>
+
+  <pre><code class="language-python python-code">stream_df = (spark
     .readStream
     .format("kafka")
     .option("kafka.bootstrap.servers", "localhost:9092")
@@ -74,13 +94,27 @@
     .option("startingOffsets", "latest")
     .load())</code></pre>
 
-  <h4>Parseo de JSON</h4>
-  <pre><code  class="language-python python-code">from pyspark.sql.functions import col
+  <strong>Columnas resultantes</strong>
+  <ul>
+    <li>key (binario)</li>
+    <li>value (binario)</li>
+    <li>topic</li>
+    <li>partition</li>
+    <li>offset</li>
+    <li>timestamp</li>
+  </ul>
+
+  <p>
+    Es necesario convertir el campo <code>value</code> desde binario a string:
+  </p>
+
+  <pre><code class="language-python python-code">from pyspark.sql.functions import col
 
 parsed_df = stream_df.selectExpr("CAST(value AS STRING)")</code></pre>
 
-  <h4>Escritura hacia Kafka</h4>
-  <pre><code  class="language-python python-code">query = (df
+  <h3>Escritura hacia Kafka</h3>
+
+  <pre><code class="language-python python-code">query = (df
     .selectExpr("CAST(key AS STRING)", "CAST(value AS STRING)")
     .writeStream
     .format("kafka")
@@ -89,9 +123,87 @@ parsed_df = stream_df.selectExpr("CAST(value AS STRING)")</code></pre>
     .option("checkpointLocation", "/checkpoint")
     .start())</code></pre>
 
-  <h4>Gestión de offsets y seguridad</h4>
-  <pre><code  class="language-python python-code">.option("kafka.security.protocol", "SASL_SSL")
+  <h3>Gestión de offsets</h3>
+
+  <strong>startingOffsets</strong>
+  <ul>
+    <li><strong>earliest</strong>: desde el inicio del topic.</li>
+    <li><strong>latest</strong>: desde el último offset disponible.</li>
+  </ul>
+
+  <strong>Checkpointing</strong>
+  <p>
+    Spark guarda offsets procesados en el directorio de checkpoint,
+    permitiendo reanudar procesamiento tras fallos.
+  </p>
+
+  <h3>Garantías de procesamiento</h3>
+
+  <ul>
+    <li>At-least-once por defecto.</li>
+    <li>Exactly-once posible combinando Kafka idempotente y sinks compatibles.</li>
+  </ul>
+
+  <h3>Procesamiento típico</h3>
+
+  <pre><code class="language-python python-code">from pyspark.sql.functions import from_json, col
+from pyspark.sql.types import StructType, StringType, IntegerType
+
+schema = StructType() \
+    .add("user", StringType()) \
+    .add("amount", IntegerType())
+
+parsed = (stream_df
+    .selectExpr("CAST(value AS STRING)")
+    .select(from_json(col("value"), schema).alias("data"))
+    .select("data.*"))</code></pre>
+
+  <h3>Rendimiento y particionado</h3>
+
+  <ul>
+    <li>El número de particiones Kafka influye en el paralelismo.</li>
+    <li>Cada partición Kafka puede mapearse a una partición Spark.</li>
+    <li>Evitar skew en claves.</li>
+  </ul>
+
+  <h3>Seguridad</h3>
+
+  <strong>Autenticación SASL</strong>
+  <pre><code class="language-python python-code">.option("kafka.security.protocol", "SASL_SSL")
 .option("kafka.sasl.mechanism", "SCRAM-SHA-256")</code></pre>
+
+  <strong>SSL</strong>
+  <pre><code class="language-python python-code">.option("kafka.ssl.truststore.location", "/path/truststore")</code></pre>
+
+  <h3>Monitorización</h3>
+
+  <ul>
+    <li>Lag del consumidor.</li>
+    <li>Throughput (mensajes/segundo).</li>
+    <li>Latencia end-to-end.</li>
+    <li>Errores de conexión.</li>
+  </ul>
+
+  <h3>Problemas comunes</h3>
+
+  <ul>
+    <li>Offsets incorrectos tras reinicio.</li>
+    <li>Checkpoint corrupto.</li>
+    <li>Desajuste de versiones Kafka-Spark.</li>
+    <li>Particiones insuficientes.</li>
+  </ul>
+
+  <h3>Buenas prácticas</h3>
+
+  <ul>
+    <li>Configurar correctamente checkpointLocation.</li>
+    <li>Definir claves adecuadas para particionado.</li>
+    <li>Evitar transformaciones costosas antes de parseo.</li>
+    <li>Monitorizar lag constantemente.</li>
+  </ul>
+
+
+
 
       </div>
     </div>
@@ -99,23 +211,22 @@ parsed_df = stream_df.selectExpr("CAST(value AS STRING)")</code></pre>
 
   <section id="conclusion">
     <div class="lesson-container">
-      <strong>CONCLUSIÓN</strong>
+      <h3>CONCLUSIÓN</h3>
       <hr>
       <div class="text-cell">
-        <p>La integración Kafka-Spark es un patrón probado que, bien configurado, permite construir pipelines robustos y escalables.</p>
-      </div>
+ <p>
+    La integración entre Apache Spark y Apache Kafka permite construir arquitecturas
+    de procesamiento en tiempo real robustas y escalables.
+  </p>
+  <p>
+    Kafka actúa como sistema de adquisición y transporte de eventos,
+    mientras que Spark proporciona capacidad analítica distribuida,
+    ofreciendo una solución completa para pipelines orientados a eventos.
+  </p>      </div>
     </div>
   </section>
 
-  <section id="ejercicio">
-    <div class="lesson-container">
-      <strong>EJERCICIO</strong>
-      <hr>
-      <div class="text-cell">
-        <p>Crea un pipeline que lea desde Kafka, parse los eventos y escriba a Parquet; documenta los checkpoints y el comportamiento ante reinicios.</p>
-      </div>
-    </div>
-  </section>
+
 
   <div class="navigation-buttons">
     <button onclick="window.location.href='M3T3L1.html'">Anterior</button>

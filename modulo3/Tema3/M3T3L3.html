@@ -22,7 +22,7 @@
     </div>
   </nav>
 
-  <h4 class="titulos-leccion">Casos prácticos con Spark Streaming</h4>
+  <h2 class="titulos-leccion">Casos prácticos con Spark Streaming</h2>
 
   <div class="indice-container">
     <div id="index-container" class="text-cell">
@@ -30,50 +30,76 @@
       <ul>
         <li><a href="#descripcion">Descripción</a></li>
         <li><a href="#contenido">Contenido</a></li>
-        <li><a href="/modulo3/Tema3/M3T3L3.html#conclusion">Conclusión</a></li>
-        <li><a href="/modulo3/Tema3/M3T3L3.html#ejercicio">Ejercicio</a></li>
+
       </ul>
     </div>
   </div>
 
   <section id="descripcion">
     <div class="lesson-container">
-      <strong>DESCRIPCIÓN</strong>
+      <h3>DESCRIPCIÓN</h3>
       <hr>
       <div class="text-cell">
-        <p>Casos prácticos de Structured Streaming: patrones de ingestión desde Kafka, agregaciones por ventana, joins con tablas estáticas, y pipelines Bronze→Silver.</p>
-      </div>
+  <p>
+    En esta lección se presentan casos prácticos implementables con Apache Spark Structured Streaming utilizando
+    <strong>Apache Kafka</strong> como fuente de eventos y <strong>Parquet</strong> como almacenamiento de salida (data lake).
+    Este enfoque es habitual en arquitecturas modernas (incluyendo patrones tipo Kappa) debido a que Kafka actúa como un
+    log distribuido y Parquet ofrece un formato columnar eficiente para analítica posterior.
+  </p>
+  <p>
+    Los ejemplos están diseñados para un entorno típico de laboratorio: un clúster Spark (por ejemplo, Standalone en
+    Docker Compose), un broker Kafka accesible desde Spark, y un sistema de ficheros (local o volumen montado) donde se
+    persisten los resultados y el estado del streaming (checkpoints).
+  </p>      </div>
     </div>
   </section>
 
   <section id="contenido">
     <div class="lesson-container">
-      <strong>CONTENIDO</strong>
+      <h3>CONTENIDO</h3>
       <hr>
       <div class="text-cell">
 
-  <h1>Casos prácticos con Structured Streaming: Kafka como fuente y Parquet como almacenamiento</h1>
 
-  <h4>Introducción</h4>
+  <h3>Consideraciones generales del entorno</h3>
+  <ul>
+    <li>
+      <strong>Fuente</strong>: Kafka (topics con eventos en JSON).
+    </li>
+    <li>
+      <strong>Salida</strong>: Parquet en un directorio de data lake (por ejemplo, <code>/data/out/...</code>).
+    </li>
+    <li>
+      <strong>Estado y tolerancia a fallos</strong>: checkpoints en <code>/data/chk/...</code>.
+    </li>
+    <li>
+      <strong>Tiempo de evento</strong>: se asume un campo <code>ts</code> de tipo timestamp (event time) dentro del JSON.
+    </li>
+  </ul>
+
+
+  <h3>Base técnica: lectura desde Kafka y parseo de JSON</h3>
   <p>
-    En este capítulo se presentan casos prácticos implementables con Apache Spark Structured Streaming utilizando
-    <strong>Apache Kafka</strong> como fuente de eventos y <strong>Parquet</strong> como almacenamiento de salida (data lake).
+    Structured Streaming lee de Kafka devolviendo un DataFrame con columnas como <code>key</code>, <code>value</code>,
+    <code>topic</code>, <code>partition</code>, <code>offset</code> y <code>timestamp</code> (timestamp de Kafka).
+    Habitualmente, el payload de negocio se encuentra en <code>value</code> y se parsea desde JSON a columnas estructuradas
+    con un esquema explícito.
   </p>
 
-  <h4>Lectura y parseo desde Kafka</h4>
-  <pre><code  class="language-python python-code">from pyspark.sql import SparkSession
+  <strong>Plantilla de lectura y parseo (PySpark)</strong>
+  <pre><code class="language-python python-code">from pyspark.sql import SparkSession
 from pyspark.sql.functions import col, from_json
 from pyspark.sql.types import StructType, StructField, StringType, TimestampType, DoubleType
 
 spark = SparkSession.builder.appName("TFG-Streaming-Kafka-Parquet").getOrCreate()
 
-bootstrap_servers = "kafka:9092"
+bootstrap_servers = "kafka:9092"  # ajustar al hostname/puerto accesible desde Spark
 
 raw = (spark.readStream
        .format("kafka")
        .option("kafka.bootstrap.servers", bootstrap_servers)
        .option("subscribe", "mi_topic")
-       .option("startingOffsets", "latest")
+       .option("startingOffsets", "latest")   # "earliest" para reprocesar desde el inicio
        .load())
 
 schema = StructType([
@@ -86,19 +112,76 @@ schema = StructType([
 events = (raw.select(from_json(col("value").cast("string"), schema).alias("e"))
           .select("e.*"))</code></pre>
 
-  <h4>Caso práctico 1: Clickstream (usuarios activos y top URLs)</h4>
-  <pre><code  class="language-python python-code">from pyspark.sql.functions import window, approx_count_distinct
+  <p>
+    A partir de este patrón se construyen los tres casos prácticos del capítulo.
+  </p>
 
+  <hr />
+
+  <h3>Caso práctico 1: Clickstream web (usuarios activos y páginas top) a Parquet</h3>
+
+  <strong>1. Objetivo</strong>
+  <p>
+    Analizar eventos de navegación en tiempo real para calcular:
+  </p>
+  <ul>
+    <li><strong>Usuarios activos por minuto</strong> (aproximación eficiente).</li>
+    <li><strong>Top URLs por ventana de 5 minutos</strong>.</li>
+  </ul>
+
+  <strong>2. Topic y esquema de eventos</strong>
+  <p>
+    Topic Kafka sugerido: <code>clicks</code>
+  </p>
+  <p>
+    Ejemplo de evento (JSON):
+  </p>
+  <pre><code class="language-python python-code">{
+  "ts": "2026-03-04T10:05:12Z",
+  "userId": "u123",
+  "url": "/pricing"
+}</code></pre>
+
+  <strong>3. Implementación (PySpark)</strong>
+  <pre><code class="language-python python-code">from pyspark.sql import SparkSession
+from pyspark.sql.functions import col, from_json, window, approx_count_distinct
+from pyspark.sql.types import StructType, StructField, StringType, TimestampType
+
+spark = SparkSession.builder.appName("Case1-Clickstream").getOrCreate()
+
+bootstrap_servers = "kafka:9092"
+topic = "clicks"
+
+schema = StructType([
+    StructField("ts", TimestampType(), True),
+    StructField("userId", StringType(), True),
+    StructField("url", StringType(), True),
+])
+
+raw = (spark.readStream
+       .format("kafka")
+       .option("kafka.bootstrap.servers", bootstrap_servers)
+       .option("subscribe", topic)
+       .option("startingOffsets", "latest")
+       .load())
+
+events = (raw.select(from_json(col("value").cast("string"), schema).alias("e"))
+          .select("e.*")
+          .dropna(subset=["ts", "userId", "url"]))
+
+# 1) Usuarios activos por minuto (usando watermark para controlar datos tardíos)
 active_users_1m = (events
   .withWatermark("ts", "10 minutes")
   .groupBy(window(col("ts"), "1 minute"))
   .agg(approx_count_distinct("userId").alias("active_users")))
 
+# 2) Top URLs por ventana de 5 minutos
 urls_5m = (events
   .withWatermark("ts", "10 minutes")
   .groupBy(window(col("ts"), "5 minutes"), col("url"))
   .count())
 
+# Escritura a Parquet (dos sinks independientes)
 q1 = (active_users_1m.writeStream
       .outputMode("append")
       .format("parquet")
@@ -115,9 +198,74 @@ q2 = (urls_5m.writeStream
 
 spark.streams.awaitAnyTermination()</code></pre>
 
-  <h4>Caso práctico 2: Detección de fraude (picos de transacciones)</h4>
-  <pre><code  class="language-python python-code">from pyspark.sql.functions import lit
+  <strong>4. Aspectos clave</strong>
+  <ul>
+    <li>
+      <strong>Watermark</strong>: limita el estado en memoria y permite “cerrar” ventanas cuando se supera el umbral de tardanza.
+    </li>
+    <li>
+      <strong>Salida en modo append</strong>: adecuada cuando las ventanas se consideran completas (con watermark).
+    </li>
+    <li>
+      <strong>Dos salidas Parquet</strong>: facilita consumo analítico separado (métricas de usuarios vs ranking de URLs).
+    </li>
+  </ul>
 
+  <hr />
+
+  <h3>Caso práctico 2: Detección de fraude simple (picos de transacciones) y persistencia de alertas</h3>
+
+  <strong>1. Objetivo</strong>
+  <p>
+    Detectar patrones sospechosos basados en volumen de transacciones por tarjeta en ventanas cortas:
+    si una tarjeta supera un umbral de operaciones en un intervalo, se genera una alerta.
+  </p>
+
+  <strong>2. Topic y esquema de eventos</strong>
+  <p>
+    Topic Kafka sugerido: <code>transactions</code>
+  </p>
+  <p>
+    Ejemplo de evento (JSON):
+  </p>
+  <pre><code class="language-python python-code">{
+  "ts": "2026-03-04T10:07:40Z",
+  "txId": "t999",
+  "cardId": "c100",
+  "amount": 35.50,
+  "merchant": "shop_01"
+}</code></pre>
+
+  <strong>3. Implementación (PySpark)</strong>
+  <pre><code class="language-python python-code">from pyspark.sql import SparkSession
+from pyspark.sql.functions import col, from_json, window, lit
+from pyspark.sql.types import StructType, StructField, StringType, TimestampType, DoubleType
+
+spark = SparkSession.builder.appName("Case2-Fraud-Bursts").getOrCreate()
+
+bootstrap_servers = "kafka:9092"
+topic = "transactions"
+
+schema = StructType([
+    StructField("ts", TimestampType(), True),
+    StructField("txId", StringType(), True),
+    StructField("cardId", StringType(), True),
+    StructField("amount", DoubleType(), True),
+    StructField("merchant", StringType(), True),
+])
+
+raw = (spark.readStream
+       .format("kafka")
+       .option("kafka.bootstrap.servers", bootstrap_servers)
+       .option("subscribe", topic)
+       .option("startingOffsets", "latest")
+       .load())
+
+tx = (raw.select(from_json(col("value").cast("string"), schema).alias("t"))
+      .select("t.*")
+      .dropna(subset=["ts", "cardId", "txId"]))
+
+# Regla: más de N transacciones por cardId en 2 minutos (ventana deslizante)
 N = 10
 alerts = (tx
   .withWatermark("ts", "15 minutes")
@@ -136,13 +284,82 @@ q = (alerts.writeStream
 
 q.awaitTermination()</code></pre>
 
-  <h4>Caso práctico 3: ETL continuo Bronze → Silver con foreachBatch</h4>
-  <pre><code  class="language-python python-code">def process_batch(batch_df, batch_id: int):
+  <strong>4. Aspectos clave</strong>
+  <ul>
+    <li>
+      <strong>Ventana deslizante</strong>: permite detectar picos aunque no coincidan exactamente con bordes fijos de ventana.
+    </li>
+    <li>
+      <strong>Salida Parquet de alertas</strong>: se integra fácilmente con análisis posterior (dashboards, reporting, auditoría).
+    </li>
+    <li>
+      <strong>Watermark</strong>: evita que el estado crezca indefinidamente en presencia de eventos tardíos.
+    </li>
+  </ul>
+
+  <hr />
+
+  <h3>Caso práctico 3: ETL continuo Bronze → Silver con foreachBatch</h3>
+
+  <strong>1. Objetivo</strong>
+  <p>
+    Construir un pipeline de streaming que:
+  </p>
+  <ul>
+    <li>Consuma eventos crudos desde Kafka (capa Bronze).</li>
+    <li>Limpie, valide y deduplique por micro-lote.</li>
+    <li>Escriba a Parquet particionado (capa Silver) con mayor control del proceso.</li>
+  </ul>
+
+  <strong>2. Topic y esquema de eventos</strong>
+  <p>
+    Topic Kafka sugerido: <code>metrics_raw</code>
+  </p>
+  <p>
+    Ejemplo de evento (JSON):
+  </p>
+  <pre><code class="language-python python-code">{
+  "ts": "2026-03-04T10:09:05Z",
+  "id": "m001",
+  "source": "appA",
+  "value": 12.7
+}</code></pre>
+
+  <strong>3. Implementación (PySpark)</strong>
+  <pre><code class="language-python python-code">from pyspark.sql import SparkSession
+from pyspark.sql.functions import col, from_json
+from pyspark.sql.types import StructType, StructField, StringType, TimestampType, DoubleType
+
+spark = SparkSession.builder.appName("Case3-Bronze-Silver-ETL").getOrCreate()
+
+bootstrap_servers = "kafka:9092"
+topic = "metrics_raw"
+
+schema = StructType([
+    StructField("ts", TimestampType(), True),
+    StructField("id", StringType(), True),
+    StructField("source", StringType(), True),
+    StructField("value", DoubleType(), True),
+])
+
+raw = (spark.readStream
+       .format("kafka")
+       .option("kafka.bootstrap.servers", bootstrap_servers)
+       .option("subscribe", topic)
+       .option("startingOffsets", "latest")
+       .load())
+
+events = (raw.select(from_json(col("value").cast("string"), schema).alias("e"))
+          .select("e.*"))
+
+def process_batch(batch_df, batch_id: int):
+    # Validación y limpieza básica
     clean = (batch_df
              .dropna(subset=["ts", "id", "source", "value"])
-             .dropDuplicates(["id"])
+             .dropDuplicates(["id"])  # ejemplo: deduplicación simple por id
              .withColumn("date", col("ts").cast("date")))
 
+    # Escritura a Silver (particionado por fecha)
     (clean.write
      .mode("append")
      .partitionBy("date")
@@ -155,63 +372,88 @@ q = (events.writeStream
 
 q.awaitTermination()</code></pre>
 
-  <h4>Buenas prácticas</h4>
-  <p>Checkpointing, watermarks, elección de modo de salida y ajustes de rendimiento.</p>
-
-  <h4>Referencias</h4>
+  <strong>4. Aspectos clave</strong>
   <ul>
-    <li>Documentación oficial de Apache Spark: Structured Streaming y fuente Kafka.</li>
-    <li>Documentación oficial de Apache Kafka: topics, offsets y retención.</li>
-    <li>Materiales técnicos sobre diseño de data lakes y formatos columnar (Parquet).</li>
+    <li>
+      <strong>foreachBatch</strong>: permite aplicar lógica batch (deduplicación, validación, escritura particionada) dentro de un
+      pipeline streaming.
+    </li>
+    <li>
+      <strong>Particionado por fecha</strong>: mejora la eficiencia de consultas posteriores y reduce el coste de lectura.
+    </li>
+    <li>
+      <strong>Checkpoints</strong>: necesarios para tolerancia a fallos y recuperación del progreso del streaming.
+    </li>
   </ul>
+
+  <hr />
+
+  <h3>Buenas prácticas para Kafka + Parquet en Structured Streaming</h3>
+
+  <strong>Checkpointing obligatorio</strong>
+  <ul>
+    <li>
+      Definir siempre <code>checkpointLocation</code> en sinks persistentes.
+    </li>
+    <li>
+      Mantener un directorio de checkpoint por consulta (<code>q1</code>, <code>q2</code>, etc.) para evitar corrupción de estado.
+    </li>
+  </ul>
+
+  <strong>Control de datos tardíos con watermark</strong>
+  <ul>
+    <li>
+      Usar <code>withWatermark</code> cuando se realizan agregaciones con ventanas.
+    </li>
+    <li>
+      Ajustar el watermark según el comportamiento real de tardanza de eventos (retrasos del sistema).
+    </li>
+  </ul>
+
+  <strong>Elección del modo de salida</strong>
+  <ul>
+    <li><strong>append</strong>: recomendado para ventanas con watermark y resultados finales.</li>
+    <li><strong>update</strong>: útil cuando se requiere ver cambios incrementales (sinks compatibles).</li>
+    <li><strong>complete</strong>: más costoso; reescribe todo el resultado en cada micro-lote, útil para demos (p. ej. consola).</li>
+  </ul>
+
+  <strong>Ajustes de rendimiento</strong>
+  <ul>
+    <li>
+      Definir un esquema explícito para JSON (evita inferencia en streaming).
+    </li>
+    <li>
+      Ajustar <code>spark.sql.shuffle.partitions</code> según el tamaño del clúster y la carga.
+    </li>
+    <li>
+      Monitorizar latencia y progreso mediante <code>StreamingQuery</code> y logs del Driver.
+    </li>
+  </ul>
+
+  <strong>Gestión de offsets y reprocesamiento</strong>
+  <ul>
+    <li>
+      <code>startingOffsets=latest</code> para consumo en tiempo real desde el momento actual.
+    </li>
+    <li>
+      <code>startingOffsets=earliest</code> para reprocesar histórico (si la retención de Kafka lo permite).
+    </li>
+    <li>
+      Reprocesamientos controlados se apoyan en checkpoints y en la retención del log.
+    </li>
+  </ul>
+
+  <hr />
+
+
+
 
       </div>
     </div>
   </section>
 
-  <section id="joins">
-    <div class="lesson-container">
--      <h3>JOINS CON TABLAS ESTÁTICAS</h3>
-+      <strong>JOINS CON TABLAS ESTÁTICAS</strong>
-       <hr>
-       <div class="text-cell">
-         <p>Enriquecer eventos en streaming con tablas de referencia mediante joins estáticos o broadcast joins.</p>
-       </div>
-     </div>
-   </section>
 
-   <section id="ejemplo">
-     <div class="lesson-container">
--      <h3>EJEMPLO PRÁCTICO</h3>
-+      <strong>EJEMPLO PRÁCTICO</strong>
-       <hr>
-       <div class="text-cell">
-         <p>Implementar pipeline que agregue métricas por minuto y escriba resultados a un sink.</p>
-       </div>
-     </div>
-   </section>
 
-+  <a id="conclusion"></a>
-   <section id="conclusion">
-     <div class="lesson-container">
-       <strong>CONCLUSIÓN</strong>
-       <hr>
-       <div class="text-cell">
-         <p>Los casos prácticos muestran patrones recurrentes: uso de watermarks para datos tardíos, particionado adecuado para paralelismo y checkpoints para tolerancia a fallos. Documentar y medir (latencia, throughput) es clave en un TFG.</p>
-       </div>
-     </div>
-   </section>
-
-+  <a id="ejercicio"></a>
-   <section id="ejercicio">
-     <div class="lesson-container">
-       <strong>EJERCICIO</strong>
-       <hr>
-       <div class="text-cell">
-         <p>Implementa uno de los casos prácticos (Clickstream o Fraud Burst), ejecuta en un entorno de pruebas y documenta configuración, métricas y observaciones.</p>
-       </div>
-     </div>
-   </section>
 
    <div class="navigation-buttons">
      <button onclick="window.location.href='M3T3L2.html'">Anterior</button>

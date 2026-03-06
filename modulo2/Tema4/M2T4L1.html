@@ -33,14 +33,13 @@
                 <li><a href="#descripcion">Descripción</a></li>
                 <li><a href="#contenido">Contenido</a></li>
                 <li><a href="#conclusion">Conclusión</a></li>
-                <li><a href="#ejercicio">Ejercicio</a></li>
             </ul>
         </div>
     </div>
 
     <section id="descripcion">
       <div class="lesson-container">
-        <strong>DESCRIPCIÓN</strong>
+        <h3>DESCRIPCIÓN</h3>
         <hr>
         <div class="text-cell">
   <p>
@@ -60,22 +59,10 @@
     <!-- Agrupamos el contenido extenso dentro de una sección CONTENIDO -->
     <section id="contenido">
       <div class="lesson-container">
-        <strong>CONTENIDO</strong>
+        <h3>CONTENIDO</h3>
         <hr>
         <div class="text-cell">
-          <h1>Capítulo X: Monitorización y configuración de Apache Spark</h1>
 
-  <h4>Introducción</h4>
-  <p>
-    La monitorización y correcta configuración de Apache Spark son aspectos fundamentales para garantizar
-    rendimiento, estabilidad y eficiencia en entornos de procesamiento distribuido. Una mala configuración
-    puede provocar cuellos de botella, consumo excesivo de memoria, tiempos elevados de ejecución o incluso
-    fallos de aplicación.
-  </p>
-  <p>
-    En entornos académicos y profesionales, comprender cómo ajustar parámetros y cómo interpretar métricas
-    de ejecución resulta clave para optimizar aplicaciones Spark.
-  </p>
 
   <h4>Arquitectura relevante para la monitorización</h4>
   <p>
@@ -228,23 +215,7 @@ df_join = df1.join(broadcast(df2), "id")</code></pre>
     <li>Configurar adecuadamente memoria según volumen de datos.</li>
   </ul>
 
-  <h4>Ejercicio propuesto (nivel TFG)</h4>
 
-  <strong>Objetivo</strong>
-  <p>
-    Analizar el comportamiento de una aplicación Spark variando parámetros de configuración
-    y observando métricas en la Spark UI.
-  </p>
-
-  <strong>Enunciado</strong>
-  <ol>
-    <li>Ejecutar una aplicación con configuración por defecto.</li>
-    <li>Registrar métricas de tiempo, shuffle y uso de memoria.</li>
-    <li>Modificar <code>spark.sql.shuffle.partitions</code>.</li>
-    <li>Activar AQE.</li>
-    <li>Comparar tiempos y planes físicos.</li>
-    <li>Documentar conclusiones.</li>
-  </ol>
 
         </div>
       </div>
@@ -253,7 +224,7 @@ df_join = df1.join(broadcast(df2), "id")</code></pre>
     <!-- Sección CONCLUSIÓN separada -->
     <section id="conclusion">
       <div class="lesson-container">
-        <strong>CONCLUSIÓN</strong>
+        <h3>CONCLUSIÓN</h3>
         <hr>
         <div class="text-cell">
           <p>
@@ -261,24 +232,12 @@ df_join = df1.join(broadcast(df2), "id")</code></pre>
             La comprensión de métricas, configuración de memoria, paralelismo y optimización adaptativa
             permite ajustar aplicaciones a distintos entornos y cargas de trabajo.
           </p>
-          <p>
-            En el contexto de un TFG, este conocimiento demuestra dominio práctico del ecosistema Spark,
-            más allá del uso básico de sus APIs.
-          </p>
+
         </div>
       </div>
     </section>
 
-    <!-- EJERCICIO final (mismo contenido previo) -->
-    <section id="ejercicio">
-      <div class="lesson-container">
-        <strong>EJERCICIO</strong>
-        <hr>
-        <div class="text-cell">
-          <p>Despliega una aplicación de ejemplo y monitoriza su ejecución con el Spark UI. Extrae métricas básicas (tiempo total, tiempo por stage) y documenta las configuraciones usadas.</p>
-        </div>
-      </div>
-    </section>
+
 
     <div class="navigation-buttons">
       <button onclick="window.location.href='index.html'">Índice del Tema</button>

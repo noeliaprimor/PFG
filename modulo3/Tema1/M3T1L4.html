@@ -22,7 +22,7 @@
     </div>
   </nav>
 
-  <h4 class="titulos-leccion">Introducción a Spark Streaming / Structured Streaming</h4>
+  <h2 class="titulos-leccion">Introducción a Spark Streaming / Structured Streaming</h2>
 
   <div class="indice-container">
     <div id="index-container" class="text-cell">
@@ -31,37 +31,101 @@
         <li><a href="#descripcion">Descripción</a></li>
         <li><a href="#contenido">Contenido</a></li>
         <li><a href="#conclusion">Conclusión</a></li>
-        <li><a href="#ejercicio">Ejercicio</a></li>
       </ul>
     </div>
   </div>
 
   <section id="descripcion">
     <div class="lesson-container">
-      <strong>DESCRIPCIÓN</strong>
+      <h3>DESCRIPCIÓN</h3>
       <hr>
       <div class="text-cell">
-        <p>Comparativa entre Spark Streaming (DStreams) y Structured Streaming; introducción a modelos, ventanas y watermark.</p>
-      </div>
+  <p>
+    El procesamiento de datos en tiempo real se ha convertido en un componente esencial en arquitecturas
+    modernas de Big Data. Apache Spark incorpora capacidades de streaming que permiten procesar datos
+    de forma continua y distribuida, reduciendo la latencia entre la generación del evento y la obtención
+    de resultados analíticos.
+  </p>
+  <p>
+    Dentro del ecosistema Spark existen dos aproximaciones principales al streaming:
+  </p>
+  <ul>
+    <li><strong>Spark Streaming</strong> (modelo basado en DStreams).</li>
+    <li><strong>Structured Streaming</strong> (modelo basado en DataFrames/Datasets).</li>
+  </ul>
+  <p>
+    Structured Streaming representa la evolución natural del modelo hacia un enfoque declarativo,
+    optimizado e integrado con Spark SQL.
+  </p>      </div>
     </div>
   </section>
 
   <section id="contenido">
     <div class="lesson-container">
-      <strong>CONTENIDO</strong>
+      <h3>CONTENIDO</h3>
       <hr>
       <div class="text-cell">
 
-  <h1>Capítulo X: Introducción a Spark Streaming y Structured Streaming</h1>
 
-  <h4>Introducción</h4>
-  <p>El procesamiento de datos en tiempo real se ha convertido en un componente esencial en arquitecturas modernas de Big Data.</p>
 
-  <h4>Spark Streaming vs Structured Streaming</h4>
-  <p>Structured Streaming es la evolución moderna y recomendada; ofrece optimizaciones y API unificada.</p>
+  <h3>Spark Streaming (modelo DStream)</h3>
 
-  <h4>Ejemplo básico</h4>
-  <pre><code  class="language-python python-code">from pyspark.sql import SparkSession
+  <strong>Concepto</strong>
+  <p>
+    Spark Streaming fue la primera implementación de procesamiento en tiempo real en Spark.
+    Se basa en la abstracción denominada <strong>DStream (Discretized Stream)</strong>,
+    que representa una secuencia de RDDs generados periódicamente.
+  </p>
+  <p>
+    El modelo operativo se basa en <strong>micro-batches</strong>: los datos que llegan en un intervalo
+    de tiempo determinado (por ejemplo, cada 5 segundos) se agrupan y procesan como un pequeño lote.
+  </p>
+
+  <strong>Flujo de ejecución</strong>
+  <ol>
+    <li>Recepción de datos desde una fuente (Kafka, socket, archivos).</li>
+    <li>División en micro-batches.</li>
+    <li>Procesamiento distribuido mediante RDD.</li>
+    <li>Escritura del resultado.</li>
+  </ol>
+
+  <strong>Limitaciones</strong>
+  <ul>
+    <li>Basado en RDD (menor integración con Spark SQL).</li>
+    <li>API menos declarativa.</li>
+    <li>Optimización limitada frente a DataFrames.</li>
+  </ul>
+
+  <h3>Structured Streaming</h3>
+
+  <strong>Concepto</strong>
+  <p>
+    Structured Streaming es la evolución moderna del streaming en Spark.
+    Trata el flujo de datos como una <strong>tabla infinita</strong> sobre la cual se pueden
+    ejecutar consultas declarativas usando la API de DataFrames o SQL.
+  </p>
+  <p>
+    El desarrollador define una consulta, y Spark se encarga de ejecutarla de forma incremental
+    sobre los nuevos datos que van llegando.
+  </p>
+
+  <strong>Características principales</strong>
+  <ul>
+    <li>API unificada para batch y streaming.</li>
+    <li>Optimización automática mediante Catalyst.</li>
+    <li>Soporte para ventanas temporales.</li>
+    <li>Gestión de estado y datos tardíos (watermark).</li>
+  </ul>
+
+  <strong>Modelo de ejecución</strong>
+  <p>
+    Structured Streaming funciona principalmente en modo micro-batch, aunque internamente
+    aplica procesamiento incremental y mantiene el estado cuando es necesario.
+  </p>
+
+  <h3>Ejemplo básico en Structured Streaming (PySpark)</h3>
+
+  <pre><code class="language-python python-code">from pyspark.sql import SparkSession
 
 spark = SparkSession.builder.appName("StreamingExample").getOrCreate()
 
@@ -82,29 +146,101 @@ query = (result
 
 query.awaitTermination()</code></pre>
 
+  <h3>Modos de salida</h3>
+  <ul>
+    <li><strong>Append</strong>: solo nuevas filas.</li>
+    <li><strong>Update</strong>: filas actualizadas.</li>
+    <li><strong>Complete</strong>: resultado completo en cada trigger.</li>
+  </ul>
+
+  <h3>Ventanas temporales</h3>
+  <p>
+    Permiten agrupar eventos según intervalos de tiempo.
+  </p>
+
+  <pre><code class="language-python python-code">from pyspark.sql.functions import window
+
+windowed = (stream_df
+    .groupBy(window(stream_df.timestamp, "10 minutes"))
+    .count())</code></pre>
+
+  <h3>Gestión de datos tardíos (Watermarking)</h3>
+  <p>
+    En sistemas reales, algunos eventos pueden llegar con retraso.
+    El watermark define cuánto tiempo se aceptan datos tardíos antes de cerrar una ventana.
+  </p>
+
+  <pre><code class="language-python python-code">stream_df.withWatermark("timestamp", "5 minutes")</code></pre>
+
+  <h3>Comparativa general</h3>
+
+  <table border="1">
+    <thead>
+      <tr>
+        <th>Aspecto</th>
+        <th>Spark Streaming</th>
+        <th>Structured Streaming</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Modelo base</td>
+        <td>DStreams (RDD)</td>
+        <td>DataFrames/Datasets</td>
+      </tr>
+      <tr>
+        <td>Optimización automática</td>
+        <td>No</td>
+        <td>Sí</td>
+      </tr>
+      <tr>
+        <td>Integración SQL</td>
+        <td>Limitada</td>
+        <td>Total</td>
+      </tr>
+      <tr>
+        <td>Recomendación actual</td>
+        <td>Legacy</td>
+        <td>Recomendada</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3>Casos de uso habituales</h3>
+  <ul>
+    <li>Procesamiento de logs en tiempo real.</li>
+    <li>Detección de fraude.</li>
+    <li>Monitorización de sistemas.</li>
+    <li>Procesamiento de eventos IoT.</li>
+    <li>Integración con Kafka.</li>
+  </ul>
+
+
+
+
+
       </div>
     </div>
   </section>
 
   <section id="conclusion">
     <div class="lesson-container">
-      <strong>CONCLUSIÓN</strong>
+      <h3>CONCLUSIÓN</h3>
       <hr>
       <div class="text-cell">
-        <p>Structured Streaming proporciona una API unificada y optimizaciones que facilitan el desarrollo de pipelines de streaming robustos.</p>
-      </div>
+  <p>
+    Spark Streaming introdujo el procesamiento distribuido en tiempo real en el ecosistema Spark,
+    mientras que Structured Streaming lo modernizó mediante un modelo declarativo
+    completamente integrado con Spark SQL.
+  </p>
+  <p>
+    En arquitecturas actuales de datos, Structured Streaming es la opción recomendada,
+    permitiendo construir pipelines escalables, mantenibles y coherentes con el resto del ecosistema Spark.
+  </p>      </div>
     </div>
   </section>
 
-  <section id="ejercicio">
-    <div class="lesson-container">
-      <strong>EJERCICIO</strong>
-      <hr>
-      <div class="text-cell">
-        <p>Implementar una pequeña aplicación en Structured Streaming, probar ventanas y watermark.</p>
-      </div>
-    </div>
-  </section>
+
 
   <div class="navigation-buttons">
     <button onclick="window.location.href='M3T1L3.html'">Anterior</button>

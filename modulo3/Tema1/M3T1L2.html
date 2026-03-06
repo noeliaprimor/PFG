@@ -22,7 +22,7 @@
     </div>
   </nav>
 
-  <h4 class="titulos-leccion">Arquitecturas Lambda y Kappa</h4>
+  <h2 class="titulos-leccion">Arquitecturas Lambda y Kappa</h2>
 
   <div class="indice-container">
     <div id="index-container" class="text-cell">
@@ -31,30 +31,15 @@
         <li><a href="#descripcion">Descripción</a></li>
         <li><a href="#contenido">Contenido</a></li>
         <li><a href="#conclusion">Conclusión</a></li>
-        <li><a href="#ejercicio">Ejercicio</a></li>
       </ul>
     </div>
   </div>
 
   <section id="descripcion">
     <div class="lesson-container">
-      <strong>DESCRIPCIÓN</strong>
+      <h3>DESCRIPCIÓN</h3>
       <hr>
       <div class="text-cell">
-        <p>Revisaremos los patrones Lambda (batch + speed layer) y Kappa (solo streaming) para procesar datos en tiempo real, con sus ventajas, costes y casos de uso.</p>
-      </div>
-    </div>
-  </section>
-
-  <section id="contenido">
-    <div class="lesson-container">
-      <strong>CONTENIDO</strong>
-      <hr>
-      <div class="text-cell">
-
-  <h1>Arquitecturas Lambda y Kappa en Apache Spark</h1>
-
-  <h4>Introducción</h4>
   <p>
     En los sistemas Big Data, uno de los problemas principales consiste en combinar el análisis histórico (batch) con la
     necesidad de generar resultados con baja latencia (streaming). Para abordar este reto surgieron patrones
@@ -66,9 +51,16 @@
     enfoques. En particular, <strong>Spark SQL</strong> facilita el tratamiento de datos estructurados (batch), y
     <strong>Structured Streaming</strong> permite el procesamiento continuo de eventos en tiempo (casi) real manteniendo
     una API unificada basada en DataFrames/Datasets.
-  </p>
+  </p>      </div>
+    </div>
+  </section>
 
-  <hr />
+  <section id="contenido">
+    <div class="lesson-container">
+      <h3>CONTENIDO</h3>
+      <hr>
+      <div class="text-cell">
+
 
   <h4>Arquitectura Lambda</h4>
 
@@ -224,7 +216,7 @@
 
   <hr />
 
-  <h2>5. Comparativa Lambda vs Kappa en Spark</h2>
+  <h4>Comparativa Lambda vs Kappa en Spark</h4>
 
   <table>
     <thead>
@@ -296,14 +288,6 @@ query = (df_transformed.writeStream
 
 query.awaitTermination()</code></pre>
 
-  <h4>Buenas prácticas (enfoque TFG)</h4>
-
-  <h4>Referencias</h4>
-  <ul>
-    <li>Documentación oficial de Apache Spark: Spark SQL y Structured Streaming.</li>
-    <li>Documentación oficial de Apache Kafka (como ejemplo de log distribuido).</li>
-    <li>Artículos y materiales académicos sobre Lambda Architecture y Kappa Architecture (definición y comparativas).</li>
-  </ul>
 
       </div>
     </div>
@@ -319,15 +303,7 @@ query.awaitTermination()</code></pre>
     </div>
   </section>
 
-  <section id="ejercicio">
-    <div class="lesson-container">
-      <strong>EJERCICIO</strong>
-      <hr>
-      <div class="text-cell">
-        <p>Diseña una solución para un caso de uso (p. ej. métricas de uso) y argumenta si eliges Lambda o Kappa y por qué.</p>
-      </div>
-    </div>
-  </section>
+
 
   <div class="navigation-buttons">
     <button onclick="window.location.href='M3T1L1.html'">Anterior</button>
