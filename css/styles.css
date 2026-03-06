@@ -627,6 +627,13 @@ code.python-code {
 }
 
 /* IMAGENES */
+/* Estilo general para TODAS las imágenes dentro de secciones */
+section img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  margin: 20px auto;
+}
 
 .img-referencia{
   justify-content: center;
@@ -638,8 +645,9 @@ code.python-code {
 }
 
 .img-referencia img{
-  max-width: 98%;
-  width: 80%;
+  max-width: 90%;
+  width: 100%;
+  height: auto;
   padding: 10px;
   border: 1px solid rgb(112, 112, 112);
   margin-bottom: 10px;
@@ -679,27 +687,39 @@ code.python-code {
 
 .img-bloque {
   max-width: 100%;
+  height: auto;
   max-height: 500px;
 }
 
 .img-iframe {
-  max-width: 80%;
+  max-width: 100%;
+  height: auto;
   max-height: 800px;
 }
 
 .img-flotante-derecha{
   float: right;
   max-width: 40%;
+  height: auto;
   margin: 15px;
-
 }
 
 .img-flotante-media{
   float: right;
   max-width: 40%;
+  height: auto;
   margin: 15px;
   display: none;
+}
 
+.img-caption {
+  text-align: center;
+  font-style: italic;
+  color: #666;
+  font-size: 13px;
+  margin-top: 8px;
+  margin-bottom: 20px;
+  line-height: 1.4;
 }
 
 /* Textos */
@@ -1321,6 +1341,11 @@ textarea {
     scroll-margin-top: 220px; /* Altura del header */
   }
 
+  section img {
+    max-width: 100%;
+    height: auto;
+  }
+
   #scroll {
     margin-bottom: 5px;
   }
@@ -1337,7 +1362,8 @@ textarea {
 
   .img-iframe {
     max-width: 100%;
-    max-height: 500px;
+    height: auto;
+    max-height: 800px;
   }
 
   .title h1 {
@@ -1476,7 +1502,8 @@ textarea {
   }
 
   .img-referencia img {
-    width: auto;
+    width: 100%;
+    height: auto;
     padding: 10px;
     border: 1px solid rgb(112, 112, 112);
   }

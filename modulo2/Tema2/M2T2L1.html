@@ -48,6 +48,40 @@
               La elección del entorno de desarrollo depende del perfil del usuario, el caso de uso y el entorno de ejecución.
                 A continuación se muestra una tabla con recomendaciones para diferentes perfiles:</p>
 
+            <div class="entornos-container">
+  <h4>Entornos interactivos</h4>
+  <ul>
+    <li>
+      <strong>Scala: </strong> Spark Shell
+
+    </li>
+    <li>
+      <strong>Python</strong>
+      <ul>
+        <li>PySpark</li>
+        <li>Jupyter Notebooks</li>
+      </ul>
+    </li>
+
+  </ul>
+
+  <h4>Entornos de compilación de trabajos</h4>
+  <ul>
+    <li>
+      <strong>Scala/Java</strong>
+      <ul>
+        <li>Eclipse</li>
+        <li>IntelliJ</li>
+      </ul>
+    </li>
+    <li>
+      <strong>Python</strong>
+      <ul>
+        <li>PyCharm</li>
+        <li>Visual Studio Code</li>
+      </ul>
+  </ul>
+</div>
             <table>
               <thead>
               <tr>
@@ -66,7 +100,8 @@
               <td>Arquitecto cloud</td>
               <td>Spark en Kubernetes o Dataproc/EMR</td> </tr> </tbody> </table>
 
-              <p>En nuestro caso, y aprovechando la licencia de estudiante que nos proporciona Uned a traves de github vamos a instalar Pychar de jetBrains.</p>
+              <p>En nuestro caso, y aprovechando la licencia de estudiante que nos proporciona Uned a traves de github vamos a instalar Pycharm de jetBrains,
+                que ademas permite integración total con los cuadernos de Jupyter.</p>
 
             </div>
         </div>
@@ -77,7 +112,17 @@
             <h3>INSTALACIÓN Y CONFIGURACIÓN DE PYCHARM</h3>
             <hr>
           <img src="/img/M2T2L1_1.png">
+          <p class="img-caption">Figura 1: Pantalla de instalación de PyCharm</p>
             <div class="text-cell">
+              <p>Para instalar Pycharm, lo primero es acceder a la página de JetBrains y descargar la versión Community (o si tenemmos cuenta de Github Student, la opción PRO), que es gratuita. </p>
+              <p>Una vez descargada e instalada, se puede configurar el entorno para trabajar con Spark. Esto incluye:</p>
+              <ul>
+                <li>Instalar el plugin de Spark para PyCharm.</li>
+                <li>Configurar un intérprete de Python compatible con PySpark.</li>
+                <li>Crear un nuevo proyecto y configurar las dependencias de Spark.</li>
+              </ul>
+              <p>Con estos pasos, tendremos un entorno de desarrollo completo para programar aplicaciones Spark en Python, con soporte para depuración, autocompletado y ejecución de notebooks.</p>
+            </div>
 
     </section>
 

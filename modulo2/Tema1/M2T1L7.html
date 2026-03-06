@@ -63,6 +63,7 @@
               Para crear un dataframe a partir de un fichero csv, lo primero que tenemos que hacer es iniciar la consola de PySpark. Para ello, desde la terminal, ejecutamos el comando <code>pyspark</code>. Esto iniciará la consola y nos permitirá ejecutar código Python sobre <Spark class=""></Spark>
               </p>
               <img src="/img/M2T2L7_1.png">
+              <p class="img-caption">Figura 1: Sesión PySpark iniciada correctamente con SparkSession disponible</p>
               <p>
                 Ahora creamos el dataset a partir del fichero csv. Para ello, ejecutamos el siguiente código:
               </p>
@@ -71,21 +72,25 @@ df=spark.read.csv("heart.csv", header=True, inferSchema=True)
 df.show(5)
               </pre></code>
           <img src="/img/M2T2L7_2.png">
+          <p class="img-caption">Figura 2: Resultado de lectura de archivo CSV y visualización de primeras filas del DataFrame</p>
             <p>Podemos mostrar el esquema del dataframe con el siguiente código:</p>
               <pre><code class="language-python python-code">
 df.printSchema()
               </code></pre>
               <img src="/img/M2T2L7_3.png">
+              <p class="img-caption">Figura 3: Esquema del DataFrame mostrando nombres de columnas y tipos de datos</p>
               <p>Y podemos realizar operaciones sobre el dataframe, agrupar los datos por la columna "Age":</p>
               <pre><code class="language-python python-code">
 df.groupBy("Age").count().show()
               </code></pre>
               <img src="/img/M2T2L7_4.png">
+              <p class="img-caption">Figura 4: Resultado de agrupación de datos por edad con conteo de registros</p>
               <p>Incluso podemos realizar filtros sobre los datos:</p>
               <pre><code class="language-python python-code">
 df.filter(df.Age > 65).show(5)
               </code></pre>
               <img src="/img/M2T2L7_5.png">
+              <p class="img-caption">Figura 5: Resultado de filtración de registros con edad mayor a 65 años</p>
               <p>Podemos mostrar estadisticas descriptivas y numericas:</p>
               <pre><code class="language-python python-code">
 df.describe().show()
@@ -94,6 +99,7 @@ df.select(numeric_cols).describe().show()
 
               </code></pre>
               <img src="/img/M2T2L7_6.png">
+              <p class="img-caption">Figura 6: Estadísticas descriptivas del DataFrame mostrando resumen de valores numéricos</p>
 
 
             </div>
