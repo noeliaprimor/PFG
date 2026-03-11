@@ -56,7 +56,7 @@ principal y procesos de trabajo.
     <section id="contenido">
       <div class="lesson-container">
         <h3>CONTENIDO</h3>
-
+<hr>
 
 
 
@@ -84,7 +84,7 @@ principal y procesos de trabajo.
   </li>
 </ul>
 
-<hr/>
+
 
 <h4>Desarrollo: del problema al pipeline</h4>
 <p>
@@ -121,7 +121,6 @@ sino que Spark construye un plan. La ejecución real comienza al invocar una <st
   </li>
 </ul>
 
-<hr />
 
 <h4>Ciclo de ejecución de una aplicación Spark</h4>
 <p>
@@ -209,7 +208,6 @@ Por ello, muchos problemas de rendimiento en pipelines Spark están asociados a 
   <li>Se registran logs, métricas y, en su caso, se almacenan resultados finales.</li>
 </ul>
 
-<hr />
 
 <h4>Pipeline en profundidad: diseño, materialización y optimización</h4>
 
@@ -255,7 +253,6 @@ Por ello, muchos problemas de rendimiento en pipelines Spark están asociados a 
   </li>
 </ul>
 
-<hr />
 
 <h4>Riesgos y errores comunes en ejecución de pipelines</h4>
 <ul>
@@ -273,127 +270,6 @@ Por ello, muchos problemas de rendimiento en pipelines Spark están asociados a 
     <strong>Uso excesivo de UDFs</strong>: puede limitar optimizaciones del motor; preferir funciones nativas de Spark SQL cuando sea posible.
   </li>
 </ul>
-
-<hr />
-
-
-
-<h3>Criterios de evaluación (orientativos)</h3>
-<ul>
-  <li>Identificación correcta de acciones y transformaciones.</li>
-  <li>Comprensión del concepto de shuffle y sus causas.</li>
-  <li>Propuesta razonable de optimización (por ejemplo, broadcast join si aplica).</li>
-  <li>Justificación del particionado de salida y su impacto en consultas posteriores.</li>
-  <li>Selección de métricas útiles y bien justificadas.</li>
-</ul>
-
-
-
-
-
-        <hr>
-        <div class="text-cell">
-          <h4>Python (PySpark)</h4>
-          <p>poner estructura de una aplicación spark y ciclo de ejecución</p>
-
-          <pre><code class="language-bash bash-code">myapp/
-  app/
-    jobs.py
-  requirements.txt
-  Dockerfile
-  run.sh</code></pre>
-          <p>Incluye un script <code>run.sh</code> para ejecutar en distintos entornos y un <code>requirements.txt</code> para dependencias.</p>
-        </div>
-
-        <div class="text-cell">
-          <h4>Scala (sbt)</h4>
-          <pre><code class="language-bash bash-code">myapp/
-  build.sbt
-  src/main/scala/com/example/MyApp.scala
-  src/main/resources/</code></pre>
-        </div>
-      </div>
-    </section>
-
-    <section id="ejecucion">
-      <div class="lesson-container">
-        <h3>EJECUCIÓN EN LOCAL Y CLÚSTER</h3>
-        <hr>
-        <div class="text-cell">
-          <h4>Modo local (PySpark)</h4>
-          <pre><code class="language-bash bash-code">pyspark --master local[*]
-python app/jobs.py --input data/input.csv --output out/</code></pre>
-        </div>
-        <div class="text-cell">
-          <h4>Uso de spark-submit</h4>
-          <pre><code class="language-bash bash-code">/opt/spark/bin/spark-submit \
-  --master spark://master:7077 \
-  --deploy-mode cluster \
-  --num-executors 4 \
-  --executor-memory 2G \
-  app/jobs.py</code></pre>
-        </div>
-
-        <div class="text-cell">
-          <h4>Depuración y logs</h4>
-          <p>Usa el UI (por defecto 4040) y configura niveles de log a WARN/INFO en <code>log4j.properties</code>.</p>
-        </div>
-      </div>
-    </section>
-
-    <section id="notebook">
-      <div class="lesson-container">
-        <h3>NOTEBOOK</h3>
-        <hr>
-        <div class="text-cell">
-          <p>Notebook de ejemplo con un pipeline básico: <a href="/modulo2/Tema2/notebooks/M2T2L2.ipynb">M2T2L2.ipynb</a></p>
-        </div>
-      </div>
-    </section>
-
-    <section id="ejercicios">
-      <div class="lesson-container">
-        <h3>EJERCICIOS</h3>
-        <hr>
-        <div class="text-cell">
-         <h2>6. Ejercicio propuesto</h2>
-
-<h3>Enunciado</h3>
-<p>
-Se dispone de un pipeline (a nivel conceptual) con los siguientes pasos:
-</p>
-<ol>
-  <li>Leer un dataset de transacciones (<strong>transactions</strong>) particionado por fecha.</li>
-  <li>Filtrar transacciones del último mes y seleccionar solo columnas necesarias (id_cliente, fecha, importe, pais).</li>
-  <li>Leer una tabla de clientes (<strong>customers</strong>) con (id_cliente, segmento, alta_fecha).</li>
-  <li>Realizar un join transactions &larr; customers por id_cliente para añadir el segmento.</li>
-  <li>Calcular el importe total y número de transacciones por (segmento, pais).</li>
-  <li>Ordenar el resultado por importe_total descendente.</li>
-  <li>Escribir el resultado final en Parquet.</li>
-</ol>
-
-<h3>Preguntas</h3>
-<ol>
-  <li>
-    Indica qué pasos son <strong>transformaciones</strong> y cuáles son <strong>acciones</strong>. Justifica brevemente.
-  </li>
-  <li>
-    Señala en qué pasos es <strong>probable</strong> que aparezca un <strong>shuffle</strong> y explica por qué.
-  </li>
-  <li>
-    Asumiendo que <strong>customers</strong> es una tabla pequeña, propone una optimización para el join y explica
-    qué efecto tendría sobre el shuffle.
-  </li>
-  <li>
-    Propón una estrategia de particionado de salida (por ejemplo, por fecha o por país) y argumenta
-    cuándo sería útil.
-  </li>
-  <li>
-    Describe dos métricas de observabilidad que registrarías para validar que el pipeline funciona correctamente
-    (por ejemplo, conteos de entrada/salida, porcentaje de nulos, latencia por etapa, etc.).
-  </li>
-</ol>
-        </div>
       </div>
     </section>
 

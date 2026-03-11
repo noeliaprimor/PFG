@@ -29,8 +29,9 @@
       <hr>
       <ul>
         <li><a href="#descripcion">Descripción</a></li>
-        <li><a href="#contenido">Contenido</a></li>
-        <li><a href="#conclusion">Conclusión</a></li>
+        <li><a href="#lambda">Arquitectura Lambda</a></li>
+        <li><a href="#kappa">Arquitectura Kappa</a></li>
+        <li><a href="#comparativa">Comparativa Lambda vs Kappa</a></li>
       </ul>
     </div>
   </div>
@@ -55,14 +56,13 @@
     </div>
   </section>
 
-  <section id="contenido">
+  <section id="lambda">
     <div class="lesson-container">
-      <h3>CONTENIDO</h3>
+      <h3>ARQUITECTURA LAMBDA</h3>
       <hr>
       <div class="text-cell">
 
 
-  <h4>Arquitectura Lambda</h4>
 
   <strong>Definición y objetivo</strong>
   <p>
@@ -147,9 +147,15 @@
     <li>Coste de mantenimiento más alto (dos modos de ejecución, pruebas duplicadas).</li>
   </ul>
 
-  <hr />
+      </div>
+    </div>
+  </section>
+    <section id="kappa">
+    <div class="lesson-container">
+      <h3>ARQUITECTURA KAPPA</h3>
+      <hr>
+      <div class="text-cell">
 
-  <h4>Arquitectura Kappa</h4>
 
   <strong>Definición y objetivo</strong>
   <p>
@@ -188,35 +194,42 @@
     <li>Alta dependencia del sistema de mensajería/log (retención, orden, escalabilidad, consistencia).</li>
     <li>Para casos extremadamente batch (cargas masivas históricas) puede no ser la opción óptima.</li>
   </ul>
-
-  <hr />
-
-  <h4>Implementación en Spark: relación con Structured Streaming</h4>
-
-  <h4>De DStreams a Structured Streaming</h4>
+        <h4>Ejemplo conceptual: enfoque Kappa con Spark Structured Streaming</h4>
   <p>
-    Spark evolucionó desde enfoques de streaming más antiguos (como DStreams) hacia Structured Streaming, que adopta un
-    modelo declarativo basado en DataFrames y planes de ejecución optimizados. Esta evolución facilita aproximaciones
-    cercanas a Kappa al reducir la brecha entre batch y streaming mediante una API común.
+    El siguiente fragmento muestra un esquema conceptual de consumo de eventos desde Kafka y escritura de resultados.
+    En una arquitectura Kappa, este pipeline representa la vía principal (y única) de procesamiento.
   </p>
 
-  <h4>Micro-batch y semántica de procesamiento</h4>
-  <p>
-    Structured Streaming, en su configuración habitual, ejecuta micro-lotes (micro-batches) que procesan intervalos cortos
-    de datos. Esto permite combinar rendimiento y tolerancia a fallos, manteniendo un modelo de “streaming” sobre un motor
-    distribuido.
-  </p>
-  <p>
-    En diseños Kappa, el mismo pipeline se usa para:
-  </p>
-  <ul>
-    <li>Datos “en caliente” (eventos nuevos).</li>
-    <li>Datos históricos (reprocesamiento) releyendo el log o reinyectando eventos.</li>
-  </ul>
+  <pre><code  class="language-python python-code">from pyspark.sql import SparkSession
 
-  <hr />
+spark = (SparkSession.builder
+         .appName("Arquitectura-Kappa")
+         .getOrCreate())
 
-  <h4>Comparativa Lambda vs Kappa en Spark</h4>
+df_stream = (spark.readStream
+             .format("kafka")
+             .option("kafka.bootstrap.servers", "localhost:9092")
+             .option("subscribe", "eventos")
+             .load())
+
+df_transformed = df_stream.selectExpr("CAST(value AS STRING)")
+
+query = (df_transformed.writeStream
+         .format("console")
+         .start())
+
+query.awaitTermination()</code></pre>
+
+
+      </div>
+    </div>
+    </section>
+
+  <section id="comparativa">
+    <div class="lesson-container">
+      <strong>COMPARATIVA LAMBDA VS KAPPA</strong>
+      <hr>
+      <div class="text-cell">
 
   <table>
     <thead>
@@ -260,45 +273,6 @@
     </tbody>
   </table>
 
-  <hr />
-
-  <h4>Ejemplo conceptual: enfoque Kappa con Spark Structured Streaming</h4>
-  <p>
-    El siguiente fragmento muestra un esquema conceptual de consumo de eventos desde Kafka y escritura de resultados.
-    En una arquitectura Kappa, este pipeline representa la vía principal (y única) de procesamiento.
-  </p>
-
-  <pre><code  class="language-python python-code">from pyspark.sql import SparkSession
-
-spark = (SparkSession.builder
-         .appName("Arquitectura-Kappa")
-         .getOrCreate())
-
-df_stream = (spark.readStream
-             .format("kafka")
-             .option("kafka.bootstrap.servers", "localhost:9092")
-             .option("subscribe", "eventos")
-             .load())
-
-df_transformed = df_stream.selectExpr("CAST(value AS STRING)")
-
-query = (df_transformed.writeStream
-         .format("console")
-         .start())
-
-query.awaitTermination()</code></pre>
-
-
-      </div>
-    </div>
-  </section>
-
-  <section id="conclusion">
-    <div class="lesson-container">
-      <strong>CONCLUSIÓN</strong>
-      <hr>
-      <div class="text-cell">
-        <p>Resumen: Lambda y Kappa son patrones útiles con trade-offs claros; la elección debe justificarse según requisitos de latencia, precisión y coste.</p>
       </div>
     </div>
   </section>

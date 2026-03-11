@@ -34,6 +34,7 @@
            <li><a href="#transform">Transformaciones</a></li>
            <li><a href="#acciones">Acciones</a></li>
            <li><a href="#consideraciones">Consideraciones generales</a></li>
+           <li><a href="#conclusion">Conclusión</a></li>
            <li><a href="#ejemplos">Ejemplos</a></li>
          </ul>
        </div>
@@ -310,8 +311,19 @@ print(resultado.take(10))</code></pre>
     <li>Evitar <code>collect()</code> en grandes datasets; usar <code>take()</code> o escrituras a almacenamiento.</li>
     <li>Usar <code>cache()</code> o <code>persist()</code> si se reutiliza el mismo RDD en varias acciones.</li>
   </ul>
-  <h3>Conclusión</h3>
-  <p>
+
+
+
+
+  </div>
+  </div>
+</section>
+    <section id="conclusion">
+      <div class="lesson-container">
+        <h3>CONCLUSIÓN</h3>
+        <hr>
+        <div class ="text-cell">
+            <p>
     Las operaciones sobre RDD constituyen la base del modelo distribuido en Spark. Las transformaciones construyen el DAG de ejecución
     de forma perezosa, mientras que las acciones disparan la ejecución y materializan los resultados. El tipo de dependencias
     (narrow o wide) determina el número de stages y la necesidad de shuffle, influyendo directamente en el rendimiento.
@@ -321,10 +333,9 @@ print(resultado.take(10))</code></pre>
     comprender el funcionamiento interno de Spark Core, depurar pipelines complejos y optimizar cargas específicas.
   </p>
 
-
-  </div>
-  </div>
-</section>
+        </div>
+      </div>
+    </section>
     <section id="ejemplos">
       <div class="lesson-container">
         <h3>EJERCICIO PROPUESTO</h3>

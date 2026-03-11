@@ -32,6 +32,8 @@
          <ul>
            <li><a href="#descripcion">Descripción</a></li>
            <li><a href="#ejemplos">Ejemplos Avanzados</a></li>
+              <li><a href="#ejercicio">Ejercicio propuesto</a></li>
+
          </ul>
        </div>
      </div>
@@ -398,7 +400,14 @@ gold = (silver
   .agg(F.count("*").alias("events"))
 )</code></pre>
 
-  <h2>Mini-lab propuesto (nivel TFG)</h2>
+  </div>
+      </div>
+    </section>
+    <section id="ejercicio">
+      <div class="lesson-container">
+        <h3>EJERCICIO PROPUESTO</h3>
+        <hr>
+        <div class="text-cell">
 
   <h3>1 Objetivo</h3>
   <p>
@@ -446,7 +455,7 @@ latest = (df
 # 4) Escritura particionada
 latest.write.mode("overwrite").partitionBy("pais").parquet("salida_gold")</code></pre>
 
-  <h3>3.4 Entregables</h3>
+  <h3>4 Entregables</h3>
   <ul>
     <li>Capturas o transcripción de <code>explain(True)</code> para join normal y join con broadcast.</li>
     <li>Tabla comparativa con tiempos aproximados y observaciones (número de shuffles, estrategia de join).</li>
@@ -454,17 +463,9 @@ latest.write.mode("overwrite").partitionBy("pais").parquet("salida_gold")</code>
     <li>Dataset final en Parquet particionado y descripción de la estructura de carpetas generada.</li>
   </ul>
 
-
-
-          <pre><code class="language-python python-code">from pyspark.sql.window import Window
-from pyspark.sql.functions import row_number
-w = Window.partitionBy('user').orderBy('timestamp')
-df = df.withColumn('rn', row_number().over(w))
-</code></pre>        </div>
+        </div>
       </div>
     </section>
-
-
 
     <div class="navigation-buttons">
       <button onclick="window.location.href='M2T2L9.html'">Anterior</button>

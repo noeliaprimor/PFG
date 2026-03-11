@@ -34,6 +34,7 @@
            <li><a href="#dataframes">Operaciones sobre DataFrames</a></li>
            <li><a href="#dataset">Dataset (Scala/Java) y operaciones tipadas</a></li>
              <li><a href="#consideraciones">Consideraciones Generales</a></li>
+           <li><a href="#conclusion">Conclusión</a></li>
              <li><a href="#ejercicio">Ejercicio práctico</a></li>
 
          </ul>
@@ -369,9 +370,16 @@ df_coal = df.coalesce(2)</code></pre>
     </tbody>
   </table>
 
+        </div>
+      </div>
+    </section>
 
-  <h4>Conclusión</h4>
-  <p>
+    <section id="conclusion">
+      <div class="lesson-container">
+        <h3>CONCLUSIÓN</h3>
+        <hr>
+        <div class="text-cell">
+          <p>
     Las operaciones sobre DataFrames y Datasets representan la forma moderna y optimizada de trabajar en Spark. La combinación de
     planificación lógica y física, optimización automática mediante Catalyst y mejoras de ejecución (Tungsten y generación de código)
     permiten obtener mayor rendimiento y escalabilidad que aproximaciones equivalentes basadas en RDD para datos estructurados.
@@ -384,10 +392,11 @@ df_coal = df.coalesce(2)</code></pre>
           <p>1. Usa DataFrames/Datasets en lugar de RDDs para aprovechar las optimizaciones de Catalyst.</p>
           <p>2. Evita operaciones que desencadenen shuffle innecesarios, como groupByKey.</p>
           <p>3. Usa persistencia/caching para conjuntos de datos reutilizados.</p>
-          <p>4. Aplica broadcast joins para tablas pequeñas.</p>        </div>
+          <p>4. Aplica broadcast joins para tablas pequeñas.</p>
+        </div>
       </div>
     </section>
-
+</section>
     <section id="ejercicio">
       <div class="lesson-container">
         <h3>EJERCICIO PRÁCTICO</h3>

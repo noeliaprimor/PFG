@@ -41,9 +41,9 @@
       <strong>DESCRIPCIÓN</strong>
       <hr>
       <div class="text-cell">
- <h2>7. Ejercicios propuestos (nivel TFG)</h2>
+ <h2>Ejercicios propuestos </h2>
 
-  <h3>7.1. Ejercicio 1: Clickstream con métricas y persistencia</h3>
+  <h3>Ejercicio 1: Clickstream con métricas y persistencia</h3>
   <ol>
     <li>Genera eventos JSON en el topic <code>clicks</code> con campos <code>ts</code>, <code>userId</code> y <code>url</code>.</li>
     <li>Implementa el pipeline del Caso 1.</li>
@@ -51,14 +51,14 @@
     <li>Consulta los Parquet resultantes con Spark batch (por ejemplo, <code>spark.read.parquet(...)</code>) y valida resultados.</li>
   </ol>
 
-  <h3>7.2. Ejercicio 2: Ajuste de watermark y eventos tardíos</h3>
+  <h3>Ejercicio 2: Ajuste de watermark y eventos tardíos</h3>
   <ol>
     <li>Inyecta eventos “tardíos” (con <code>ts</code> antiguo) en el topic correspondiente.</li>
     <li>Varía el watermark (por ejemplo, 2, 10 y 30 minutos) y documenta cómo afecta al resultado y al estado.</li>
     <li>Explica el compromiso entre precisión y consumo de memoria/estado.</li>
   </ol>
 
-  <h3>7.3. Ejercicio 3: Bronze → Silver con validación</h3>
+  <h3>Ejercicio 3: Bronze → Silver con validación</h3>
   <ol>
     <li>Amplía el Caso 3 para invalidar registros con valores fuera de rango (por ejemplo, <code>value &lt; 0</code>).</li>
     <li>Escribe registros inválidos en un directorio Parquet separado (por ejemplo, <code>/data/out/case3_quarantine</code>).</li>

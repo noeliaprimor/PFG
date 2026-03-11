@@ -35,7 +35,7 @@
            <li><a href="#dataframe">DataFrame</a></li>
            <li><a href="#dataset">Dataset</a></li>
             <li><a href="#comparativa">Comparativa</a></li>
-           <li><a href="#ejemplos">Ejercicio Propuesto</a></li>
+           <li><a href="#conclusion">Conclusión</a></li>
          </ul>
        </div>
      </div>
@@ -59,7 +59,7 @@
     </section>
         <section id="RDD">
       <div class="lesson-container">
-        <h3>RDD (resilient Distributed Dataset)</h3>
+        <h3>RDD (Resilient Distributed Dataset)</h3>
         <hr>
         <div class="text-cell">
   <p>
@@ -339,8 +339,16 @@ val ds = spark.read.json("personas.json").as[Persona]</code></pre>
     RDD puede ser adecuado en casos especiales, pero suele implicar mayor sobrecarga y falta de optimización automática.
   </p>
 
-            <h4>Conclusión</h4>
-  <p>
+        </div>
+      </div>
+    </section>
+
+    <section id="conclusion">
+      <div class="lesson-container">
+        <h3>CONCLUSIÓN</h3>
+        <hr>
+        <div class="text-cell">
+           <p>
     RDD, DataFrame y Dataset representan tres niveles de abstracción sobre el mismo motor distribuido de Spark.
     RDD ofrece control y flexibilidad de bajo nivel, mientras que DataFrame aporta optimización automática y eficiencia para
     ETL y analítica. Dataset añade, además, seguridad de tipos en lenguajes como Scala y Java.
@@ -350,54 +358,6 @@ val ds = spark.read.json("personas.json").as[Persona]</code></pre>
     reservado para escenarios específicos donde se requiere un control muy detallado o lógica no estructurada, mientras que
     Dataset es especialmente útil en aplicaciones Scala/Java que demandan tipado fuerte.
   </p>
-        </div>
-      </div>
-    </section>
-
-    <section id="ejemplos">
-      <div class="lesson-container">
-        <h3>EJERCICIO PROPUESTO</h3>
-        <hr>
-        <div class="text-cell">
-           <p>
-    Comparar el rendimiento y el nivel de expresividad entre RDD y DataFrame para una operación equivalente sobre un volumen
-    significativo de datos.
-  </p>
-
-  <strong>Pasos</strong>
-  <ol>
-    <li>Crear un RDD con 1 millón de registros numéricos (por ejemplo, del 1 al 1.000.000).</li>
-    <li>Aplicar una transformación: multiplicar por 2, filtrar múltiplos de 3 y contar resultados.</li>
-    <li>Medir tiempo de ejecución aproximado (por ejemplo, con registros de logs o medición simple de tiempo).</li>
-    <li>Convertir el RDD a DataFrame con una columna.</li>
-    <li>Repetir la misma operación utilizando la API de DataFrame (expresiones/funciones).</li>
-    <li>Comparar tiempos y discutir diferencias en términos de optimización (Catalyst) y planificación.</li>
-  </ol>
-
-  <strong>Sugerencia de implementación</strong>
-  <p>Ejemplo base (PySpark) para el RDD:</p>
-  <pre><code class="language-python python-code">import time
-
-rdd = spark.sparkContext.parallelize(range(1, 1000001))
-
-t0 = time.time()
-count_rdd = rdd.map(lambda x: x * 2).filter(lambda x: x % 3 == 0).count()
-t1 = time.time()
-
-print("RDD count:", count_rdd, "Tiempo:", t1 - t0)</code></pre>
-
-  <p>Ejemplo base (PySpark) para el DataFrame:</p>
-  <pre><code class="language-python python-code">from pyspark.sql.functions import col
-import time
-
-df = spark.range(1, 1000001).toDF("x")
-
-t0 = time.time()
-count_df = df.select((col("x") * 2).alias("y")).filter(col("y") % 3 == 0).count()
-t1 = time.time()
-
-print("DF count:", count_df, "Tiempo:", t1 - t0)</code></pre>
-
         </div>
       </div>
     </section>

@@ -33,6 +33,7 @@
            <li><a href="#descripcion">Descripción</a></li>
            <li><a href="#paralizacion">Paralización</a></li>
            <li><a href="#particionado">Particionado</a></li>
+           <li><a href="#conclusion">Conclusión</a></li>
            <li><a href="#practica">Ejercicio Práctico</a></li>
          </ul>
        </div>
@@ -319,24 +320,22 @@ spark.conf.set("spark.default.parallelism", 8)</code></pre>
   </table>
 
 
-  <h4>Conclusión</h4>
+
+
+        </div>
+      </div>
+    </section>
+    <section id ="conclusion">
+      <div class ="lesson-container">
+        <h3>CONCLUSIÓN</h3>
+        <hr>
+        <div class="text-cell">
   <p>
     La paralelización y el particionado son elementos críticos para el rendimiento en Spark. El grado de paralelismo depende
     directamente del número de particiones, mientras que el shuffle introduce un coste relevante al redistribuir datos entre
     nodos. Ajustar correctamente el número de particiones, minimizar shuffles innecesarios y aplicar estrategias de mitigación
     de skew permite diseñar aplicaciones distribuidas más eficientes y escalables.
   </p>
-
-          <p>Métodos: <code >repartition(n)</code>, <code>coalesce(n)</code>. Repartition fuerza shuffle; coalesce intenta evitarlo cuando reduce particiones.</p>
-          <pre><code class="language-python python-code">rdd = sc.parallelize(range(1000), 4)
-rdd.getNumPartitions()
-rdd2 = rdd.repartition(8)</code></pre>
-
-
-
-
-
-
         </div>
       </div>
     </section>

@@ -34,7 +34,6 @@
                  <li><a href="#cargar">Cargar Datos en Spark</a></li>
                  <li><a href="#guardar">Guardar Datos en Spark</a></li>
                  <li><a href="#buenaspracticas">Buenas prácticas en el desarrollo de aplicaciones Spark</a></li>
-                 <li><a href ="#ejercicio">Ejercicio Propuesto</a></li>
              </ul>
          </div>
      </div>
@@ -124,7 +123,6 @@ df.write     # Para guardar</code></pre>
       </tr>
     </tbody>
   </table>
-          <HR>
 
   <h4>Lectura de JSON</h4>
   <p>
@@ -135,7 +133,6 @@ df.write     # Para guardar</code></pre>
     En JSON es especialmente importante mantener consistencia de tipos y estructura para evitar columnas con tipos ambiguos
     o estructuras anidadas inconsistentes.
   </p>
-<HR>
   <h4>Lectura de Parquet</h4>
   <p>
     Parquet es un formato columnar optimizado para analítica y es el estándar recomendado en la mayoría de casos Big Data:
@@ -147,7 +144,7 @@ df.write     # Para guardar</code></pre>
     <li>Lectura selectiva de columnas (mejora de rendimiento en consultas).</li>
     <li>Mejor integración con motores analíticos y catálogos de datos.</li>
   </ul>
-          <HR>
+
 
   <h4>Lectura desde bases de datos relacionales (JDBC)</h4>
   <p>
@@ -173,7 +170,6 @@ df.write     # Para guardar</code></pre>
   <p>
     Esto permite dividir la tabla en rangos y leerlos en paralelo (siempre que exista una columna adecuada para particionar).
   </p>
-          <hr>
 
   <h4>Lectura desde almacenamiento en la nube (ejemplo S3)</h4>
   <p>
@@ -202,7 +198,6 @@ df.write     # Para guardar</code></pre>
     .mode("overwrite") \
     .option("header", "true") \
     .csv("salida_csv")</code></pre>
-<hr>
   <h4> Escritura en Parquet</h4>
   <p>
     Parquet es el formato recomendado para persistir resultados en escenarios analíticos:
@@ -210,10 +205,8 @@ df.write     # Para guardar</code></pre>
   <pre><code  class="language-python python-code">df.write \
     .mode("overwrite") \
     .parquet("salida_parquet")</code></pre>
-<hr>
   <h4>Escritura en JSON</h4>
   <pre><code  class="language-python python-code">df.write.json("salida_json")</code></pre>
-<hr>
   <h4>Escritura en base de datos (JDBC)</h4>
   <p>
     Para escribir en una base de datos relacional mediante JDBC:
@@ -226,7 +219,6 @@ df.write     # Para guardar</code></pre>
     .option("password", "password") \
     .mode("append") \
     .save()</code></pre>
-<hr>
   <h3>Modos de escritura</h3>
   <p>
     Spark define diferentes modos de escritura para controlar el comportamiento cuando el destino ya existe:
@@ -257,7 +249,7 @@ df.write     # Para guardar</code></pre>
       </tr>
     </tbody>
   </table>
-          <hr>
+
 
   <h3>Diferencias entre formatos: CSV vs JSON vs Parquet</h3>
   <p>
@@ -329,7 +321,6 @@ df.write     # Para guardar</code></pre>
     <li>Reduce lectura innecesaria al acceder solo a particiones relevantes.</li>
     <li>Facilita organización lógica de datasets grandes.</li>
   </ul>
-<hr>
   <h3>Carga y guardado con RDD</h3>
   <p>
     Aunque actualmente el uso de DataFrames es lo más común, Spark también permite cargar y guardar datos con RDD:
@@ -376,74 +367,6 @@ rdd.saveAsTextFile("salida_rdd")</code></pre>
   </p>
           <p>Parquet es preferido por su compresión y esquema. El particionado mejora consultas filtradas pero puede generar demasiados ficheros si los buckets son pequeños.</p>
         </div>
-      </div>
-    </section>
-    <section id="ejercicio">
-      <div class="lesson-container">
-          <h3>EJERCICIO PROPUESTO</h3>
-        <hr>
-        <div class="text-cell">
-
-
-  <p>
-    El objetivo de este ejercicio es comparar el impacto de formato y particionamiento en el rendimiento de lectura/escritura mediante un flujo sencillo:
-    CSV &rarr; transformación &rarr; Parquet particionado.
-  </p>
-
-  <strong>Requisitos del ejercicio</strong>
-  <ul>
-    <li>Un fichero CSV con al menos 100.000 registros (puede ser un dataset público o generado).</li>
-    <li>Una columna categórica para particionar (por ejemplo: <code>departamento</code>, <code>pais</code> o <code>categoria</code>).</li>
-  </ul>
-
-  <strong>Pasos</strong>
-  <ol>
-    <li>
-      <strong>Cargar el CSV</strong> con cabecera e inferencia de esquema (solo para la primera carga):
-      <pre><code class="language-python python-code">df = spark.read \
-  .option("header", "true") \
-  .option("inferSchema", "true") \
-  .csv("datos.csv")</code></pre>
-    </li>
-    <li>
-      <strong>Aplicar una transformación</strong> (por ejemplo, filtrar registros o crear una nueva columna):
-      <pre><code class="language-python python-code">from pyspark.sql.functions import col
-
-df2 = df.filter(col("importe") &gt; 0)</code></pre>
-    </li>
-    <li>
-      <strong>Guardar en Parquet</strong> (sin particionar) y medir tamaño en disco:
-      <pre><code class="language-python python-code">df2.write.mode("overwrite").parquet("salida_parquet_no_part")</code></pre>
-    </li>
-    <li>
-      <strong>Guardar en Parquet particionado</strong> por una columna categórica:
-      <pre><code class="language-python python-code">df2.write \
-  .mode("overwrite") \
-  .partitionBy("categoria") \
-  .parquet("salida_parquet_part")</code></pre>
-    </li>
-    <li>
-      <strong>Comparar tamaños</strong> entre el CSV original, el Parquet no particionado y el Parquet particionado.</li>
-    <li>
-      <strong>Comparar tiempos de lectura</strong> ejecutando:
-      <ul>
-        <li>Lectura completa del dataset</li>
-        <li>Lectura filtrando por una sola categoría/partición</li>
-      </ul>
-      <p>Ejemplo de lectura filtrando por partición:</p>
-      <pre><code class="language-python python-code">df_part = spark.read.parquet("salida_parquet_part")
-df_filtrado = df_part.filter(col("categoria") == "A")
-df_filtrado.count()</code></pre>
-    </li>
-  </ol>
-
-  <strong>Entregables</strong>
-  <ul>
-    <li>Tabla con tamaños (MB) de cada formato.</li>
-    <li>Tabla con tiempos aproximados de lectura (completa vs filtrada).</li>
-    <li>Conclusión breve (5-10 líneas) justificando qué formato/estrategia es más eficiente y por qué.</li>
-  </ul>
-</div>
       </div>
     </section>
 

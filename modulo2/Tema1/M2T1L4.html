@@ -41,7 +41,6 @@
                  <li><a href="#descripcion">Descripción</a></li>
                  <li><a href="#contenidos">Contenidos</a></li>
                  <li><a href="#saber-mas">Para saber más</a></li>
-                 <li><a href="#ejercicio-propuesto">Ejercicio propuesto</a></li>
              </ul>
          </div>
      </div>
@@ -187,7 +186,7 @@
       resultado = rdd.count()
       print(resultado)
 
-            //devuelve 4, que es el número de elementos en el RDD
+      //devuelve 4, que es el número de elementos en el RDD
 
     </code></pre>
     <li><strong>take</strong></li>
@@ -196,15 +195,15 @@
       resultado = rdd.take(2)
       print(resultado)
 
-            //devuelve [1, 2], que son los dos primeros elementos del RDD
+      //devuelve [1, 2], que son los dos primeros elementos del RDD
     </code></pre>
-    <li><strong>firs</strong></li>
+    <li><strong>first</strong></li>
     <pre><code class="language-python python-code">
       rdd = sc.parallelize([1, 2, 3, 4])
       resultado = rdd.first()
       print(resultado)
 
-            //devuelve 1, que es el primer elemento del RDD
+      //devuelve 1, que es el primer elemento del RDD
     </code></pre>
   </ul>
 
@@ -390,27 +389,6 @@
       (<code>academy.databricks.com</code>)
     </li>
   </ul>
-            </div>
-
-        </div>
-    </section>
-    <section id="ejercicio-propuesto">
-
-        <!-- Ejercicio propuesto -->
-        <div class="lesson-container">
-            <h3>Ejercicio Propuesto</h3>
-            <hr>
-            <div class="text-cell">
-                <p>
-    Suponga un sistema que debe procesar registros de acceso web generados por millones de usuarios cada día. Responda:
-  </p>
-  <ol>
-    <li>¿Por qué sería adecuado utilizar RDD para procesar estos datos?</li>
-    <li>¿Qué ventajas ofrece el procesamiento en memoria frente al procesamiento en disco?</li>
-    <li>Explique cómo el mecanismo de lineage permite recuperar datos tras un fallo.</li>
-    <li>Diferencie entre una transformación y una acción en Spark.</li>
-    <li>¿En qué escenarios preferiría utilizar DataFrames en lugar de RDD?</li>
-  </ol>
             </div>
 
         </div>

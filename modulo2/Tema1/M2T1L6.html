@@ -37,8 +37,6 @@
                  <li><a href="#scala">Scala Shell</a></li>
                 <li><a href="#python">PySpark (Python)</a></li>
                <li><a href="#comparativa">comparativa</a></li>
-                 <li><a href="#saber-mas">Para saber más</a></li>
-                 <li><a href="#ejercicio-propuesto">Ejercicio propuesto</a></li>
              </ul>
          </div>
      </div>
@@ -75,7 +73,7 @@
             <div class="text-cell">
                 <h4> Ejecución </h4>
                <p>Se inicia en la terminal ejecutando <code>./spark-shell</code></p> desde la carpeta de instalación de Spark. También se pueden añadir configuraciones:</p>
-  <pre><code>spark-shell --master local[4] --executor-memory 4G</code></pre>
+  <pre><code class="language-python python-code">spark-shell --master local[4] --executor-memory 4G</code></pre>
        <img src="/img/M2T2L6_1.png">
        <p class="img-caption">Figura 1: Interfaz de Scala Shell de Spark mostrando inicio de sesión y comandos disponibles</p>
             </div>
@@ -99,7 +97,7 @@
   </ul>
 
   <h3>Ejemplo básico</h3>
-  <pre><code>val df = spark.read.json("datos.json")
+  <pre><code class="language-python python-code">val df = spark.read.json("datos.json")
 df.show()</code></pre>
 
   <h3>Ventajas</h3>
@@ -108,8 +106,6 @@ df.show()</code></pre>
     <li>Acceso a Datasets tipados.</li>
     <li>Ideal para usuarios que trabajan con el ecosistema JVM.</li>
   </ul>
-
-
 
            </div>
 
@@ -130,10 +126,10 @@ df.show()</code></pre>
 
   <h3>Ejecución</h3>
   <p>Se inicia con:</p>
-  <pre><code>pyspark</code></pre>
+  <pre><code class="language-python python-code">pyspark</code></pre>
 
   <p>También admite configuraciones:</p>
-  <pre><code>pyspark --master local[*] --packages com.databricks:spark-xml_2.12:0.15.0</code></pre>
+  <pre><code class="language-python python-code">pyspark --master local[*] --packages com.databricks:spark-xml_2.12:0.15.0</code></pre>
               <img src="/img/M2T2L6_2.png">
               <p class="img-caption">Figura 2: Interfaz de PySpark Shell mostrando contexto Spark disponible y comandos Python</p>
 
@@ -157,7 +153,7 @@ df.show()</code></pre>
   </ul>
 
   <h3>Ejemplo básico</h3>
-  <pre><code>df = spark.read.json("datos.json")
+  <pre><code class="language-python python-code">df = spark.read.json("datos.json")
 df.show()</code></pre>
 
   <h3>Ventajas</h3>
@@ -173,13 +169,11 @@ df.show()</code></pre>
     </section>
     <section id="comparativa">
 
-         <!-- Contenidos -->
         <div class="lesson-container">
 
             <h3>COMPARATIVA</h3>
             <hr>
 
-            <!-- Blóque con texto -->
             <div class="text-cell">
               <h3>Comparación rápida</h3>
 
@@ -252,32 +246,6 @@ df.show()</code></pre>
             </div>
 
             </div>
-        </div>
-    </section>
-    <section  id="saber-mas">
-         <!-- Para saber más -->
-        <div class="lesson-container indice-modulos">
-            <h3>Para saber más</h3>
-            <hr>
-            <div class="text-cell">
-                <ul>
-                    <li><a href="https://spark-packages.org">Enlaces</a></li>
-                    <li><a href="https://www.usenix.org/legacy/event/hotcloud10/tech/full_papers/Zaharia.pdf">Proyecto de investigación de Spar</a></li>
-                </ul>
-            </div>
-
-        </div>
-    </section>
-    <section id="ejercicio-propuesto">
-
-        <!-- Ejercicio propuesto -->
-        <div class="lesson-container">
-            <h3>Ejercicio Propuesto</h3>
-            <hr>
-            <div class="text-cell">
-              <p>Ejercicio propuesto</p>
-            </div>
-
         </div>
     </section>
         <div>

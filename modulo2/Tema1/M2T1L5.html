@@ -42,7 +42,6 @@
                  <li><a href="#standalone">Instalación Standalone</a></li>
                  <li><a href="docker">Instalación en cluster Docker</a></li>
                  <li><a href="#saber-mas">Para saber más</a></li>
-                 <li><a href="#ejercicio-propuesto">Ejercicio propuesto</a></li>
              </ul>
          </div>
      </div>
@@ -340,73 +339,7 @@ docker compose down
 
         </div>
     </section>
-    <section id="ejercicio-propuesto">
 
-        <!-- Ejercicio propuesto -->
-        <div class="lesson-container">
-            <h3>Ejercicios Propuestos</h3>
-            <hr>
-            <div class="text-cell">
-              <h4>Ejercicio 1 – Escalado del clúster</h4>
-<p>
-Escalar el número de <em>workers</em> a 4:
-</p>
-<pre><code>docker compose up -d --scale spark-worker=4</code></pre>
-<p>
-Analizar:
-</p>
-<ul>
-  <li>¿Cómo cambia la distribución de tareas?</li>
-  <li>¿Se reduce el tiempo de ejecución?</li>
-</ul>
-<hr>
-<h4>Ejercicio 2 – Modificación de recursos</h4>
-<p>
-Reducir la memoria del <em>worker</em> a 512MB y ejecutar un job que requiera más recursos (por ejemplo, leyendo un fichero grande o aumentando el número de particiones).
-</p>
-<p>
-Analizar:
-</p>
-<ul>
-  <li>¿Qué ocurre cuando la memoria asignada no es suficiente?</li>
-  <li>¿Se produce algún error (por ejemplo, out-of-memory) o se degrada el rendimiento?</li>
-</ul>
-<hr>
-<h4>Ejercicio 3 – Análisis de logs</h4>
-<p>
-Ejecutar un job y analizar los logs del clúster:
-</p>
-<pre><code>docker compose logs spark-master</code></pre>
-<p>
-Identificar:
-</p>
-<ul>
-  <li>Inicio del job (submit del trabajo)</li>
-  <li>Asignación de ejecutores y recursos a los workers</li>
-  <li>Finalización del job (éxito o error)</li>
-</ul>
-<hr>
-<h1>Este ejercicio ponerlo más adelante</h1>
-              <h4>Ejercicio 4 – Procesamiento real de datos</h4>
-<p>
-Crear un CSV de prueba dentro de la carpeta <code>data/</code> y desarrollar un script PySpark que realice:
-</p>
-<ul>
-  <li>Lectura del CSV con <code>spark.read.csv</code></li>
-  <li>Filtrado por una condición</li>
-  <li>Agrupación y conteo (groupBy + count)</li>
-</ul>
-<p>
-Evaluar:
-</p>
-<ul>
-  <li>Número de particiones del DataFrame</li>
-  <li>Tiempo de ejecución aproximado</li>
-  <li>Impacto de cambiar el número de workers en el resultado y el rendimiento</li>
-</ul>
-            </div>
-        </div>
-    </section>
         <div>
             <div class="navigation-buttons">
               <button onclick="window.location.href='M2T1L4.html'">Anterior</button>

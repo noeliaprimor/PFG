@@ -38,8 +38,6 @@
                  <li><a href="#YARN">YARN</a></li>
                  <li><a href="#KUBERNETES">Kubernetes</a></li>
                  <li><a href="#MESOS">Mesos</a></li>
-                 <li><a href="#saber-mas">Para saber más</a></li>
-                 <li><a href="#ejercicio-propuesto">Ejercicio propuesto</a></li>
              </ul>
          </div>
      </div>
@@ -49,9 +47,7 @@
             <h3>DESCRIPCIÓN</h3>
             <hr>
             <div class="text-cell">
-            <p>Spark puede ejecutarse sobre distintos gestores de recursos. Standalone es simple y
-              fácil para entornos dedicados; YARN es común en clusters Hadoop; Kubernetes
-              ofrece flexibilidad con contenedores.</p>
+            <p>Spark puede ejecutarse sobre modelos dependiendo de las necesidades del proyecto:</p>
 
                <li><strong>Standalone:</strong> fácil de configurar, buen rendimiento en clústeres dedicados.</li>
         <li><strong>YARN:</strong> integración con Hadoop, multi-tenant.</li>
@@ -66,15 +62,10 @@
     </section>
     <section id="STANDALONE">
 
-         <!-- Contenidos -->
         <div class="lesson-container">
-
-            <h3>SPARK Standalone</h3>
+            <h3>SPARK STANDALONE</h3>
             <hr>
-
-            <!-- Blóque con texto -->
             <div class="text-cell">
-                <h4> Spark Standalone </h4>
                  <p>Spark Standalone es el <strong>gestor de clúster nativo</strong> de Apache Spark.
           Permite ejecutar aplicaciones Spark distribuidas en varias máquinas <strong>sin depender</strong>
           de YARN o Kubernetes.</p>
@@ -83,29 +74,28 @@
           Standalone facilita montar un clúster Spark de forma rápida y con pocos componentes.
           Es especialmente útil en <strong>entornos pequeños/medios</strong>, desarrollo, pruebas y docencia.
         </p>
-<div class="pill-row" aria-label="Casos típicos de uso">
-          <span class="pill"><b>✅</b> Proyectos universitarios</span><br>
-          <span class="pill"><b>✅</b> Laboratorios</span><br>
-          <span class="pill"><b>✅</b> Pruebas internas</span><br>
-          <span class="pill"><b>✅</b> Clúster simple on-prem</span><br>
-        </div>
+<ul>
+          <li>Proyectos universitarios</li>
+          <li>Laboratorios</li>
+          <li>Pruebas internas</li>
+          <li>Clúster simple on-prem</li>
+     </ul>
 
         <h4>Componentes principales</h4>
         <ul class="list">
-          <li><strong>Master</strong>: coordina el clúster y asigna recursos, decid donde se ejecutan las tareas y asignan los ejecutores a las aplicaciones. Solamente hay un Master, aunque se pueden configurar en alta disponiblidad</li>
+          <li><strong>Master</strong>: coordina el clúster y asigna recursos, decide donde se ejecutan las tareas y asignan los ejecutores a las aplicaciones. Solamente hay un Master, aunque se pueden configurar en alta disponiblidad</li>
           <li><strong>Workers</strong>: nodos donde se ejecutan los procesos de trabajo. Cada worker, ejecuta los procesos llamados "ejecutores", utiliza la memoria y el CPU del nodo. Es el responsable de la ejecución de las tareas Spark.</li>
-          <li><strong>Executors</strong>: Son procesos en los workers que ejecutan tareas y mantienen datos en memoria. Envian los resultados al driver</li>
+          <li><strong>Executors (ejecutores)</strong>: Son procesos en los workers que ejecutan tareas y mantienen datos en memoria. Envian los resultados al driver</li>
           <li><strong>Driver</strong>: Es la aplicación Spark que se envía al cluster, define el trabjo, divide las tareas y recoge los resultados</li>
         </ul>
 
               <img src="/img/M2T1L3_1.png">
               <p class="img-caption">Figura 1: Topologías y modos de despliegue de Spark en diferentes entornos de ejecución</p>
 
-      <!-- Columna secundaria -->
-      <aside class="card">
-        <h4>Comandos básicos</h4>
+
+
         <pre><code class="language-python python-code">
-           #Arrancar el master:
+        #Arrancar el master:
         sbin/start-master.sh
 
         #Arrancar un worker (conectándolo al master):
@@ -115,7 +105,9 @@
         spark-submit --master spark://IP_MASTER:7077 app.py
 
          </code></pre>
-        <h3>✅ Ventajas</h3>
+               <p class="img-caption">Comandos básicos de operación de un clúster Standalone</p>
+
+        <strong>Ventajas</strong>
               <ul class="list">
                 <li>Instalación y puesta en marcha rápida</li>
                 <li>No requiere Hadoop</li>
@@ -123,22 +115,23 @@
               </ul>
 
 
-            <div class="cons">
-              <h3>⚠️ Limitaciones</h3>
+              <strong> Limitaciones</strong>
               <ul class="list">
                 <li>Menos “ecosistema” que Kubernetes/YARN</li>
                 <li>Gestión de recursos más manual</li>
                 <li>No siempre es el mejor para grandes producciones</li>
               </ul>
-            </div>
+
 
     </section>
 
 
     <section id="YARN">
       <div class="lesson-container">
+            <h3>YARN</h3>
+            <hr>
+            <div class="text-cell">
 
-      <h3>YARN</h3>
       <p>
     En un entorno Big Data tradicional basado en Hadoop, Apache Spark suele ejecutarse utilizando
     <strong>YARN (Yet Another Resource Negotiator)</strong> como gestor de recursos del clúster.
@@ -168,14 +161,13 @@
   </p>
 <h4>¿Para que sirve?</h4>
   <p>Spark YARN se suele utilizar en:</p>
-                  <div class="pill-row" aria-label="Casos típicos de uso">
-            <span class="pill"><b>✅</b> Clústeres Hadoop existentes</span><br>
-            <span class="pill"><b>✅</b> Entornos multi-tenant</span><br>
-            <span class="pill"><b>✅</b> Grandes organizaciones con infraestructura Hadoop</span><br>
-          </div>
-        <p></p>
+                  <ul>
+            <li> Clústeres Hadoop existentes</li>
+            <li> Entornos multi-tenant</li>
+            <li> Grandes organizaciones con infraestructura Hadoop</li>
+                  </ul>
 
-  <h3>ResourceManager (YARN)</h3>
+  <h4>ResourceManager (YARN)</h3>
   <p>
     Es el coordinador global del clúster y decide dónde se ejecutan las aplicaciones.
   </p>
@@ -210,9 +202,7 @@
     devuelven resultados al driver.
   </p>
 
-
-
-  <h3>Modos de ejecución en YARN</h3>
+  <h4>Modos de ejecución en YARN</h4>
 
   <strong>Client Mode</strong>
   <p>El driver se ejecuta en la máquina cliente.</p>
@@ -265,37 +255,17 @@
     <li>Spark sobre Kubernetes</li>
     <li>Servicios cloud gestionados</li>
   </ul>
-          <h4>Componentes principales</h4>
-          <ul class="list">
-            <li><strong>ResourceManager</strong>: coordina los recursos del clúster y asigna contenedores a las aplicaciones.</li>
-            <li><strong>NodeManager</strong>: gestiona los recursos en cada nodo y ejecuta los contenedores asignados por el ResourceManager.</li>
-            <li><strong>ApplicationMaster</strong>: es un proceso específico para cada aplicación que negocia recursos con el ResourceManager y supervisa la ejecución de las tareas.</li>
-          </ul>
+
             <img src="/img/M2T1L3_2.jpg">
             <p class="img-caption">Figura 2: Arquitectura detallada del cluster de Spark con gestión de recursos YARN</p>
 
-              <h3>✅ Ventajas</h3>
-                <ul class="list">
-                  <li>Integración con Hadoop</li>
-                  <li>Gestión de recursos centralizada</li>
-                  <li>Multi-tenant</li>
-                </ul>
-
-              <div class="cons">
-                <h3>⚠️ Limitaciones</h3>
-                <ul class="list">
-                  <li>Requiere clúster Hadoop</li>
-                  <li>Más complejo de configurar que Standalone</li>
-                  <li>No tan flexible como Kubernetes para contenedores</li>
-                </ul>
-              </div>
       </div>
 
     </section>
     <section id="KUBERNETES">
         <!-- Kubernetes -->
         <div class="lesson-container">
-            <h3>Kubernetes</h3>
+            <h3>KUBERNETES</h3>
             <hr>
             <div class="text-cell">
                 <p>
@@ -304,20 +274,18 @@
 
                 <h4>¿Para qué sirve?</h4>
                 <p>Spark sobre Kubernetes se utiliza en:</p>
-                <div class="pill-row" aria-label="Casos típicos de uso">
-                    <span class="pill"><b>✅</b> Entornos cloud nativos</span><br>
-                    <span class="pill"><b>✅</b> Organizaciones con infraestructura Kubernetes</span><br>
-                    <span class="pill"><b>✅</b> Proyectos que buscan portabilidad entre entornos</span><br>
-                </div>
+                    <li> Entornos cloud nativos</li>
+                    <li> Organizaciones con infraestructura Kubernetes</li>
+                    <li> Proyectos que buscan portabilidad entre entornos</li>
+
 
             </div>
-          <p></p>
         </div>
     </section>
         <section id="MESOS">
         <!-- Mesos -->
         <div class="lesson-container">
-            <h3>Mesos</h3>
+            <h3>MESOS</h3>
             <hr>
             <div class="text-cell">
                 <p>
@@ -326,40 +294,13 @@
 
                 <h4>¿Para qué sirve?</h4>
                 <p>Spark sobre Mesos se utilizaba principalmente en:</p>
-                <div class="pill-row" aria-label="Casos típicos de uso">
-                    <span class="pill"><b>✅</b> Entornos con infraestructura Mesos existente</span><br>
-                    <span class="pill"><b>✅</b> Proyectos que buscaban una alternativa a YARN antes de la popularización de Kubernetes</span><br>
-                </div>
+                    <li> Entornos con infraestructura Mesos existente</li>
+                    <li> Proyectos que buscaban una alternativa a YARN antes de la popularización de Kubernetes</li>
 
             </div>
-          <p></p>
     </section>
 
-    <section  id="saber-mas">
-         <!-- Para saber más -->
-        <div class="lesson-container indice-modulos">
-            <h3>Para saber más</h3>
-            <hr>
-            <div class="text-cell">
-                <ul>
-                    <li><a href="https://spark-packages.org">Enlaces</a></li>
-                    <li><a href="https://www.usenix.org/legacy/event/hotcloud10/tech/full_papers/Zaharia.pdf">Proyecto de investigación de Spar</a></li>
-                </ul>
-            </div>
 
-        </div>
-    </section>
-    <section id="ejercicio-propuesto">
-        <!-- Ejercicio propuesto -->
-        <div class="lesson-container">
-            <h3>Ejercicio Propuesto</h3>
-            <hr>
-            <div class="text-cell">
-              <p>Ejercicio propuesto</p>
-            </div>
-
-        </div>
-    </section>
         <div>
             <div class="navigation-buttons">
               <button onclick="window.location.href='M2T1L2.html'">Anterior</button>

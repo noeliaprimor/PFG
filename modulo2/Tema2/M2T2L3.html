@@ -71,7 +71,7 @@
 
   <h4>Arquitectura general de una aplicación Spark</h4>
   <p>
-    Una aplicación Spark se compone, de forma general, de los siguientes elementos:
+    Como se ha comentado en anteriores lecciónes, una aplicación Spark se compone, de forma general, de los siguientes elementos:
   </p>
   <ul>
     <li><strong>Driver Program</strong>: proceso principal que ejecuta el código del usuario.</li>
@@ -83,7 +83,6 @@
   <p>
     En este contexto, la “sesión” es el mecanismo mediante el cual el Driver se conecta al clúster y coordina la ejecución distribuida.
   </p>
-          <hr />
 
   <h4>SparkContext</h4>
 
@@ -131,16 +130,15 @@ sc = SparkContext(conf=conf)
   <p>
     <strong>Nota:</strong> solo puede existir un SparkContext activo por JVM. Intentar crear varios suele producir errores del tipo:
   </p>
-  <pre><code>ValueError: Cannot run multiple SparkContexts at once</code></pre>
+  <pre><code class="language-python python-code">ValueError: Cannot run multiple SparkContexts at once</code></pre>
 
   <strong>Limitaciones del modelo basado únicamente en SparkContext</strong>
   <p>
     Antes de Spark 2.0, era común gestionar distintos contextos (por ejemplo, SQLContext o HiveContext) de forma separada.
     Esto incrementaba la complejidad de aplicaciones híbridas (RDD + SQL) y fragmentaba la configuración. Estas limitaciones
     motivaron la introducción de SparkSession como punto de entrada unificado.
-    :contentReference[oaicite:3]{index=3}
+
   </p>
-            <hr />
 
   <h4>SparkSession</h4>
 
@@ -156,7 +154,7 @@ sc = SparkContext(conf=conf)
   </ul>
   <p>
     Por este motivo, SparkSession es el modelo recomendado en desarrollos modernos.
-    :contentReference[oaicite:4]{index=4}
+
   </p>
 
   <strong>Creación de una SparkSession</strong>
@@ -172,7 +170,7 @@ spark = SparkSession.builder \
     El método <code>getOrCreate()</code> reutiliza una sesión existente si ya fue creada o crea una nueva si no existe.
     El SparkContext interno queda accesible así:
   </p>
-  <pre><code>sc = spark.sparkContext</code></pre>
+  <pre><code class="language-python python-code">sc = spark.sparkContext</code></pre>
 
   <strong>Funcionalidades disponibles desde SparkSession</strong>
   <table>
@@ -253,7 +251,6 @@ spark = SparkSession.builder \
     acceder a SparkContext a través de <code>spark.sparkContext</code>.
 
   </p>
-<hr />
   <h4>Ciclo de vida de una sesión Spark</h4>
   <ol>
     <li>Creación de la SparkSession.</li>
@@ -267,8 +264,7 @@ spark = SparkSession.builder \
   </ol>
 
   <p>Cierre explícito de la sesión:</p>
-  <pre><code>spark.stop()</code></pre>
-               <hr />
+  <pre><code class="language-python python-code">spark.stop()</code></pre>
 
   <h4>Configuración avanzada de sesiones</h4>
   <p>
@@ -292,7 +288,7 @@ spark = SparkSession.builder \
     <li><code>spark.driver.memory</code>: memoria del driver.</li>
     <li><code>spark.sql.shuffle.partitions</code>: número de particiones para operaciones de shuffle (impacto en rendimiento).</li>
   </ul>
-                <hr />
+
 
   <h4>Buenas prácticas en el desarrollo de aplicaciones Spark</h4>
   <ul>
@@ -305,19 +301,15 @@ spark = SparkSession.builder \
   </ul>
 
 
-
-
-
-
-
-
         </div>
       </div>
     </section>
     <section id="diferencias">
-      <div class="lesson-container">
 
-  <h3>DIFERENCIAS DE COMPORTAMIENTO: STANDALONE vs KUBERNETES</h3>
+      <div class="lesson-container">
+        <h3>DIFERENCIAS DE COMPORTAMIENTO: STANDALONE vs KUBERNETES</h3>
+<hr>
+        <div class="text-cell">
 
 
   <p>
@@ -325,7 +317,7 @@ spark = SparkSession.builder \
     (nativo de Spark) y la ejecución sobre <strong>Kubernetes</strong>. Aunque la creación de la sesión con SparkSession es similar,
     el comportamiento interno, la asignación de recursos y el modelo operativo presentan diferencias relevantes.
   </p>
-<HR>
+
   <h4>Arquitectura en modo Standalone</h4>
   <p>En modo Standalone:</p>
   <ul>
@@ -356,7 +348,7 @@ spark = SparkSession.builder \
     <li>Adecuado para entornos académicos y laboratorios (p. ej., Docker).</li>
     <li>Escalabilidad y elasticidad más limitadas que Kubernetes.</li>
   </ul>
-<hr>
+
   <h4> Arquitectura en modo Kubernetes</h4>
   <p>En modo Kubernetes:</p>
   <ul>
@@ -477,12 +469,12 @@ spark = SparkSession.builder \
     resiliencia. En síntesis: Standalone prioriza simplicidad y control; Kubernetes prioriza elasticidad e integración cloud-native.
   </p>
 
-      </div>
+        </div></div>
     </section>
     <section id="caso">
       <div class="lesson-container">
           <h3>CASO PRÁCTICO APLICADO</h3>
-
+<hr>
   <strong>Objetivo</strong>
   <p>Construir una aplicación que:</p>
   <ol>
@@ -523,6 +515,7 @@ spark.stop()
     <section id="referencias">
       <div class="lesson-container">
         <h3>REFERENCIAS</h3>
+        <hr>
   <ul>
     <li>Documentación oficial de Apache Spark: <code>https://spark.apache.org/docs/latest/</code></li>
     <li>Guía de programación Spark SQL / SparkSession: <code>https://spark.apache.org/docs/latest/sql-programming-guide.html</code></li>
@@ -534,6 +527,7 @@ spark.stop()
     <section id="conclusiones">
       <div class="lesson-container">
          <h3>CONCLUSIONES</h3>
+        <hr>
   <p>
     La creación de sesiones en Apache Spark representa el punto de entrada al procesamiento distribuido. Mientras que SparkContext
     constituye la base del motor de ejecución, SparkSession introduce una capa de abstracción superior que unifica las capacidades
