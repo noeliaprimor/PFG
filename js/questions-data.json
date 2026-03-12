@@ -1,94 +1,94 @@
 {
   "modulo2_tema1": {
-    "titulo": "Autoevaluación - Módulo 2, Tema 1: Introducción a Hadoop",
+    "titulo": "Autoevaluación - Módulo 2, Tema 1: Introducción e instalación de Apache Spark",
     "preguntas": [
       {
-        "pregunta": "¿Cuáles son los componentes principales de Hadoop?",
+        "pregunta": "¿Cuál es la ventaja principal de Spark frente a enfoques batch tradicionales?",
         "opciones": {
-          "A": "HDFS y MapReduce",
-          "B": "Spark y Kafka",
-          "C": "HBase y Hive"
+          "A": "Procesamiento en memoria para acelerar tareas iterativas",
+          "B": "Obligar siempre a usar SQL",
+          "C": "Eliminar la necesidad de clúster"
         },
         "respuestaCorrecta": "A"
       },
       {
-        "pregunta": "¿Qué ventaja tiene HDFS frente a sistemas de ficheros tradicionales?",
+        "pregunta": "¿Qué componente actúa como coordinador principal en una aplicación Spark?",
         "opciones": {
-          "A": "Mayor velocidad de lectura",
-          "B": "Replicación automática y tolerancia a fallos",
-          "C": "Menor consumo de memoria"
-        },
-        "respuestaCorrecta": "B"
-      },
-      {
-        "pregunta": "¿Cuántas réplicas mantiene HDFS por defecto?",
-        "opciones": {
-          "A": "1 réplica",
-          "B": "2 réplicas",
-          "C": "3 réplicas"
-        },
-        "respuestaCorrecta": "C"
-      },
-      {
-        "pregunta": "¿Cuál es la función principal del NameNode en HDFS?",
-        "opciones": {
-          "A": "Almacenar datos replicados",
-          "B": "Gestionar el espacio de nombres y el árbol de ficheros",
-          "C": "Ejecutar trabajos MapReduce"
-        },
-        "respuestaCorrecta": "B"
-      },
-      {
-        "pregunta": "¿Cuántos NameNodes puede haber en un clúster HDFS típico?",
-        "opciones": {
-          "A": "Múltiples activos simultáneamente",
-          "B": "Uno principal y varios secundarios",
-          "C": "Solo uno"
-        },
-        "respuestaCorrecta": "C"
-      },
-      {
-        "pregunta": "¿Qué nodo almacena físicamente los bloques de datos en HDFS?",
-        "opciones": {
-          "A": "NameNode",
-          "B": "DataNode",
-          "C": "ResourceManager"
-        },
-        "respuestaCorrecta": "B"
-      },
-      {
-        "pregunta": "¿Qué comando de ejemplo lista archivos en HDFS? <code>hdfs dfs -ls /data</code>",
-        "opciones": {
-          "A": "Muestra el contenido de /data en HDFS",
-          "B": "Formatea el NameNode",
-          "C": "Detiene todos los DataNodes"
+          "A": "Driver",
+          "B": "Executor",
+          "C": "Worker"
         },
         "respuestaCorrecta": "A"
       },
       {
-        "pregunta": "Si un DataNode falla, ¿qué hace HDFS de forma automática?",
+        "pregunta": "¿Qué describen mejor los executors en Spark?",
         "opciones": {
-          "A": "Elimina el fichero completo",
-          "B": "Restaura las réplicas en otros nodos",
-          "C": "Detiene el clúster"
-        },
-        "respuestaCorrecta": "B"
-      },
-      {
-        "pregunta": "¿Qué archivo mantiene la imagen persistente del sistema de ficheros?",
-        "opciones": {
-          "A": "fsimage",
-          "B": "core-site.xml",
-          "C": "workers.list"
+          "A": "Procesos que ejecutan tareas y almacenan datos en caché",
+          "B": "Interfaces web para monitorización",
+          "C": "Gestores de paquetes del sistema operativo"
         },
         "respuestaCorrecta": "A"
       },
       {
-        "pregunta": "¿Cuál es el objetivo de dividir ficheros grandes en bloques en HDFS?",
+        "pregunta": "¿Qué gestores de clúster aparecen en el tema?",
         "opciones": {
-          "A": "Permitir almacenamiento y procesamiento distribuido",
-          "B": "Reducir la seguridad",
-          "C": "Evitar la replicación"
+          "A": "YARN, Standalone y Kubernetes",
+          "B": "Docker Swarm, Nomad y Mesos únicamente",
+          "C": "Solo Kubernetes"
+        },
+        "respuestaCorrecta": "A"
+      },
+      {
+        "pregunta": "¿Qué propiedad caracteriza a un RDD?",
+        "opciones": {
+          "A": "Conjunto distribuido, inmutable y tolerante a fallos",
+          "B": "Tabla relacional persistente en disco local",
+          "C": "Estructura mutable sin linaje"
+        },
+        "respuestaCorrecta": "A"
+      },
+      {
+        "pregunta": "En <code>spark.read.csv('datos.csv', header=True)</code>, ¿qué hace <code>header=True</code>?",
+        "opciones": {
+          "A": "Indica que la primera fila contiene nombres de columnas",
+          "B": "Activa el modo streaming",
+          "C": "Guarda automáticamente en Parquet"
+        },
+        "respuestaCorrecta": "A"
+      },
+      {
+        "pregunta": "¿Qué entorno interactivo se usa para trabajar con Spark en Python?",
+        "opciones": {
+          "A": "PySpark",
+          "B": "PL/SQL",
+          "C": "PowerShell"
+        },
+        "respuestaCorrecta": "A"
+      },
+      {
+        "pregunta": "¿Qué comando se usa habitualmente para lanzar una aplicación Spark empaquetada?",
+        "opciones": {
+          "A": "spark-submit",
+          "B": "spark-install",
+          "C": "spark-cluster-init"
+        },
+        "respuestaCorrecta": "A"
+      },
+      {
+        "pregunta": "Si ejecutas <code>rdd = sc.parallelize([1,2,3,4])</code>, ¿qué estás creando?",
+        "opciones": {
+          "A": "Un RDD distribuido a partir de una colección local",
+          "B": "Un DataFrame SQL con esquema fijo",
+          "C": "Un topic de Kafka"
+        },
+        "respuestaCorrecta": "A"
+      },
+      {
+        "pregunta": "¿Cuál es un criterio importante para validar una instalación de Spark?",
+        "opciones": {
+          "A": "Poder ejecutar ejemplos y ver la aplicación en la UI de Spark",
+          "B": "Tener únicamente Java instalado",
+          "C": "No usar variables de entorno"
         },
         "respuestaCorrecta": "A"
       }
