@@ -1,32 +1,5 @@
 name = "pfg-bigdata"
-main = "src/index.js"
 compatibility_date = "2024-01-01"
+pages_build_output_dir = "dist"
 
-# Configuración de Cloudflare Pages
-[env.production]
-routes = [
-  { pattern = "example.com/*", zone_name = "example.com" }
-]
-
-# Directorio de salida del build
-[build]
-command = "npm run build"
-cwd = "./"
-watch_paths = ["js/**/*.js", "css/**/*.css", "index.html", "modulo*/**"]
-
-[build.upload]
-format = "modules"
-
-[[build.upload.rules]]
-type = "CompiledContentType"
-globs = ["**/*.wasm"]
-fallthrough = true
-
-# Configuración de funciones (si se necesita)
-[functions]
-directory = "src/functions"
-
-# Variables de entorno
-[env.production.vars]
-ENVIRONMENT = "production"
 
