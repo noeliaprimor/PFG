@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Módulo 2 — Tema 3 — Lección 4: Spark Streaming / Structured Streaming</title>
+  <link rel="stylesheet" href="/css/styles.css" />
+  <script src="/js/jquery-3.6.0.min.js"></script>
+  <link rel="stylesheet" href="/css/prism-1.29.0.min.css" />
+  <script src="/js/prism-1.29.0.min.js"></script>
+</head>
+<body>
+  <div data-include="/partials/header.html"></div>
+  <main>
+
+ <nav class="lesson-nav">
+      <div class="crumbs">
+       <a href="/modulo2/modulo2.html">Módulo 2</a>
+         <span class="sep">/</span>
+    <a href="/modulo2/Tema3/index.html">Tema 3</a>
+    <span class="sep">/</span>
+    <a href="/modulo2/Tema3/M2T3L4.html" class="current" aria-current="page">Lección 4</a>
+      </div>
+    </nav>
+    <br>
+
+    <h2 class="titulos-leccion">Spark Streaming y Structured Streaming</h2>
+
+    <div class="indice-container">
+      <div id="index-container" class="text-cell">
+         <hr>
+         <ul>
+           <li><a href="#descripcion">Descripción</a></li>
+           <li><a href="#contenido">Contenido</a></li>
+           <li><a href="#conclusion">Conclusión</a></li>
+           <li><a href="#ejercicio">Ejercicio</a></li>
+         </ul>
+       </div>
+     </div>
+
+
+
+    <section id="descripcion">
+      <div class="lesson-container">
+        <h3>DESCRIPCIÓN</h3>
+        <hr>
+        <div class="text-cell">
+  <p>
+    El procesamiento de datos en tiempo real se ha convertido en un componente esencial en arquitecturas modernas de Big Data.
+    Apache Spark incorpora capacidades de streaming mediante dos enfoques históricos:
+  </p>
+  <ul>
+    <li><strong>Spark Streaming</strong> (basado en DStreams).</li>
+    <li><strong>Structured Streaming</strong> (basado en DataFrames/Datasets).</li>
+  </ul>
+  <p>
+    Aunque ambos permiten procesar datos en flujo continuo, Structured Streaming representa la evolución del modelo hacia un enfoque
+    declarativo, optimizado e integrado con Spark SQL.
+  </p>        </div>
+      </div>
+    </section>
+    <section id="contenido">
+      <div class="lesson-container">
+        <h3>CONTENIDO</h3>
+        <hr>
+        <div class="text-cell">
+
+          <h3>Spark Streaming</h3>
+          <p>
+    Spark Streaming fue la primera solución de streaming en Spark. Se basa en la abstracción denominada <strong>DStream
+    (Discretized Stream)</strong>, que representa una secuencia de RDDs generados a intervalos regulares.
+  </p>
+  <p>
+    El modelo operativo se basa en <strong>micro-batches</strong>: los datos que llegan en un intervalo de tiempo se agrupan y procesan
+    como un pequeño lote (batch).
+  </p>
+
+  <strong>Arquitectura conceptual</strong>
+  <ul>
+    <li>Recepción de datos (por ejemplo, Kafka, socket, archivos).</li>
+    <li>División en micro-batches (intervalo configurable).</li>
+    <li>Procesamiento distribuido mediante RDD.</li>
+    <li>Salida a almacenamiento o sistema externo.</li>
+  </ul>
+
+  <strong>Ejemplo básico (Scala)</strong>
+  <pre><code  class="language-python python-code">import org.apache.spark.streaming._
+import org.apache.spark.streaming.socket._
+
+val ssc = new StreamingContext(sc, Seconds(5))
+val lines = ssc.socketTextStream("localhost", 9999)
+val words = lines.flatMap(_.split(" "))
+val pairs = words.map(word =&gt; (word, 1))
+val counts = pairs.reduceByKey(_ + _)
+
+counts.print()
+ssc.start()
+ssc.awaitTermination()</code></pre>
+
+  <strong>Limitaciones de Spark Streaming</strong>
+  <ul>
+    <li>Basado en RDD, menor integración con Spark SQL.</li>
+    <li>API menos declarativa y más compleja.</li>
+    <li>Gestión de estado menos flexible.</li>
+    <li>Mayor complejidad en optimización y mantenimiento.</li>
+  </ul>
+
+  <p>
+    Debido a estas limitaciones, Structured Streaming se convirtió en la solución recomendada en versiones modernas de Spark.
+  </p>
+
+  <h3>Structured Streaming</h3>
+
+
+  <p>
+    Structured Streaming es la evolución de Spark Streaming. Se basa en el mismo modelo estructurado que Spark SQL y DataFrames,
+    permitiendo escribir consultas declarativas que se ejecutan de forma incremental sobre datos en streaming.
+  </p>
+  <p>
+    El desarrollador define una consulta sobre un DataFrame de streaming, y Spark se encarga de:
+  </p>
+  <ul>
+    <li>Gestionar micro-batches o ejecución continua.</li>
+    <li>Mantener el estado cuando sea necesario.</li>
+    <li>Aplicar optimización automática (Catalyst).</li>
+  </ul>
+
+  <strong>Modelo de programación</strong>
+  <p>
+    Structured Streaming trata el flujo de datos como una tabla infinita que crece continuamente.
+    Cada operación sobre esta “tabla” se ejecuta incrementalmente.
+  </p>
+
+  <strong>Ejemplo básico (PySpark con Kafka)</strong>
+  <pre><code  class="language-python python-code">from pyspark.sql import SparkSession
+
+spark = SparkSession.builder.appName("StreamingExample").getOrCreate()
+
+stream_df = (spark
+    .readStream
+    .format("kafka")
+    .option("kafka.bootstrap.servers", "localhost:9092")
+    .option("subscribe", "topic")
+    .load())
+
+query = (stream_df
+    .writeStream
+    .format("console")
+    .start())
+
+query.awaitTermination()</code></pre>
+
+  <h3>Modos de salida en Structured Streaming</h3>
+
+  <p>Structured Streaming soporta diferentes modos de salida:</p>
+  <ul>
+    <li><strong>Append</strong>: solo nuevas filas añadidas.</li>
+    <li><strong>Update</strong>: filas actualizadas.</li>
+    <li><strong>Complete</strong>: reescribe todo el resultado en cada trigger.</li>
+  </ul>
+
+  <p>Ejemplo con agregación:</p>
+  <pre><code  class="language-python python-code">from pyspark.sql.functions import count
+
+agg_df = stream_df.groupBy("key").agg(count("*").alias("total"))
+
+query = (agg_df
+    .writeStream
+    .outputMode("complete")
+    .format("console")
+    .start())</code></pre>
+
+  <h3>Ventanas temporales y gestión de estado</h3>
+
+  <strong>Ventanas por tiempo</strong>
+  <pre><code  class="language-python python-code">from pyspark.sql.functions import window
+
+windowed = (stream_df
+    .groupBy(window(stream_df.timestamp, "10 minutes"))
+    .count())</code></pre>
+
+  <strong>Watermarking</strong>
+  <p>
+    Permite gestionar datos tardíos (late data) definiendo un umbral temporal para aceptar eventos atrasados.
+  </p>
+  <pre><code  class="language-python python-code">stream_df.withWatermark("timestamp", "5 minutes")</code></pre>
+
+  <h3>Comparativa: Spark Streaming vs Structured Streaming</h3>
+
+  <table border="1">
+    <thead>
+      <tr>
+        <th>Aspecto</th>
+        <th>Spark Streaming</th>
+        <th>Structured Streaming</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Modelo base</td>
+        <td>DStream (RDD)</td>
+        <td>DataFrame/Dataset</td>
+      </tr>
+      <tr>
+        <td>Optimización automática</td>
+        <td>No</td>
+        <td>Sí (Catalyst)</td>
+      </tr>
+      <tr>
+        <td>API declarativa</td>
+        <td>No completamente</td>
+        <td>Sí</td>
+      </tr>
+      <tr>
+        <td>Integración con SQL</td>
+        <td>Limitada</td>
+        <td>Total</td>
+      </tr>
+      <tr>
+        <td>Recomendación actual</td>
+        <td>Legacy</td>
+        <td>Recomendada</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3>Arquitectura y ejecución</h3>
+  <p>
+    Structured Streaming sigue utilizando micro-batches en la mayoría de configuraciones, aunque puede trabajar en modo continuo
+    según el origen y la configuración.
+  </p>
+  <p>
+    Cada trigger:
+  </p>
+  <ol>
+    <li>Lee nuevos datos desde la fuente.</li>
+    <li>Aplica transformaciones incrementales.</li>
+    <li>Actualiza estado si es necesario.</li>
+    <li>Escribe resultados en el sink configurado.</li>
+  </ol>
+
+  <h3>Casos de uso típicos</h3>
+  <ul>
+    <li>Procesamiento de logs en tiempo real.</li>
+    <li>Detección de fraude en transacciones.</li>
+    <li>Monitoreo de sistemas.</li>
+    <li>Agregaciones en ventanas temporales.</li>
+    <li>Ingesta continua hacia data lakes.</li>
+  </ul>
+        </div>
+      </div>
+    </section>
+    <section id="conclusion">
+      <div class="lesson-container">
+        <h3>CONCLUSIÓN</h3>
+        <hr>
+        <div class="text-cell">
+  <p>
+    Spark Streaming introdujo el procesamiento distribuido en tiempo real dentro del ecosistema Spark mediante micro-batches basados en RDD.
+    Structured Streaming representa su evolución natural, ofreciendo una API declarativa, optimización automática y plena integración con
+    Spark SQL y DataFrames.
+  </p>        </div>
+      </div>
+    </section>
+    <section id="ejercicio">
+      <div class="lesson-container">
+        <h3>EJERCICIO</h3>
+        <hr>
+        <div class="text-cell">
+<h3>1 Objetivo</h3>
+  <p>
+    Implementar una aplicación de Structured Streaming que procese eventos en tiempo real y realice una agregación por ventana temporal.
+  </p>
+
+  <h3>2 Enunciado</h3>
+  <ol>
+    <li>Simular un flujo de datos (por ejemplo, mediante socket o Kafka).</li>
+    <li>Leer el flujo con <code>readStream</code>.</li>
+    <li>Aplicar transformación (split, map, filtrado).</li>
+    <li>Realizar agregación por ventana de 5 minutos.</li>
+    <li>Configurar modo de salida y sink (console o Parquet).</li>
+    <li>Analizar el comportamiento ante datos tardíos usando watermark.</li>
+  </ol>
+
+  <h3>3 Entregables</h3>
+  <ul>
+    <li>Código de la aplicación.</li>
+    <li>Descripción del flujo de ejecución.</li>
+    <li>Comparativa breve entre Spark Streaming y Structured Streaming.</li>
+    <li>Conclusión sobre ventajas del modelo estructurado.</li>
+  </ul>        </div>
+      </div>
+    </section>
+
+
+    <div class="navigation-buttons">
+      <button onclick="window.location.href='M2T3L3.html'">Anterior</button>
+      <button onclick="window.location.href='M2T3L5.html'">Siguiente</button>
+    </div>
+
+  </main>
+  <div data-include="/partials/footer.html"></div>
+  <script src="/js/include.js"></script>
+  <script src="/js/script.js"></script>
+</body>
+</html>

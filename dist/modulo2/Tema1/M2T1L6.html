@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Ejecución y uso de las shells de Spark (Scala/Python)</title>
+  <link rel="stylesheet" href="/css/styles.css" />
+      <script src="https://kit.fontawesome.com/d8a0cf358f.js" crossorigin="anonymous"></script>
+  <script src="/js/jquery-3.6.0.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+
+</head>
+<body>
+<div data-include="/partials/header.html"></div>
+<main>
+
+
+ <nav class="lesson-nav">
+      <div class="crumbs">
+       <a href="/modulo2/Tema1/index.html">Módulo 2</a>
+         <span class="sep">/</span>
+    <a href="/modulo2/Tema1/index.html">Tema 1</a>
+    <span class="sep">/</span>
+    <a href="/modulo2/Tema1/M2T1L6.html" class="current" aria-current="page">Lección 6</a>
+      </div>
+    </nav>
+    <br>
+    <br>
+    <h2 class="titulos-leccion">Ejecución y uso de las shells de Spark (Scala/Python)</h2>
+    <div class="indice-container">
+
+        <div id="index-container" class="text-cell">
+             <hr>
+             <ul>
+                 <li><a href="#descripcion">Descripción</a></li>
+                 <li><a href="#scala">Scala Shell</a></li>
+                <li><a href="#python">PySpark (Python)</a></li>
+               <li><a href="#comparativa">comparativa</a></li>
+             </ul>
+         </div>
+     </div>
+    <section id="descripcion">
+    <!-- Descripcion -->
+        <div class="lesson-container">
+            <h3>DESCRIPCIÓN</h3>
+            <hr>
+            <div class="text-cell">
+             <p>Las shells de Spark son entornos interactivos que permiten ejecutar código sobre Apache Spark sin necesidad de compilar proyectos completos. Son ideales para experimentar, probar consultas, explorar datos y aprender Spark.</p>
+
+                <p>Spark ofrece dos shells principales:</p>
+  <ul>
+    <li>Scala Shell → <code>spark-shell</code></li>
+    <li>Python Shell → <code>pyspark</code></li>
+  </ul>
+
+  <p>Ambas proporcionan un entorno REPL (Read–Eval–Print Loop) con una instancia de <code>SparkSession</code> ya inicializada.</p>
+              <p>En esta lección vamos a profundicar en cada una de ellas, con ejemplos. Al final de la lección hay disponible una comparativa con sus casos de uso.</p>
+
+
+              </div>
+        </div>
+    </section>
+    <section id="scala">
+
+         <!-- Scala Shell -->
+        <div class="lesson-container">
+
+            <h3>SCALA SHELL</h3>
+            <hr>
+
+            <!-- Blóque con texto -->
+            <div class="text-cell">
+                <h4> Ejecución </h4>
+               <p>Se inicia en la terminal ejecutando <code>./spark-shell</code></p> desde la carpeta de instalación de Spark. También se pueden añadir configuraciones:</p>
+  <pre><code class="language-python python-code">spark-shell --master local[4] --executor-memory 4G</code></pre>
+       <img src="/img/M2T2L6_1.png">
+       <p class="img-caption">Figura 1: Interfaz de Scala Shell de Spark mostrando inicio de sesión y comandos disponibles</p>
+            </div>
+           <div class="text-cell">
+  <h3>Características principales</h3>
+  <ul>
+    <li>Es la shell nativa de Spark, ya que Spark está escrito en Scala.</li>
+    <li>Ofrece acceso inmediato a:
+      <ul>
+        <li><code>spark</code>: instancia de <code>SparkSession</code></li>
+        <li><code>sc</code>: instancia de <code>SparkContext</code></li>
+      </ul>
+    </li>
+    <li>Permite trabajar con:
+      <ul>
+        <li>RDDs</li>
+        <li>DataFrames</li>
+        <li>Datasets (solo disponibles en Scala y Java)</li>
+      </ul>
+    </li>
+  </ul>
+
+  <h3>Ejemplo básico</h3>
+  <pre><code class="language-python python-code">val df = spark.read.json("datos.json")
+df.show()</code></pre>
+
+  <h3>Ventajas</h3>
+  <ul>
+    <li>Mejor rendimiento y compatibilidad con todas las APIs.</li>
+    <li>Acceso a Datasets tipados.</li>
+    <li>Ideal para usuarios que trabajan con el ecosistema JVM.</li>
+  </ul>
+
+           </div>
+
+
+            </div>
+
+            </div>
+        </div>
+    </section>
+    <section  id="python">
+         <!-- Para saber más -->
+        <div class="lesson-container indice-modulos">
+            <h3>PYTHON SHELL</h3>
+            <hr>
+            <div class="text-cell">
+
+
+
+  <h3>Ejecución</h3>
+  <p>Se inicia con:</p>
+  <pre><code class="language-python python-code">pyspark</code></pre>
+
+  <p>También admite configuraciones:</p>
+  <pre><code class="language-python python-code">pyspark --master local[*] --packages com.databricks:spark-xml_2.12:0.15.0</code></pre>
+              <img src="/img/M2T2L6_2.png">
+              <p class="img-caption">Figura 2: Interfaz de PySpark Shell mostrando contexto Spark disponible y comandos Python</p>
+
+  <h3>Características principales</h3>
+  <ul>
+    <li>Permite usar Spark desde Python.</li>
+    <li>Proporciona automáticamente:
+      <ul>
+        <li><code>spark</code>: <code>SparkSession</code></li>
+        <li><code>sc</code>: <code>SparkContext</code></li>
+      </ul>
+    </li>
+    <li>Soporta:
+      <ul>
+        <li>RDDs</li>
+        <li>DataFrames</li>
+        <li>Funciones SQL</li>
+      </ul>
+    </li>
+    <li>No soporta Datasets tipados (solo Scala/Java).</li>
+  </ul>
+
+  <h3>Ejemplo básico</h3>
+  <pre><code class="language-python python-code">df = spark.read.json("datos.json")
+df.show()</code></pre>
+
+  <h3>Ventajas</h3>
+  <ul>
+    <li>Sintaxis más sencilla y familiar para científicos de datos.</li>
+    <li>Integración con librerías como Pandas, NumPy o Matplotlib.</li>
+    <li>Ideal para análisis exploratorio y prototipado.</li>
+  </ul>
+
+            </div>
+
+        </div>
+    </section>
+    <section id="comparativa">
+
+        <div class="lesson-container">
+
+            <h3>COMPARATIVA</h3>
+            <hr>
+
+            <div class="text-cell">
+              <h3>Comparación rápida</h3>
+
+  <table border="1">
+    <thead>
+      <tr>
+        <th>Aspecto</th>
+        <th>Scala Shell (<code>spark-shell</code>)</th>
+        <th>Python Shell (<code>pyspark</code>)</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Lenguaje</td>
+        <td>Scala</td>
+        <td>Python</td>
+      </tr>
+      <tr>
+        <td>API soportada</td>
+        <td>RDD, DataFrame, Dataset</td>
+        <td>RDD, DataFrame</td>
+      </tr>
+      <tr>
+        <td>Rendimiento</td>
+        <td>Más alto</td>
+        <td>Ligeramente menor</td>
+      </tr>
+      <tr>
+        <td>Facilidad de uso</td>
+        <td>Más técnico</td>
+        <td>Más accesible</td>
+      </tr>
+      <tr>
+        <td>Integración</td>
+        <td>JVM</td>
+        <td>Ecosistema científico de Python</td>
+      </tr>
+      <tr>
+        <td>Uso típico</td>
+        <td>Ingeniería de datos</td>
+        <td>Ciencia de datos / análisis</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3>Casos de uso comunes en ambas shells</h3>
+  <ul>
+    <li>Cargar y explorar datos rápidamente.</li>
+    <li>Probar transformaciones sobre RDDs o DataFrames.</li>
+    <li>Ejecutar consultas SQL.</li>
+    <li>Depurar lógica antes de integrarla en un proyecto.</li>
+    <li>Aprender Spark de forma interactiva.</li>
+  </ul>
+
+  <h3>¿Cuál usar?</h3>
+  <p>Depende del perfil de la persona que lo use:</p>
+  <ul>
+    <li>Si vienes del mundo de la ingeniería de datos o Java/Scala, la shell de Scala es más natural.</li>
+    <li>Si vienes de Python o ciencia de datos, PySpark es la opción más cómoda.</li>
+
+  </ul>
+
+              <p>Durante este curso, siempre que sea posible se utilizara por comodidad pyspark sobre scala, aunque se realizaran
+              ejemplos de los dos.</p>
+
+
+           </div>
+
+
+            </div>
+
+            </div>
+        </div>
+    </section>
+        <div>
+            <div class="navigation-buttons">
+                 <button onclick="window.location.href='M2T1L5.html'">Anterior</button>
+              <button onclick="window.location.href='M2T1L7.html'">Siguiente</button>
+            </div>
+        </div>
+
+</main>
+<div data-include="/partials/footer.html"></div>
+<script src="/js/include.js"></script>
+<script src="/js/script.js"></script>
+</body>
+</html>

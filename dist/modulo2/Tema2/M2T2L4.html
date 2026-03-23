@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Inicialización de Spark en Scala y Python</title>
+  <link rel="stylesheet" href="/css/styles.css" />
+  <script src="/js/jquery-3.6.0.min.js"></script>
+  <link rel="stylesheet" href="/css/prism-1.29.0.min.css" />
+  <script src="/js/prism-1.29.0.min.js"></script>
+</head>
+<body>
+  <div data-include="/partials/header.html"></div>
+  <main>
+
+ <nav class="lesson-nav">
+      <div class="crumbs">
+       <a href="/modulo2/modulo2.html">Módulo 2</a>
+         <span class="sep">/</span>
+    <a href="/modulo2/Tema2/index.html">Tema 2</a>
+    <span class="sep">/</span>
+    <a href="/modulo2/Tema2/M2T2L4.html" class="current" aria-current="page">Lección 4</a>
+      </div>
+    </nav>
+    <br>
+
+    <h2 class="titulos-leccion">Inicialización de Spark en Scala y Python</h2>
+
+    <div class="indice-container">
+      <div id="index-container" class="text-cell">
+         <hr>
+         <ul>
+           <li><a href="#descripcion">Descripción</a></li>
+           <li><a href="#scala">Inicialización en Scala</a></li>
+           <li><a href="#python">Inicialización en Python</a></li>
+           <li><a href ="#buenaspracticas">Buenas prácticas</a></li>
+           <li><a href="#ejercicio">Ejercicio Propuesto</a></li>
+         </ul>
+       </div>
+     </div>
+
+    <section id="descripcion">
+      <div class="lesson-container">
+        <h3>DESCRIPCIÓN</h3>
+        <hr>
+        <div class="text-cell">
+           <p>
+    La inicialización de Apache Spark es el proceso mediante el cual el <strong>programa Driver</strong> prepara el entorno para
+    ejecutar tareas de forma distribuida. En versiones modernas de Spark (2.0+), el punto de entrada recomendado es
+    <strong>SparkSession</strong>, que unifica funcionalidades de Spark Core y Spark SQL (además de integrarse con Structured Streaming
+    y MLlib). Internamente, al crear una SparkSession se crea (o reutiliza) un <strong>SparkContext</strong>, que es la conexión real
+    con el clúster y el núcleo de ejecución.
+  </p>
+  <p>
+    En esta lección se muestran ejemplos equivalentes en <strong>Scala</strong> y <strong>Python (PySpark)</strong>, incluyendo ejecución
+    mediante <strong>spark-submit</strong>, buenas prácticas y un ejercicio propuesto.
+  </p>
+        </div>
+      </div>
+    </section>
+
+    <section id="scala">
+      <div class="lesson-container">
+        <h3>INICIALIZACIÓN EN SCALA</h3>
+        <hr>
+
+        <div class="text-cell">
+          <p>
+    En Scala, la forma moderna de inicializar Spark es mediante <strong>SparkSession.builder()</strong>. Este patrón permite definir
+    el nombre de la aplicación, el modo de ejecución (master) y parámetros de configuración.
+  </p>
+
+  <pre><code class="language-python python-code">import org.apache.spark.sql.SparkSession
+
+object App {
+  def main(args: Array[String]): Unit = {
+
+    val spark = SparkSession.builder()
+      .appName("aplicacion-Spark-Scala")
+      .master("local[*]") // Alternativas: "spark://spark-master:7077", "yarn", "k8s://..."
+      .getOrCreate()
+
+    // Acceso al SparkContext si se necesita trabajar a bajo nivel (RDD)
+    val sc = spark.sparkContext
+
+    // Ejemplo rápido
+    val df = spark.range(1, 101).toDF("n")
+    df.show(5)
+
+    spark.stop()
+  }
+}</code></pre>
+
+  <strong>Configuración típica (memoria, cores, particiones de shuffle)</strong>
+  <p>
+    En entornos de clúster, ciertos parámetros influyen directamente en el rendimiento y en la asignación de recursos.
+  </p>
+
+  <pre><code class="language-python python-code">val spark = SparkSession.builder()
+  .appName("aplicacion-Scala-Config")
+  .master("spark://spark-master:7077")
+  .config("spark.executor.instances", "2")
+  .config("spark.executor.cores", "2")
+  .config("spark.executor.memory", "2g")
+  .config("spark.sql.shuffle.partitions", "200")
+  .getOrCreate()</code></pre>
+
+  <strong>Creación explícita de SparkContext (enfoque legacy)</strong>
+  <p>
+    Aunque no es lo recomendado en proyectos modernos, puede ser útil para explicar la evolución histórica de Spark:
+    <strong>SparkContext</strong> fue el punto de entrada original (Spark 1.x), especialmente orientado al uso de RDDs.
+  </p>
+
+  <pre><code class="language-python python-code">import org.apache.spark.{SparkConf, SparkContext}
+
+val conf = new SparkConf()
+  .setAppName("Legacy-Scala")
+  .setMaster("local[*]")
+
+val sc = new SparkContext(conf)
+
+val rdd = sc.parallelize(1 to 100)
+println(rdd.sum())
+
+sc.stop()</code></pre>
+
+  <hr />
+          <pre><code  class="language-python python-code">import org.apache.spark.sql.SparkSession
+object App {
+  def main(args: Array[String]): Unit = {
+    val spark = SparkSession.builder().appName("ScalaApp").master("local[*]").getOrCreate()
+    val df = spark.read.json("data/example.json")
+    df.show()
+    spark.stop()
+  }
+}
+</code></pre>
+           <strong>Ejecución de una aplicación Scala empaquetada (JAR)</strong>
+  <pre><code class="language-python python-code">spark-submit \
+  --class App \
+  --master spark://spark-master:7077 \
+  target/scala-2.12/miapp.jar</code></pre>
+
+  <p>
+    En este modo, Spark lanzará el Driver y coordinará la creación de executors según el cluster manager y la configuración
+    establecida.
+  </p>
+        </div>
+      </div>
+    </section>
+
+    <section id="python">
+      <div class="lesson-container">
+        <h3>INICIALIZACIÓN EN PYTHON (PySpark)</h3>
+        <hr>
+        <div class="text-cell">
+            <strong>Inicialización recomendada con SparkSession</strong>
+  <p>
+    En PySpark, la inicialización recomendada también se realiza con <strong>SparkSession.builder</strong>. El acceso al
+    <strong>SparkContext</strong> está disponible desde <code>spark.sparkContext</code>.
+  </p>
+
+  <pre><code class="language-python python-code">from pyspark.sql import SparkSession
+
+spark = (
+    SparkSession.builder
+    .appName("app-Spark-Python")
+    .master("local[*]")  # Alternativas: "spark://spark-master:7077", "yarn", "k8s://..."
+    .getOrCreate()
+)
+
+sc = spark.sparkContext  # acceso al SparkContext (RDD / APIs de bajo nivel)
+
+df = spark.range(1, 101).toDF("n")
+df.show(5)
+
+spark.stop()</code></pre>
+
+  <strong> Configuración típica (memoria, cores, particiones de shuffle)</strong>
+  <pre><code class="language-python python-code">spark = (
+    SparkSession.builder
+    .appName("app-PySpark-Config")
+    .master("spark://spark-master:7077")
+    .config("spark.executor.instances", "2")
+    .config("spark.executor.cores", "2")
+    .config("spark.executor.memory", "2g")
+    .config("spark.sql.shuffle.partitions", "200")
+    .getOrCreate()
+)</code></pre>
+
+  <strong>Creación explícita de SparkContext (enfoque legacy)</strong>
+  <p>
+    Este enfoque se utiliza principalmente en ejemplos centrados en RDDs o en compatibilidad con proyectos antiguos.
+    Para proyectos modernos, se recomienda SparkSession.
+  </p>
+
+  <pre><code class="language-python python-code">from pyspark import SparkConf, SparkContext
+
+conf = SparkConf().setAppName("Legacy-Python").setMaster("local[*]")
+sc = SparkContext(conf=conf)
+
+rdd = sc.parallelize(range(1, 101))
+print(rdd.sum())
+
+sc.stop()</code></pre>
+
+  <hr>
+
+  <h4>Ejecución (spark-submit)</h4>
+
+
+  <p>
+    Con <strong>spark-submit</strong> puedes lanzar la aplicación especificando el modo de ejecución (master) desde la línea de
+    comandos. Es una práctica habitual centralizar el master en el submit para evitar inconsistencias.
+  </p>
+
+  <pre><code class="language-python python-code">spark-submit --master local[*] mi_app.py</code></pre>
+
+  <p>
+    Ejemplo para un clúster Standalone (típico en Docker Compose):
+  </p>
+
+  <pre><code class="language-python python-code">spark-submit --master spark://spark-master:7077 mi_app.py</code></pre>
+
+
+
+
+
+
+  <hr />
+
+          </div>
+      </div>
+    </section>
+
+    <section id="buenaspracticas">
+      <div class="lesson-container">
+        <h3>BUENAS PRÁCTICAS</h3>
+        <hr>
+        <div class="text-cell">
+          <strong>1. Usar SparkSession como punto de entrada</strong>
+  <ul>
+    <li>Facilita la integración con DataFrames, SQL, Streaming y MLlib.</li>
+    <li>Evita fragmentación de contextos (SQLContext, HiveContext, etc.).</li>
+  </ul>
+
+  <strong>2. Evitar múltiples contextos/sesiones innecesarias</strong>
+  <ul>
+    <li>Utiliza <code>getOrCreate()</code> para reutilizar la sesión existente.</li>
+    <li>En general, un proceso Driver debe tener una única sesión activa.</li>
+  </ul>
+
+  <strong>3. Cerrar la sesión al finalizar</strong>
+  <ul>
+    <li>Siempre ejecutar <code>spark.stop()</code> para liberar recursos del clúster.</li>
+    <li>En Docker, esto ayuda a evitar procesos colgados o recursos bloqueados.</li>
+  </ul>
+
+  <strong>4. Ajustar nivel de logs para entornos de desarrollo</strong>
+  <p>
+    Reducir el ruido de logs mejora la trazabilidad en notebooks o durante pruebas:
+  </p>
+
+  <pre><code class="language-python python-code"># Python
+spark.sparkContext.setLogLevel("WARN")</code></pre>
+
+  <pre><code class="language-python python-code">// Scala
+spark.sparkContext.setLogLevel("WARN")</code></pre>
+
+  <strong>5. Centralizar el master en spark-submit (cuando aplique)</strong>
+  <ul>
+    <li>Si trabajas con despliegue formal (scripts/JAR), define el master en <code>spark-submit</code>.</li>
+    <li>Evita duplicidad/confusión entre parámetros del builder y parámetros del submit.</li>
+  </ul>
+
+        </div>
+      </div>
+    </section>
+    <section id="ejercicio">
+      <div class="lesson-container">
+        <h3>Ejercicio Propuesto</h3>
+        <hr>
+        <div class="text-cell">
+          <p>Enhorabuena! Has llegado al final de la lección. Ahora es tu turno. Como ejercicio práctico te proponemos implementar la inicialización de Spark tanto en Scala como en Python, siguiendo las buenas prácticas mencionadas. Asegúrate de configurar el nivel de log en WARN y de cerrar correctamente la sesión al finalizar. Puedes probar tu código en un entorno local o en un clúster de Spark si tienes acceso a uno.</p>
+
+
+
+  <ol>
+    <li>Inicializa Spark con <strong>SparkSession</strong> en modo local (<code>local[*]</code>) en Scala y en Python.</li>
+    <li>Obtén el <strong>SparkContext</strong> desde la sesión (<code>spark.sparkContext</code>).</li>
+    <li>Crea un RDD con los números del 1 al 100 y calcula su suma (por ejemplo, usando <code>reduce</code> o <code>sum</code>).</li>
+    <li>Crea un DataFrame con esos mismos números y calcula la media usando operaciones DataFrame (y opcionalmente SQL).</li>
+    <li>Configura el nivel de log en <code>WARN</code> y documenta la diferencia en la salida del terminal.</li>
+    <li>Finaliza la aplicación con <code>spark.stop()</code> y verifica que no quedan procesos en ejecución.</li>
+  </ol>
+
+
+
+
+          <pre><code class="language-python python-code">from pyspark.sql import SparkSession
+spark = SparkSession.builder.appName('PyApp').master('local[*]').getOrCreate()
+df = spark.read.json('data/example.json')
+df.show()
+spark.stop()
+</code></pre>
+
+
+        </div>
+      </div>
+    </section>
+
+
+
+    <div class="navigation-buttons">
+      <button onclick="window.location.href='M2T2L3.html'">Anterior</button>
+      <button onclick="window.location.href='M2T2L5.html'">Siguiente</button>
+    </div>
+
+  </main>
+  <div data-include="/partials/footer.html"></div>
+  <script src="/js/include.js"></script>
+  <script src="/js/script.js"></script>
+</body>
+</html>

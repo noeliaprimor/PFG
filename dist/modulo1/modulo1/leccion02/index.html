@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../../../css/styles.css">
+    <script src="https://kit.fontawesome.com/d8a0cf358f.js" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <title id="tituloP">01. Leccion 2</title>
+
+</head>
+
+<body>
+
+<header class="header-section">
+    <div class="header-content">
+        <div class="title">
+            <a href="../../../index.html">
+                <p id="titulo"></p>
+            </a>
+        </div>
+        <div class="logo">
+            <a target="_blank" href="https://www.uned.es/universidad/facultades/informatica.html">
+                <img src="../../../img/logo_informatica.gif" alt="Logo ETSI Informatica UNED">
+            </a>
+        </div>
+    </div>
+
+
+    <div id="menuprincipal"></div>
+
+</header>
+
+<main>
+        <!-- Volver arriba Button -->
+        <a href="#" id="scroll" title="Volver Arriba" style="display: none;">Arriba<span></span></a>
+
+        <!-- Titulos -->
+
+        <h3 class="titulos-leccion">Tema 1. Introducción a Big Data</h3>
+        <h2 class="titulos-leccion">Lección 2: Características y desafíos de Big Data.</h2>
+        <br>
+
+        <!-- Indice -->
+        <div class="indice-container">
+            <div id="index-container" class="text-cell">
+                <hr>
+                <ul>
+                    <li><a href="#descripcion">Descripción</a></li>
+                    <li><a href="#contenidos">Contenidos</a></li>
+                    <li><a href="#saber-mas">Para saber más</a></li>
+                    <li><a href="#ejercicio-propuesto">Ejercicio propuesto</a></li>
+                </ul>
+            </div>
+        </div>
+    <section id="descripcion">
+        <!-- Descripcion -->
+        <div class="lesson-container">
+            <h3>DESCRIPCIÓN</h3>
+            <hr>
+            <div class="text-cell">
+                <p>Después de haber comprendido un poco el término Big Data y haber echado una breve mirada a sus orígenes,
+                   vamos a enunciar las principales características que lo identifican. En concreto, veremos el término de
+                   las cinco v`s. Estas 5 V's representan las características clave que definen el Big Data y nos ayudan a
+                   entender su complejidad y valor. Las cinco V's son: Volumen, Velocidad, Variedad, Veracidad y Valor.
+                </p>
+                <p>A lo largo de la lección veremos cada una de ellas en profundidad y entenderemos el porqué es tan importante
+                    que los datos tengan estas características para pertenecer al Big data. Por último, presentaremos un panorama
+                    sobre los desafíos que plantean estas tecnologías, así como los problemas
+                    y retos a los que se enfrentan.
+                </p>
+            </div>
+
+        </div>
+
+    </section>
+
+    <section id="contenidos">
+
+         <!-- Contenidos -->
+        <div class="lesson-container">
+
+            <h3>CONTENIDOS</h3>
+            <hr>
+
+            <!-- Blóque con texto -->
+            <div class="text-cell">
+                <h4 > Las cinco "V" del Big Data </h4>
+                <p>El concepto de las V's del Big Data ha evolucionado con el tiempo, comenzando con 3 V's: Volumen, Velocidad y Variedad y ampliándose a 5 con Valor y Veracidad
+                    y, en algunos casos, hasta 7 V's: Variabilidad y Visualización.
+                    Nosotros vamos a elegir hablar de 5 de las características que son clave en los datos, que se conocen como las cinco "V". Inicialmente eran tres:
+                    Volumen, Velocidad y Variedad, sin embargo, podemos unir a éstas las de Valor y Veracidad.
+                </p>
+
+                <p class="imagenes-bloque">
+                        <img class="img-bloque" src="../img/volumen.png" alt="Las cinco V's. Volumen">
+                        <img class="img-bloque" src="../img/variedad.png" alt="Las cinco V's. Variedad">
+                        <img class="img-bloque" src="../img/velocidad.png" alt="Las cinco V's. Velocidad">
+                        <img class="img-bloque" src="../img/veracidad.png" alt="Las cinco V's. Veracidad">
+                        <img class="img-bloque" src="../img/valor.png" alt="Las cinco V's. Valor">
+                </p>
+
+
+            </div>
+
+            <div class="text-cell">
+                <table class="tabla-v">
+                    <tbody>
+                        <tr>
+                            <td>
+                                <p style="text-align: -webkit-center;">
+                                    <img class="img-flotante-media" src="../img/volumen.png" alt="Las cinco V's. Volumen">
+                                </p>
+                                <p class="titulo-contenido">Volumen</p>
+                                <p>Se refiere a la enorme cantidad de datos generados y recopilados.El Big Data maneja conjuntos de datos
+                                    significativamente más grandes que los que las tecnologías tradicionales pueden gestionar eficientemente.</p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <p style="text-align: -webkit-center;">
+                                    <img class="img-flotante-media" src="../img/variedad.png" alt="Las cinco V's. Variedad">
+                                </p>
+                                <p class="titulo-contenido">Variedad</p>
+                                <p>Hace referencia a la diversidad de tipos de datos. El Big Data implica no solo datos estructurados
+                                    (como bases de datos tradicionales), sino también datos no estructurados, como texto, imágenes, videos, etc.</p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <p style="text-align: -webkit-center;">
+                                    <img class="img-flotante-media" src="../img/velocidad.png" alt="Las cinco V's. Velocidad">
+                                </p>
+                                <p class="titulo-contenido">Velocidad</p>
+                                <p>Se refiere a la velocidad a la que se generan, procesan y analizan los datos. En entornos de Big Data,
+                                    la rapidez en el manejo de datos en tiempo real es crucial, especialmente en aplicaciones como redes sociales,
+                                    transacciones financieras y sistemas de monitoreo.</p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <p style="text-align: -webkit-center;">
+                                <img class="img-flotante-media" src="../img/veracidad.png" alt="Las cinco V's. Veracidad">
+                                </p>
+                                <p class="titulo-contenido">Veracidad</p>
+                                <p>Relacionada con la calidad y la confiabilidad de los datos. La veracidad se asegura de que los datos
+                                    sean precisos y confiables para la toma de decisiones. La calidad de los datos es esencial para obtener análisis significativos.</p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <p style="text-align: -webkit-center;">
+                                    <img class="img-flotante-media" src="../img/valor.png" alt="Las cinco V's. Valor">
+                                </p>
+                                <p class="titulo-contenido">Valor</p>
+                                <p>Finalmente, se trata de la capacidad para convertir los datos en valor significativo para la toma de decisiones
+                                    y la obtención de información. El Big Data busca no solo recopilar datos masivos, sino extraer conocimientos
+                                    valiosos que puedan influir en la toma de decisiones estratégicas.</p>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <p style="text-align: center;">Fuente imagenes: <a href="https://www.linkedin.com/pulse/todo-lo-que-debes-saber-del-big-data-bst-corp/">linkedin.com</a></p>
+            </div>
+
+            <div class="text-cell">
+                <p>Estas cinco características ayudan a comprender los desafíos y las oportunidades que presenta el Big Data en términos
+                    de gestión, análisis y aplicación práctica. Para comprender mejor estos conceptos, vamos a ver un vídeo resumen de las características principales de Big Data
+                    e introduciremos algunos conceptos sobre las infraestructuras necesarias para su desarrollo.
+                </p>
+            </div>
+            <!-- Blóque con vídeo -->
+            <div class="video-cell">
+                <iframe class="video-iframe" src="https://www.youtube.com/embed/bAyrObl7TYE" title="Big Data In 5 Minutes | What Is Big Data?| Big Data Analytics | Big Data Tutorial | Simplilearn"
+                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+            </div>
+
+
+
+
+            <div class="text-cell">
+                <h4> Desafíos del Big Data </h4>
+                <p>¿Interesante verdad? Pero no todo es tan bonito como parece. Esta tecnología, aunque es muy potente y tiene múltiples aplicaciones,
+                    como veremos en la próxima lección, se enfrenta a múltiples desafíos de diversa naturaleza: desafíos económicos, de escalabilidad, etc.
+                    Vamos a ver algunos de ellos:
+                </p>
+
+                <table class="tabla-des">
+                    <tbody>
+                        <tr>
+                            <td>
+                                <p class="titulo-contenido">Infraestructuras para los datos</p>
+                                <p>Puesto que la cantidad de datos es enorme, la gestión y el almacenamiento pueden ser costosos y complicados.
+                                    Esto conlleva la creación de infraestructuras robustas y escalables para manejar eficientemente la cantidad masiva de datos.
+                                </p>
+                            </td>
+                            <td>
+                                <p class="titulo-contenido">Velocidad de procesamiento</p>
+                                <p>El análisis en tiempo real y la capacidad de procesar datos rápidamente son fundamentales en muchos casos, como en las aplicaciones en tiempo real.
+                                    La capacidad de getionar la información en el tiempo estipulado puede resultar un desafío para diversos entornos en los que hacerlo es crucial.
+                                </p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <p class="titulo-contenido">Veracidad de los datos</p>
+                                <p>Los datos deben proceder de fuentes confiables que aseguren una toma de decisiones correcta. En un mundo en el que existen muchísimos datos fake,
+                                    es de vital importancia que no existan errores en los datos o que no tengan consistencia, ya que esto puede afectar negativamente
+                                    en la toma de decisiones basada en el análisis. Siempre hay que asegurarse de que los datos provengan de fuentes fidedignas.
+                                </p>
+                            </td>
+                            <td>
+                                <p class="titulo-contenido">Privacidad y seguridad</p>
+                                <p>Con la creciente adquisición de los datos la privacidad de los usuarios y la seguridad de la información pueden estar amenazadas.
+                                    Esto deriva en la implantación de leyes y normas que regulen la privacidad y seguridad de los datos.
+                                </p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <p class="titulo-contenido">Elevados costos</p>
+                                <p>Implementar y mantener infraestructuras y tecnologías de Big Data puede conllevar una importante inversión. Por ello las empresas deben estar seguras
+                                    de la inversión que realicen y ser conscientes que los beneficios pueden tardar en aparecer.
+                                </p>
+                            </td>
+                            <td>
+                                <p class="titulo-contenido">Profesionales especializados</p>
+                                <p>Existe una demanda creciente de profesionales con habilidades en el manejo, limpieza y análisis de datos masivos. La escasez de profesionales especializados en Big Data
+                                    puede ser un desafío para las organizaciones que buscan aprovechar al máximo el potencial de esta tecnología. Aunque cada vez existen más profesionales
+                                    todavía queda un largo camino que recorrer.
+                                </p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <p class="titulo-contenido">Interoperabilidad</p>
+                                <p>La integración de diferentes sistemas y tecnologías puede resultar difícil y ser un verdadero desafío especialmente cuando se trabaja con conjuntos de datos
+                                    provenientes de diversas fuentes y en diferentes formatos. Los científicos de datos deben estar preparados para la unificiación de los datos que
+                                    vienen del mundo real como encuestas, documentos públicos, etc.
+                                </p>
+                            </td>
+                            <td>
+                                <p class="titulo-contenido">Gobernanza</p>
+                                <p>Gestionar y gobernar los datos de forma eficaz es un reto importante para las empresas que gestionan conjuntos masivos de datos.
+                                </p>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+    <section  id="saber-mas">
+
+         <!-- Para saber más -->
+        <div class="lesson-container">
+            <h3>PARA SABER MÁS</h3>
+            <hr>
+            <div class="text-cell indice-modulos">
+                <ul>
+                    <li><a href="https://www.telefonica.com/es/sala-comunicacion/blog/5-v-big-data-beneficios/">Las 5 V del Big Data. ¿Cómo pueden beneficiar a las empresas?</a></li>
+                    <li><a href="https://tecnologiaparatuempresa.ituser.es/productividad/2023/04/retos-de-almacenamiento-a-los-que-se-enfrenta-el-big-data">Retos de almacenamiento a los que se enfrenta el Big Data</a></li>
+                </ul>
+            </div>
+
+        </div>
+    </section>
+    <section id="ejercicio-propuesto">
+
+        <!-- Ejercicio propuesto -->
+        <div class="lesson-container">
+            <h3>EJERCICIO PROPUESTO</h3>
+            <hr>
+            <div class="text-cell">
+                <p> En esta lección hemos aprendido las principales características y desafíos del Big Data</p>
+                <p> Hemos hablado de las infraestructuras como uno de los principales retos que tiene esta tecnología.
+                    ¿Has pensado en cómo se guardan los datos? ¿Crees que los sistemas de ficheros y bases de datos tradicionales
+                    pueden albergar toda esta información?
+                    </p>
+                <p>Como ejercicio práctico te proponemos investigar algunas de las tecnologías que permiten que Big Data sea posible y contestar
+                    a las preguntas planteadas y otras que dejamos a tu elección. No olvides escribir tus fuentes!</p>
+            </div>
+
+        </div>
+    </section>
+
+        <!-- Botones navegacion entre lecciones -->
+        <div>
+            <div class="navigation-buttons">
+                <button onclick="window.location.href='../leccion01/index.html'">Lección anterior</button>
+                <button onclick="window.location.href='../leccion03/index.html'">Lección siguiente</button>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <p id="piePagina"></p>
+    </footer>
+
+    <!-- Fichero con las funciones de menú, botón arriba, etc. -->
+    <script src="../../../js/script.js"></script>
+
+</body>
+</html>

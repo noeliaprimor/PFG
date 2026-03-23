@@ -1,0 +1,667 @@
+{
+  "modulo2_tema1": {
+    "titulo": "Autoevaluación - Módulo 2, Tema 1: Introducción e instalación de Apache Spark",
+    "preguntas": [
+      {
+        "pregunta": "¿Cuál es la ventaja principal de Spark frente a enfoques batch tradicionales?",
+        "opciones": {
+          "A": "Procesamiento en memoria para acelerar tareas iterativas",
+          "B": "Obligar siempre a usar SQL",
+          "C": "Eliminar la necesidad de clúster"
+        },
+        "respuestaCorrecta": "A"
+      },
+      {
+        "pregunta": "¿Qué componente actúa como coordinador principal en una aplicación Spark?",
+        "opciones": {
+          "A": "Driver",
+          "B": "Executor",
+          "C": "Worker"
+        },
+        "respuestaCorrecta": "A"
+      },
+      {
+        "pregunta": "¿Qué describen mejor los executors en Spark?",
+        "opciones": {
+          "A": "Procesos que ejecutan tareas y almacenan datos en caché",
+          "B": "Interfaces web para monitorización",
+          "C": "Gestores de paquetes del sistema operativo"
+        },
+        "respuestaCorrecta": "A"
+      },
+      {
+        "pregunta": "¿Qué gestores de clúster aparecen en el tema?",
+        "opciones": {
+          "A": "YARN, Standalone y Kubernetes",
+          "B": "Docker Swarm, Nomad y Mesos únicamente",
+          "C": "Solo Kubernetes"
+        },
+        "respuestaCorrecta": "A"
+      },
+      {
+        "pregunta": "¿Qué propiedad caracteriza a un RDD?",
+        "opciones": {
+          "A": "Conjunto distribuido, inmutable y tolerante a fallos",
+          "B": "Tabla relacional persistente en disco local",
+          "C": "Estructura mutable sin linaje"
+        },
+        "respuestaCorrecta": "A"
+      },
+      {
+        "pregunta": "En <code>spark.read.csv('datos.csv', header=True)</code>, ¿qué hace <code>header=True</code>?",
+        "opciones": {
+          "A": "Indica que la primera fila contiene nombres de columnas",
+          "B": "Activa el modo streaming",
+          "C": "Guarda automáticamente en Parquet"
+        },
+        "respuestaCorrecta": "A"
+      },
+      {
+        "pregunta": "¿Qué entorno interactivo se usa para trabajar con Spark en Python?",
+        "opciones": {
+          "A": "PySpark",
+          "B": "PL/SQL",
+          "C": "PowerShell"
+        },
+        "respuestaCorrecta": "A"
+      },
+      {
+        "pregunta": "¿Qué comando se usa habitualmente para lanzar una aplicación Spark empaquetada?",
+        "opciones": {
+          "A": "spark-submit",
+          "B": "spark-install",
+          "C": "spark-cluster-init"
+        },
+        "respuestaCorrecta": "A"
+      },
+      {
+        "pregunta": "Si ejecutas <code>rdd = sc.parallelize([1,2,3,4])</code>, ¿qué estás creando?",
+        "opciones": {
+          "A": "Un RDD distribuido a partir de una colección local",
+          "B": "Un DataFrame SQL con esquema fijo",
+          "C": "Un topic de Kafka"
+        },
+        "respuestaCorrecta": "A"
+      },
+      {
+        "pregunta": "¿Cuál es un criterio importante para validar una instalación de Spark?",
+        "opciones": {
+          "A": "Poder ejecutar ejemplos y ver la aplicación en la UI de Spark",
+          "B": "Tener únicamente Java instalado",
+          "C": "No usar variables de entorno"
+        },
+        "respuestaCorrecta": "A"
+      }
+    ]
+  },
+  "modulo2_tema2": {
+    "titulo": "Autoevaluación - Módulo 2, Tema 2: MapReduce",
+    "preguntas": [
+      {
+        "pregunta": "¿Cuál es la arquitectura base de MapReduce?",
+        "opciones": {
+          "A": "Divide los datos, procesa localmente y agrega resultados",
+          "B": "Distribuye el procesamiento de forma aleatoria",
+          "C": "Centraliza todos los datos antes de procesar"
+        },
+        "respuestaCorrecta": "A"
+      },
+      {
+        "pregunta": "¿Qué fases principales tiene un trabajo MapReduce?",
+        "opciones": {
+          "A": "Map, Shuffle y Reduce",
+          "B": "Filter, Transform y Aggregate",
+          "C": "Load, Process y Save"
+        },
+        "respuestaCorrecta": "A"
+      },
+      {
+        "pregunta": "¿En qué fase de MapReduce ocurre la localidad de datos?",
+        "opciones": {
+          "A": "En la fase Shuffle",
+          "B": "En la fase Map",
+          "C": "En la fase Reduce"
+        },
+        "respuestaCorrecta": "B"
+      },
+      {
+        "pregunta": "¿Cuál es la función del Combiner en MapReduce?",
+        "opciones": {
+          "A": "Distribuir datos entre nodos",
+          "B": "Reducir datos localmente antes del Shuffle",
+          "C": "Compilar el código del job"
+        },
+        "respuestaCorrecta": "B"
+      },
+      {
+        "pregunta": "¿Cuándo se ejecuta el Shuffle and Sort?",
+        "opciones": {
+          "A": "Antes de la fase Map",
+          "B": "Entre Map y Reduce",
+          "C": "Después de Reduce"
+        },
+        "respuestaCorrecta": "B"
+      },
+      {
+        "pregunta": "¿Qué entrada/salida maneja típicamente la función Map?",
+        "opciones": {
+          "A": "Par clave-valor a otro par clave-valor",
+          "B": "Solo números enteros",
+          "C": "Solo tablas SQL"
+        },
+        "respuestaCorrecta": "A"
+      },
+      {
+        "pregunta": "En el ejemplo <code>map(k, v) -> (palabra, 1)</code>, ¿qué representa el 1?",
+        "opciones": {
+          "A": "Un contador parcial por ocurrencia",
+          "B": "El ID del nodo",
+          "C": "La partición final"
+        },
+        "respuestaCorrecta": "A"
+      },
+      {
+        "pregunta": "¿Cuál es el objetivo del Partitioner?",
+        "opciones": {
+          "A": "Asignar claves a reducers",
+          "B": "Comprimir datos HDFS",
+          "C": "Crear bloques en disco"
+        },
+        "respuestaCorrecta": "A"
+      },
+      {
+        "pregunta": "¿Qué reduce la transferencia de red en un job MapReduce?",
+        "opciones": {
+          "A": "Usar Combiner cuando sea posible",
+          "B": "Aumentar siempre reducers al máximo",
+          "C": "Eliminar el shuffle"
+        },
+        "respuestaCorrecta": "A"
+      },
+      {
+        "pregunta": "¿Qué hace de forma conceptual <code>reduce(palabra, [1,1,1])</code>?",
+        "opciones": {
+          "A": "Suma ocurrencias por clave",
+          "B": "Filtra claves por longitud",
+          "C": "Ordena nodos del clúster"
+        },
+        "respuestaCorrecta": "A"
+      }
+    ]
+  },
+  "modulo2_tema3": {
+    "titulo": "Autoevaluación - Módulo 2, Tema 3: Spark",
+    "preguntas": [
+      {
+        "pregunta": "¿Cuál es la principal diferencia entre Apache Spark y Hadoop MapReduce?",
+        "opciones": {
+          "A": "Spark procesa todo en memoria, MapReduce usa disco",
+          "B": "Spark solo funciona con datos estructurados",
+          "C": "MapReduce es más rápido para batch processing"
+        },
+        "respuestaCorrecta": "A"
+      },
+      {
+        "pregunta": "¿Qué es un RDD en Spark?",
+        "opciones": {
+          "A": "Resilient Distributed Dataset",
+          "B": "Relational Database Design",
+          "C": "Rapid Data Delivery"
+        },
+        "respuestaCorrecta": "A"
+      },
+      {
+        "pregunta": "¿Cuáles son las dos operaciones básicas en Spark?",
+        "opciones": {
+          "A": "Map y Filter",
+          "B": "Transformations y Actions",
+          "C": "Read y Write"
+        },
+        "respuestaCorrecta": "B"
+      },
+      {
+        "pregunta": "¿Qué es lazy evaluation en Spark?",
+        "opciones": {
+          "A": "Los datos se procesan bajo demanda al llamar una Action",
+          "B": "Los datos nunca se procesan",
+          "C": "El procesamiento ocurre inmediatamente"
+        },
+        "respuestaCorrecta": "A"
+      },
+      {
+        "pregunta": "¿Cuál de estos es una Action en Spark?",
+        "opciones": {
+          "A": "map()",
+          "B": "filter()",
+          "C": "collect()"
+        },
+        "respuestaCorrecta": "C"
+      },
+      {
+        "pregunta": "¿Qué devuelve normalmente <code>rdd.map(...)</code>?",
+        "opciones": {
+          "A": "Un nuevo RDD",
+          "B": "Un valor escalar",
+          "C": "Un DataNode"
+        },
+        "respuestaCorrecta": "A"
+      },
+      {
+        "pregunta": "En <code>df.select('id').show()</code>, ¿qué operación dispara el plan?",
+        "opciones": {
+          "A": "select",
+          "B": "show",
+          "C": "id"
+        },
+        "respuestaCorrecta": "B"
+      },
+      {
+        "pregunta": "¿Para qué sirve el cacheo en Spark?",
+        "opciones": {
+          "A": "Reutilizar resultados intermedios y reducir recomputación",
+          "B": "Encriptar particiones",
+          "C": "Crear índices SQL físicos"
+        },
+        "respuestaCorrecta": "A"
+      },
+      {
+        "pregunta": "¿Qué representa el DAG en Spark?",
+        "opciones": {
+          "A": "El grafo de dependencias de operaciones",
+          "B": "El archivo de configuración de Hadoop",
+          "C": "El log de errores del driver"
+        },
+        "respuestaCorrecta": "A"
+      },
+      {
+        "pregunta": "¿Qué resultado esperas de <code>sc.parallelize([1,2,3]).reduce(lambda a,b: a+b)</code>?",
+        "opciones": {
+          "A": "6",
+          "B": "3",
+          "C": "[1,2,3]"
+        },
+        "respuestaCorrecta": "A"
+      }
+    ]
+  },
+  "modulo2_tema4": {
+    "titulo": "Autoevaluación - Módulo 2, Tema 4: Procesamiento Distribuido",
+    "preguntas": [
+      {
+        "pregunta": "¿Cuál es el objetivo principal del procesamiento distribuido?",
+        "opciones": {
+          "A": "Aumentar la velocidad mediante paralelización",
+          "B": "Reducir costos de hardware",
+          "C": "Simplificar la programación"
+        },
+        "respuestaCorrecta": "A"
+      },
+      {
+        "pregunta": "¿Qué es la localidad de datos?",
+        "opciones": {
+          "A": "Procesar datos donde residen para minimizar transferencias de red",
+          "B": "Almacenar datos localmente en cada nodo",
+          "C": "Distribuir datos de forma aleatoria"
+        },
+        "respuestaCorrecta": "A"
+      },
+      {
+        "pregunta": "¿Cuál es el impacto del shuffle en MapReduce?",
+        "opciones": {
+          "A": "Aumenta el rendimiento significativamente",
+          "B": "Es un cuello de botella que requiere transferencia de red",
+          "C": "No tiene ningún impacto en el rendimiento"
+        },
+        "respuestaCorrecta": "B"
+      },
+      {
+        "pregunta": "¿Qué ventaja tiene usar memoria caché en Spark?",
+        "opciones": {
+          "A": "Permite reutilizar RDDs sin recalcularlos",
+          "B": "Reduce el consumo de CPU",
+          "C": "Mejora la tolerancia a fallos"
+        },
+        "respuestaCorrecta": "A"
+      },
+      {
+        "pregunta": "¿Cuál es el propósito del particionamiento en procesamiento distribuido?",
+        "opciones": {
+          "A": "Dividir datos entre nodos para procesamiento paralelo",
+          "B": "Encriptar datos sensibles",
+          "C": "Comprimir archivos"
+        },
+        "respuestaCorrecta": "A"
+      },
+      {
+        "pregunta": "¿Qué efecto tiene aumentar demasiado el número de particiones?",
+        "opciones": {
+          "A": "Puede aumentar overhead de scheduling",
+          "B": "Siempre mejora rendimiento linealmente",
+          "C": "Desactiva la ejecución paralela"
+        },
+        "respuestaCorrecta": "A"
+      },
+      {
+        "pregunta": "En <code>df.repartition(200)</code>, ¿qué puede ocurrir?",
+        "opciones": {
+          "A": "Un shuffle para redistribuir datos",
+          "B": "No cambia nada nunca",
+          "C": "Se elimina el DataFrame"
+        },
+        "respuestaCorrecta": "A"
+      },
+      {
+        "pregunta": "¿Qué métrica es útil para detectar skew (desbalanceo)?",
+        "opciones": {
+          "A": "Diferencias grandes de tiempo entre tasks",
+          "B": "Solo la versión de Java",
+          "C": "El tamaño del monitor"
+        },
+        "respuestaCorrecta": "A"
+      },
+      {
+        "pregunta": "¿Qué estrategia ayuda a reducir pequeños archivos en salida?",
+        "opciones": {
+          "A": "Ajustar particiones antes de escribir",
+          "B": "Desactivar compresión siempre",
+          "C": "Aumentar logs del driver"
+        },
+        "respuestaCorrecta": "A"
+      },
+      {
+        "pregunta": "¿Qué describe mejor el comando <code>df.coalesce(1)</code>?",
+        "opciones": {
+          "A": "Reduce particiones, útil para salidas pequeñas",
+          "B": "Aumenta particiones para paralelismo",
+          "C": "Convierte DataFrame en RDD automáticamente"
+        },
+        "respuestaCorrecta": "A"
+      }
+    ]
+  },
+  "modulo3_tema1": {
+    "titulo": "Autoevaluación - Módulo 3, Tema 1: Kafka",
+    "preguntas": [
+      {
+        "pregunta": "¿Qué es Apache Kafka?",
+        "opciones": {
+          "A": "Una base de datos relacional",
+          "B": "Una plataforma de streaming distribuida y de tolerancia a fallos",
+          "C": "Un framework de procesamiento por lotes"
+        },
+        "respuestaCorrecta": "B"
+      },
+      {
+        "pregunta": "¿Cuál es la unidad básica de datos en Kafka?",
+        "opciones": {
+          "A": "Record o Mensaje",
+          "B": "Tabla",
+          "C": "Batch"
+        },
+        "respuestaCorrecta": "A"
+      },
+      {
+        "pregunta": "¿Qué es un Topic en Kafka?",
+        "opciones": {
+          "A": "Un archivo de configuración",
+          "B": "Un canal de streaming donde se publican mensajes",
+          "C": "Un contenedor de bases de datos"
+        },
+        "respuestaCorrecta": "B"
+      },
+      {
+        "pregunta": "¿Cuál es el rol de un Productor en Kafka?",
+        "opciones": {
+          "A": "Consumir mensajes del topic",
+          "B": "Publicar mensajes en un topic",
+          "C": "Procesar mensajes en tiempo real"
+        },
+        "respuestaCorrecta": "B"
+      },
+      {
+        "pregunta": "¿Cómo garantiza Kafka la tolerancia a fallos?",
+        "opciones": {
+          "A": "Replicando particiones entre brokers",
+          "B": "Almacenando solo un backup",
+          "C": "Usando una base de datos centralizada"
+        },
+        "respuestaCorrecta": "A"
+      },
+      {
+        "pregunta": "¿Qué permite un Consumer Group en Kafka?",
+        "opciones": {
+          "A": "Paralelizar consumo repartiendo particiones",
+          "B": "Crear topics automáticamente",
+          "C": "Eliminar mensajes confirmados"
+        },
+        "respuestaCorrecta": "A"
+      },
+      {
+        "pregunta": "En <code>kafka-topics --create --topic eventos --partitions 3</code>, ¿qué indica el 3?",
+        "opciones": {
+          "A": "Número de particiones del topic",
+          "B": "Número de brokers mínimos",
+          "C": "Número de consumidores activos"
+        },
+        "respuestaCorrecta": "A"
+      },
+      {
+        "pregunta": "¿Qué es un offset en Kafka?",
+        "opciones": {
+          "A": "Posición de lectura de un mensaje en una partición",
+          "B": "Clave de cifrado del broker",
+          "C": "Nombre alternativo del topic"
+        },
+        "respuestaCorrecta": "A"
+      },
+      {
+        "pregunta": "¿Qué ventaja aporta particionar un topic?",
+        "opciones": {
+          "A": "Escalado horizontal de lectura/escritura",
+          "B": "Desactivar replicación",
+          "C": "Eliminar la retención"
+        },
+        "respuestaCorrecta": "A"
+      },
+      {
+        "pregunta": "¿Qué comando consume mensajes desde el inicio? <code>kafka-console-consumer --from-beginning ...</code>",
+        "opciones": {
+          "A": "Lee desde el offset inicial",
+          "B": "Borra el topic",
+          "C": "Reduce el número de particiones"
+        },
+        "respuestaCorrecta": "A"
+      }
+    ]
+  },
+  "modulo3_tema2": {
+    "titulo": "Autoevaluación - Módulo 3, Tema 2: Structured Streaming",
+    "preguntas": [
+      {
+        "pregunta": "¿Qué es Structured Streaming?",
+        "opciones": {
+          "A": "Un API de Spark para procesamiento de streaming",
+          "B": "Una base de datos para datos no estructurados",
+          "C": "Un sistema de almacenamiento distribuido"
+        },
+        "respuestaCorrecta": "A"
+      },
+      {
+        "pregunta": "¿Cuál es el concepto fundamental de Structured Streaming?",
+        "opciones": {
+          "A": "Procesar flujos como DataFrames ilimitados",
+          "B": "Dividir el stream en lotes pequeños",
+          "C": "Procesar un mensaje a la vez"
+        },
+        "respuestaCorrecta": "A"
+      },
+      {
+        "pregunta": "¿Qué es un micro-batch en Spark Streaming?",
+        "opciones": {
+          "A": "Un pequeño lote de datos procesado en cada intervalo",
+          "B": "Un error de compresión",
+          "C": "Un tipo de partición"
+        },
+        "respuestaCorrecta": "A"
+      },
+      {
+        "pregunta": "¿Cuál es la función del Output Mode en Structured Streaming?",
+        "opciones": {
+          "A": "Definir cómo se escriben los resultados",
+          "B": "Controlar la velocidad del procesamiento",
+          "C": "Establecer el nivel de replicación"
+        },
+        "respuestaCorrecta": "A"
+      },
+      {
+        "pregunta": "¿Cuáles son los Output Modes disponibles?",
+        "opciones": {
+          "A": "Append, Update, Complete",
+          "B": "Read, Write, Transform",
+          "C": "Batch, Streaming, Hybrid"
+        },
+        "respuestaCorrecta": "A"
+      },
+      {
+        "pregunta": "¿Para qué sirve el checkpoint en streaming?",
+        "opciones": {
+          "A": "Recuperar estado y offsets ante fallos",
+          "B": "Reducir tamaño de particiones",
+          "C": "Crear topics en Kafka"
+        },
+        "respuestaCorrecta": "A"
+      },
+      {
+        "pregunta": "En <code>df.writeStream.outputMode('append')</code>, ¿cuándo se emiten filas?",
+        "opciones": {
+          "A": "Cuando no volverán a cambiar",
+          "B": "Solo al final del día",
+          "C": "Nunca"
+        },
+        "respuestaCorrecta": "A"
+      },
+      {
+        "pregunta": "¿Qué controla un trigger en Structured Streaming?",
+        "opciones": {
+          "A": "Frecuencia de ejecución de micro-batches",
+          "B": "Número de columnas",
+          "C": "Número de brokers Kafka"
+        },
+        "respuestaCorrecta": "A"
+      },
+      {
+        "pregunta": "¿Qué problema resuelve un watermark?",
+        "opciones": {
+          "A": "Gestión de eventos tardíos y limpieza de estado",
+          "B": "Compresión de mensajes",
+          "C": "Autenticación de usuarios"
+        },
+        "respuestaCorrecta": "A"
+      },
+      {
+        "pregunta": "¿Qué hace este patrón? <code>query.awaitTermination()</code>",
+        "opciones": {
+          "A": "Mantiene activa la consulta streaming",
+          "B": "Detiene inmediatamente el job",
+          "C": "Borra el checkpoint"
+        },
+        "respuestaCorrecta": "A"
+      }
+    ]
+  },
+  "modulo3_tema3": {
+    "titulo": "Autoevaluación - Módulo 3, Tema 3: Arquitectura y Pipelines Avanzados",
+    "preguntas": [
+      {
+        "pregunta": "¿Qué es el Medallion Architecture?",
+        "opciones": {
+          "A": "Un modelo de datos con capas Bronze, Silver y Gold",
+          "B": "Un protocolo de cifrado",
+          "C": "Una estrategia de particionamiento"
+        },
+        "respuestaCorrecta": "A"
+      },
+      {
+        "pregunta": "¿Cuál es el propósito de la capa Bronze?",
+        "opciones": {
+          "A": "Almacenar datos crudos sin procesar",
+          "B": "Datos transformados y limpios",
+          "C": "Datos listos para reportes ejecutivos"
+        },
+        "respuestaCorrecta": "A"
+      },
+      {
+        "pregunta": "¿Qué se realiza en la capa Silver?",
+        "opciones": {
+          "A": "Limpieza, validación y enriquecimiento de datos",
+          "B": "Apenas se modifican los datos",
+          "C": "Se crean visualizaciones"
+        },
+        "respuestaCorrecta": "A"
+      },
+      {
+        "pregunta": "¿Qué es Delta Lake?",
+        "opciones": {
+          "A": "Una capa de almacenamiento que añade ACID a Parquet",
+          "B": "Una base de datos relacional",
+          "C": "Un tipo de compresión"
+        },
+        "respuestaCorrecta": "A"
+      },
+      {
+        "pregunta": "¿Cuál es el propósito principal del checkpoint en Structured Streaming?",
+        "opciones": {
+          "A": "Almacenar resultados finales en Parquet",
+          "B": "Mantener el estado del procesamiento y permitir recuperación ante fallos",
+          "C": "Comprimir datos de salida"
+        },
+        "respuestaCorrecta": "B"
+      },
+      {
+        "pregunta": "¿Qué ventaja principal aporta ACID en Delta Lake?",
+        "opciones": {
+          "A": "Consistencia en escrituras concurrentes",
+          "B": "Eliminar necesidad de metadatos",
+          "C": "Aumentar latencia de lectura"
+        },
+        "respuestaCorrecta": "A"
+      },
+      {
+        "pregunta": "¿Qué describe mejor <code>MERGE INTO destino USING fuente ...</code> en Delta?",
+        "opciones": {
+          "A": "Upsert de registros (insert/update)",
+          "B": "Borrado completo de tabla",
+          "C": "Cambio de partición física"
+        },
+        "respuestaCorrecta": "A"
+      },
+      {
+        "pregunta": "¿Cuál es el objetivo de la capa Gold?",
+        "opciones": {
+          "A": "Datos agregados y listos para consumo analítico",
+          "B": "Guardar datos sin validar",
+          "C": "Reemplazar Kafka"
+        },
+        "respuestaCorrecta": "A"
+      },
+      {
+        "pregunta": "¿Qué permite el versionado (time travel) en Delta Lake?",
+        "opciones": {
+          "A": "Consultar versiones anteriores de los datos",
+          "B": "Ignorar el esquema",
+          "C": "Reducir nodos del clúster"
+        },
+        "respuestaCorrecta": "A"
+      },
+      {
+        "pregunta": "¿Qué indica una buena práctica en pipelines Bronze->Silver->Gold?",
+        "opciones": {
+          "A": "Separar responsabilidades y validaciones por capa",
+          "B": "Mezclar todas las transformaciones en una sola capa",
+          "C": "Evitar controles de calidad"
+        },
+        "respuestaCorrecta": "A"
+      }
+    ]
+  }
+}

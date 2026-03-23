@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>M3T2L2 — Kafka en detalle</title>
+  <link rel="stylesheet" href="/css/styles.css" />
+  <script src="/js/jquery-3.6.0.min.js"></script>
+  <link rel="stylesheet" href="/css/prism-1.29.0.min.css" />
+  <script src="/js/prism-1.29.0.min.js"></script>
+</head>
+<body>
+<div data-include="/partials/header.html"></div>
+<main>
+  <nav class="lesson-nav">
+    <div class="crumbs">
+      <a href="/modulo3/modulo3.html">Módulo 3</a>
+      <span class="sep">/</span>
+      <a href="/modulo3/Tema2/index.html">Tema 2</a>
+      <span class="sep">/</span>
+      <a href="/modulo3/Tema2/M3T2L2.html" class="current" aria-current="page">Lección 2</a>
+    </div>
+  </nav>
+
+  <h2 class="titulos-leccion">Kafka en detalle</h2>
+
+  <div class="indice-container">
+    <div id="index-container" class="text-cell">
+        <hr>
+        <ul>
+          <li><a href="#descripcion">Descripción</a></li>
+          <li><a href="#contenido">Contenido</a></li>
+          <li><a href="#conclusion">Conclusión</a></li>
+        </ul>
+      </div>
+    </div>
+
+  <section id="descripcion">
+    <div class="lesson-container">
+      <h3>DESCRIPCIÓN</h3>
+      <hr>
+      <div class="text-cell">
+  <p>
+    Apache Kafka es una plataforma distribuida de streaming diseñada para construir pipelines
+    de datos en tiempo real y aplicaciones basadas en eventos. Actúa como backbone de eventos
+    en arquitecturas modernas, permitiendo desacoplar productores y consumidores mediante
+    almacenamiento persistente, escalable y tolerante a fallos.
+  </p>
+  <p>
+    En entornos Big Data, Kafka suele situarse entre las fuentes de datos y motores de procesamiento
+    como Spark Structured Streaming, proporcionando alta disponibilidad y capacidad de reprocesamiento.
+  </p>      </div>
+    </div>
+  </section>
+
+  <section id="contenido">
+    <div class="lesson-container">
+      <h3>CONTENIDO</h3>
+      <hr>
+      <div class="text-cell">
+
+
+
+  <h3>Arquitectura interna</h3>
+
+  <strong>Brokers</strong>
+  <p>
+    Un clúster Kafka está compuesto por uno o más <strong>brokers</strong>, que son servidores
+    responsables de almacenar datos y atender peticiones de productores y consumidores.
+  </p>
+
+  <strong>Topics</strong>
+  <p>
+    Un topic es una categoría lógica donde se publican los eventos. Los topics permiten
+    organizar datos por dominio o tipo de evento.
+  </p>
+
+  <strong>Particiones</strong>
+  <p>
+    Cada topic se divide en particiones. Las particiones:
+  </p>
+  <ul>
+    <li>Permiten paralelismo.</li>
+    <li>Distribuyen carga entre brokers.</li>
+    <li>Mantienen orden interno de los mensajes.</li>
+  </ul>
+
+  <strong>Réplicas</strong>
+  <p>
+    Para tolerancia a fallos, cada partición puede replicarse en múltiples brokers.
+    Existe un <strong>líder</strong> y uno o más <strong>followers</strong>.
+  </p>
+
+  <strong>Controlador (Controller)</strong>
+  <p>
+    Nodo responsable de gestionar liderazgo de particiones y cambios en el clúster.
+    En versiones modernas, Kafka utiliza el modo KRaft para eliminar dependencia de ZooKeeper.
+  </p>
+
+  <h3>Modelo de almacenamiento</h3>
+
+  <strong>Log append-only</strong>
+  <p>
+    Kafka almacena datos como un log secuencial en disco.
+    Cada mensaje recibe un <strong>offset</strong> único dentro de la partición.
+  </p>
+
+  <strong>Retención</strong>
+  <p>
+    Los mensajes se conservan según:
+  </p>
+  <ul>
+    <li>Tiempo (<code>retention.ms</code>).</li>
+    <li>Tamaño (<code>retention.bytes</code>).</li>
+  </ul>
+  <p>
+    Los mensajes no se eliminan tras ser consumidos, lo que permite reprocesamiento.
+  </p>
+
+  <h3>Productores</h3>
+
+  <strong>Funcionamiento</strong>
+  <p>
+    Los productores envían eventos a un topic y pueden:
+  </p>
+  <ul>
+    <li>Especificar clave para determinar partición.</li>
+    <li>Configurar acknowledgments (acks).</li>
+    <li>Activar idempotencia para evitar duplicados.</li>
+  </ul>
+
+  <strong>Acknowledgments</strong>
+  <ul>
+    <li><strong>acks=0</strong>: no espera confirmación.</li>
+    <li><strong>acks=1</strong>: espera confirmación del líder.</li>
+    <li><strong>acks=all</strong>: espera confirmación de todas las réplicas sincronizadas.</li>
+  </ul>
+
+  <h3>Consumidores</h3>
+
+  <strong>Offset</strong>
+  <p>
+    Cada consumidor mantiene su posición de lectura mediante offsets.
+  </p>
+
+  <strong>Consumer Groups</strong>
+  <p>
+    Un grupo de consumidores comparte la carga de procesamiento.
+    Cada partición es asignada a un único consumidor dentro del grupo.
+  </p>
+
+  <strong>Commit de offsets</strong>
+  <ul>
+    <li>Automático.</li>
+    <li>Manual (más control).</li>
+  </ul>
+
+  <h3>Garantías de entrega</h3>
+
+  <strong>At-most-once</strong>
+  <p>Puede perder mensajes.</p>
+
+  <strong>At-least-once</strong>
+  <p>Puede duplicar mensajes.</p>
+
+  <strong>Exactly-once</strong>
+  <p>
+    Requiere idempotencia en productor y configuración transaccional.
+  </p>
+
+  <h3>Escalabilidad y particionado</h3>
+
+  <p>
+    La escalabilidad horizontal se logra añadiendo brokers y aumentando
+    el número de particiones.
+  </p>
+
+  <p>Buenas prácticas:</p>
+  <ul>
+    <li>Diseñar número adecuado de particiones.</li>
+    <li>Elegir claves que distribuyan carga uniformemente.</li>
+    <li>Evitar particiones con skew extremo.</li>
+  </ul>
+
+  <h3>Seguridad en Kafka</h3>
+
+  <strong>Autenticación</strong>
+  <ul>
+    <li>SASL (PLAIN, SCRAM, GSSAPI).</li>
+    <li>SSL/TLS.</li>
+  </ul>
+
+  <strong>Autorización</strong>
+  <p>
+    Control mediante ACLs para restringir acceso a topics y operaciones.
+  </p>
+
+  <strong>Cifrado</strong>
+  <p>
+    Cifrado en tránsito mediante TLS.
+  </p>
+
+  <h3>Integración con Spark</h3>
+
+  <p>
+    Kafka se integra fácilmente con Spark Structured Streaming:
+  </p>
+
+  <pre><code class="language-python python-code">stream_df = (spark
+    .readStream
+    .format("kafka")
+    .option("kafka.bootstrap.servers", "localhost:9092")
+    .option("subscribe", "mi_topic")
+    .load())</code></pre>
+
+  <p>
+    Spark gestiona offsets y checkpoints para garantizar consistencia.
+  </p>
+
+  <h3>Monitorización</h3>
+
+  <ul>
+    <li>Lag de consumidores.</li>
+    <li>Throughput (mensajes por segundo).</li>
+    <li>Uso de disco.</li>
+    <li>Replicación y particiones fuera de sincronía.</li>
+  </ul>
+
+  <h3>Casos de uso avanzados</h3>
+
+  <ul>
+    <li>Event sourcing.</li>
+    <li>CDC (Change Data Capture).</li>
+    <li>Arquitecturas Lambda y Kappa.</li>
+    <li>Integración entre microservicios.</li>
+  </ul>
+
+  <h3>Retos comunes</h3>
+
+  <ul>
+    <li>Mala distribución de particiones.</li>
+    <li>Configuración incorrecta de retención.</li>
+    <li>Lag elevado en consumidores.</li>
+    <li>Gestión inadecuada de offsets.</li>
+  </ul>
+
+
+
+
+
+
+      </div>
+    </div>
+  </section>
+
+  <section id="conclusion">
+    <div class="lesson-container">
+      <h3>CONCLUSIÓN</h3>
+      <hr>
+      <div class="text-cell">
+  <p>
+    Apache Kafka es un componente fundamental en arquitecturas modernas de datos
+    orientadas a eventos. Su modelo distribuido basado en logs persistentes,
+    particiones y replicación permite construir sistemas escalables,
+    resilientes y preparados para procesamiento en tiempo real.
+  </p>
+  <p>
+    Su integración con motores como Spark Structured Streaming
+    facilita la construcción de pipelines robustos y coherentes
+    dentro del ecosistema Big Data.
+  </p>      </div>
+    </div>
+  </section>
+
+
+  <div class="navigation-buttons">
+    <button onclick="window.location.href='M3T2L1.html'">Anterior</button>
+    <button onclick="window.location.href='M3T2L3.html'">Siguiente</button>
+  </div>
+
+</main>
+<div data-include="/partials/footer.html"></div>
+<script src="/js/include.js"></script>
+<script src="/js/script.js"></script>
+</body>
+</html>
