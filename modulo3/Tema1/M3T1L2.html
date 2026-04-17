@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>M3T1L2 — Arquitecturas Lambda y Kappa</title>
   <link rel="stylesheet" href="/css/styles.css" />
+  <link rel="stylesheet" href="/css/tables.css" /> <!-- añadido: estilos para tablas -->
   <script src="/js/jquery-3.6.0.min.js"></script>
   <link rel="stylesheet" href="/css/prism-1.29.0.min.css" />
   <script src="/js/prism-1.29.0.min.js"></script>
@@ -231,47 +232,49 @@ query.awaitTermination()</code></pre>
       <hr>
       <div class="text-cell">
 
-  <table>
-    <thead>
-      <tr>
-        <th>Característica</th>
-        <th>Lambda</th>
-        <th>Kappa</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td>Procesamiento batch</td>
-        <td>Sí (capa batch dedicada)</td>
-        <td>No (todo como streaming)</td>
-      </tr>
-      <tr>
-        <td>Procesamiento en tiempo real</td>
-        <td>Sí (capa speed)</td>
-        <td>Sí (pipeline único)</td>
-      </tr>
-      <tr>
-        <td>Duplicación de lógica</td>
-        <td>Frecuente</td>
-        <td>Minimizada</td>
-      </tr>
-      <tr>
-        <td>Complejidad operativa</td>
-        <td>Alta</td>
-        <td>Media</td>
-      </tr>
-      <tr>
-        <td>Reprocesamiento histórico</td>
-        <td>Recomputación batch completa</td>
-        <td>Reproducción del stream</td>
-      </tr>
-      <tr>
-        <td>Adecuación con Spark moderno</td>
-        <td>Válida, pero más pesada</td>
-        <td>Muy alineada (API unificada)</td>
-      </tr>
-    </tbody>
-  </table>
+  <div class="table-responsive">
+    <table class="table table-bordered" role="table" aria-describedby="comparativa-descripcion">
+      <thead>
+        <tr>
+          <th>Característica</th>
+          <th>Lambda</th>
+          <th>Kappa</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Procesamiento batch</td>
+          <td>Sí (capa batch dedicada)</td>
+          <td>No (todo como streaming)</td>
+        </tr>
+        <tr>
+          <td>Procesamiento en tiempo real</td>
+          <td>Sí (capa speed)</td>
+          <td>Sí (pipeline único)</td>
+        </tr>
+        <tr>
+          <td>Duplicación de lógica</td>
+          <td>Frecuente</td>
+          <td>Minimizada</td>
+        </tr>
+        <tr>
+          <td>Complejidad operativa</td>
+          <td>Alta</td>
+          <td>Media</td>
+        </tr>
+        <tr>
+          <td>Reprocesamiento histórico</td>
+          <td>Recomputación batch completa</td>
+          <td>Reproducción del stream</td>
+        </tr>
+        <tr>
+          <td>Adecuación con Spark moderno</td>
+          <td>Válida, pero más pesada</td>
+          <td>Muy alineada (API unificada)</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 
       </div>
     </div>

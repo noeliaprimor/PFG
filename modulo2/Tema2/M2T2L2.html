@@ -32,9 +32,7 @@
          <ul>
            <li><a href="#descripcion">Descripción</a></li>
            <li><a href="#contenido">Contenido</a></li>
-           <li><a href="#ejecucion">Ejecución</a></li>
-           <li><a href="#notebook">Notebook</a></li>
-           <li><a href="#ejercicios">Ejercicios</a></li>
+           <li><a href="#conclusion">Ejecución</a></li>
          </ul>
        </div>
      </div>
@@ -44,11 +42,23 @@
         <h3>DESCRIPCIÓN</h3>
         <hr>
         <div class="text-cell">
-        <p> En Apache Spark, una <strong>aplicación</strong> es el conjunto completo que se ejecuta bajo un único
-<strong>SparkSession</strong> (y, por debajo, un <strong>SparkContext</strong>) y que puede incluir uno o varios
-<strong>jobs</strong>. Una aplicación se distribuye en un clúster y se ejecuta coordinadamente entre un proceso
-principal y procesos de trabajo.
-</p>
+  <p>
+    El desarrollo y la ejecución de una aplicación en Apache Spark comprende el conjunto de actividades necesarias para
+    diseñar, implementar, desplegar, ejecutar y monitorizar un procesamiento distribuido de datos. A diferencia de una
+    aplicación tradicional que se ejecuta en una sola máquina, una aplicación Spark está pensada para trabajar sobre un
+    clúster y repartir la carga de trabajo entre varios nodos.
+  </p>
+  <p>
+    En este contexto, Spark proporciona una arquitectura de ejecución distribuida basada en un <strong>Driver</strong>,
+    uno o varios <strong>Executors</strong> y un <strong>Cluster Manager</strong>, así como una API unificada que
+    permite desarrollar aplicaciones batch, analíticas, de streaming y de machine learning. El punto de entrada
+    recomendado en las versiones modernas de Spark es <strong>SparkSession</strong>, que unifica el acceso a Spark SQL,
+    DataFrames y otras capacidades del ecosistema.
+  </p>
+  <p>
+    Este capítulo describe de forma estructurada las fases principales del desarrollo y ejecución de una aplicación Spark,
+    desde la definición del problema hasta la monitorización del job en funcionamiento.
+  </p>
         </div>
       </div>
     </section>
@@ -60,216 +70,391 @@ principal y procesos de trabajo.
 
 
 
-<h4>Componentes principales</h4>
-        <p>Los componentes principales durante la ejecución de una aplicación en Spark son:</p>
-<ul>
-  <li>
-    <strong>Driver</strong>: proceso principal. Ejecuta el programa (por ejemplo, el <em>main</em>), crea la sesión de Spark,
-    construye planes de ejecución (DAG) y coordina la distribución del trabajo.
-  </li>
-  <li>
-    <strong>Executors</strong>: procesos distribuidos en los nodos del clúster. Ejecutan tareas sobre particiones de datos
-    y pueden almacenar datos en caché.
-  </li>
-  <li>
-    <strong>Cluster Manager</strong>: gestiona recursos y despliegue (por ejemplo, Standalone, YARN o Kubernetes).
-  </li>
-  <li>
-    <strong>Job, Stage y Task</strong>:
-    <ul>
-      <li><strong>Job</strong>: se crea cada vez que se ejecuta una <strong>acción</strong> (por ejemplo, count, collect, write).</li>
-      <li><strong>Stage</strong>: parte del job separada por límites de <strong>shuffle</strong> (redistribución de datos).</li>
-      <li><strong>Task</strong>: unidad mínima de trabajo; normalmente, una task procesa una <strong>partición</strong>.</li>
-    </ul>
-  </li>
-</ul>
+   <h4>Concepto de aplicación Spark</h4>
+ <p>
+    Una aplicación Spark es un programa distribuido que se ejecuta sobre un conjunto de recursos gestionados por Spark.
+    En términos generales, una aplicación Spark incluye:
+  </p>
+  <ul>
+    <li><strong>Driver Program</strong>: proceso principal que contiene la lógica de control de la aplicación.</li>
+    <li><strong>SparkSession / SparkContext</strong>: punto de entrada a la funcionalidad de Spark y conexión con el clúster.</li>
+    <li><strong>Executors</strong>: procesos distribuidos que ejecutan tareas sobre las particiones de datos.</li>
+    <li><strong>Cluster Manager</strong>: componente encargado de asignar recursos a la aplicación.</li>
+  </ul>
+  <p>
+    El Driver define las operaciones sobre los datos, construye el plan de ejecución y coordina el envío de tareas a los
+    Executors. A su vez, los Executors ejecutan dichas tareas y devuelven los resultados parciales o finales al Driver,
+    además de almacenar datos intermedios en memoria o disco cuando es necesario.
+  </p>
+
+  <hr />
+
+  <h4>Fases del desarrollo de una aplicación Spark</h4>
+
+  <strong>Definición del problema y del tipo de procesamiento</strong>
+  <p>
+    La primera fase del desarrollo consiste en identificar el problema que se desea resolver y determinar el tipo de
+    procesamiento más adecuado. En Spark, una aplicación puede estar orientada a:
+  </p>
+  <ul>
+    <li>Procesamiento batch sobre grandes volúmenes de datos históricos.</li>
+    <li>Procesamiento estructurado mediante DataFrames y Spark SQL.</li>
+    <li>Procesamiento de flujos de datos en tiempo real con Structured Streaming.</li>
+    <li>Aplicaciones de aprendizaje automático mediante MLlib.</li>
+  </ul>
+  <p>
+    Esta decisión condiciona tanto la API a utilizar como el diseño del pipeline y la estrategia de ejecución posterior.
+    En desarrollos modernos, el enfoque basado en DataFrames y Spark SQL suele ser el más recomendable debido a sus
+    optimizaciones internas.
+  </p>
+
+  <strong>Diseño del pipeline de datos</strong>
+  <p>
+    Una aplicación Spark suele organizarse como una secuencia de pasos de procesamiento, a menudo denominada
+    <strong>pipeline</strong>. De forma general, este pipeline incluye:
+  </p>
+  <ol>
+    <li>Lectura de datos desde una o varias fuentes.</li>
+    <li>Transformación, limpieza o enriquecimiento de los datos.</li>
+    <li>Agregación, análisis o aplicación de lógica de negocio.</li>
+    <li>Escritura del resultado en un sistema de salida.</li>
+  </ol>
+  <p>
+    El diseño del pipeline debe tener en cuenta el formato de entrada, la estructura de los datos, el volumen previsto,
+    el paralelismo necesario y el destino final del resultado.
+  </p>
+
+  <strong>  Elección del lenguaje y de la API</strong>
+  <p>
+    Spark soporta varios lenguajes de programación, principalmente Scala, Python, Java y R. La elección del lenguaje
+    depende del entorno del proyecto, de los conocimientos del desarrollador y del tipo de integración deseada.
+  </p>
+  <p>
+    Desde el punto de vista de la API, existen distintas opciones:
+  </p>
+  <ul>
+    <li><strong>RDD</strong>: nivel bajo, más control manual, menos optimización automática.</li>
+    <li><strong>DataFrame</strong>: modelo tabular, optimizado, recomendado para la mayoría de casos.</li>
+    <li><strong>Dataset</strong>: tipado fuerte en Scala/Java, combina expresividad y optimización.</li>
+    <li><strong>Spark SQL</strong>: consultas declarativas sobre datos estructurados.</li>
+  </ul>
+
+  <strong> Inicialización de la aplicación</strong>
+  <p>
+    Una vez definido el diseño general, el primer paso técnico consiste en inicializar la sesión Spark. Esta sesión
+    representa el punto de entrada principal a la aplicación y encapsula la conexión con el clúster y el acceso a las
+    APIs de Spark.
+  </p>
+
+  <strong>1. Ejemplo en Python</strong>
+  <pre><code  class="language-python python-code">from pyspark.sql import SparkSession
+
+spark = (
+    SparkSession.builder
+    .appName("MiAplicacionSpark")
+    .getOrCreate()
+)</code></pre>
+
+  <strong>2. Ejemplo en Scala</strong>
+  <pre><code  class="language-python python-code">import org.apache.spark.sql.SparkSession
+
+val spark = SparkSession
+  .builder()
+  .appName("MiAplicacionSpark")
+  .getOrCreate()</code></pre>
+
+  <p>
+    A partir de este objeto se puede acceder tanto a DataFrames como al SparkContext subyacente, en caso de que sea
+    necesario trabajar a un nivel más bajo con RDDs.
+  </p>
+
+  <strong> Implementación de la lógica de negocio</strong>
+  <p>
+    Una vez creada la sesión, la aplicación implementa la lógica de transformación. Esta fase incluye lectura de datos,
+    filtros, joins, agregaciones, conversiones de tipos, validaciones y escritura del resultado.
+  </p>
+
+  <strong>1. Ejemplo básico en Python</strong>
+  <pre><code  class="language-python python-code">df = spark.read.csv("/data/entrada.csv", header=True, inferSchema=True)
+
+resultado = (df
+    .filter(df.edad &gt;= 18)
+    .groupBy("pais")
+    .count())
+
+resultado.write.mode("overwrite").parquet("/data/salida")</code></pre>
+
+  <p>
+    En este ejemplo se observa un flujo clásico de aplicación Spark: lectura, transformación y escritura. Aunque el código
+    se expresa de forma secuencial, Spark construye internamente un plan lógico y físico que se ejecutará de forma
+    distribuida cuando se invoque una acción o una escritura.
+  </p>
+
+  <strong>Pruebas en local</strong>
+  <p>
+    Antes de desplegar la aplicación en un clúster, es habitual ejecutarla en modo local. Esto permite validar la lógica,
+    revisar la salida, detectar errores de esquema y comprobar el comportamiento general del pipeline sin necesidad de
+    utilizar aún recursos distribuidos.
+  </p>
+
+  <pre><code  class="language-python python-code">spark = (
+    SparkSession.builder
+    .appName("PruebaLocal")
+    .master("local[*]")
+    .getOrCreate()
+)</code></pre>
+
+  <p>
+    El modo local resulta especialmente útil en etapas tempranas del desarrollo, en prototipos y en pruebas unitarias o
+    funcionales.
+  </p>
+
+  <hr />
+
+  <h4>Empaquetado de la aplicación</h4>
+
+  <strong>Empaquetado en Scala o Java</strong>
+  <p>
+    En aplicaciones desarrolladas en Scala o Java, el código suele empaquetarse en un archivo JAR. Este artefacto puede
+    incluir únicamente la aplicación o, de forma más habitual, contener también las dependencias necesarias en un
+    ensamblado o <em>uber jar</em>.
+  </p>
+  <p>
+    El empaquetado correcto es esencial para garantizar que el Driver y los Executors disponen de todas las clases y
+    bibliotecas requeridas durante la ejecución.
+  </p>
+
+  <strong>Distribución en Python</strong>
+  <p>
+    En PySpark, la aplicación se distribuye normalmente como un script <code>.py</code>, aunque también pueden añadirse
+    dependencias adicionales mediante archivos <code>.zip</code>, <code>.egg</code> o módulos auxiliares enviados con el
+    comando de ejecución.
+  </p>
+  <p>
+    Esta fase es importante cuando el proyecto no se limita a un único script, sino que incluye librerías propias,
+    funciones reutilizables o estructuras modulares más complejas.
+  </p>
+
+  <hr />
+
+  <h4>Ejecución de la aplicación</h4>
+
+  <strong>Uso de spark-submit</strong>
+  <p>
+    El mecanismo estándar para ejecutar aplicaciones Spark es <strong>spark-submit</strong>. Este comando permite lanzar
+    aplicaciones sobre distintos tipos de clúster, indicando parámetros como el master, la clase principal, el modo de
+    despliegue y opciones de configuración.
+  </p>
+
+  <strong>1. Ejemplo de ejecución en Python</strong>
+  <pre><code  class="language-python python-code">spark-submit --master local[*] mi_aplicacion.py</code></pre>
+
+  <strong>2. Ejemplo de ejecución en Scala</strong>
+  <pre><code  class="language-python python-code">spark-submit \
+  --class com.ejemplo.Main \
+  --master spark://spark-master:7077 \
+  mi-aplicacion.jar</code></pre>
+
+  <p>
+    Mediante este comando, Spark prepara el entorno de ejecución, arranca el Driver, distribuye dependencias y solicita
+    recursos al gestor de clúster correspondiente.
+  </p>
+
+  <strong>Parámetros principales de ejecución</strong>
+  <p>
+    Algunos de los parámetros más habituales al lanzar una aplicación Spark son los siguientes:
+  </p>
+  <ul>
+    <li><code>--master</code>: define el gestor de recursos o entorno de ejecución.</li>
+    <li><code>--class</code>: clase principal en aplicaciones Scala/Java.</li>
+    <li><code>--deploy-mode</code>: determina dónde se ejecuta el Driver.</li>
+    <li><code>--conf</code>: permite añadir parámetros de configuración específicos.</li>
+    <li><code>--py-files</code>: distribuye dependencias adicionales en aplicaciones Python.</li>
+  </ul>
+
+  <strong>Modos de ejecución</strong>
+  <p>
+    Spark permite distintos modos de ejecución según el entorno disponible:
+  </p>
+  <ul>
+    <li><strong>Local</strong>: ejecución en una sola máquina, útil para desarrollo y pruebas.</li>
+    <li><strong>Standalone</strong>: modo nativo de Spark, adecuado para laboratorios y clústeres dedicados.</li>
+    <li><strong>YARN</strong>: integración con ecosistemas Hadoop.</li>
+    <li><strong>Kubernetes</strong>: despliegue en entornos contenerizados modernos.</li>
+  </ul>
+  <p>
+    La elección del modo de ejecución influye en la gestión de recursos, en el despliegue del Driver y en la visibilidad
+    operativa de la aplicación.
+  </p>
+
+  <hr />
+
+  <h4>Ciclo de ejecución interno de una aplicación Spark</h4>
+  <p>
+    Cuando una aplicación Spark se lanza, no ejecuta inmediatamente todas las instrucciones de transformación. En su lugar,
+    Spark construye primero una representación lógica del trabajo y retrasa la ejecución real hasta que se solicita una
+    acción. Este comportamiento se conoce como <strong>evaluación perezosa</strong>.
+  </p>
+
+  <strong>Fases principales</strong>
+  <ol>
+    <li>Arranque del Driver y creación de SparkSession.</li>
+    <li>Conexión con el Cluster Manager y asignación de recursos.</li>
+    <li>Construcción del plan lógico a partir de las transformaciones.</li>
+    <li>Optimización del plan de ejecución.</li>
+    <li>División en jobs, stages y tasks.</li>
+    <li>Envío de tareas a los Executors.</li>
+    <li>Ejecución distribuida sobre particiones de datos.</li>
+    <li>Escritura del resultado o devolución al Driver.</li>
+    <li>Liberación de recursos al finalizar la aplicación.</li>
+  </ol>
+
+  <strong>Jobs, stages y tasks</strong>
+  <p>
+    Durante la ejecución, Spark divide el trabajo en distintas unidades:
+  </p>
+  <ul>
+    <li><strong>Job</strong>: unidad global asociada normalmente a una acción.</li>
+    <li><strong>Stage</strong>: subconjunto del job que puede ejecutarse sin necesidad de un nuevo shuffle.</li>
+    <li><strong>Task</strong>: unidad mínima de trabajo ejecutada sobre una partición.</li>
+  </ul>
+  <p>
+    Esta organización es esencial para comprender el paralelismo interno de Spark y para interpretar la información de la
+    interfaz web de monitorización.
+  </p>
+
+  <hr />
+
+  <h4>Monitorización de la ejecución</h4>
+  <p>
+    Una parte fundamental del ciclo de vida de una aplicación Spark es su monitorización. Spark ofrece una interfaz web
+    desde el Driver en la que pueden visualizarse los jobs, stages, tasks, executors, uso de almacenamiento, tiempos de
+    ejecución y posibles cuellos de botella.
+  </p>
+  <p>
+    En un entorno de laboratorio o TFG, esta interfaz resulta especialmente útil para:
+  </p>
+  <ul>
+    <li>Verificar que el job se ha ejecutado correctamente.</li>
+    <li>Analizar el paralelismo real de la aplicación.</li>
+    <li>Detectar stages lentos o con excesivo shuffle.</li>
+    <li>Observar uso de memoria y distribución de tareas por executor.</li>
+  </ul>
+
+  <strong>Aspectos que conviene analizar</strong>
+  <ul>
+    <li>Número de jobs generados.</li>
+    <li>Duración de cada stage.</li>
+    <li>Cantidad de tasks por partición.</li>
+    <li>Movimientos de shuffle.</li>
+    <li>Uso de memoria y almacenamiento.</li>
+    <li>Errores y reintentos.</li>
+  </ul>
+
+  <hr />
+
+  <h4>Desarrollo de aplicaciones batch y streaming</h4>
+
+  <strong>Aplicaciones batch</strong>
+  <p>
+    En una aplicación batch, el procesamiento se realiza sobre un conjunto finito de datos. El job empieza, procesa el
+    dataset completo y termina al finalizar la escritura o la acción solicitada.
+  </p>
+
+  <strong>Aplicaciones streaming</strong>
+  <p>
+    En una aplicación de streaming, por el contrario, el pipeline permanece activo de forma continua a la espera de nuevos
+    eventos. Structured Streaming permite definir esta lógica con una API muy similar a la de batch, pero la ejecución se
+    mantiene en funcionamiento hasta que se detiene explícitamente.
+  </p>
+  <p>
+    Esta diferencia implica cambios tanto en el diseño de la aplicación como en su despliegue, monitorización y estrategia
+    de tolerancia a fallos.
+  </p>
+
+  <hr />
+
+  <h4>Buenas prácticas en el desarrollo y ejecución</h4>
+
+  <strong>1. Utilizar SparkSession como punto de entrada</strong>
+  <p>
+    En desarrollos modernos, SparkSession debe ser el punto de entrada principal de la aplicación, ya que integra las
+    capacidades de Spark Core, SQL y DataFrames en una única abstracción.
+  </p>
+
+  <strong>2. Probar primero en local</strong>
+  <p>
+    La validación inicial en modo local permite reducir errores antes del despliegue en clúster y facilita depuración y
+    pruebas funcionales.
+  </p>
+
+  <strong>3. Empaquetar correctamente las dependencias</strong>
+  <p>
+    Un empaquetado incompleto puede provocar fallos en tiempo de ejecución, especialmente cuando los Executors necesitan
+    acceder a clases o módulos que no están disponibles en el entorno distribuido.
+  </p>
+
+  <strong>4. Monitorizar el comportamiento real</strong>
+  <p>
+    No basta con que la aplicación funcione; también debe analizarse su rendimiento, el paralelismo alcanzado y el coste
+    de las operaciones más pesadas, como los joins amplios o el shuffle.
+  </p>
+
+  <strong>5. Cerrar correctamente la sesión</strong>
+  <p>
+    Al finalizar la aplicación, es recomendable cerrar la sesión de Spark para liberar los recursos asociados:
+  </p>
+
+  <pre><code  class="language-python python-code">spark.stop()</code></pre>
+
+  <p>
+    Esta práctica es especialmente importante en entornos Docker, clústeres compartidos y ejecuciones repetidas.
+  </p>
+
+  <hr />
+
+  <h4>Ejemplo simplificado de aplicación completa en PySpark</h4>
 
 
+  <pre><code  class="language-python python-code">from pyspark.sql import SparkSession
 
-<h4>Desarrollo: del problema al pipeline</h4>
-<p>
-El desarrollo de una aplicación Spark consiste en diseñar un flujo de procesamiento distribuido que transforma datos
-desde una o varias fuentes hasta un resultado final (escritura, cálculo de métricas o consumo por otro sistema).
-Este flujo se conoce como <strong>pipeline</strong>.
-</p>
+spark = (
+    SparkSession.builder
+    .appName("EjemploAplicacionCompleta")
+    .master("local[*]")
+    .getOrCreate()
+)
 
-<strong>Definición de pipeline en Spark</strong>
-<p>
-Un <strong>pipeline</strong> en Spark es un flujo declarativo compuesto por:
-</p>
-<ol>
-  <li><strong>Lectura / ingesta</strong> (fuentes de datos).</li>
-  <li><strong>Transformaciones</strong> (ETL/ELT): selección, filtrado, joins, agregaciones, enriquecimientos.</li>
-  <li><strong>Acciones / salidas</strong>: materialización (escritura), métricas, o resultados para el driver.</li>
-  <li><strong>Controles transversales</strong>: calidad de datos, observabilidad, trazabilidad y gestión de errores.</li>
-</ol>
+df = spark.read.csv("/data/entrada.csv", header=True, inferSchema=True)
 
-<p>
-En Spark, la mayoría de transformaciones son <strong>lazy</strong> (perezosas): no se ejecutan en el momento de definirse,
-sino que Spark construye un plan. La ejecución real comienza al invocar una <strong>acción</strong>.
-</p>
+resultado = (df
+    .filter(df.edad &gt;= 18)
+    .groupBy("pais")
+    .count())
 
-<strong>Transformaciones y acciones</strong>
-<ul>
-  <li>
-    <strong>Transformaciones (lazy)</strong>: definen cómo se transforman los datos sin ejecutarlo todavía.
-    Ejemplos: select, filter, withColumn, join, groupBy, map, flatMap, repartition.
-  </li>
-  <li>
-    <strong>Acciones</strong>: desencadenan el cómputo y generan un resultado o una salida.
-    Ejemplos: count, collect, take, show, write.
-  </li>
-</ul>
+resultado.write.mode("overwrite").parquet("/data/salida")
+
+spark.stop()</code></pre>
+
+  <p>
+    Este ejemplo resume el ciclo habitual de una aplicación Spark: inicialización, lectura, transformación, escritura y
+    finalización.
+  </p>
+
+  <hr />
 
 
-<h4>Ciclo de ejecución de una aplicación Spark</h4>
-<p>
-El ciclo de ejecución describe qué ocurre desde que se lanza la aplicación (por ejemplo con <em>spark-submit</em>)
-hasta que el job termina. Este ciclo es clave para comprender el rendimiento y el comportamiento del pipeline.
-</p>
-
-<strong>Arranque y creación del contexto</strong>
-<ol>
-  <li>
-    <strong>Lanzamiento de la aplicación</strong>: el usuario ejecuta la aplicación (típicamente con <em>spark-submit</em>).
-  </li>
-  <li>
-    <strong>Inicio del Driver</strong>: se inicia el proceso del driver, que crea <strong>SparkSession</strong> y establece la configuración.
-  </li>
-  <li>
-    <strong>Negociación de recursos</strong>: el driver solicita recursos al Cluster Manager (executors, memoria y CPU).
-  </li>
-  <li>
-    <strong>Creación de Executors</strong>: el clúster lanza ejecutores donde se ejecutarán las tareas.
-  </li>
-</ol>
-
-<strong>Construcción de planes (antes de ejecutar)</strong>
-<p>
-Cuando el código define transformaciones (por ejemplo, una cadena de select/filter/join/groupBy), Spark construye
-representaciones internas del trabajo:
-</p>
-<ul>
-  <li>
-    <strong>Plan lógico</strong>: representa qué operaciones se quieren realizar (a nivel de operaciones sobre datos).
-  </li>
-  <li>
-    <strong>Optimización</strong>: el optimizador reescribe el plan para hacerlo más eficiente, por ejemplo:
-    <ul>
-      <li><strong>Predicate pushdown</strong>: empujar filtros hacia el origen de datos para leer menos.</li>
-      <li><strong>Column pruning</strong>: leer solo las columnas necesarias.</li>
-      <li>Simplificación de expresiones y reordenación de operaciones cuando es posible.</li>
-    </ul>
-  </li>
-  <li>
-    <strong>Plan físico</strong>: decide cómo ejecutar realmente (estrategias de join, agregación, lectura, etc.).</li>
-</ul>
-
-<strong>Acción &rarr; creación del Job y del DAG</strong>
-<p>
-Cuando se invoca una <strong>acción</strong> (por ejemplo, escribir un DataFrame), Spark:
-</p>
-<ol>
-  <li>Crea un <strong>Job</strong>.</li>
-  <li>Genera un <strong>DAG</strong> (grafo acíclico dirigido) de ejecución a partir del plan.</li>
-  <li>Divide el job en <strong>Stages</strong> según los límites de <strong>shuffle</strong>.</li>
-</ol>
-
-<strong>Stages, Tasks y Shuffle</strong>
-<p>
-La ejecución se organiza en etapas (stages) y tareas (tasks). Un elemento crítico es el <strong>shuffle</strong>, que implica
-redistribución de datos entre nodos para reagrupar o alinear datos por clave.
-</p>
-
-<p><strong>Operaciones típicas que generan shuffle</strong>:</p>
-<ul>
-  <li>groupBy, distinct</li>
-  <li>orderBy/sort</li>
-  <li>joins grandes (cuando no se puede usar broadcast de una tabla pequeña)</li>
-  <li>repartition</li>
-</ul>
-
-<p>
-Un shuffle suele ser costoso porque implica E/S (datos intermedios), uso de red y sincronización entre tareas.
-Por ello, muchos problemas de rendimiento en pipelines Spark están asociados a shuffles innecesarios o desbalanceados.
-</p>
-
-<strong>Ejecución distribuida</strong>
-<ol>
-  <li>El driver planifica <strong>tasks</strong> (normalmente una por partición) y las asigna a executors.</li>
-  <li>Los executors leen particiones, aplican operadores y generan resultados intermedios o finales.</li>
-  <li>Al finalizar, los resultados se devuelven al driver (si aplica) o se escriben en un sistema de almacenamiento.</li>
-</ol>
-
-<strong>Finalización de la aplicación</strong>
-<ul>
-  <li>El job finaliza cuando todas las stages y tasks completan correctamente.</li>
-  <li>Se liberan recursos (dependiendo del modo de despliegue y configuración).</li>
-  <li>Se registran logs, métricas y, en su caso, se almacenan resultados finales.</li>
-</ul>
-
-
-<h4>Pipeline en profundidad: diseño, materialización y optimización</h4>
-
-<strong>Pipeline conceptual por fases</strong>
-<ol>
-  <li><strong>Ingesta</strong>: lectura desde fuentes y selección de formatos adecuados (por ejemplo, Parquet para analítica).</li>
-  <li><strong>Limpieza y normalización</strong>: tipado, tratamiento de nulos, deduplicación, normalización de cadenas.</li>
-  <li><strong>Enriquecimiento</strong>: joins con dimensiones o tablas auxiliares; derivación de nuevas columnas.</li>
-  <li><strong>Agregación / cálculo de métricas</strong>: groupBy y ventanas; generación de indicadores y features.</li>
-  <li><strong>Salida</strong>: escritura particionada, modos de escritura y control de idempotencia.</li>
-  <li><strong>Observabilidad</strong>: conteos, validaciones, trazabilidad, métricas de latencia y calidad.</li>
-</ol>
-
-<strong>Cache, persistencia y checkpoints</strong>
-<ul>
-  <li>
-    <strong>cache/persist</strong>: materializa datos para reutilizarlos en varias acciones, evitando recomputaciones.
-    Debe usarse cuando el mismo dataset se consume varias veces y cabe razonablemente en memoria/disco.
-  </li>
-  <li>
-    <strong>checkpoint</strong>: corta el lineage (cadena de dependencias) para pipelines muy largos o streaming,
-    reduciendo recomputación y aumentando estabilidad.
-  </li>
-</ul>
-
-<strong>Repartition vs Coalesce</strong>
-<ul>
-  <li>
-    <strong>repartition(n)</strong>: redistribuye datos y suele implicar shuffle; útil para equilibrar particiones o cambiar paralelismo.
-  </li>
-  <li>
-    <strong>coalesce(n)</strong>: reduce particiones con menos movimiento de datos; útil para compactar antes de escribir.
-  </li>
-</ul>
-
-<strong>Estrategias de join (visión práctica)</strong>
-<ul>
-  <li>
-    <strong>Broadcast join</strong>: cuando una tabla es pequeña, se replica en executors y se evita un shuffle grande.
-  </li>
-  <li>
-    <strong>Sort-merge join</strong> (u otras variantes): común cuando ambas tablas son grandes; suele implicar shuffle y ordenación.
-  </li>
-</ul>
-
-
-<h4>Riesgos y errores comunes en ejecución de pipelines</h4>
-<ul>
-  <li>
-    <strong>Usar collect() en datasets grandes</strong>: puede saturar memoria del driver.
-    Alternativas: escribir a almacenamiento, usar limit/take o procesar por particiones.
-  </li>
-  <li>
-    <strong>Shuffles innecesarios</strong>: repartir/reparticionar sin necesidad penaliza rendimiento.
-  </li>
-  <li>
-    <strong>Desbalanceo (data skew)</strong>: claves muy frecuentes en groupBy/join generan tareas lentas y cuellos de botella.
-  </li>
-  <li>
-    <strong>Uso excesivo de UDFs</strong>: puede limitar optimizaciones del motor; preferir funciones nativas de Spark SQL cuando sea posible.
-  </li>
-</ul>
+      </div>
+    </section>
+    <section id="conclusion">
+      <div class="lesson-container">
+        <h3>CONCLUSIÓN</h3>
+        <hr>
+        <div class="text-cell">
+  <p>
+    El desarrollo y ejecución de una aplicación Spark es un proceso estructurado que abarca desde la definición del problema hasta la monitorización del job en funcionamiento. Comprender las fases de diseño, las transformaciones, las acciones y el ciclo de ejecución es fundamental para crear aplicaciones eficientes y escalables. Además, la elección de estrategias de optimización, el manejo adecuado de recursos y la observabilidad del rendimiento son aspectos clave para el éxito de cualquier proyecto basado en Spark.
+  </p>
+        </div>
       </div>
     </section>
 

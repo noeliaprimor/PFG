@@ -22,52 +22,20 @@
     </nav>
     <br>
     <br>
-    <h2 class="titulos-leccion">Recursos y lecturas recomendadas</h2>
+    <h2 class="titulos-leccion">Recursos y Ejercicios Propuestos</h2>
     <div class="indice-container">
         <div id="index-container" class="text-cell">
             <hr>
             <ul>
-                <li><a href="#descripcion">Descripción</a></li>
-                <li><a href="#contenidos">Contenidos</a></li>
+
+
                 <li><a href="#saber-mas">Para saber más</a></li>
-                <li><a href="#ejercicio-propuesto">Ejercicio propuesto</a></li>
+                <li><a href="#ejercicio-propuesto">Ejercicios propuestos</a></li>
             </ul>
         </div>
     </div>
-    <section id="descripcion">
-    <!-- Descripcion -->
-        <div class="lesson-container">
-            <h3>Descripción</h3>
-            <hr>
-            <div class="text-cell">
-            <p>DESCRIPCIÓN DE LA LECIÓN</p>
-            </div>
-        </div>
-    </section>
-    <section id="contenidos">
-
-         <!-- Contenidos -->
-        <div class="lesson-container">
-
-            <h3>CONTENIDOS</h3>
-            <hr>
-
-            <!-- Blóque con texto -->
-            <div class="text-cell">
-                <h4> Comenzamos con los contenidos </h4>
-               En esta caja metemos contenidos
-            </div>
-           <div class="text-cell"> <h4>que mas metemos</h4>
-             <p>muchos más contenidos</p>
-
-           </div>
 
 
-            </div>
-
-            </div>
-        </div>
-    </section>
     <section  id="saber-mas">
          <!-- Para saber más -->
         <div class="lesson-container indice-modulos">
@@ -89,10 +57,50 @@
 
         <!-- Ejercicio propuesto -->
         <div class="lesson-container">
-            <h3>Ejercicio Propuesto</h3>
+            <h3>Ejercicios Propuestos</h3>
             <hr>
             <div class="text-cell">
-              <p>Ejercicio propuesto</p>
+
+              <p>Instala Spark en un cluster kubernetes y a continuación realiza las siguientes tareas:</p>
+                          <h4>Ejercicio 1 – Escalado del clúster</h4>
+<p>
+Escalar el número de <em>workers</em> a 4:
+</p>
+<pre><code class="language-python python-code">docker compose up -d --scale spark-worker=4</code></pre>
+<p>
+Analizar:
+</p>
+<ul>
+  <li>¿Cómo cambia la distribución de tareas?</li>
+  <li>¿Se reduce el tiempo de ejecución?</li>
+</ul>
+<hr>
+<h4>Ejercicio 2 – Modificación de recursos</h4>
+<p>
+Reducir la memoria del <em>worker</em> a 512MB y ejecutar un job que requiera más recursos (por ejemplo, leyendo un fichero grande o aumentando el número de particiones).
+</p>
+<p>
+Analizar:
+</p>
+<ul>
+  <li>¿Qué ocurre cuando la memoria asignada no es suficiente?</li>
+  <li>¿Se produce algún error (por ejemplo, out-of-memory) o se degrada el rendimiento?</li>
+</ul>
+<hr>
+<h4>Ejercicio 3 – Análisis de logs</h4>
+<p>
+Ejecutar un job y analizar los logs del clúster:
+</p>
+<pre><code class="language-python python-code">docker compose logs spark-master</code></pre>
+<p>
+Identificar:
+</p>
+<ul>
+  <li>Inicio del job (submit del trabajo)</li>
+  <li>Asignación de ejecutores y recursos a los workers</li>
+  <li>Finalización del job (éxito o error)</li>
+</ul>
+<hr>
             </div>
 
         </div>
@@ -100,7 +108,7 @@
         <div>
             <div class="navigation-buttons">
                 <button onclick="window.location.href='M2T1L7.html'">Anterior</button>
-              <button onclick="window.location.href='M2T1L9.html'">Siguiente</button>
+              <button onclick="window.location.href='M2T1auto.html'">Siguiente: Autoevaluación</button>
             </div>
         </div>
 
