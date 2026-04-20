@@ -33,8 +33,9 @@
            <li><a href="#descripcion">Descripción</a></li>
            <li><a href="#scala">Inicialización en Scala</a></li>
            <li><a href="#python">Inicialización en Python</a></li>
+           <li><a href="pycharm">Creación de un proyecto Spark en Pycharm</a></li>
            <li><a href ="#buenaspracticas">Buenas prácticas</a></li>
-           <li><a href="#ejercicio">Ejercicio Propuesto</a></li>
+
          </ul>
        </div>
      </div>
@@ -233,6 +234,40 @@ sc.stop()</code></pre>
       </div>
     </section>
 
+<section id="pycharm">
+    <div class ="lesson-container">
+      <h3>CREACIÓN DE UN PROYECTO SPARK EN PYCHARM</h3>
+      <hr>
+      <p>Crear un proyecto Spark en Pycharm (déspues de haber instalado todos los plugins), es tan sencillo como ir
+      a "Archivo-> New Proyect" y seleccionar Spark</p>
+      <img src="/img/M2T2L4_1.png">
+         <p class="img-caption">Imagen 1: Selección de proyecto en Pycharm</p>
+
+<p> Vamos a ejecutar el siguiente código de prueba: </p>
+      <pre><code class="language-python python-code">from pyspark.sql import SparkSession
+
+def main():
+    spark = (SparkSession.builder
+             .appName("EjemploPySpark")
+             .master("local[*]")
+             .getOrCreate())
+
+    data = [("alice", 34), ("bob", 45), ("carol", 29)]
+    df = spark.createDataFrame(data, ["nombre", "edad"])
+    df.show()
+
+    spark.stop()
+
+if __name__ == "__main__":
+    main()</code></pre>
+
+<img src="/img/M2T2L4_2.png">
+         <p class="img-caption">Imagen 2: Salida de la ejecución del sccript anterior</p>
+
+
+      </div>
+    </section>
+
     <section id="buenaspracticas">
       <div class="lesson-container">
         <h3>BUENAS PRÁCTICAS</h3>
@@ -272,38 +307,6 @@ spark.sparkContext.setLogLevel("WARN")</code></pre>
     <li>Si trabajas con despliegue formal (scripts/JAR), define el master en <code>spark-submit</code>.</li>
     <li>Evita duplicidad/confusión entre parámetros del builder y parámetros del submit.</li>
   </ul>
-
-        </div>
-      </div>
-    </section>
-    <section id="ejercicio">
-      <div class="lesson-container">
-        <h3>Ejercicio Propuesto</h3>
-        <hr>
-        <div class="text-cell">
-          <p>Enhorabuena! Has llegado al final de la lección. Ahora es tu turno. Como ejercicio práctico te proponemos implementar la inicialización de Spark tanto en Scala como en Python, siguiendo las buenas prácticas mencionadas. Asegúrate de configurar el nivel de log en WARN y de cerrar correctamente la sesión al finalizar. Puedes probar tu código en un entorno local o en un clúster de Spark si tienes acceso a uno.</p>
-
-
-
-  <ol>
-    <li>Inicializa Spark con <strong>SparkSession</strong> en modo local (<code>local[*]</code>) en Scala y en Python.</li>
-    <li>Obtén el <strong>SparkContext</strong> desde la sesión (<code>spark.sparkContext</code>).</li>
-    <li>Crea un RDD con los números del 1 al 100 y calcula su suma (por ejemplo, usando <code>reduce</code> o <code>sum</code>).</li>
-    <li>Crea un DataFrame con esos mismos números y calcula la media usando operaciones DataFrame (y opcionalmente SQL).</li>
-    <li>Configura el nivel de log en <code>WARN</code> y documenta la diferencia en la salida del terminal.</li>
-    <li>Finaliza la aplicación con <code>spark.stop()</code> y verifica que no quedan procesos en ejecución.</li>
-  </ol>
-
-
-
-
-          <pre><code class="language-python python-code">from pyspark.sql import SparkSession
-spark = SparkSession.builder.appName('PyApp').master('local[*]').getOrCreate()
-df = spark.read.json('data/example.json')
-df.show()
-spark.stop()
-</code></pre>
-
 
         </div>
       </div>

@@ -86,6 +86,8 @@
     Executors. A su vez, los Executors ejecutan dichas tareas y devuelven los resultados parciales o finales al Driver,
     además de almacenar datos intermedios en memoria o disco cuando es necesario.
   </p>
+        <img src="/img/M2T2L2_2.png">
+        <p class="img-caption">Figura 1: Estructura de una aplicación Spark</p>
 
   <hr />
 
@@ -332,7 +334,7 @@ resultado.write.mode("overwrite").parquet("/data/salida")</code></pre>
     ejecución y posibles cuellos de botella.
   </p>
   <p>
-    En un entorno de laboratorio o TFG, esta interfaz resulta especialmente útil para:
+    En un entorno de laboratorio, esta interfaz resulta especialmente útil para:
   </p>
   <ul>
     <li>Verificar que el job se ha ejecutado correctamente.</li>

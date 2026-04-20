@@ -123,7 +123,7 @@ df.write     # Para guardar</code></pre>
       </tr>
     </tbody>
   </table>
-
+ <hr>
   <h4>Lectura de JSON</h4>
   <p>
     JSON es un formato semiestructurado habitual en APIs y logs. Spark puede inferir el esquema si los registros son consistentes:
@@ -133,6 +133,7 @@ df.write     # Para guardar</code></pre>
     En JSON es especialmente importante mantener consistencia de tipos y estructura para evitar columnas con tipos ambiguos
     o estructuras anidadas inconsistentes.
   </p>
+           <hr>
   <h4>Lectura de Parquet</h4>
   <p>
     Parquet es un formato columnar optimizado para analítica y es el estándar recomendado en la mayoría de casos Big Data:
@@ -145,7 +146,7 @@ df.write     # Para guardar</code></pre>
     <li>Mejor integración con motores analíticos y catálogos de datos.</li>
   </ul>
 
-
+ <hr>
   <h4>Lectura desde bases de datos relacionales (JDBC)</h4>
   <p>
     Spark permite leer desde bases de datos mediante JDBC. Ejemplo con PostgreSQL:
@@ -170,7 +171,7 @@ df.write     # Para guardar</code></pre>
   <p>
     Esto permite dividir la tabla en rangos y leerlos en paralelo (siempre que exista una columna adecuada para particionar).
   </p>
-
+ <hr>
   <h4>Lectura desde almacenamiento en la nube (ejemplo S3)</h4>
   <p>
     Spark puede leer desde almacenamiento en la nube usando conectores adecuados. Ejemplo con S3:
