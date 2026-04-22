@@ -30,19 +30,19 @@
       <div id="index-container" class="text-cell">
          <hr>
          <ul>
-           <li><a href="#descripcion">Descripción</a></li>
+           <li><a href="#descripcion">Introducción</a></li>
            <li><a href="#dataframes">Operaciones sobre DataFrames</a></li>
            <li><a href="#dataset">Dataset (Scala/Java) y operaciones tipadas</a></li>
              <li><a href="#consideraciones">Consideraciones Generales</a></li>
            <li><a href="#conclusion">Conclusión</a></li>
-             <li><a href="#ejercicio">Ejercicio práctico</a></li>
+
 
          </ul>
        </div>
      </div>
     <section id="descripcion">
       <div class="lesson-container">
-        <h3>DESCRIPCIÓN</h3>
+        <h3>INTRODUCCIÓN</h3>
         <hr>
         <div class="text-cell">
 
@@ -146,7 +146,7 @@ df.withColumn("rn", row_number().over(w))</code></pre>
     Spark selecciona estrategias de join según tamaños estimados, estadísticas y configuración: broadcast join, sort-merge join o
     shuffle hash join, entre otras.
   </p>
-
+<hr>
   <h4>Tipos de join y optimización</h4>
 
   <strong>Broadcast join</strong>
@@ -237,7 +237,7 @@ val ds = spark.read.json("personas.json").as[Persona]</code></pre>
   <p>
     Spark intentará aplicar el filtro y la proyección en el orden más eficiente, y eliminará columnas innecesarias lo antes posible.
   </p>
-
+<hr>
   <h4>Tungsten y ejecución eficiente</h4>
   <p>
     Tungsten se refiere a un conjunto de mejoras orientadas a la eficiencia de ejecución y memoria, destacando:
@@ -251,7 +251,7 @@ val ds = spark.read.json("personas.json").as[Persona]</code></pre>
     Estas optimizaciones suelen traducirse en mejoras significativas respecto a aproximaciones equivalentes con RDD, especialmente en
     cargas ETL/analítica.
   </p>
-
+<hr>
   <h4>Análisis del plan de ejecución</h4>
   <p>
     Spark permite inspeccionar cómo se ejecutará una operación mediante <code>explain()</code>. Esto es clave para analizar joins,
@@ -270,7 +270,7 @@ val ds = spark.read.json("personas.json").as[Persona]</code></pre>
     <li>Estrategia de join seleccionada.</li>
     <li>Indicadores de shuffle (Exchange) y ordenación (Sort).</li>
   </ul>
-
+<hr>
   <h4>Particionado, shuffle y optimización</h4>
   <p>
     La distribución de datos en particiones influye directamente en el rendimiento. En DataFrames, operaciones como joins y groupBy
@@ -307,7 +307,7 @@ df_coal = df.coalesce(2)</code></pre>
   <p>
     Esto resulta especialmente útil cuando el plan es costoso (joins, agregaciones) y el dataset intermedio se reutiliza varias veces.
   </p>
-
+<hr>
   <h4>UDF vs funciones nativas</h4>
   <p>
     Las UDF (User Defined Functions) permiten lógica personalizada, pero pueden perjudicar el rendimiento porque limitan la capacidad
@@ -320,7 +320,7 @@ df_coal = df.coalesce(2)</code></pre>
     <li>Preferir funciones nativas de <code>pyspark.sql.functions</code> siempre que sea posible.</li>
     <li>Evitar UDF en transformaciones críticas; considerar SQL expressions, funciones integradas o UDFs vectorizadas (según caso).</li>
   </ul>
-
+<hr>
   <h4>Buenas prácticas de optimización</h4>
   <ul>
     <li>Usar DataFrames/SQL para ETL y analítica: favorece optimización automática.</li>
@@ -331,7 +331,7 @@ df_coal = df.coalesce(2)</code></pre>
     <li>Revisar planes con <code>explain(True)</code> para validar estrategia y detectar cuellos de botella.</li>
     <li>Cachear datasets intermedios reutilizados.</li>
   </ul>
-
+<hr>
   <h4>Comparación RDD vs DataFrame/Dataset</h4>
   <table border="1">
     <thead>
@@ -397,47 +397,6 @@ df_coal = df.coalesce(2)</code></pre>
       </div>
     </section>
 </section>
-    <section id="ejercicio">
-      <div class="lesson-container">
-        <h3>EJERCICIO PRÁCTICO</h3>
-        <hr>
-        <div class="text-cell">
-
-
-
-  <strong>Objetivo</strong>
-  <p>
-    Analizar el impacto de la estrategia de join y del ajuste de particiones de shuffle comparando ejecución con y sin broadcast.
-  </p>
-
-  <strong>Enunciado</strong>
-  <ol>
-    <li>Cargar un dataset grande (por ejemplo, transacciones) y otro pequeño (por ejemplo, catálogo de productos).</li>
-    <li>Ejecutar un join sin forzar broadcast y medir tiempo aproximado.</li>
-    <li>Inspeccionar el plan con <code>explain(True)</code> e identificar la estrategia de join.</li>
-    <li>Repetir el join forzando broadcast del dataset pequeño y medir tiempo.</li>
-    <li>Ajustar <code>spark.sql.shuffle.partitions</code> y repetir la ejecución.</li>
-    <li>Documentar: diferencias en planes, número de shuffles y tiempos.</li>
-  </ol>
-
-  <strong>Ejemplo orientativo (PySpark)</strong>
-  <pre><code  class="language-python python-code">from pyspark.sql.functions import broadcast
-
-spark.conf.set("spark.sql.shuffle.partitions", 200)
-
-df_big = spark.read.parquet("transacciones.parquet")
-df_small = spark.read.parquet("catalogo.parquet")
-
-join1 = df_big.join(df_small, "product_id")
-join1.explain(True)
-join1.count()
-
-join2 = df_big.join(broadcast(df_small), "product_id")
-join2.explain(True)
-join2.count()</code></pre>
-        </div>
-      </div>
-    </section>
 
     <div class="navigation-buttons">
       <button onclick="window.location.href='M2T2L8.html'">Anterior</button>

@@ -34,6 +34,7 @@
                  <li><a href="#cargar">Cargar Datos en Spark</a></li>
                  <li><a href="#guardar">Guardar Datos en Spark</a></li>
                  <li><a href="#buenaspracticas">Buenas prácticas en el desarrollo de aplicaciones Spark</a></li>
+                 <li><a href="#conclusion">Conclusión</a></li>
              </ul>
          </div>
      </div>
@@ -353,10 +354,17 @@ rdd.saveAsTextFile("salida_rdd")</code></pre>
     <li>En Docker, validar rutas y permisos de volúmenes montados para lectura/escritura.</li>
   </ul>
 
+   </div>
+      </div>
+    </section>
 
+    <section id="conclusion">
+            <div class="lesson-container">
+        <h3>CONCLUSIÓN</h3>
+        <hr>
+        <div class="text-cell">
 
-  <h3>Conclusión</h3>
-  <p>
+          <p>
     La carga y guardado de datos en Spark es un componente esencial del procesamiento distribuido. El uso de
     DataFrameReader y DataFrameWriter permite integrar Spark con múltiples sistemas y formatos, mientras que la elección
     adecuada del formato (especialmente Parquet) y estrategias como el particionamiento impactan directamente en rendimiento,
@@ -367,8 +375,10 @@ rdd.saveAsTextFile("salida_rdd")</code></pre>
     prácticas tanto en entornos académicos como en producción.
   </p>
           <p>Parquet es preferido por su compresión y esquema. El particionado mejora consultas filtradas pero puede generar demasiados ficheros si los buckets son pequeños.</p>
+
         </div>
-      </div>
+            </div>
+
     </section>
 
     <div class="navigation-buttons">

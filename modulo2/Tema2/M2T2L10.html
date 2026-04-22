@@ -30,9 +30,9 @@
       <div id="index-container" class="text-cell">
          <hr>
          <ul>
-           <li><a href="#descripcion">Descripción</a></li>
+           <li><a href="#descripcion">Introducción</a></li>
            <li><a href="#ejemplos">Ejemplos Avanzados</a></li>
-              <li><a href="#ejercicio">Ejercicio propuesto</a></li>
+
 
          </ul>
        </div>
@@ -40,7 +40,7 @@
 
     <section id="descripcion">
       <div class="lesson-container">
-        <h3>DESCRIPCIÓN</h3>
+        <h3>INTRODUCCIÓN</h3>
         <hr>
         <div class="text-cell">
 
@@ -55,7 +55,7 @@
     Desde Spark 2.0, el API estructurado se ha consolidado como el estándar para el desarrollo de pipelines ETL y analítica avanzada,
     debido a su eficiencia, expresividad y capacidad para adaptar la ejecución a distintos entornos de clúster.
   </p>
-
+<hr>
   <h4>¿Qué es un DataFrame?</h4>
   <p>
     Un <strong>DataFrame</strong> es una colección distribuida de datos organizada en columnas, asociada a un <em>schema</em>
@@ -65,7 +65,7 @@
   <p>Ejemplo básico en PySpark:</p>
   <pre><code  class="language-python python-code">df = spark.read.csv("datos.csv", header=True, inferSchema=True)
 df.select("nombre", "edad").filter("edad &gt; 30")</code></pre>
-
+<hr>
   <h4>¿Qué es un Dataset?</h4>
   <p>
     Un <strong>Dataset</strong> extiende el concepto de DataFrame añadiendo tipado fuerte en lenguajes como Scala y Java. En términos
@@ -80,7 +80,7 @@ df.select("nombre", "edad").filter("edad &gt; 30")</code></pre>
   <p>Ejemplo en Scala:</p>
   <pre><code  class="language-python python-code">case class Persona(nombre: String, edad: Int)
 val ds = spark.read.json("personas.json").as[Persona]</code></pre>
-
+<hr>
   <h4>Principios fundamentales del API estructurado</h4>
 
   <strong>Programación declarativa</strong>
@@ -152,13 +152,13 @@ val ds = spark.read.json("personas.json").as[Persona]</code></pre>
     <li>Preparación de datasets para BI.</li>
     <li>Procesamiento batch y streaming estructurado.</li>
   </ul>
-
+<hr>
   <h4>Relación con el motor interno</h4>
   <p>
     Aunque el desarrollador trabaja a alto nivel, la ejecución final se materializa como tareas sobre particiones distribuidas:
   </p>
   <pre><code  class="language-python python-code">Dataset → DataFrame → Logical Plan → Physical Plan → RDD → Tasks</code></pre>
-
+<hr>
   <h4>Conclusión</h4>
   <p>
     El API de DataFrames y Datasets representa la evolución del modelo de programación de Spark hacia un paradigma declarativo,
@@ -170,16 +170,16 @@ val ds = spark.read.json("personas.json").as[Persona]</code></pre>
       </div>
     </section>
 
-    <section id="ejempos">
+    <section id="ejemplos">
       <div class="lesson-container">
         <h3>EJEMPLOS AVANZADOS DEL API DE DATAFRAMES(PYSPARK) Y DATASETS (SCALA/JAVA)</h3>
         <hr>
         <div class="text-cell">
 
 
-  <h4>1. Ventanas avanzadas (Window Functions)</h4>
+  <h4>Ventanas avanzadas (Window Functions)</h4>
 
-  <strong>Top-N por grupo (row_number / dense_rank)</strong>
+  <strong>Top-N por grupo (row_number / dense_rank)</strong>: Selección de los tres empleados con mayor salario
   <pre><code  class="language-python python-code">from pyspark.sql import functions as F
 from pyspark.sql.window import Window
 
@@ -191,8 +191,7 @@ df_top = (df
   .drop("rn")
 )</code></pre>
 
-  <strong>Métricas móviles (rolling) con rangeBetween</strong>
-  <p>Ejemplo: media móvil por usuario en los últimos 7 días (si <code>ts</code> es timestamp).</p>
+  <strong>Métricas móviles (rolling) con rangeBetween</strong>: Calcula el promedio del campo importe en los últimos 7 días para cada user_id, tomando como referencia cada fila (en este caso, ts debe ser tipo timestamp o convertible a long)
   <pre><code  class="language-python python-code">from pyspark.sql import functions as F
 from pyspark.sql.window import Window
 
@@ -204,7 +203,15 @@ w7d = (Window
 
 df_roll = df.withColumn("avg_7d", F.avg("importe").over(w7d))</code></pre>
 
-  <strong>Sessionization con lag + sum acumulado</strong>
+  <strong>Sessionization con lag + sum acumulado</strong> : agrupa los eventos de cada user_id en sesiones, considerando que empieza una sesión nueva cuando pasan más de 30 minutos entre un evento y el siguiente.
+          Si un usuario genera eventos con marcas de tiempo, <code>ts</code>, este código:
+          <ul>
+          <li>Ordena esos eventos por tiempo</li>
+          <li>Calcula cúanto timpo ha pasado desde el evento anterior</li>
+          <li>Marca el inicio de una nueva sesión si el tiempo transcurrido es mayor a 30 minutos o si no hay evento anterior (primer evento del usuario)</li>
+          <li>Asigna un <code>session_id</code> acumulado</li>
+          </ul>
+
   <pre><code  class="language-python python-code">from pyspark.sql import functions as F
 from pyspark.sql.window import Window
 
@@ -217,31 +224,37 @@ df_sess = (df
   .withColumn("session_id", F.sum("new_sess").over(w))
   .drop("prev_ts", "gap_min", "new_sess")
 )</code></pre>
-
-  <h4>2. Joins avanzados</h4>
+<hr>
+  <h4>Joins avanzados</h4>
 
   <strong> Anti join / Semi join</strong>
+          <ul>
+            <li><strong><code>left_anti</code>:</strong> Toma los elemento de la izquierda que NO están en la derecha</li>
+            <li><strong><code>left_semi</code>:</strong> Toma los elementos de la izquierda que SÍ están en la derecha</li>
+          </ul>
+          <p>Recuerda que un inner join normal, devuelve columnas de ambos DataFrames y puede duplicar filas</p>
   <pre><code  class="language-python python-code"># Usuarios que NO tienen transacciones (left_anti)
 df_no_tx = users.join(tx.select("user_id").distinct(), "user_id", "left_anti")
 
 # Usuarios que SÍ tienen transacciones (left_semi)
 df_has_tx = users.join(tx.select("user_id").distinct(), "user_id", "left_semi")</code></pre>
 
-  <strong>Join con condición no equi-join (rangos)</strong>
+  <strong>Join con condición no equi-join (rangos)</strong> : Join por rango temporal entre las transacciones Tx y promociones. Se asocia a cada transacción la promoción que estaba activa en ese momento.
+          Es decir, ocurre despúes o en el inicio de la promo <code> >= start_ts</code> y antes del final <code> < end_ts</code>
   <pre><code  class="language-python python-code">cond = (
   (tx["ts"] &gt;= promo["start_ts"]) &
   (tx["ts"] &lt;  promo["end_ts"])
 )
 tx_promo = tx.join(promo, cond, "left")</code></pre>
 
-  <strong>Join optimizado con broadcast (tabla pequeña)</strong>
+  <strong>Join optimizado con broadcast</strong>: Es una buena práctica cuando tienes una tabla grande y otra pequeña, se recomienda forzar el broadcast de la tabla pequeña para evitar shuffles costosos. En este ejemplo, se asume que <code>dim_productos</code> es una dimensión pequeña que se puede replicar en cada nodo para evitar shuffle.
   <pre><code  class="language-python python-code">from pyspark.sql import functions as F
 
 tx_enriched = tx.join(F.broadcast(dim_productos), "product_id", "left")</code></pre>
+<hr>
+  <h4>Agregaciones avanzadas: pivot, rollup, cube, grouping sets</h4>
 
-  <h4>3 Agregaciones avanzadas: pivot, rollup, cube, grouping sets</h4>
-
-  <strong>Pivot</strong>
+  <strong>Pivot</strong>: Permite transformar filas en columnas. En este ejemplo, se calcula la suma de ventas por país y canal, pivotando el campo canal para obtener columnas separadas para cada tipo de canal (web, mobile, store).
   <pre><code  class="language-python python-code">from pyspark.sql import functions as F
 
 df_pivot = (df
@@ -250,13 +263,14 @@ df_pivot = (df
   .agg(F.sum("importe").alias("ventas"))
 )</code></pre>
 
-  <strong>Rollup / Cube</strong>
+  <strong>Rollup / Cube</strong>: Permiten generar agregaciones a múltiples niveles de granularidad. Rollup genera subtotales jerárquicos, mientras que Cube genera todas las combinaciones posibles. En este ejemplo, se calcula la suma de ventas por país y ciudad (rollup) y por país y canal (cube).
+           El resultado de rollup incluirá filas con total por país <code>ciudad = null</code> y total general <code>pais = null, ciudad = null</code>. El resultado de cube incluirá filas con total por país <code>canal = null</code>, total por canal <code>pais = null</code> y total general <code>pais = null, canal = null</code>.
   <pre><code  class="language-python python-code">from pyspark.sql import functions as F
 
 roll = df.rollup("pais", "ciudad").agg(F.sum("importe").alias("ventas"))
 cube = df.cube("pais", "canal").agg(F.sum("importe").alias("ventas"))</code></pre>
 
-  <strong>Grouping sets vía SQL</strong>
+  <strong>Grouping sets vía SQL</strong>: Permite definir explícitamente las combinaciones de agrupación que se desean calcular. En este ejemplo, se calculan las ventas por país y ciudad, por país y canal, y por país sin desglosar.
   <pre><code  class="language-python python-code">df.createOrReplaceTempView("t")
 spark.sql("""
 SELECT pais, ciudad, canal, SUM(importe) ventas
@@ -267,17 +281,17 @@ GROUP BY GROUPING SETS (
   (pais)
 )
 """)</code></pre>
+<hr>
+  <h4>Manejo avanzado de estructuras complejas (arrays, maps, structs)</h4>
 
-  <h3>4 Manejo avanzado de estructuras complejas (arrays, maps, structs)</h3>
-
-  <strong>explode / posexplode (arrays)</strong>
+  <strong>explode / posexplode (arrays)</strong>: Permite convertir elementos de un array en filas individuales. En este ejemplo, se toma una columna <code>tags</code> que es un array de etiquetas y se genera una fila por cada etiqueta, manteniendo el resto de columnas.
   <pre><code  class="language-python python-code">from pyspark.sql import functions as F
 
 df_ex = (df
   .withColumn("tag", F.explode("tags"))
 )</code></pre>
 
-  <strong>transform / filter / size en arrays (expresiones)</strong>
+  <strong>transform / filter / size en arrays (expresiones)</strong>: Permite aplicar transformaciones y filtros directamente sobre arrays sin necesidad de explotar la columna. En este ejemplo, se crean nuevas columnas a partir de la columna <code>tags</code>: una con las etiquetas en mayúscula, otra con solo las etiquetas que empiezan con 'A', y otra con el número total de etiquetas.
   <pre><code  class="language-python python-code">from pyspark.sql import functions as F
 
 df_arr = (df
@@ -286,7 +300,7 @@ df_arr = (df
   .withColumn("n_tags", F.expr("size(tags)"))
 )</code></pre>
 
-  <strong>structs y acceso a campos</strong>
+  <strong>structs y acceso a campos</strong>: Permite agrupar varias columnas en una estructura anidada y acceder a sus campos. En este ejemplo, se crea una nueva columna <code>persona</code> que es un struct con los campos <code>nombre</code> y <code>edad</code>, y luego se accede a esos campos para seleccionarlos.
   <pre><code  class="language-python python-code">from pyspark.sql import functions as F
 
 df_struct = df.select(
@@ -296,17 +310,20 @@ df_struct = df.select(
 
 df_struct.select("persona.nombre", "persona.edad")</code></pre>
 
-  <strong>map_keys / map_values</strong>
+  <strong>map_keys / map_values</strong>: Permite extraer las claves y valores de una columna de tipo map. En este ejemplo, se toma una columna <code>atributos</code> que es un map (por ejemplo, con clave-valor de características) y se generan dos nuevas columnas: una con las claves (keys) del map y otra con los valores.
   <pre><code  class="language-python python-code">from pyspark.sql import functions as F
 
 df_map = (df
   .withColumn("map_keys", F.map_keys("atributos"))
   .withColumn("map_vals", F.map_values("atributos"))
 )</code></pre>
+<hr>
+  <h4>Deduplicación avanzada</h4>
+          <p>En muchos casos, es común encontrarse con datos que contienen registros duplicados según una clave (por ejemplo, un ID de usuario o transacción). En lugar de eliminar todos los duplicados, a menudo se desea mantener solo el registro más reciente o relevante según un criterio específico (por ejemplo, la fecha de actualización). Para lograr esto, se pueden utilizar funciones de ventana para asignar un número de fila ordenado por el campo de timestamp y luego filtrar por el número de fila igual a 1, lo que garantiza que solo se conserve el registro más reciente para cada clave.
 
-  <h4>5 Deduplicación avanzada</h4>
+          </p>
 
-  <strong>Mantener el registro más reciente por clave</strong>
+  <strong>Mantener el registro más reciente por clave</strong>: Si tienes registros duplicados por una clave (por ejemplo, <code>id</code>) y quieres quedarte solo con el registro más reciente según un campo de timestamp (<code>updated_at</code>), puedes usar funciones de ventana para asignar un número de fila ordenado por fecha y luego filtrar por el número de fila igual a 1.
   <pre><code  class="language-python python-code">from pyspark.sql import functions as F
 from pyspark.sql.window import Window
 
@@ -318,7 +335,7 @@ df_latest = (df
   .drop("rn")
 )</code></pre>
 
-  <strong>CDC simple (detección de cambios entre snapshots)</strong>
+  <strong>CDC simple (detección de cambios entre snapshots)</strong>: Si tienes dos DataFrames que representan el estado de una tabla en dos momentos diferentes (por ejemplo, <code>df_old</code> y <code>df_new</code>), puedes realizar un join completo (full outer join) por la clave (por ejemplo, <code>id</code>) y luego usar condiciones para clasificar cada registro como INSERT, DELETE, UPDATE o NOCHANGE.
   <pre><code  class="language-python python-code">from pyspark.sql import functions as F
 
 cols = ["id", "campo1", "campo2"]
@@ -338,10 +355,11 @@ changes = (new.alias("n")
        ).otherwise(F.lit("NOCHANGE"))
   )
 )</code></pre>
-
-  <h4>6 UDF avanzada (y alternativa recomendada)</h4>
-
-  <strong>UDF (limita optimización)</strong>
+<hr>
+  <h4>UDF avanzada (y alternativa recomendada)</h4>
+<p>Entendemos como UDF  a una función definida por el usuario que se registra como función de Spark para ser utilizada en expresiones de DataFrame. Las UDF permiten aplicar lógica personalizada que no está disponible en las funciones integradas de Spark, pero tienen la contra que limitan la optimización del plan de ejecución, ya que Spark no puede entender su lógica interna para reordenar o empujar operaciones. Por eso, siempre que sea posible, es recomendable buscar alternativas nativas utilizando las funciones integradas de Spark, que sí permiten optimización y suelen ser más eficientes.
+</p>
+  <strong>UDF (limita optimización)</strong>:En este ejemplo, se define una UDF que asigna un score de 1 si el importe es mayor a 10, y 0 en caso contrario.
   <pre><code  class="language-python python-code">from pyspark.sql import functions as F
 from pyspark.sql.types import IntegerType
 
@@ -351,27 +369,33 @@ def score(x):
 
 df2 = df.withColumn("score", score(F.col("importe")))</code></pre>
 
-  <strong>Alternativa nativa (recomendada)</strong>
+  <strong>Alternativa nativa (recomendada)</strong>: En lugar de usar una UDF, se puede lograr el mismo resultado utilizando la función condicional <code>when</code> de Spark, que sí permite optimización.
   <pre><code  class="language-python python-code">from pyspark.sql import functions as F
 
 df2 = df.withColumn("score", F.when(F.col("importe") &gt; 10, 1).otherwise(0))</code></pre>
+<hr>
+  <h4>Optimización práctica: AQE, skew y particiones de shuffle</h4>
+          <p> En escenarios de joins con datos muy desbalanceados (skew), donde algunas claves tienen un volumen de datos mucho mayor que otras, es común que el rendimiento se degrade debido a tareas que procesan grandes volúmenes de datos asociados a esas claves. Para mitigar este problema, Spark ofrece la opción de activar el Adaptive Query Execution (AQE) y la optimización específica para skew joins. Además, ajustar el número de particiones de shuffle puede ayudar a mejorar la distribución de la carga y reducir los tiempos de ejecución en operaciones de join y agregación. Es importante inspeccionar el plan de ejecución con <code>explain(True)</code> para entender cómo Spark está ejecutando la consulta y verificar si las optimizaciones están teniendo efecto.
 
-  <h4>7 Optimización práctica: AQE, skew y particiones de shuffle</h4>
+          </p>
 
-  <stong>Activar Adaptive Query Execution (AQE)</stong>
+  <strong>Activar Adaptive Query Execution (AQE)</strong> : AQE permite a Spark ajustar dinámicamente el plan de ejecución durante la ejecución de la consulta, lo que puede mejorar el rendimiento en casos de joins con datos skew o cuando el tamaño de las tablas no es conocido previamente.
   <pre><code  class="language-python python-code">spark.conf.set("spark.sql.adaptive.enabled", "true")
 spark.conf.set("spark.sql.adaptive.skewJoin.enabled", "true")</code></pre>
 
-  <strong>Ajustar particiones de shuffle</strong>
+  <strong>Ajustar particiones de shuffle</strong> : En operaciones de join o agregación que requieren shuffle, el número de particiones de shuffle puede afectar significativamente el rendimiento. Un número demasiado bajo puede generar tareas muy grandes y lentas, mientras que un número demasiado alto puede generar overhead por la gestión de muchas tareas pequeñas. Ajustar este parámetro según el tamaño de los datos y la capacidad del clúster puede ayudar a mejorar los tiempos de ejecución.
   <pre><code  class="language-python python-code">spark.conf.set("spark.sql.shuffle.partitions", "200")</code></pre>
 
-  <strong>Inspeccionar plan de ejecución</strong>
+  <strong>Inspeccionar plan de ejecución</strong>: Es fundamental revisar el plan de ejecución para entender cómo Spark está procesando la consulta, identificar posibles cuellos de botella y verificar si las optimizaciones están teniendo efecto. El método <code>explain(True)</code> muestra el plan lógico, optimizado y físico, lo que permite analizar aspectos como el tipo de join utilizado, la presencia de shuffles, la estrategia de agregación, entre otros.
   <pre><code  class="language-python python-code">df_join.explain(True)</code></pre>
+<hr>
+  <h4>Dataset tipado (Scala): operaciones por clave y agregación tipada</h4>
+          <p> En Scala, el API de Datasets permite trabajar con tipos de datos definidos por el usuario (case classes) y realizar operaciones de agrupación y agregación manteniendo el tipo de dato específico. Esto facilita la escritura de código más expresivo y seguro, ya que el compilador puede verificar los tipos en tiempo de compilación.</p>
+          <p> En este ejemplo, se define una case class <code>Tx</code> para representar una transacción, se carga un Dataset tipado a partir de un archivo Parquet, se agrupa por el campo <code>userId</code> y se calcula la suma de los importes utilizando una función de agregación tipada. </p>
+          <p>Este enfoque es exclusivo de Scala/Java, ya que en PySpark no existe la distinción entre DataFrame y Dataset tipado, y normalmente se trabaja con DataFrames sin tipado fuerte.
 
-  <h4>8 Dataset tipado (Scala): operaciones por clave y agregación tipada</h4>
-  <p>
-    Nota: en PySpark no existe Dataset tipado; este patrón es propio de Scala/Java.
-  </p>
+          </p>
+
   <pre><code  class="language-python python-code">case class Tx(userId: String, amount: Double, ts: java.sql.Timestamp)
 
 val ds = spark.read.parquet("tx.parquet").as[Tx]
@@ -379,20 +403,24 @@ val ds = spark.read.parquet("tx.parquet").as[Tx]
 val byUser = ds.groupByKey(_.userId)
 val agg = byUser.agg(org.apache.spark.sql.expressions.scalalang.typed.sum[Tx](_.amount))</code></pre>
 
-  <h4>9 Patrón avanzado de ETL: Bronze → Silver → Gold</h4>
-
-  <strong>1 Bronze (raw)</strong>
-  <pre><code  class="language-python python-code">bronze = spark.read.json("s3a://bucket/raw/events/")</code></pre>
-
-  <strong>Silver (limpio + normalizado)</strong>
+          <hr>
+  <h4>Patrón avanzado de ETL: Bronze → Silver → Gold</h4>
+<p>El patrón de arquitectura de datos conocido como Bronze → Silver → Gold es una estrategia comúnmente utilizada en pipelines de datos para organizar y procesar la información de manera eficiente y escalable. Este enfoque se basa en la idea de tener diferentes capas o niveles de procesamiento, donde cada capa tiene un propósito específico:
+<ul>
+<li><strong>Bronze:</strong> Es la capa de ingestión o raw, donde se almacenan los datos tal como llegan, sin transformaciones ni limpieza. Aquí se guardan los datos en su formato original, lo que permite tener un historial completo y la posibilidad de volver a procesar los datos si es necesario.</li>
+          <pre><code  class="language-python python-code">bronze = spark.read.json("s3a://bucket/raw/events/")</code></pre>
+          <li><strong>Silver:</strong> Es la capa de procesamiento o limpio, donde se aplican transformaciones, limpieza y normalización a los datos. En esta etapa, se eliminan registros duplicados, se corrigen errores, se convierten tipos de datos y se preparan los datos para su análisis. El objetivo es tener un dataset más estructurado y de calidad, listo para ser utilizado en análisis exploratorios o como base para la capa Gold.</li>
   <pre><code  class="language-python python-code">from pyspark.sql import functions as F
 
 silver = (bronze
   .withColumn("ts", F.to_timestamp("event_time"))
   .dropna(subset=["user_id", "ts"])
 )</code></pre>
+          <li><strong>Gold:</strong> Es la capa de consumo o agregado, donde se realizan agregaciones, cálculos complejos y se preparan los datos para su consumo final, como por ejemplo para alimentar dashboards, informes o modelos de machine learning. En esta etapa, se pueden generar tablas agregadas, vistas materializadas o datasets optimizados para consultas de BI, con el objetivo de facilitar el acceso y mejorar el rendimiento en las consultas finales.</li>
 
-  <strong> Gold (agregado para BI)</strong>
+
+</p>
+
   <pre><code  class="language-python python-code">from pyspark.sql import functions as F
 
 gold = (silver
@@ -403,69 +431,7 @@ gold = (silver
   </div>
       </div>
     </section>
-    <section id="ejercicio">
-      <div class="lesson-container">
-        <h3>EJERCICIO PROPUESTO</h3>
-        <hr>
-        <div class="text-cell">
 
-  <h3>1 Objetivo</h3>
-  <p>
-    Aplicar operaciones avanzadas (join, ventanas, deduplicación) y comparar decisiones del optimizador (plan físico),
-    utilizando <code>explain(True)</code> y técnicas como broadcast join.
-  </p>
-
-  <h3>2 Enunciado</h3>
-  <ol>
-    <li>Cargar un dataset de transacciones y una dimensión pequeña (productos o clientes).</li>
-    <li>Realizar un join normal y analizar el plan con <code>explain(True)</code>.</li>
-    <li>Repetir forzando broadcast de la tabla pequeña y comparar plan y tiempos.</li>
-    <li>Implementar un Top-3 por grupo con funciones de ventana.</li>
-    <li>Aplicar deduplicación por clave manteniendo el registro más reciente.</li>
-    <li>Escribir la salida en Parquet particionada por una columna (por ejemplo, país o categoría).</li>
-  </ol>
-
-  <h3>3  Pistas de implementación</h3>
-  <pre><code  class="language-python python-code">from pyspark.sql import functions as F
-from pyspark.sql.window import Window
-
-# 1) Join normal vs broadcast
-join_normal = tx.join(dim_productos, "product_id", "left")
-join_normal.explain(True)
-
-join_bc = tx.join(F.broadcast(dim_productos), "product_id", "left")
-join_bc.explain(True)
-
-# 2) Ventana Top-3
-w = Window.partitionBy("departamento").orderBy(F.desc("salario"))
-top3 = (empleados
-  .withColumn("rn", F.row_number().over(w))
-  .filter(F.col("rn") &lt;= 3)
-  .drop("rn")
-)
-
-# 3) Dedupe por id (último updated_at)
-w2 = Window.partitionBy("id").orderBy(F.desc("updated_at"))
-latest = (df
-  .withColumn("rn", F.row_number().over(w2))
-  .filter(F.col("rn") == 1)
-  .drop("rn")
-)
-
-# 4) Escritura particionada
-latest.write.mode("overwrite").partitionBy("pais").parquet("salida_gold")</code></pre>
-
-  <h3>4 Entregables</h3>
-  <ul>
-    <li>Capturas o transcripción de <code>explain(True)</code> para join normal y join con broadcast.</li>
-    <li>Tabla comparativa con tiempos aproximados y observaciones (número de shuffles, estrategia de join).</li>
-    <li>Explicación breve (10-15 líneas) justificando las diferencias observadas y las decisiones de optimización.</li>
-    <li>Dataset final en Parquet particionado y descripción de la estructura de carpetas generada.</li>
-  </ul>
-
-        </div>
-      </div>
-    </section>
 
     <div class="navigation-buttons">
       <button onclick="window.location.href='M2T2L9.html'">Anterior</button>

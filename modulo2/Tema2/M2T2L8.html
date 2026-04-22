@@ -35,7 +35,7 @@
            <li><a href="#acciones">Acciones</a></li>
            <li><a href="#consideraciones">Consideraciones generales</a></li>
            <li><a href="#conclusion">Conclusión</a></li>
-           <li><a href="#ejemplos">Ejemplos</a></li>
+
          </ul>
        </div>
      </div>
@@ -98,7 +98,7 @@
   <strong>filter()</strong>
   <p>Filtra elementos según una condición booleana.</p>
   <pre><code  class="language-python python-code">rdd2 = rdd.filter(lambda x: x &gt; 10)</code></pre>
-
+<hr>
   <h4>Transformaciones por clave (clave-valor)</h4>
   <p>
     Muchas operaciones en Spark se basan en pares <code>(clave, valor)</code>. Estas transformaciones son fundamentales para
@@ -124,7 +124,7 @@
     Permite agregaciones más avanzadas con control detallado sobre cómo se inicializan acumuladores, cómo se combinan dentro
     de una partición y cómo se fusionan entre particiones. Es útil para medias, varianzas u otras métricas compuestas.
   </p>
-
+<hr>
   <h4>Transformaciones estructurales</h4>
 
   <strong>distinct()</strong>
@@ -142,7 +142,7 @@
     Devuelve elementos comunes entre dos RDDs. Suele implicar shuffle y puede ser costosa en datasets grandes.
   </p>
   <pre><code  class="language-python python-code">rdd3 = rdd1.intersection(rdd2)</code></pre>
-
+<hr>
   <h4>Transformaciones de particionado</h4>
   <p>
     Estas transformaciones modifican cómo se distribuyen los datos en particiones, lo que afecta al paralelismo, a la ejecución y,
@@ -198,7 +198,7 @@
   <strong>take(n)</strong>
   <p>Devuelve los primeros <code>n</code> elementos.</p>
   <pre><code  class="language-python python-code">muestra = rdd.take(5)</code></pre>
-
+<hr>
   <h4>Acciones de agregación</h4>
 
   <strong>reduce()</strong>
@@ -210,7 +210,7 @@
     Permite agregaciones más controladas con un valor inicial y funciones separadas para combinar dentro de particiones y entre
     particiones. Resulta útil cuando el tipo acumulador difiere del tipo de los elementos o cuando se requiere lógica más compleja.
   </p>
-
+<hr>
   <h4>Acciones de escritura</h4>
 
   <strong>saveAsTextFile()</strong>
@@ -260,7 +260,7 @@
     <li><code>distinct</code></li>
     <li><code>intersection</code> (en muchos casos)</li>
   </ul>
-
+<hr>
   <h4>Persistencia y cache</h4>
   <p>
     Dado que las transformaciones son perezosas, si un RDD se reutiliza en varias acciones, Spark podría recomputarlo desde el
@@ -279,8 +279,8 @@ rdd.persist(StorageLevel.MEMORY_AND_DISK)</code></pre>
   <p>
     Permite controlar dónde se almacena (memoria, disco, serializado, etc.). Esto es importante cuando el dataset no cabe en memoria.
   </p>
-
-  <h3>Ejemplo completo de pipeline con RDD</h3>
+<hr>
+  <h4>Ejemplo completo de pipeline con RDD</h4>
   <p>
     El siguiente ejemplo implementa un conteo de palabras (WordCount), un clásico para ilustrar transformaciones y acciones:
   </p>
@@ -302,8 +302,8 @@ print(resultado.take(10))</code></pre>
     <li>Agregación por clave (reduceByKey).</li>
     <li>Acción (take) para obtener una muestra y ejecutar el pipeline.</li>
   </ol>
-
-  <h3>Rendimiento y buenas prácticas</h3>
+<hr>
+  <h4>Rendimiento y buenas prácticas</h4>
   <ul>
     <li>Preferir <code>reduceByKey()</code> frente a <code>groupByKey()</code> para agregaciones (menos coste de shuffle).</li>
     <li>Minimizar operaciones que impliquen shuffle (joins, distinct, groupByKey, repartition).</li>
@@ -336,52 +336,7 @@ print(resultado.take(10))</code></pre>
         </div>
       </div>
     </section>
-    <section id="ejemplos">
-      <div class="lesson-container">
-        <h3>EJERCICIO PROPUESTO</h3>
-        <hr>
-        <div class="text-cell">
 
-
-  <strong>Objetivo</strong>
-  <p>
-    Implementar y evaluar un pipeline de procesamiento con RDD, analizando el efecto de la persistencia en el rendimiento.
-  </p>
-
-  <strong>Enunciado</strong>
-  <ol>
-    <li>Leer un fichero de texto (o un dataset de logs) como RDD.</li>
-    <li>Implementar un conteo de palabras con <code>flatMap</code>, <code>map</code> y <code>reduceByKey</code>.</li>
-    <li>Medir el tiempo de la primera ejecución con una acción (por ejemplo, <code>count()</code> o <code>take()</code>).</li>
-    <li>Aplicar <code>cache()</code> o <code>persist()</code> sobre el RDD resultante.</li>
-    <li>Ejecutar una segunda acción sobre el mismo RDD y medir el tiempo.</li>
-    <li>Comparar los resultados y explicar el efecto de la persistencia y la evaluación perezosa.</li>
-  </ol>
-
-  <strong>Sugerencia de implementación</strong>
-  <pre><code  class="language-python python-code">import time
-
-rdd = spark.sparkContext.textFile("texto.txt")
-wc = (rdd
-    .flatMap(lambda line: line.split(" "))
-    .map(lambda w: (w, 1))
-    .reduceByKey(lambda a, b: a + b)
-)
-
-t0 = time.time()
-wc.count()
-t1 = time.time()
-print("Tiempo sin cache:", t1 - t0)
-
-wc.cache()
-
-t0 = time.time()
-wc.count()
-t1 = time.time()
-print("Tiempo con cache:", t1 - t0)</code></pre>
-        </div>
-      </div>
-    </section>
 
     <div class="navigation-buttons">
       <button onclick="window.location.href='M2T2L7.html'">Anterior</button>
