@@ -42,7 +42,7 @@
         <hr>
         <div class="text-cell">
           <p>
-            El ejercicio propuesto en esta sección tiene como objetivo aplicar de forma práctica los conceptos avanzados de Apache Spark
+            El ejercicio propuesto en esta lección tiene como objetivo aplicar de forma práctica los conceptos avanzados de Apache Spark
             vistos a lo largo del tema, utilizando un dataset realista de ventas retail. Se trata de un caso completo que integra
             distintas técnicas y transformaciones para construir un análisis detallado de las ventas, el comportamiento de los clientes, las sesiones de compra y el impacto de promociones.
           </p>
@@ -53,43 +53,16 @@
         <h3>ENUNCIADO</h3>
         <hr>
         <div class="text-cell">
-          <p>
-            El ejercicio propuesto en esta sección tiene como objetivo aplicar de forma práctica los conceptos avanzados de Apache Spark
-            vistos a lo largo del tema, utilizando un dataset realista de ventas retail. Se trata de un caso completo que integra
-            distintas técnicas y transformaciones para construir un análisis detallado de las ventas, el comportamiento de los clientes, las sesiones de compra y el impacto de promociones.
-          </p>
-        </div>
-      </div>
-
-    </section>
-       <section id="ejercicios">
-      <div class="lesson-container">
-        <h3>EJERCICIO PROPUESTO</h3>
-        <hr>
-        <div class="text-cell">
-           <h4>Ejercicio práctico con Apache Spark sobre un dataset de ventas retail</h4>
-
-
-
-
-  <h2>1. Introducción</h2>
-  <p>
-    En este apartado se propone un ejercicio práctico completo para aplicar distintos conceptos avanzados de Apache Spark
-    sobre un dataset real de ventas retail. El objetivo es trabajar con transformaciones, funciones de ventana,
-    joins especializados, pivotes, enriquecimiento de datos y análisis temporal.
-
-    https://www.kaggle.com/datasets/berkayalan/retail-sales-data?select=sales.csv
-  </p>
   <p>
     El dataset seleccionado es el fichero <strong>sales.csv</strong> del conjunto de datos publicado en Kaggle
-    bajo el nombre <strong>Retail Sales Data</strong>.
-  </p>
-  <p>
-    El propósito del ejercicio es reproducir un escenario realista de analítica de datos sobre transacciones comerciales,
-    en el que se estudian ventas, comportamiento de clientes, sesiones de compra, promociones y métricas agregadas.
-  </p>
+    bajo el nombre <a href="https://www.kaggle.com/datasets/berkayalan/retail-sales-data?select=sales.csv">Retail Sales Data</a>. Tambien se puede descargar desde <a href="DatasetTema2.zip">esta ubicación</a> el fichero
+    zip con los siguientes datasets:
 
-  <h2>2. Objetivos del ejercicio</h2>
+  </p>
+          <img src="/img/M2T2L12_1.png">
+          <p class="img-caption">Imagen 1: Estructura de csv del ejercicio</p>
+<hr>
+  <h4>Objetivos del ejercicio</h4>
   <p>Los objetivos principales de este caso práctico son los siguientes:</p>
   <ul>
     <li>Cargar y preparar un dataset real de ventas en Apache Spark.</li>
@@ -101,7 +74,9 @@
     <li>Interpretar los resultados obtenidos desde una perspectiva analítica y técnica.</li>
   </ul>
 
-  <h2>3. Descripción general del dataset</h2>
+
+<hr>
+  <h4>Descripción general del dataset</h4>
   <p>
     El fichero <strong>sales.csv</strong> contiene información relativa a ventas realizadas en un entorno retail.
     Aunque la estructura exacta puede variar ligeramente según la versión descargada, el ejercicio parte de una estructura
@@ -122,611 +97,60 @@
     enriquecimiento y segmentación.
   </p>
 
-  <h2>4. Preparación inicial</h2>
-  <p>
-    Antes de desarrollar el ejercicio, se recomienda cargar el dataset en Spark y realizar una normalización mínima
-    de los nombres de columnas y tipos de datos.
-  </p>
-
-  <pre><code>from pyspark.sql import SparkSession
-from pyspark.sql import functions as F
-
-spark = SparkSession.builder.appName("RetailAnalysis").getOrCreate()
-
-df = spark.read.csv("sales.csv", header=True, inferSchema=True)
-
-df = (df
-    .withColumnRenamed("country", "pais")
-    .withColumnRenamed("payment_method", "canal")
-    .withColumnRenamed("timestamp", "ts")
-)
-
-df = df.withColumn("ts", F.to_timestamp("ts"))
-
-df = df.withColumn("importe", F.col("price") * F.col("quantity"))</code></pre>
-
-  <p>
-    En esta fase se crea además la columna <code>importe</code>, que representa el valor monetario de cada transacción
-    y que será utilizada en la mayor parte de los análisis posteriores.
-  </p>
-
-  <h2>5. Enunciado del ejercicio</h2>
-  <p>
-    Se desea construir un pequeño sistema analítico sobre el dataset de ventas retail para responder a distintas
-    necesidades de negocio y, al mismo tiempo, aplicar técnicas avanzadas de Apache Spark. El ejercicio se divide
-    en varios apartados encadenados.
-  </p>
-
-  <h3>5.1. Parte 1: Análisis de ventas por país y canal</h3>
-  <p>
-    El primer objetivo consiste en construir una tabla analítica que muestre las ventas totales por país
-    y por canal de compra o método de pago.
-  </p>
-  <p>Para ello, se debe utilizar un pivot sobre la columna <code>canal</code>.</p>
-
-  <pre><code>df_pivot = (df
-    .groupBy("pais")
-    .pivot("canal", ["web", "mobile", "store"])
-    .agg(F.sum("importe").alias("ventas"))
-)</code></pre>
-
-  <p>Este análisis permite observar la distribución de ventas por país y detectar qué canal domina en cada mercado.</p>
-
-  <h3>5.2. Parte 2: Top 3 productos por categoría</h3>
-  <p>
-    El segundo objetivo es identificar los tres productos más vendidos dentro de cada categoría.
-    Para ello, primero se agregan las ventas por producto y categoría, y posteriormente se aplica una función
-    de ventana con <code>row_number()</code>.
-  </p>
-
-  <pre><code>from pyspark.sql.window import Window
-
-df_prod = (df
-    .groupBy("category", "product_id")
-    .agg(F.sum("importe").alias("ventas"))
-)
-
-w_top = Window.partitionBy("category").orderBy(F.desc("ventas"))
-
-df_top = (df_prod
-    .withColumn("rn", F.row_number().over(w_top))
-    .filter(F.col("rn") &lt;= 3)
-    .drop("rn")
-)</code></pre>
-
-  <p>
-    Este apartado permite trabajar con rankings por grupo, una de las aplicaciones más frecuentes de las funciones
-    de ventana en Spark.
-  </p>
-
-  <h3>5.3. Parte 3: Media móvil de gasto en los últimos 7 días</h3>
-  <p>
-    A continuación, se propone calcular, para cada cliente, el promedio del importe de sus compras realizadas
-    durante los últimos siete días respecto de cada transacción.
-  </p>
-
-  <pre><code>w7d = (Window
-    .partitionBy("customer_id")
-    .orderBy(F.col("ts").cast("long"))
-    .rangeBetween(-7 * 24 * 3600, 0)
-)
-
-df_roll = df.withColumn("avg_7d", F.avg("importe").over(w7d))</code></pre>
-
-  <p>
-    Esta transformación ilustra cómo utilizar ventanas temporales deslizantes para estudiar el comportamiento reciente
-    de los clientes.
-  </p>
-
-  <h3>5.4. Parte 4: Sessionización de clientes</h3>
-  <p>
-    El siguiente paso es agrupar las compras de cada cliente en sesiones. Se considerará que comienza una nueva sesión
-    cuando transcurren más de 30 minutos entre una compra y la siguiente.
-  </p>
-
-  <pre><code>w_user = Window.partitionBy("customer_id").orderBy("ts")
-
-df_sess = (df
-    .withColumn("prev_ts", F.lag("ts").over(w_user))
-    .withColumn("gap_min", (F.col("ts").cast("long") - F.col("prev_ts").cast("long")) / 60)
-    .withColumn(
-        "new_sess",
-        F.when(F.col("prev_ts").isNull() | (F.col("gap_min") &gt; 30), 1).otherwise(0)
-    )
-    .withColumn("session_id", F.sum("new_sess").over(w_user))
-    .drop("prev_ts", "gap_min", "new_sess")
-)</code></pre>
-
-  <p>
-    Con este procedimiento es posible identificar secuencias de compras relacionadas temporalmente y estudiar
-    el número de sesiones, la duración media o el importe acumulado por sesión.
-  </p>
-
-  <h3>5.5. Parte 5: Clientes con y sin actividad reciente</h3>
-  <p>
-    Se propone clasificar los clientes en dos grupos:
-  </p>
-  <ul>
-    <li>Clientes con transacciones recientes.</li>
-    <li>Clientes sin transacciones recientes.</li>
-  </ul>
-  <p>
-    Para ello, se tomarán como recientes las compras efectuadas en los últimos 30 días y se emplearán joins
-    <code>left_semi</code> y <code>left_anti</code>.
-  </p>
-
-  <pre><code>users = df.select("customer_id").distinct()
-
-tx_recent = df.filter(F.col("ts") &gt;= F.current_timestamp() - F.expr("INTERVAL 30 DAYS"))
-
-df_has_tx = users.join(
-    tx_recent.select("customer_id").distinct(),
-    "customer_id",
-    "left_semi"
-)
-
-df_no_tx = users.join(
-    tx_recent.select("customer_id").distinct(),
-    "customer_id",
-    "left_anti"
-)</code></pre>
-
-  <p>
-    Este apartado es útil para procesos de segmentación, campañas comerciales y detección de clientes inactivos.
-  </p>
-
-  <h3>5.6. Parte 6: Enriquecimiento de datos mediante broadcast join</h3>
-  <p>
-    En muchos escenarios analíticos existe una tabla de hechos grande y una tabla de dimensiones pequeña.
-    Para reproducir este patrón, se puede construir una pequeña dimensión de productos y unirla con las transacciones
-    usando <code>broadcast</code>.
-  </p>
-
-  <pre><code>dim_productos = df.select("product_id", "category").distinct()
-
-tx_enriched = df.join(F.broadcast(dim_productos), "product_id", "left")</code></pre>
-
-  <p>
-    El uso de <code>broadcast join</code> permite reducir el coste de la operación cuando la dimensión es lo
-    suficientemente pequeña como para replicarse en memoria en los ejecutores.
-  </p>
-
-  <h3>5.7. Parte 7: Asociación de promociones por rango temporal</h3>
-  <p>
-    Otro análisis interesante consiste en asociar a cada transacción la promoción que estaba activa en el instante
-    de compra. Para ello, se puede construir un pequeño DataFrame de promociones con intervalos de tiempo.
-  </p>
-
-  <pre><code>promo = spark.createDataFrame([
-    ("promo_1", "2023-01-01 00:00:00", "2023-01-10 00:00:00"),
-    ("promo_2", "2023-01-10 00:00:00", "2023-01-20 00:00:00"),
-    ("promo_3", "2023-01-20 00:00:00", "2023-01-31 00:00:00")
-], ["promo_id", "start_ts", "end_ts"]) \
-.withColumn("start_ts", F.to_timestamp("start_ts")) \
-.withColumn("end_ts", F.to_timestamp("end_ts"))
-
-cond = (
-    (df["ts"] &gt;= promo["start_ts"]) &
-    (df["ts"] &lt; promo["end_ts"])
-)
-
-df_promo = df.join(promo, cond, "left")</code></pre>
-
-  <p>
-    Este tipo de join por rango temporal permite modelar campañas, reglas, periodos promocionales o ventanas
-    de validez de atributos.
-  </p>
-
-  <h3>5.8. Parte 8: Métricas finales de negocio</h3>
-  <p>
-    Una vez completados los apartados anteriores, se propone calcular un conjunto de indicadores finales
-    que resuman la actividad del dataset.
-  </p>
-  <ul>
-    <li>Ventas totales por país.</li>
-    <li>Ventas totales por canal.</li>
-    <li>Ticket medio por cliente.</li>
-    <li>Número de sesiones por cliente.</li>
-    <li>Top categorías por facturación.</li>
-    <li>Clientes sin actividad reciente.</li>
-    <li>Ventas realizadas durante promociones.</li>
-  </ul>
-
-  <p>Ejemplos de agregaciones posibles:</p>
-
-  <pre><code>kpi_pais = df.groupBy("pais").agg(F.sum("importe").alias("ventas_totales"))
-
-kpi_canal = df.groupBy("canal").agg(F.sum("importe").alias("ventas_totales"))
-
-kpi_cliente = df.groupBy("customer_id").agg(
-    F.avg("importe").alias("ticket_medio"),
-    F.sum("importe").alias("gasto_total")
-)
-
-kpi_categoria = df.groupBy("category").agg(
-    F.sum("importe").alias("ventas_totales")
-).orderBy(F.desc("ventas_totales"))</code></pre>
-
-  <h2>6. Preguntas orientativas para el desarrollo</h2>
-  <p>
-    Para guiar la resolución, el estudiante puede responder a las siguientes preguntas:
-  </p>
-  <ol>
-    <li>¿Qué países generan mayor volumen de ventas?</li>
-    <li>¿Qué canal concentra más facturación en cada país?</li>
-    <li>¿Qué productos lideran las ventas dentro de cada categoría?</li>
-    <li>¿Cómo evoluciona el gasto reciente de cada cliente?</li>
-    <li>¿Cuántas sesiones de compra realiza cada usuario?</li>
-    <li>¿Qué porcentaje de clientes no ha comprado en los últimos 30 días?</li>
-    <li>¿Qué impacto tienen las promociones en el volumen de ventas?</li>
-    <li>¿Qué operaciones son potencialmente más costosas en Spark y por qué?</li>
-  </ol>
-
-  <h2>7. Ampliaciones posibles</h2>
-  <p>
-    El ejercicio puede ampliarse de distintas formas para aumentar su nivel técnico:
-  </p>
-  <ul>
-    <li>Guardar resultados intermedios en formato Parquet.</li>
-    <li>Comparar rendimiento entre CSV y Parquet.</li>
-    <li>Introducir particionado por país o fecha.</li>
-    <li>Analizar el plan de ejecución con <code>explain()</code>.</li>
-    <li>Comparar un join normal con un <code>broadcast join</code>.</li>
-    <li>Extender el caso a Structured Streaming con una fuente simulada de eventos.</li>
-    <li>Exportar métricas finales para su visualización en una herramienta BI.</li>
-  </ul>
-
-  <h2>8. Ejercicio propuesto final</h2>
-  <p>
-    A partir del fichero <strong>sales.csv</strong>, se propone implementar en Apache Spark un pipeline completo
-    de análisis de ventas que incluya las siguientes tareas:
-  </p>
-  <ol>
-    <li>Cargar y limpiar el dataset.</li>
-    <li>Crear la columna <code>importe</code> como producto de precio por cantidad.</li>
-    <li>Generar una tabla pivot de ventas por país y canal.</li>
-    <li>Calcular el Top 3 de productos por categoría.</li>
-    <li>Obtener el promedio móvil de gasto por cliente en los últimos 7 días.</li>
-    <li>Construir sesiones de compra para cada cliente con umbral de 30 minutos.</li>
-    <li>Clasificar clientes con y sin actividad reciente mediante joins <code>left_semi</code> y <code>left_anti</code>.</li>
-    <li>Enriquecer las transacciones usando una dimensión de productos y <code>broadcast join</code>.</li>
-    <li>Asociar promociones a las compras mediante un join por rango temporal.</li>
-    <li>Calcular indicadores finales de negocio e interpretar los resultados.</li>
-  </ol>
-
-  <p>
-    Como resultado, el estudiante deberá entregar el código, una breve explicación de cada transformación,
-    las salidas principales obtenidas y una valoración final sobre el comportamiento del dataset y el rendimiento
-    de Spark en este caso práctico.
-  </p>
-
-  <h2>9. Conclusión</h2>
-  <p>
-    Este ejercicio permite integrar en un único caso práctico una parte importante de las técnicas avanzadas
-    de Apache Spark aplicadas al análisis de datos. A partir de un dataset de ventas retail, se combinan
-    funciones de agregación, pivotes, ventanas temporales, sessionización y joins optimizados, reproduciendo
-    patrones comunes en entornos reales de analítica distribuida.
-  </p>
-  <p>
-    Además de servir como práctica técnica, este caso constituye una base sólida para un capítulo de un
-    trabajo de fin de grado centrado en Spark, ya que conecta los conceptos teóricos con un problema real,
-    estructurado y fácilmente ampliable.
-  </p>
-
-
-  <h2>_______________________________Preguntas sobre el ejercicio</h2>
-  <ol>
-    <li>¿Por qué SparkSession no cambia entre ambos entornos aunque el comportamiento interno sí lo haga?</li>
-    <li>¿Qué ventajas ofrece Kubernetes en entornos productivos?</li>
-    <li>¿En qué escenarios sería preferible utilizar Standalone?</li>
-    <li>¿Cómo afecta el cluster manager al ciclo de vida del Driver?</li>
-    <li>¿Qué implicaciones tiene cada entorno en términos de resiliencia?</li>
-  </ol>
-
-  <h2>Ejercicio avanzado</h2>
-  <p>
-    Configura autoescalado en Kubernetes (si el entorno lo permite) y analiza cómo varía el número
-    de executors ante un aumento progresivo de la carga (por ejemplo, aumentando el tamaño del dataset).
-    Documenta el comportamiento observado y compáralo con el modo Standalone.
-  </p>
         </div>
       </div>
     </section>
+          <section id="preparacion">
+            <div class="lesson-container">
+              <h3>PREPARACIÓN DEL ENTORNO</h3>
+              <hr>
+              <div class="text-cell">
+                Vamos a realizar este ejercicio a través de Pycharm, utilizando un entorno de desarrollo local con Apache Spark instalado. Para ello, se recomienda seguir los siguientes pasos:
+                <ol>
+                  <li>Instalar Apache Spark en el entorno local (se puede usar una versión precompilada para Hadoop 3.x).</li>
+                  <li>Configurar un proyecto en Pycharm e incluir las dependencias de Spark.</li>
+                  <img src="/img/M2T2L12_3.png">
+                  <p class="img-caption">Imagen 2: Creación de nuevo proyecto en Pycharm</p>
+                  <li>Asegurarse de que los datasets están accesibles desde el entorno de desarrollo (por ejemplo, colocándolo en la raíz del proyecto o en una carpeta específica).</li>
+                   <img src="/img/M2T2L12_2.png">
+                  <p class="img-caption">Imagen 3: Estructura de ficheros del ejercicio</p>
+                  <li>Asegurarse que las dependencias del entorno del cuaderno Jupyter se encuentran correctamente instaladas</li>
+                  <ol>
 
- <section id="practica">
+              </div>
+            </div>
+          </section>
+
+
+       <section id="ejercicios">
       <div class="lesson-container">
-        <h3>EJERCICIO PRÁCTICO</h3>
+        <h3>EJERCICIO PROPUESTO</h3>
         <hr>
         <div class="text-cell">
-          <ol>
+           <h4>Ejercicio práctico con Apache Spark sobre un dataset de ventas retail</h4>
 
-
-  <h4>Objetivo</h4>
-  <p>
-    Evaluar cómo el número de particiones afecta al rendimiento y observar el impacto de un shuffle en un DataFrame.
-  </p>
-
-  <h4>Parte A: Experimento con RDD</h4>
-  <ol>
-    <li>Crear un RDD con 1 millón de registros y 2 particiones.</li>
-    <li>Ejecutar <code>count()</code> y medir el tiempo aproximado.</li>
-    <li>Repetir el experimento con 8 particiones.</li>
-    <li>Repetir con 32 particiones.</li>
-    <li>Comparar resultados y justificar el comportamiento observado.</li>
-  </ol>
-
-  <p>Ejemplo base en PySpark:</p>
-  <pre><code  class="language-python python-code">import time
-
-rdd = spark.sparkContext.parallelize(range(1, 1000001), 2)
-
-t0 = time.time()
-c = rdd.count()
-t1 = time.time()
-
-print("Count:", c, "Tiempo:", t1 - t0)</code></pre>
-
-  <h3>Parte B: Experimento con DataFrame y shuffle</h3>
-  <ol>
-    <li>Cargar un DataFrame (CSV o Parquet) con una columna categórica.</li>
-    <li>Aplicar <code >repartition(10)</code> y ejecutar una acción (por ejemplo, <code>count()</code>).</li>
-    <li>Ejecutar un <code>groupBy</code> sobre la columna categórica y observar stages en Spark UI.</li>
-    <li>Ajustar <code>spark.sql.shuffle.partitions</code> a un valor inferior y repetir el <code>groupBy</code>.</li>
-    <li>Comparar el número de tareas y el tiempo de ejecución aproximado.</li>
-  </ol>
-
-  <p>Ejemplo orientativo:</p>
-  <pre><code  class="language-python python-code">from pyspark.sql.functions import col
-
-spark.conf.set("spark.sql.shuffle.partitions", 50)
-
-df = spark.read.parquet("dataset.parquet")
-df2 = df.repartition(10)
-
-df2.groupBy(col("categoria")).count().show()</code></pre>
-
-  <h3>Preguntas</h3>
-  <ul>
-    <li>Cual es el tiempo medio para cada número de particiones en RDD (2, 8, 32).</li>
-    <li>Captura o descripción del número de stages/tasks observados en Spark UI para el caso DataFrame.</li>
-    <li>Conclusión razonada (10-15 líneas) sobre el impacto del particionado y el shuffle.</li>
-  </ul>
-
-          </ol>
-        </div>
-      </div>
-    </section>
-    <section id="enunciado">
-      <div class="lesson-container">
-        <h3>ENUNCIADO</h3>
-        <hr>
-        <div class="text-cell">
-          <h3>EJERCICIO PROPUESTO</h3>
-          <hr>
-
+          <p>En el cuaderno de Jupyter <a href="Ejercicio1.ipynb">Ejercicio1.ipynb<a></a> se encuentra un ejercicio práctico del dataset retail con las operaciones detalladas durante el presente tema. </p>
           <p>
-            El objetivo de este ejercicio es comparar el impacto de formato y particionamiento en el rendimiento de lectura/escritura mediante un flujo sencillo:
-            CSV &rarr; transformación &rarr; Parquet particionado.
+            Se compone de las siguientes partes:
+            <ul>
+              <li><strong>Parte 1: Carga y preparación de datos</strong>: lectura del CSV, manejo de tipos de datos, tratamiento de valores nulos y creación de columnas derivadas como <code>total_amount</code>.</li>
+              <li><strong>Parte 2: Exploración y Transformación inicial de los datos</strong>: Para identificar valores nulos, conversión de tipos y generación de indicadores temporales </li>
+              <li><strong>Parte 3: Cálculo de métricas de negocio</strong>: Después de enriquecer los datos, se calculan KPIs como venta total por tienda, analisis por ciudad  tipo de tienda....</li>
+          <li><strong>Parte 4: Pivot y análisis por promoción</strong>: construcción de una tabla pivot para analizar ingresos por promoción e interpretación de los resultados. </li>
+          <li><strong>Parte 5: Funciones de ventana</strong>: cálculo de medias móviles de ventas diarias por tienda y producto.</li>
+              <li><strong>Parte 6: Joins especializados</strong>: identificación de clientes activos/inactivos</li>
+              <li><strong>Parte 7: Simulación de promociones</strong>: asignación de promociones a transacciones mediante joins por rango temporal y análisis del impacto en las ventas. </li>
+              <li><strong>Parte 8: Interpretación de resultados</strong>: análisis de los resultados obtenidos desde una perspectiva tanto analítica como técnica, identificando patrones, insights y posibles acciones a partir de los datos mediante KPIs. </li>
+            </ul>
           </p>
 
-          <strong>Requisitos del ejercicio</strong>
-          <ul>
-            <li>Un fichero CSV con al menos 100.000 registros (puede ser un dataset público o generado).</li>
-            <li>Una columna categórica para particionar (por ejemplo: <code>departamento</code>, <code>pais</code> o <code>categoria</code>).</li>
-          </ul>
-
-          <strong>Pasos</strong>
-          <ol>
-            <li>
-              <strong>Cargar el CSV</strong> con cabecera e inferencia de esquema (solo para la primera carga):
-              <pre><code class="language-python python-code">df = spark.read \
-  .option("header", "true") \
-  .option("inferSchema", "true") \
-  .csv("datos.csv")</code></pre>
-            </li>
-            <li>
-              <strong>Aplicar una transformación</strong> (por ejemplo, filtrar registros o crear una nueva columna):
-              <pre><code class="language-python python-code">from pyspark.sql.functions import col
-
-df2 = df.filter(col("importe") &gt; 0)</code></pre>
-            </li>
-            <li>
-              <strong>Guardar en Parquet</strong> (sin particionar) y medir tamaño en disco:
-              <pre><code class="language-python python-code">df2.write.mode("overwrite").parquet("salida_parquet_no_part")</code></pre>
-            </li>
-            <li>
-              <strong>Guardar en Parquet particionado</strong> por una columna categórica:
-              <pre><code class="language-python python-code">df2.write \
-  .mode("overwrite") \
-  .partitionBy("categoria") \
-  .parquet("salida_parquet_part")</code></pre>
-            </li>
-            <li>
-              <strong>Comparar tamaños</strong> entre el CSV original, el Parquet no particionado y el Parquet particionado.
-            </li>
-            <li>
-              <strong>Comparar tiempos de lectura</strong> ejecutando:
-              <ul>
-                <li>Lectura completa del dataset</li>
-                <li>Lectura filtrando por una sola categoría/partición</li>
-              </ul>
-              <p>Ejemplo de lectura filtrando por partición:</p>
-              <pre><code class="language-python python-code">df_part = spark.read.parquet("salida_parquet_part")
-df_filtrado = df_part.filter(col("categoria") == "A")
-df_filtrado.count()</code></pre>
-            </li>
-          </ol>
-
-          <strong>Entregables</strong>
-          <ul>
-            <li>Tabla con tamaños (MB) de cada formato.</li>
-            <li>Tabla con tiempos aproximados de lectura (completa vs filtrada).</li>
-            <li>Conclusión breve (5-10 líneas) justificando qué formato/estrategia es más eficiente y por qué.</li>
-          </ul>
-        </div>
-      </div>
-    </section>
-        <section id="ejemplos">
-      <div class="lesson-container">
-        <h3>EJERCICIO PROPUESTO</h3>
-        <hr>
-        <div class="text-cell">
-
-
-  <strong>Objetivo</strong>
-  <p>
-    Implementar y evaluar un pipeline de procesamiento con RDD, analizando el efecto de la persistencia en el rendimiento.
-  </p>
-
-  <strong>Enunciado</strong>
-  <ol>
-    <li>Leer un fichero de texto (o un dataset de logs) como RDD.</li>
-    <li>Implementar un conteo de palabras con <code>flatMap</code>, <code>map</code> y <code>reduceByKey</code>.</li>
-    <li>Medir el tiempo de la primera ejecución con una acción (por ejemplo, <code>count()</code> o <code>take()</code>).</li>
-    <li>Aplicar <code>cache()</code> o <code>persist()</code> sobre el RDD resultante.</li>
-    <li>Ejecutar una segunda acción sobre el mismo RDD y medir el tiempo.</li>
-    <li>Comparar los resultados y explicar el efecto de la persistencia y la evaluación perezosa.</li>
-  </ol>
-
-  <strong>Sugerencia de implementación</strong>
-  <pre><code  class="language-python python-code">import time
-
-rdd = spark.sparkContext.textFile("texto.txt")
-wc = (rdd
-    .flatMap(lambda line: line.split(" "))
-    .map(lambda w: (w, 1))
-    .reduceByKey(lambda a, b: a + b)
-)
-
-t0 = time.time()
-wc.count()
-t1 = time.time()
-print("Tiempo sin cache:", t1 - t0)
-
-wc.cache()
-
-t0 = time.time()
-wc.count()
-t1 = time.time()
-print("Tiempo con cache:", t1 - t0)</code></pre>
-        </div>
-      </div>
-    </section>
-       <section id="ejercicio">
-      <div class="lesson-container">
-        <h3>EJERCICIO PRÁCTICO</h3>
-        <hr>
-        <div class="text-cell">
 
 
 
-  <strong>Objetivo</strong>
-  <p>
-    Analizar el impacto de la estrategia de join y del ajuste de particiones de shuffle comparando ejecución con y sin broadcast.
-  </p>
 
-  <strong>Enunciado</strong>
-  <ol>
-    <li>Cargar un dataset grande (por ejemplo, transacciones) y otro pequeño (por ejemplo, catálogo de productos).</li>
-    <li>Ejecutar un join sin forzar broadcast y medir tiempo aproximado.</li>
-    <li>Inspeccionar el plan con <code>explain(True)</code> e identificar la estrategia de join.</li>
-    <li>Repetir el join forzando broadcast del dataset pequeño y medir tiempo.</li>
-    <li>Ajustar <code>spark.sql.shuffle.partitions</code> y repetir la ejecución.</li>
-    <li>Documentar: diferencias en planes, número de shuffles y tiempos.</li>
-  </ol>
 
-  <strong>Ejemplo orientativo (PySpark)</strong>
-  <pre><code  class="language-python python-code">from pyspark.sql.functions import broadcast
 
-spark.conf.set("spark.sql.shuffle.partitions", 200)
 
-df_big = spark.read.parquet("transacciones.parquet")
-df_small = spark.read.parquet("catalogo.parquet")
-
-join1 = df_big.join(df_small, "product_id")
-join1.explain(True)
-join1.count()
-
-join2 = df_big.join(broadcast(df_small), "product_id")
-join2.explain(True)
-join2.count()</code></pre>
-        </div>
-      </div>
-    </section>
-
-    <section id="ejercicio">
-      <div class="lesson-container">
-        <h3>EJERCICIO PROPUESTO</h3>
-        <hr>
-        <div class="text-cell">
-
-  <h3>1 Objetivo</h3>
-  <p>
-    Aplicar operaciones avanzadas (join, ventanas, deduplicación) y comparar decisiones del optimizador (plan físico),
-    utilizando <code>explain(True)</code> y técnicas como broadcast join.
-  </p>
-
-  <h3>2 Enunciado</h3>
-  <ol>
-    <li>Cargar un dataset de transacciones y una dimensión pequeña (productos o clientes).</li>
-    <li>Realizar un join normal y analizar el plan con <code>explain(True)</code>.</li>
-    <li>Repetir forzando broadcast de la tabla pequeña y comparar plan y tiempos.</li>
-    <li>Implementar un Top-3 por grupo con funciones de ventana.</li>
-    <li>Aplicar deduplicación por clave manteniendo el registro más reciente.</li>
-    <li>Escribir la salida en Parquet particionada por una columna (por ejemplo, país o categoría).</li>
-  </ol>
-
-  <h3>3  Pistas de implementación</h3>
-  <pre><code  class="language-python python-code">from pyspark.sql import functions as F
-from pyspark.sql.window import Window
-
-# 1) Join normal vs broadcast
-join_normal = tx.join(dim_productos, "product_id", "left")
-join_normal.explain(True)
-
-join_bc = tx.join(F.broadcast(dim_productos), "product_id", "left")
-join_bc.explain(True)
-
-# 2) Ventana Top-3
-w = Window.partitionBy("departamento").orderBy(F.desc("salario"))
-top3 = (empleados
-  .withColumn("rn", F.row_number().over(w))
-  .filter(F.col("rn") &lt;= 3)
-  .drop("rn")
-)
-
-# 3) Dedupe por id (último updated_at)
-w2 = Window.partitionBy("id").orderBy(F.desc("updated_at"))
-latest = (df
-  .withColumn("rn", F.row_number().over(w2))
-  .filter(F.col("rn") == 1)
-  .drop("rn")
-)
-
-# 4) Escritura particionada
-latest.write.mode("overwrite").partitionBy("pais").parquet("salida_gold")</code></pre>
-
-  <h3>4 Entregables</h3>
-  <ul>
-    <li>Capturas o transcripción de <code>explain(True)</code> para join normal y join con broadcast.</li>
-    <li>Tabla comparativa con tiempos aproximados y observaciones (número de shuffles, estrategia de join).</li>
-    <li>Explicación breve (10-15 líneas) justificando las diferencias observadas y las decisiones de optimización.</li>
-    <li>Dataset final en Parquet particionado y descripción de la estructura de carpetas generada.</li>
-  </ul>
-
-        </div>
-      </div>
-    </section>
-    <section id="criterios">
-      <div class="lesson-container">
-        <h3>CRITERIOS DE EVALUACIÓN</h3>
-        <hr>
-        <div class="text-cell">
-          <ul>
-            <li>Funcionalidad: la aplicación procesa los datos correctamente.</li>
-            <li>Documentación: explicas decisiones de particionado y persistencia.</li>
-            <li>Rendimiento: justificas configuraciones y mides tiempos.</li>
-          </ul>
         </div>
       </div>
     </section>

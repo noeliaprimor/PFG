@@ -95,99 +95,189 @@
     ]
   },
   "modulo2_tema2": {
-    "titulo": "Autoevaluación - Módulo 2, Tema 2: MapReduce",
+    "titulo": "Autoevaluación - Módulo 2, Tema 2",
     "preguntas": [
-      {
-        "pregunta": "¿Cuál es la arquitectura base de MapReduce?",
-        "opciones": {
-          "A": "Divide los datos, procesa localmente y agrega resultados",
-          "B": "Distribuye el procesamiento de forma aleatoria",
-          "C": "Centraliza todos los datos antes de procesar"
-        },
-        "respuestaCorrecta": "A"
+    {
+      "pregunta": "¿Cuál es uno de los principales entornos de ejecución de Apache Spark?",
+      "opciones": {
+        "A": "Standalone",
+        "B": "Docker Engine",
+        "C": "MySQL Server"
       },
-      {
-        "pregunta": "¿Qué fases principales tiene un trabajo MapReduce?",
-        "opciones": {
-          "A": "Map, Shuffle y Reduce",
-          "B": "Filter, Transform y Aggregate",
-          "C": "Load, Process y Save"
-        },
-        "respuestaCorrecta": "A"
+      "respuestaCorrecta": "A"
+    },
+    {
+      "pregunta": "¿Qué componente coordina la ejecución de una aplicación Spark?",
+      "opciones": {
+        "A": "Driver",
+        "B": "Executor",
+        "C": "Worker"
       },
-      {
-        "pregunta": "¿En qué fase de MapReduce ocurre la localidad de datos?",
-        "opciones": {
-          "A": "En la fase Shuffle",
-          "B": "En la fase Map",
-          "C": "En la fase Reduce"
-        },
-        "respuestaCorrecta": "B"
+      "respuestaCorrecta": "A"
+    },
+    {
+      "pregunta": "¿Qué comando se utiliza para ejecutar una aplicación Spark desde consola?",
+      "opciones": {
+        "A": "spark-submit",
+        "B": "spark-run",
+        "C": "spark-exec"
       },
-      {
-        "pregunta": "¿Cuál es la función del Combiner en MapReduce?",
-        "opciones": {
-          "A": "Distribuir datos entre nodos",
-          "B": "Reducir datos localmente antes del Shuffle",
-          "C": "Compilar el código del job"
-        },
-        "respuestaCorrecta": "B"
+      "respuestaCorrecta": "A"
+    },
+    {
+      "pregunta": "¿Cuál es el punto de entrada principal en aplicaciones Spark modernas?",
+      "opciones": {
+        "A": "SparkSession",
+        "B": "SparkContext",
+        "C": "SQLContext"
       },
-      {
-        "pregunta": "¿Cuándo se ejecuta el Shuffle and Sort?",
-        "opciones": {
-          "A": "Antes de la fase Map",
-          "B": "Entre Map y Reduce",
-          "C": "Después de Reduce"
-        },
-        "respuestaCorrecta": "B"
+      "respuestaCorrecta": "A"
+    },
+    {
+      "pregunta": "¿Qué componente es responsable de la ejecución de tareas en nodos de trabajo?",
+      "opciones": {
+        "A": "Executor",
+        "B": "Driver",
+        "C": "Scheduler"
       },
-      {
-        "pregunta": "¿Qué entrada/salida maneja típicamente la función Map?",
-        "opciones": {
-          "A": "Par clave-valor a otro par clave-valor",
-          "B": "Solo números enteros",
-          "C": "Solo tablas SQL"
-        },
-        "respuestaCorrecta": "A"
+      "respuestaCorrecta": "A"
+    },
+    {
+      "pregunta": "¿En qué lenguaje se puede inicializar Spark además de Python?",
+      "opciones": {
+        "A": "Scala",
+        "B": "HTML",
+        "C": "SQL puro"
       },
-      {
-        "pregunta": "En el ejemplo <code>map(k, v) -> (palabra, 1)</code>, ¿qué representa el 1?",
-        "opciones": {
-          "A": "Un contador parcial por ocurrencia",
-          "B": "El ID del nodo",
-          "C": "La partición final"
-        },
-        "respuestaCorrecta": "A"
+      "respuestaCorrecta": "A"
+    },
+    {
+      "pregunta": "¿Qué método se usa para crear o recuperar una SparkSession?",
+      "opciones": {
+        "A": "getOrCreate()",
+        "B": "createSession()",
+        "C": "startSession()"
       },
-      {
-        "pregunta": "¿Cuál es el objetivo del Partitioner?",
-        "opciones": {
-          "A": "Asignar claves a reducers",
-          "B": "Comprimir datos HDFS",
-          "C": "Crear bloques en disco"
-        },
-        "respuestaCorrecta": "A"
+      "respuestaCorrecta": "A"
+    },
+    {
+      "pregunta": "¿Qué formato de datos es más eficiente para almacenamiento en Spark?",
+      "opciones": {
+        "A": "Parquet",
+        "B": "CSV",
+        "C": "TXT"
       },
-      {
-        "pregunta": "¿Qué reduce la transferencia de red en un job MapReduce?",
-        "opciones": {
-          "A": "Usar Combiner cuando sea posible",
-          "B": "Aumentar siempre reducers al máximo",
-          "C": "Eliminar el shuffle"
-        },
-        "respuestaCorrecta": "A"
+      "respuestaCorrecta": "A"
+    },
+    {
+      "pregunta": "¿Cuál es la estructura de datos de más bajo nivel en Spark?",
+      "opciones": {
+        "A": "RDD",
+        "B": "DataFrame",
+        "C": "Dataset"
       },
-      {
-        "pregunta": "¿Qué hace de forma conceptual <code>reduce(palabra, [1,1,1])</code>?",
-        "opciones": {
-          "A": "Suma ocurrencias por clave",
-          "B": "Filtra claves por longitud",
-          "C": "Ordena nodos del clúster"
-        },
-        "respuestaCorrecta": "A"
-      }
-    ]
+      "respuestaCorrecta": "A"
+    },
+    {
+      "pregunta": "¿Qué API proporciona optimización automática mediante Catalyst?",
+      "opciones": {
+        "A": "DataFrame",
+        "B": "RDD",
+        "C": "HDFS"
+      },
+      "respuestaCorrecta": "A"
+    },
+    {
+      "pregunta": "¿Qué característica define a los RDD?",
+      "opciones": {
+        "A": "Inmutabilidad",
+        "B": "Persistencia automática",
+        "C": "Indexación relacional"
+      },
+      "respuestaCorrecta": "A"
+    },
+    {
+      "pregunta": "¿Qué significa paralelizar una colección en Spark?",
+      "opciones": {
+        "A": "Dividir los datos en particiones para procesarlos en paralelo",
+        "B": "Guardar datos en memoria",
+        "C": "Ordenar datos automáticamente"
+      },
+      "respuestaCorrecta": "A"
+    },
+    {
+      "pregunta": "¿Qué concepto permite distribuir datos en múltiples nodos?",
+      "opciones": {
+        "A": "Particionado",
+        "B": "Serialización",
+        "C": "Indexación"
+      },
+      "respuestaCorrecta": "A"
+    },
+    {
+      "pregunta": "¿Cuál de las siguientes es una transformación sobre RDD?",
+      "opciones": {
+        "A": "map",
+        "B": "collect",
+        "C": "count"
+      },
+      "respuestaCorrecta": "A"
+    },
+    {
+      "pregunta": "¿Cuál de las siguientes es una acción en Spark?",
+      "opciones": {
+        "A": "collect",
+        "B": "map",
+        "C": "filter"
+      },
+      "respuestaCorrecta": "A"
+    },
+    {
+      "pregunta": "¿Qué optimización permite evitar movimientos de datos en joins pequeños?",
+      "opciones": {
+        "A": "Broadcast Join",
+        "B": "Shuffle Join",
+        "C": "Cartesian Join"
+      },
+      "respuestaCorrecta": "A"
+    },
+    {
+      "pregunta": "¿Qué técnica mejora el rendimiento al reutilizar datos en memoria?",
+      "opciones": {
+        "A": "Cache",
+        "B": "Sort",
+        "C": "Filter"
+      },
+      "respuestaCorrecta": "A"
+    },
+    {
+      "pregunta": "¿Qué API permite trabajar con datos estructurados en Spark?",
+      "opciones": {
+        "A": "DataFrame/Dataset",
+        "B": "RDD",
+        "C": "Spark Core"
+      },
+      "respuestaCorrecta": "A"
+    },
+    {
+      "pregunta": "¿Qué función permite aplicar operaciones sobre ventanas en DataFrames?",
+      "opciones": {
+        "A": "window",
+        "B": "groupBy",
+        "C": "join"
+      },
+      "respuestaCorrecta": "A"
+    },
+    {
+      "pregunta": "¿Cuál es una ventaja clave de los DataFrames frente a los RDD?",
+      "opciones": {
+        "A": "Optimización automática del plan de ejecución",
+        "B": "Mayor control manual del código",
+        "C": "Menor uso de memoria siempre"
+      },
+      "respuestaCorrecta": "A"
+    }
+  ]
   },
   "modulo2_tema3": {
     "titulo": "Autoevaluación - Módulo 2, Tema 3: Spark",
