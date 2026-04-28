@@ -30,44 +30,52 @@
       <div id="index-container" class="text-cell">
          <hr>
          <ul>
-           <li><a href="#descripcion">Descripción</a></li>
-           <li><a href="#contenidos">Contenidos</a></li>
+           <li><a href="#enunciado">Enunciado</a></li>
+           <li><a href="#ejercicio">Ejercicio</a></li>
          </ul>
        </div>
      </div>
+
+
 
     <section id="enunciado">
       <div class="lesson-container">
         <h3>ENUNCIADO</h3>
         <hr>
         <div class="text-cell">
-          <p>Diseña y desarrolla un mini-proyecto que combine Spark SQL y MLlib: prepara datos, entrena un clasificador sencillo y evalúa resultados. Documenta decisiones de particionado y persistencia.</p>
-        </div>
-      </div>
-    </section>
+          <p>El objetivo de este ejercicio es introducir los fundamentos del procesamiento de datos en tiempo real mediante Spark Structured Streaming. Para ello, se emplea la API del servicio de criptomonedas <a href="https://www.coingecko.com/en/api" target="_blank">CoinGecko</a>, que permite obtener información actualizada sobre precios de activos digitales. Esta API se utiliza como fuente de datos para simular un flujo continuo de eventos, facilitando así la comprensión de los conceptos clave asociados al procesamiento de datos en streaming.</p>
+          <p>El ejercicio se estructura en dos partes principales: un productor que genera datos simulando un flujo de eventos a partir de la API de CoinGecko, y un consumidor que procesa estos datos en tiempo real utilizando Spark Structured Streaming. A través de esta práctica, se busca que los estudiantes adquieran habilidades para configurar pipelines de streaming, analizar datos en tiempo real y visualizar resultados de manera efectiva.</p>
 
-    <section id="plantilla">
-      <div class="lesson-container">
-        <h3>PLANTILLA</h3>
-        <hr>
-        <div class="text-cell">
-          <p>Descarga la plantilla: <a href="/modulo2/Tema3/notebooks/M2T3L7.ipynb">M2T3L7.ipynb</a></p>
-        </div>
-      </div>
-    </section>
-
-    <section id="criterios">
-      <div class="lesson-container">
-        <h3>CRITERIOS</h3>
-        <hr>
-        <div class="text-cell">
+          <img src="/img/M2T3L7_1.png">
+          <p class="img-caption">Imagen 1: Servicio coingecko</p>
           <ul>
-            <li>Pipeline funcional.</li>
-            <li>Medidas de rendimiento y justificación de decisiones.</li>
+            <li><strong>Productor:</strong> Creación de los ficheros, configuración del streaming y generación de información. <a href="M2T3_productor.ipynb">Disponible aqui</a></li>
+            <li><strong>Consumidor:</strong> Consumo de datos en tiempo real, análisis de los datos obtenidos y visualización de resultados.<a href="M2T3_consumidor.ipynb">Disponible aqui</a></li>
+
           </ul>
         </div>
       </div>
     </section>
+
+    <section id="ejercicio">
+      <div class="lesson-container">
+        <h3>EJERCICIO</h3>
+        <hr>
+        <div class="text-cell">
+          <p>Una vez creado el proyecto Spark y comprobado que se crean y se consumen los datos en tiempo real, realiza los siguiente ejercicios:</p>
+          <ol>
+  <li>Añadir más criptomonedas a la lista <code>COINS</code>.</li>
+  <li>Cambiar la moneda de referencia de <code>eur</code> a <code>usd</code>.</li>
+  <li>Calcular ventanas de 5 minutos en lugar de 1 minuto.</li>
+  <li>Crear una alerta cuando el precio de Bitcoin supere un umbral definido.</li>
+  <li>Guardar las métricas agregadas en Parquet en lugar de guardar los eventos originales.</li>
+  <li>Añadir una columna <code>source</code> con valor <code>coingecko</code>.</li>
+  <li>Comparar el número de eventos esperados con el número de eventos realmente procesados.</li>
+</ol>
+        </div>
+      </div>
+    </section>
+
 
     <div class="navigation-buttons">
       <button onclick="window.location.href='M2T3L6.html'">Anterior</button>

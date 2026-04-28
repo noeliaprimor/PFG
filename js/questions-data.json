@@ -281,98 +281,188 @@
   },
   "modulo2_tema3": {
     "titulo": "Autoevaluación - Módulo 2, Tema 3: Spark",
-    "preguntas": [
-      {
-        "pregunta": "¿Cuál es la principal diferencia entre Apache Spark y Hadoop MapReduce?",
-        "opciones": {
-          "A": "Spark procesa todo en memoria, MapReduce usa disco",
-          "B": "Spark solo funciona con datos estructurados",
-          "C": "MapReduce es más rápido para batch processing"
-        },
-        "respuestaCorrecta": "A"
+    "preguntas":  [
+    {
+      "pregunta": "¿Cuál es la principal función de Apache Spark SQL?",
+      "opciones": {
+        "A": "Procesar grafos distribuidos",
+        "B": "Permitir consultas estructuradas mediante SQL y DataFrames",
+        "C": "Gestionar el almacenamiento en HDFS"
       },
-      {
-        "pregunta": "¿Qué es un RDD en Spark?",
-        "opciones": {
-          "A": "Resilient Distributed Dataset",
-          "B": "Relational Database Design",
-          "C": "Rapid Data Delivery"
-        },
-        "respuestaCorrecta": "A"
+      "respuestaCorrecta": "B"
+    },
+    {
+      "pregunta": "¿Qué componente de Spark se utiliza para procesamiento de grafos?",
+      "opciones": {
+        "A": "MLlib",
+        "B": "Spark Streaming",
+        "C": "GraphX"
       },
-      {
-        "pregunta": "¿Cuáles son las dos operaciones básicas en Spark?",
-        "opciones": {
-          "A": "Map y Filter",
-          "B": "Transformations y Actions",
-          "C": "Read y Write"
-        },
-        "respuestaCorrecta": "B"
+      "respuestaCorrecta": "C"
+    },
+    {
+      "pregunta": "¿Cuál es la evolución moderna de Spark Streaming?",
+      "opciones": {
+        "A": "GraphFrames",
+        "B": "Structured Streaming",
+        "C": "Spark SQL"
       },
-      {
-        "pregunta": "¿Qué es lazy evaluation en Spark?",
-        "opciones": {
-          "A": "Los datos se procesan bajo demanda al llamar una Action",
-          "B": "Los datos nunca se procesan",
-          "C": "El procesamiento ocurre inmediatamente"
-        },
-        "respuestaCorrecta": "A"
+      "respuestaCorrecta": "B"
+    },
+    {
+      "pregunta": "¿Qué biblioteca de Spark se utiliza para Machine Learning?",
+      "opciones": {
+        "A": "GraphX",
+        "B": "MLlib",
+        "C": "Spark SQL"
       },
-      {
-        "pregunta": "¿Cuál de estos es una Action en Spark?",
-        "opciones": {
-          "A": "map()",
-          "B": "filter()",
-          "C": "collect()"
-        },
-        "respuestaCorrecta": "C"
+      "respuestaCorrecta": "B"
+    },
+    {
+      "pregunta": "¿Qué abstracción principal utiliza Spark SQL?",
+      "opciones": {
+        "A": "RDD",
+        "B": "DataFrame",
+        "C": "Graph"
       },
-      {
-        "pregunta": "¿Qué devuelve normalmente <code>rdd.map(...)</code>?",
-        "opciones": {
-          "A": "Un nuevo RDD",
-          "B": "Un valor escalar",
-          "C": "Un DataNode"
-        },
-        "respuestaCorrecta": "A"
+      "respuestaCorrecta": "B"
+    },
+    {
+      "pregunta": "¿Qué permite Catalyst Optimizer en Spark SQL?",
+      "opciones": {
+        "A": "Optimizar consultas de forma automática",
+        "B": "Ejecutar código en GPU",
+        "C": "Gestionar nodos del cluster"
       },
-      {
-        "pregunta": "En <code>df.select('id').show()</code>, ¿qué operación dispara el plan?",
-        "opciones": {
-          "A": "select",
-          "B": "show",
-          "C": "id"
-        },
-        "respuestaCorrecta": "B"
+      "respuestaCorrecta": "A"
+    },
+    {
+      "pregunta": "¿Qué tipo de procesamiento realiza Spark Streaming?",
+      "opciones": {
+        "A": "Procesamiento batch puro",
+        "B": "Procesamiento en micro-batches",
+        "C": "Procesamiento exclusivamente en memoria"
       },
-      {
-        "pregunta": "¿Para qué sirve el cacheo en Spark?",
-        "opciones": {
-          "A": "Reutilizar resultados intermedios y reducir recomputación",
-          "B": "Encriptar particiones",
-          "C": "Crear índices SQL físicos"
-        },
-        "respuestaCorrecta": "A"
+      "respuestaCorrecta": "B"
+    },
+    {
+      "pregunta": "¿Cuál es una ventaja de Structured Streaming frente a Spark Streaming clásico?",
+      "opciones": {
+        "A": "No necesita cluster",
+        "B": "Unifica batch y streaming mediante DataFrames",
+        "C": "Solo trabaja con JSON"
       },
-      {
-        "pregunta": "¿Qué representa el DAG en Spark?",
-        "opciones": {
-          "A": "El grafo de dependencias de operaciones",
-          "B": "El archivo de configuración de Hadoop",
-          "C": "El log de errores del driver"
-        },
-        "respuestaCorrecta": "A"
+      "respuestaCorrecta": "B"
+    },
+    {
+      "pregunta": "¿Qué tipo de datos procesa GraphX?",
+      "opciones": {
+        "A": "Datos tabulares",
+        "B": "Grafos dirigidos y no dirigidos",
+        "C": "Imágenes"
       },
-      {
-        "pregunta": "¿Qué resultado esperas de <code>sc.parallelize([1,2,3]).reduce(lambda a,b: a+b)</code>?",
-        "opciones": {
-          "A": "6",
-          "B": "3",
-          "C": "[1,2,3]"
-        },
-        "respuestaCorrecta": "A"
-      }
-    ]
+      "respuestaCorrecta": "B"
+    },
+    {
+      "pregunta": "¿Qué algoritmo es típico en GraphX?",
+      "opciones": {
+        "A": "K-means",
+        "B": "PageRank",
+        "C": "Regresión lineal"
+      },
+      "respuestaCorrecta": "B"
+    },
+    {
+      "pregunta": "¿Qué formato permite consultar datos con SQL en Spark?",
+      "opciones": {
+        "A": "DataFrame",
+        "B": "RDD plano",
+        "C": "Socket"
+      },
+      "respuestaCorrecta": "A"
+    },
+    {
+      "pregunta": "¿Qué función permite ejecutar consultas SQL en Spark?",
+      "opciones": {
+        "A": "spark.read()",
+        "B": "spark.sql()",
+        "C": "spark.stream()"
+      },
+      "respuestaCorrecta": "B"
+    },
+    {
+      "pregunta": "¿Qué hace el siguiente código?\n\nspark.readStream.format(\"json\").load(\"input/\")",
+      "opciones": {
+        "A": "Lee datos batch desde JSON",
+        "B": "Lee datos en streaming desde archivos JSON",
+        "C": "Escribe datos en JSON"
+      },
+      "respuestaCorrecta": "B"
+    },
+    {
+      "pregunta": "¿Qué hace el siguiente código?\n\ndf.groupBy(\"coin\").avg(\"price\")",
+      "opciones": {
+        "A": "Filtra datos",
+        "B": "Agrupa y calcula la media",
+        "C": "Ordena datos"
+      },
+      "respuestaCorrecta": "B"
+    },
+    {
+      "pregunta": "¿Qué permite MLlib?",
+      "opciones": {
+        "A": "Procesar streams",
+        "B": "Entrenar modelos de Machine Learning distribuidos",
+        "C": "Gestionar grafos"
+      },
+      "respuestaCorrecta": "B"
+    },
+    {
+      "pregunta": "¿Qué tipo de aprendizaje soporta MLlib?",
+      "opciones": {
+        "A": "Solo supervisado",
+        "B": "Supervisado y no supervisado",
+        "C": "Solo aprendizaje profundo"
+      },
+      "respuestaCorrecta": "B"
+    },
+    {
+      "pregunta": "¿Cuál es el modo de salida típico en Structured Streaming para agregaciones?",
+      "opciones": {
+        "A": "overwrite",
+        "B": "update",
+        "C": "append"
+      },
+      "respuestaCorrecta": "B"
+    },
+    {
+      "pregunta": "¿Qué hace withWatermark en streaming?",
+      "opciones": {
+        "A": "Ordena datos",
+        "B": "Gestiona datos tardíos",
+        "C": "Elimina duplicados automáticamente"
+      },
+      "respuestaCorrecta": "B"
+    },
+    {
+      "pregunta": "¿Qué representa una ventana en streaming?",
+      "opciones": {
+        "A": "Un archivo",
+        "B": "Un intervalo de tiempo para agrupar datos",
+        "C": "Una tabla en memoria"
+      },
+      "respuestaCorrecta": "B"
+    },
+    {
+      "pregunta": "¿Qué librería usarías para combinar datos estructurados con consultas SQL y streaming?",
+      "opciones": {
+        "A": "GraphX",
+        "B": "Spark SQL + Structured Streaming",
+        "C": "MLlib"
+      },
+      "respuestaCorrecta": "B"
+    }
+  ]
   },
   "modulo2_tema4": {
     "titulo": "Autoevaluación - Módulo 2, Tema 4: Procesamiento Distribuido",

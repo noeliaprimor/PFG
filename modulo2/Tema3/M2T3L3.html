@@ -30,17 +30,17 @@
       <div id="index-container" class="text-cell">
          <hr>
          <ul>
-           <li><a href="#descripcion">Descripción</a></li>
+           <li><a href="#descripcion">Introducción</a></li>
            <li><a href="#contenido">Contenido</a></li>
            <li><a href="#conclusion">Conclusion</a></li>
-           <li><a href="#ejercicio">Ejercicio Propuesto</a></li>
+
          </ul>
        </div>
      </div>
 
     <section id="descripcion">
       <div class="lesson-container">
-        <h3>DESCRIPCIÓN</h3>
+        <h3>INTRODUCCIÓN</h3>
         <hr>
         <div class="text-cell">
   <p>
@@ -70,13 +70,17 @@
     <li><strong>Vértices (vertices)</strong>: representan entidades (usuarios, cuentas, dispositivos, páginas, etc.).</li>
     <li><strong>Aristas (edges)</strong>: representan relaciones entre entidades (amistad, transferencia, enlace, dependencia, etc.).</li>
   </ul>
+          <img src="/img/M2T3L3_1.png">
+          <p class="img-caption">Figura 1: Actores y su relación "actúa en" con la entidad Películas</p>
 
   <p>
     En entornos Big Data, el modelado como grafo permite explotar patrones de conectividad y propagación, y habilita métricas
     estructurales que no son sencillas de obtener en modelos tabulares tradicionales.
   </p>
+          <p>En <a href="https://www.oracle.com/es/autonomous-database/what-is-graph-database/">este enlace</a> tienes más información sobre BBDD orientadas a Grafos</p>
 
-  <h3>Aportación de GraphX dentro de Spark</h3>
+<hr>
+  <h4>Aportación de GraphX dentro de Spark</h4>
   <p>
     GraphX aporta un modelo distribuido para grafos dentro de Spark que permite:
   </p>
@@ -90,8 +94,8 @@
     Dado que GraphX se ejecuta sobre Spark, hereda su escalabilidad, tolerancia a fallos, ejecución en clúster y capacidades de
     persistencia (cache/persist).
   </p>
-
-  <h3>Modelo de datos en GraphX</h3>
+<hr>
+  <h4>Modelo de datos en GraphX</h4>
 
   <strong>Tipos principales</strong>
   <ul>
@@ -126,8 +130,8 @@ val edges: RDD[Edge[Int]] = sc.parallelize(Seq(
 ))
 
 val graph: Graph[String, Int] = Graph(vertices, edges)</code></pre>
-
-  <h3>Operaciones fundamentales (GraphX API)</h3>
+<hr>
+  <h4>Operaciones fundamentales (GraphX API)</h4>
   <p>
     GraphX proporciona operaciones para transformar y analizar grafos, de forma análoga a como se transforman colecciones distribuidas.
   </p>
@@ -150,8 +154,8 @@ val g3 = graph.mapEdges(e =&gt; e.attr + 10)</code></pre>
   <pre><code  class="language-python python-code">graph.triplets.collect.foreach { t =&gt;
   println(s"${t.srcAttr} -&gt; ${t.dstAttr} (w=${t.attr})")
 }</code></pre>
-
-  <h3>Algoritmos habituales en GraphX</h3>
+<hr>
+  <h4>Algoritmos habituales en GraphX</h4>
   <p>
     GraphX incluye implementaciones de algoritmos clásicos de grafos orientados a métricas estructurales y conectividad.
   </p>
@@ -179,8 +183,8 @@ val g3 = graph.mapEdges(e =&gt; e.attr + 10)</code></pre>
     Dependiendo de la versión y utilidades disponibles, pueden existir implementaciones o ejemplos para rutas más cortas. Alternativamente,
     este tipo de algoritmos puede implementarse mediante el modelo iterativo Pregel, propagando distancias y actualizando estados de vértices.
   </p>
-
-  <h3>Pregel en GraphX: computación iterativa por mensajes</h3>
+<hr>
+  <h4>Pregel en GraphX: computación iterativa por mensajes</h4>
   <p>
     Muchos algoritmos de grafos requieren múltiples iteraciones (por ejemplo, propagación de scores, distancias o etiquetas). GraphX incorpora
     un modelo inspirado en Pregel basado en intercambio de mensajes:
@@ -199,12 +203,8 @@ val gPregel = graph.pregel(initialMsg, maxIterations = 10)(
   mergeMsg = (a, b) =&gt; a                    // combinación de mensajes
 )</code></pre>
 
-  <p>
-    En un contexto académico, Pregel es especialmente importante para explicar cómo GraphX soporta algoritmos iterativos distribuidos
-    de forma eficiente sobre particiones.
-  </p>
-
-  <h3>Rendimiento: particionado, persistencia y skew</h3>
+  <hr>
+  <h4>Rendimiento: particionado, persistencia y skew</h4>
   <p>
     Dado que GraphX ejecuta sobre Spark, el rendimiento depende de factores habituales del procesamiento distribuido:
   </p>
@@ -222,8 +222,8 @@ val gPregel = graph.pregel(initialMsg, maxIterations = 10)(
     <li>Reducir shuffles y operaciones costosas en fases previas de ETL del grafo.</li>
     <li>Evitar operaciones que requieran traer resultados masivos al driver.</li>
   </ul>
-
-  <h3>Limitaciones de GraphX y alternativas</h3>
+<hr>
+  <h4>Limitaciones de GraphX y alternativas</h4>
   <p>
     Aunque GraphX es una herramienta potente, presenta algunas limitaciones prácticas:
   </p>
@@ -253,56 +253,14 @@ val gPregel = graph.pregel(initialMsg, maxIterations = 10)(
     algoritmos que requieren propagación de información a través de relaciones.
   </p>
   <p>
-    En el contexto de un TFG, GraphX resulta especialmente útil para explicar cómo se ejecutan algoritmos de grafos en un entorno distribuido,
+    GraphX resulta especialmente útil para explicar cómo se ejecutan algoritmos de grafos en un entorno distribuido,
     cómo influyen particionado y skew en el rendimiento, y cómo se aplican métricas estructurales para resolver problemas reales como
     detección de comunidades, ranking e identificación de patrones de conectividad.
   </p>
         </div>
       </div>
     </section>
-    <section id="ejercicio">
-      <div class="lesson-container">
-        <h3>EJERCICIO PROPUESTO</h3>
-        <hr>
-        <div class="text-cell">
- <h3>1 Objetivo</h3>
-  <p>
-    Construir un grafo sencillo y aplicar algoritmos clásicos para interpretar métricas estructurales y conectividad, justificando resultados
-    en base a la estructura del grafo.
-  </p>
-
-  <h3>2 Enunciado</h3>
-  <ol>
-    <li>Construir un grafo de ejemplo (vértices: usuarios; aristas: relaciones entre usuarios).</li>
-    <li>Calcular:
-      <ul>
-        <li>Componentes conexas (<code>connectedComponents</code>).</li>
-        <li>PageRank (<code>pageRank</code>).</li>
-        <li>Conteo de triángulos (<code>triangleCount</code>).</li>
-      </ul>
-    </li>
-    <li>Para cada algoritmo:
-      <ul>
-        <li>Explicar qué mide y para qué se utiliza.</li>
-        <li>Interpretar resultados (por ejemplo, nodo más relevante en PageRank o comunidades detectadas).</li>
-      </ul>
-    </li>
-    <li>(Opcional) Modificar el grafo añadiendo o eliminando aristas y analizar cómo cambian las métricas.</li>
-  </ol>
-
-  <h3>3 Entregables</h3>
-  <ul>
-    <li>Código de creación del grafo (vértices y aristas).</li>
-    <li>Resultados de los tres algoritmos y una interpretación razonada.</li>
-    <li>Conclusión breve sobre el comportamiento de las métricas ante cambios en la estructura del grafo.</li>
-  </ul>
-
-
-
-        </div>
-      </div>
-    </section>
-
+    
 
 
     <div class="navigation-buttons">

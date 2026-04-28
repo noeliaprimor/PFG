@@ -30,10 +30,9 @@
       <div id="index-container" class="text-cell">
          <hr>
          <ul>
-           <li><a href="#descripcion">Descripción</a></li>
+           <li><a href="#descripcion">Introducción</a></li>
            <li><a href="#contenido">Contenido</a></li>
            <li><a href="#conclusion">Conclusión</a></li>
-           <li><a href="#ejercicio">Ejercicio</a></li>
          </ul>
        </div>
      </div>
@@ -42,7 +41,7 @@
 
     <section id="descripcion">
       <div class="lesson-container">
-        <h3>DESCRIPCIÓN</h3>
+        <h3>INTRODUCCIÓN</h3>
         <hr>
         <div class="text-cell">
   <p>
@@ -65,7 +64,7 @@
         <hr>
         <div class="text-cell">
 
-          <h3>Spark Streaming</h3>
+          <h4>Spark Streaming</h4>
           <p>
     Spark Streaming fue la primera solución de streaming en Spark. Se basa en la abstracción denominada <strong>DStream
     (Discretized Stream)</strong>, que representa una secuencia de RDDs generados a intervalos regulares.
@@ -108,8 +107,8 @@ ssc.awaitTermination()</code></pre>
   <p>
     Debido a estas limitaciones, Structured Streaming se convirtió en la solución recomendada en versiones modernas de Spark.
   </p>
-
-  <h3>Structured Streaming</h3>
+<hr>
+  <h4>Structured Streaming</h4>
 
 
   <p>
@@ -149,8 +148,8 @@ query = (stream_df
     .start())
 
 query.awaitTermination()</code></pre>
-
-  <h3>Modos de salida en Structured Streaming</h3>
+<hr>
+  <h4>Modos de salida en Structured Streaming</h4>
 
   <p>Structured Streaming soporta diferentes modos de salida:</p>
   <ul>
@@ -169,8 +168,8 @@ query = (agg_df
     .outputMode("complete")
     .format("console")
     .start())</code></pre>
-
-  <h3>Ventanas temporales y gestión de estado</h3>
+<hr>
+  <h4>Ventanas temporales y gestión de estado</h4>
 
   <strong>Ventanas por tiempo</strong>
   <pre><code  class="language-python python-code">from pyspark.sql.functions import window
@@ -223,8 +222,8 @@ windowed = (stream_df
       </tr>
     </tbody>
   </table>
-
-  <h3>Arquitectura y ejecución</h3>
+<hr>
+  <h4>Arquitectura y ejecución</h4>
   <p>
     Structured Streaming sigue utilizando micro-batches en la mayoría de configuraciones, aunque puede trabajar en modo continuo
     según el origen y la configuración.
@@ -262,35 +261,7 @@ windowed = (stream_df
   </p>        </div>
       </div>
     </section>
-    <section id="ejercicio">
-      <div class="lesson-container">
-        <h3>EJERCICIO</h3>
-        <hr>
-        <div class="text-cell">
-<h3>1 Objetivo</h3>
-  <p>
-    Implementar una aplicación de Structured Streaming que procese eventos en tiempo real y realice una agregación por ventana temporal.
-  </p>
 
-  <h3>2 Enunciado</h3>
-  <ol>
-    <li>Simular un flujo de datos (por ejemplo, mediante socket o Kafka).</li>
-    <li>Leer el flujo con <code>readStream</code>.</li>
-    <li>Aplicar transformación (split, map, filtrado).</li>
-    <li>Realizar agregación por ventana de 5 minutos.</li>
-    <li>Configurar modo de salida y sink (console o Parquet).</li>
-    <li>Analizar el comportamiento ante datos tardíos usando watermark.</li>
-  </ol>
-
-  <h3>3 Entregables</h3>
-  <ul>
-    <li>Código de la aplicación.</li>
-    <li>Descripción del flujo de ejecución.</li>
-    <li>Comparativa breve entre Spark Streaming y Structured Streaming.</li>
-    <li>Conclusión sobre ventajas del modelo estructurado.</li>
-  </ul>        </div>
-      </div>
-    </section>
 
 
     <div class="navigation-buttons">

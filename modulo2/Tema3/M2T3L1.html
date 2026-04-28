@@ -35,7 +35,7 @@
               <li><a href="#streaming">Spark Structured Streaming</a></li>
               <li><a href="#mlib">MLlib (Machine Learning Library)</a></li>
               <li><a href="#graphx">GraphX</a></li>
-              <li><a href="#consideraciones">Consideraciones Generales</a></li>
+
               <li><a href="#conclusion">Conclusión</a></li>
 
 
@@ -53,6 +53,8 @@
     de un mismo ecosistema. Estas librerías permiten abordar diferentes tipos de cargas de trabajo, incluyendo procesamiento batch,
     streaming, machine learning, análisis de grafos y consultas SQL, además de facilitar la integración con múltiples fuentes de datos.
   </p>
+          <img src="/img/M2T2L2_1.png">
+          <p class="caption">Figura 1: Ecosistema de librerías de Apache Spark</p>
   <p>
     Una de las principales ventajas de Spark es que todas estas librerías comparten el mismo motor de ejecución, el mismo planificador
     y un modelo común de despliegue sobre distintos cluster managers, permitiendo construir pipelines completos sin cambiar de tecnología.
@@ -183,97 +185,8 @@ val ranks = graph.pageRank(0.0001).vertices</code></pre>
       </section>
 
 
-    <section id="consideraciones">
-      <div class="lesson-container">
-<h3>CONSIDERACIONES GENERALES</h3>
-          <hr>
-          <div class="text-cell">
 
-  <h4>Integración con ecosistemas externos y conectores</h4>
-  <p>
-    Spark puede integrarse con múltiples tecnologías externas mediante conectores y la Data Sources API. Algunas integraciones comunes incluyen:
-  </p>
-  <ul>
-    <li>Hadoop (HDFS) y ecosistema (por ejemplo, Hive).</li>
-    <li>Kafka (ingesta y salida en streaming).</li>
-    <li>Bases NoSQL como Cassandra (mediante conectores).</li>
-    <li>Sistemas de búsqueda como Elasticsearch (mediante conectores).</li>
-    <li>Almacenamiento cloud: AWS S3, Azure Data Lake/Blob, Google Cloud Storage.</li>
-    <li>Acceso a bases de datos relacionales mediante JDBC.</li>
-  </ul>
-  <p>
-    Estas integraciones permiten utilizar Spark como motor de procesamiento sobre datos alojados en múltiples plataformas sin necesidad
-    de moverlos a un sistema único.
-  </p>
-
-  <h4>Comparativa de librerías principales</h4>
-  <table border="1">
-    <thead>
-      <tr>
-        <th>Librería</th>
-        <th>Propósito</th>
-        <th>Nivel de API</th>
-        <th>Lenguajes</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td>Spark Core</td>
-        <td>Procesamiento distribuido base (RDD, scheduling, memoria)</td>
-        <td>Bajo</td>
-        <td>Scala, Java, Python, R</td>
-      </tr>
-      <tr>
-        <td>Spark SQL</td>
-        <td>Procesamiento estructurado (DataFrames/Datasets, SQL)</td>
-        <td>Alto</td>
-        <td>Scala, Java, Python, R</td>
-      </tr>
-      <tr>
-        <td>Structured Streaming</td>
-        <td>Procesamiento en tiempo real con API estructurada</td>
-        <td>Alto</td>
-        <td>Scala, Java, Python, R</td>
-      </tr>
-      <tr>
-        <td>MLlib</td>
-        <td>Machine Learning distribuido y pipelines</td>
-        <td>Medio/Alto</td>
-        <td>Scala, Java, Python, R</td>
-      </tr>
-      <tr>
-        <td>GraphX</td>
-        <td>Procesamiento de grafos</td>
-        <td>Medio</td>
-        <td>Scala</td>
-      </tr>
-    </tbody>
-  </table>
-
-  <h4> Arquitectura unificada del ecosistema</h4>
-  <p>
-    Una característica clave de Spark es que todas las librerías del ecosistema:
-  </p>
-  <ul>
-    <li>Comparten el mismo motor de ejecución distribuida.</li>
-    <li>Utilizan el mismo planificador y modelo de tareas.</li>
-    <li>Operan sobre el mismo modelo de particiones.</li>
-    <li>Permiten combinar batch, streaming y ML dentro de un mismo pipeline.</li>
-  </ul>
-
-  <p>Ejemplo conceptual de pipeline unificado:</p>
-  <ol>
-    <li>Ingesta en streaming (Structured Streaming).</li>
-    <li>Limpieza y normalización (DataFrames / Spark SQL).</li>
-    <li>Agregación y preparación de features (Spark SQL / DataFrames).</li>
-    <li>Entrenamiento o scoring (MLlib).</li>
-    <li>Persistencia de resultados en almacenamiento distribuido (Parquet, bases de datos, etc.).</li>
-  </ol>
-
-
-          </div></div>
-    </section>
-        <section id="conclusiones">
+        <section id="conclusion">
       <div class="lesson-container">
 <h3>CONCLUSIÓN</h3>
           <hr>

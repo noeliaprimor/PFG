@@ -30,17 +30,16 @@
       <div id="index-container" class="text-cell">
          <hr>
          <ul>
-           <li><a href="#descripcion">Descripción</a></li>
+           <li><a href="#descripcion">Introducción</a></li>
            <li><a href="#contenido">Contenido</a></li>
            <li><a href="#conclusion">Conclusion</a></li>
-           <li><a href="#ejercicio">Ejercicio Propuesto</a></li>
          </ul>
        </div>
      </div>
 
     <section id="descripcion">
       <div class="lesson-container">
-        <h3>DESCRIPCIÓN</h3>
+        <h3>INTRODUCCIÓN</h3>
         <hr>
         <div class="text-cell">
    MLlib es la librería de Machine Learning integrada en Apache Spark. Permite entrenar y evaluar modelos de aprendizaje automático
@@ -49,6 +48,8 @@
   <p>
     A diferencia de librerías tradicionales que operan en memoria local (por ejemplo, sobre datasets pequeños), MLlib está diseñada
     para trabajar en entornos Big Data, donde los datos se distribuyen en múltiples nodos del clúster.
+
+    Puedes encontrar más información sobre MLlib <a href="https://www.geeksforgeeks.org/big-data/introduction-to-mlib-apache-spark/">aquí.</a>
   </p>
 
   <h4>Evolución de MLlib</h4>
@@ -90,8 +91,8 @@
     Un Pipeline encadena múltiples etapas (stages) de transformación y entrenamiento, permitiendo definir flujos completos de
     preparación y modelado.
   </p>
-
-  <h3>Flujo típico de Machine Learning en Spark</h3>
+<hr>
+  <h4>Flujo típico de Machine Learning en Spark</h4>
   <ol>
     <li>Ingesta y limpieza de datos (DataFrame).</li>
     <li>Preparación de características (feature engineering).</li>
@@ -100,8 +101,8 @@
     <li>Evaluación.</li>
     <li>Persistencia del modelo.</li>
   </ol>
-
-  <h3>Preparación de datos (Feature Engineering)</h3>
+<hr>
+  <h4>Preparación de datos (Feature Engineering)</h4>
 
   <strong>VectorAssembler</strong>
   <p>
@@ -137,7 +138,7 @@ df_indexed = indexer.fit(df).transform(df)</code></pre>
 scaler = StandardScaler(inputCol="features", outputCol="scaledFeatures")
 model_scaler = scaler.fit(df_features)
 df_scaled = model_scaler.transform(df_features)</code></pre>
-
+<hr>
   <h3>Modelos supervisados</h3>
 
   <strong>Regresión logística</strong>
@@ -169,7 +170,7 @@ kmeans = KMeans(featuresCol="features", k=3)
 model_kmeans = kmeans.fit(df_features)
 
 clusters = model_kmeans.transform(df_features)</code></pre>
-
+<hr>
   <h3>Evaluación de modelos</h3>
 
   <strong>Evaluación para clasificación</strong>
@@ -183,7 +184,7 @@ auc = evaluator.evaluate(predictions)</code></pre>
 
 evaluator = RegressionEvaluator(labelCol="label", metricName="rmse")
 rmse = evaluator.evaluate(predictions)</code></pre>
-
+<hr>
   <h3>Validación cruzada y ajuste de hiperparámetros</h3>
 
   <pre><code  class="language-python python-code">from pyspark.ml.tuning import CrossValidator, ParamGridBuilder
@@ -200,7 +201,7 @@ crossval = CrossValidator(
     numFolds=3)
 
 cvModel = crossval.fit(training_data)</code></pre>
-
+<hr>
   <h3>Pipelines completos</h3>
 
   <pre><code  class="language-python python-code">from pyspark.ml import Pipeline
@@ -218,7 +219,7 @@ predictions = model_pipeline.transform(test_data)</code></pre>
 
   <pre><code  class="language-python python-code">model_pipeline.write().overwrite().save("/models/modelo_ml")
 loaded_model = PipelineModel.load("/models/modelo_ml")</code></pre>
-
+<hr>
   <h3>Ventajas de MLlib en entornos Big Data</h3>
   <ul>
     <li>Escalabilidad horizontal.</li>
@@ -226,7 +227,7 @@ loaded_model = PipelineModel.load("/models/modelo_ml")</code></pre>
     <li>Pipelines reproducibles.</li>
     <li>Compatibilidad con batch y streaming estructurado.</li>
   </ul>
-
+<hr>
   <h3>Limitaciones</h3>
   <ul>
     <li>Menor variedad de algoritmos comparado con librerías especializadas (por ejemplo, scikit-learn).</li>
@@ -254,35 +255,6 @@ loaded_model = PipelineModel.load("/models/modelo_ml")</code></pre>
         </div>
       </div>
     </section>
-    <section id="ejercicio">
-      <div class="lesson-container">
-        <h3>EJERCICIO PROPUESTO</h3>
-        <hr>
-        <div class="text-cell">
-<h3>1 Objetivo</h3>
-  <p>
-    Implementar un pipeline completo de clasificación binaria utilizando MLlib, incluyendo preparación de datos,
-    entrenamiento, evaluación y ajuste de hiperparámetros.
-  </p>
-
-  <h3>2 Enunciado</h3>
-  <ol>
-    <li>Cargar un dataset estructurado (por ejemplo, CSV o Parquet).</li>
-    <li>Aplicar StringIndexer a variables categóricas.</li>
-    <li>Construir la columna "features" con VectorAssembler.</li>
-    <li>Dividir el dataset en entrenamiento y test.</li>
-    <li>Entrenar un modelo de regresión logística.</li>
-    <li>Evaluar el modelo con AUC o accuracy.</li>
-    <li>Aplicar validación cruzada con diferentes hiperparámetros.</li>
-    <li>Guardar el modelo entrenado.</li>
-  </ol>
-        </div>
-      </div>
-    </section>
-
-
-
-
 
     <div class="navigation-buttons">
       <button onclick="window.location.href='M2T3L4.html'">Anterior</button>
