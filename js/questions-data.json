@@ -465,99 +465,195 @@
   ]
   },
   "modulo2_tema4": {
-    "titulo": "Autoevaluación - Módulo 2, Tema 4: Procesamiento Distribuido",
-    "preguntas": [
-      {
-        "pregunta": "¿Cuál es el objetivo principal del procesamiento distribuido?",
-        "opciones": {
-          "A": "Aumentar la velocidad mediante paralelización",
-          "B": "Reducir costos de hardware",
-          "C": "Simplificar la programación"
-        },
-        "respuestaCorrecta": "A"
+    "titulo": "Autoevaluación - Módulo 2, Tema 4:Configuración, monitorización y optimización de Spark",
+
+  "preguntas": [
+    {
+      "pregunta": "¿Qué componente de Spark permite monitorizar la ejecución de jobs, stages y tareas en tiempo real?",
+      "opciones": {
+        "A": "Spark UI",
+        "B": "SparkContext",
+        "C": "MLlib"
       },
-      {
-        "pregunta": "¿Qué es la localidad de datos?",
-        "opciones": {
-          "A": "Procesar datos donde residen para minimizar transferencias de red",
-          "B": "Almacenar datos localmente en cada nodo",
-          "C": "Distribuir datos de forma aleatoria"
-        },
-        "respuestaCorrecta": "A"
+      "respuestaCorrecta": "A"
+    },
+    {
+      "pregunta": "¿Qué información crítica se puede analizar en la pestaña 'Stages' de la Spark UI?",
+      "opciones": {
+        "A": "Solo configuración del cluster",
+        "B": "Tiempo de ejecución, shuffle y fallos de tareas",
+        "C": "Código fuente de la aplicación"
       },
-      {
-        "pregunta": "¿Cuál es el impacto del shuffle en MapReduce?",
-        "opciones": {
-          "A": "Aumenta el rendimiento significativamente",
-          "B": "Es un cuello de botella que requiere transferencia de red",
-          "C": "No tiene ningún impacto en el rendimiento"
-        },
-        "respuestaCorrecta": "B"
+      "respuestaCorrecta": "B"
+    },
+    {
+      "pregunta": "¿Qué problema indica un alto tiempo en 'shuffle read' en la Spark UI?",
+      "opciones": {
+        "A": "Falta de memoria en el driver",
+        "B": "Coste elevado en transferencia de datos entre nodos",
+        "C": "Error de configuración del cluster"
       },
-      {
-        "pregunta": "¿Qué ventaja tiene usar memoria caché en Spark?",
-        "opciones": {
-          "A": "Permite reutilizar RDDs sin recalcularlos",
-          "B": "Reduce el consumo de CPU",
-          "C": "Mejora la tolerancia a fallos"
-        },
-        "respuestaCorrecta": "A"
+      "respuestaCorrecta": "B"
+    },
+    {
+      "pregunta": "¿Qué parámetro controla el número de particiones en operaciones de shuffle en Spark SQL?",
+      "opciones": {
+        "A": "spark.executor.memory",
+        "B": "spark.sql.shuffle.partitions",
+        "C": "spark.driver.cores"
       },
-      {
-        "pregunta": "¿Cuál es el propósito del particionamiento en procesamiento distribuido?",
-        "opciones": {
-          "A": "Dividir datos entre nodos para procesamiento paralelo",
-          "B": "Encriptar datos sensibles",
-          "C": "Comprimir archivos"
-        },
-        "respuestaCorrecta": "A"
+      "respuestaCorrecta": "B"
+    },
+    {
+      "pregunta": "¿Qué consecuencia tiene un valor demasiado alto de 'spark.sql.shuffle.partitions'?",
+      "opciones": {
+        "A": "Falta de paralelismo",
+        "B": "Sobrecarga por exceso de tareas pequeñas",
+        "C": "Pérdida de datos"
       },
-      {
-        "pregunta": "¿Qué efecto tiene aumentar demasiado el número de particiones?",
-        "opciones": {
-          "A": "Puede aumentar overhead de scheduling",
-          "B": "Siempre mejora rendimiento linealmente",
-          "C": "Desactiva la ejecución paralela"
-        },
-        "respuestaCorrecta": "A"
+      "respuestaCorrecta": "B"
+    },
+    {
+      "pregunta": "¿Qué hace el siguiente código?\n\nspark = SparkSession.builder.config(\"spark.executor.memory\", \"4g\").getOrCreate()",
+      "opciones": {
+        "A": "Define la memoria del driver",
+        "B": "Configura la memoria disponible para cada executor",
+        "C": "Limita el uso de disco"
       },
-      {
-        "pregunta": "En <code>df.repartition(200)</code>, ¿qué puede ocurrir?",
-        "opciones": {
-          "A": "Un shuffle para redistribuir datos",
-          "B": "No cambia nada nunca",
-          "C": "Se elimina el DataFrame"
-        },
-        "respuestaCorrecta": "A"
+      "respuestaCorrecta": "B"
+    },
+    {
+      "pregunta": "¿Cuál es una causa común del error 'OutOfMemoryError' en Spark?",
+      "opciones": {
+        "A": "Uso de DataFrames",
+        "B": "Particiones demasiado grandes o mal dimensionadas",
+        "C": "Uso de SQL"
       },
-      {
-        "pregunta": "¿Qué métrica es útil para detectar skew (desbalanceo)?",
-        "opciones": {
-          "A": "Diferencias grandes de tiempo entre tasks",
-          "B": "Solo la versión de Java",
-          "C": "El tamaño del monitor"
-        },
-        "respuestaCorrecta": "A"
+      "respuestaCorrecta": "B"
+    },
+    {
+      "pregunta": "¿Qué técnica ayuda a reducir el consumo de memoria en Spark?",
+      "opciones": {
+        "A": "Aumentar el número de particiones",
+        "B": "Usar persistencia en disco siempre",
+        "C": "Reducir el número de executors"
       },
-      {
-        "pregunta": "¿Qué estrategia ayuda a reducir pequeños archivos en salida?",
-        "opciones": {
-          "A": "Ajustar particiones antes de escribir",
-          "B": "Desactivar compresión siempre",
-          "C": "Aumentar logs del driver"
-        },
-        "respuestaCorrecta": "A"
+      "respuestaCorrecta": "A"
+    },
+    {
+      "pregunta": "¿Qué mecanismo permite a Spark recuperarse ante fallos en streaming?",
+      "opciones": {
+        "A": "RDD caching",
+        "B": "Checkpointing",
+        "C": "Shuffle"
       },
-      {
-        "pregunta": "¿Qué describe mejor el comando <code>df.coalesce(1)</code>?",
-        "opciones": {
-          "A": "Reduce particiones, útil para salidas pequeñas",
-          "B": "Aumenta particiones para paralelismo",
-          "C": "Convierte DataFrame en RDD automáticamente"
-        },
-        "respuestaCorrecta": "A"
-      }
-    ]
+      "respuestaCorrecta": "B"
+    },
+    {
+      "pregunta": "¿Qué ocurre si no se configura correctamente el checkpoint en Structured Streaming?",
+      "opciones": {
+        "A": "Mejora el rendimiento",
+        "B": "Se pierde el estado y no hay recuperación ante fallos",
+        "C": "Se duplican los datos automáticamente"
+      },
+      "respuestaCorrecta": "B"
+    },
+    {
+      "pregunta": "¿Qué protocolo se utiliza habitualmente para asegurar la comunicación en Spark?",
+      "opciones": {
+        "A": "HTTP sin cifrado",
+        "B": "SSL/TLS",
+        "C": "FTP"
+      },
+      "respuestaCorrecta": "B"
+    },
+    {
+      "pregunta": "¿Qué sistema de autenticación es común en entornos Hadoop con Spark?",
+      "opciones": {
+        "A": "OAuth",
+        "B": "Kerberos",
+        "C": "JWT"
+      },
+      "respuestaCorrecta": "B"
+    },
+    {
+      "pregunta": "¿Qué riesgo existe si Spark se despliega sin autenticación en un cluster?",
+      "opciones": {
+        "A": "Mejora del rendimiento",
+        "B": "Acceso no autorizado y ejecución de código malicioso",
+        "C": "Fallo en el scheduler"
+      },
+      "respuestaCorrecta": "B"
+    },
+    {
+      "pregunta": "¿Qué modo de despliegue permite ejecutar Spark sin gestor de recursos externo?",
+      "opciones": {
+        "A": "YARN",
+        "B": "Standalone",
+        "C": "Kubernetes"
+      },
+      "respuestaCorrecta": "B"
+    },
+    {
+      "pregunta": "¿Qué ventaja tiene desplegar Spark en Kubernetes?",
+      "opciones": {
+        "A": "Menor escalabilidad",
+        "B": "Gestión automática de contenedores y escalado",
+        "C": "Menor seguridad"
+      },
+      "respuestaCorrecta": "B"
+    },
+    {
+      "pregunta": "¿Qué indica el error 'Task not serializable'?",
+      "opciones": {
+        "A": "Error de memoria",
+        "B": "Se intenta enviar un objeto no serializable a los executors",
+        "C": "Fallo en el cluster"
+      },
+      "respuestaCorrecta": "B"
+    },
+    {
+      "pregunta": "¿Cómo se puede solucionar el error 'Task not serializable'?",
+      "opciones": {
+        "A": "Reduciendo memoria",
+        "B": "Evitar referencias a objetos no serializables o usar funciones puras",
+        "C": "Aumentando particiones"
+      },
+      "respuestaCorrecta": "B"
+    },
+    {
+      "pregunta": "¿Qué ocurre si el 'driver' falla durante la ejecución?",
+      "opciones": {
+        "A": "Los executors continúan trabajando",
+        "B": "La aplicación completa falla",
+        "C": "Solo se pierde un stage"
+      },
+      "respuestaCorrecta": "B"
+    },
+    {
+      "pregunta": "¿Qué herramienta externa se usa frecuentemente para monitorización avanzada de Spark?",
+      "opciones": {
+        "A": "Prometheus y Grafana",
+        "B": "Excel",
+        "C": "Word"
+      },
+      "respuestaCorrecta": "A"
+    },
+    {
+      "pregunta": "¿Qué indica una alta latencia en procesamiento de micro-batches en streaming?",
+      "opciones": {
+        "A": "Procesamiento eficiente",
+        "B": "El sistema no procesa datos al ritmo de llegada",
+        "C": "Falta de datos"
+      },
+      "respuestaCorrecta": "B"
+    }
+  ]
+
+
+
+
+
   },
   "modulo3_tema1": {
     "titulo": "Autoevaluación - Módulo 3, Tema 1: Kafka",

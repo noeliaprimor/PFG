@@ -30,7 +30,7 @@
         <div id="index-container" class="text-cell">
             <hr>
             <ul>
-                <li><a href="#descripcion">Descripción</a></li>
+                <li><a href="#descripcion">Introducción</a></li>
                 <li><a href="#contenido">Contenido</a></li>
                 <li><a href="#conclusion">Conclusión</a></li>
             </ul>
@@ -39,7 +39,7 @@
 
     <section id="descripcion">
       <div class="lesson-container">
-        <h3>DESCRIPCIÓN</h3>
+        <h3>INTRODUCCIÓN</h3>
         <hr>
         <div class="text-cell">
   <p>
@@ -48,15 +48,14 @@
     puede provocar cuellos de botella, consumo excesivo de memoria, tiempos elevados de ejecución o incluso
     fallos de aplicación.
   </p>
-  <p>
-    En entornos académicos y profesionales, comprender cómo ajustar parámetros y cómo interpretar métricas
-    de ejecución resulta clave para optimizar aplicaciones Spark.
-  </p>
+  <p>Apache Spark genera una gran cantidad de información durante la ejecución de aplicaciones distribuidas. Esta información se materializa en forma de logs y eventos, que permiten monitorizar la ejecución, detectar errores, analizar el rendimiento y auditar procesos.</p>
+
+<p>La correcta gestión de estos elementos es fundamental en entornos de procesamiento distribuido, ya que facilita la identificación de problemas y la optimización de las aplicaciones.</p>
+
         </div>
       </div>
     </section>
 
-    <!-- Agrupamos el contenido extenso dentro de una sección CONTENIDO -->
     <section id="contenido">
       <div class="lesson-container">
         <h3>CONTENIDO</h3>
@@ -64,156 +63,147 @@
         <div class="text-cell">
 
 
-  <h4>Arquitectura relevante para la monitorización</h4>
-  <p>
-    Spark ejecuta aplicaciones mediante:
-  </p>
-  <ul>
-    <li><strong>Driver</strong>: coordina la ejecución.</li>
-    <li><strong>Executors</strong>: ejecutan tareas en los nodos del clúster.</li>
-    <li><strong>Tasks</strong>: unidades de trabajo dentro de un stage.</li>
-    <li><strong>Stages</strong>: agrupaciones de tareas delimitadas por operaciones de shuffle.</li>
-  </ul>
-  <p>
-    La monitorización se centra en observar el comportamiento de estos componentes durante la ejecución.
-  </p>
 
-  <h4>Spark Web UI</h4>
+<h4>Diferencia entre logs y eventos</h4>
 
-  <strong>Descripción</strong>
-  <p>
-    Spark proporciona una interfaz web integrada (Spark UI) accesible generalmente en el puerto 4040
-    durante la ejecución de una aplicación.
-  </p>
+<strong>Logs</strong>
 
-  <strong>Secciones principales</strong>
-  <ul>
-    <li><strong>Jobs</strong>: muestra trabajos ejecutados y su estado.</li>
-    <li><strong>Stages</strong>: detalla etapas, tareas, tiempos y shuffles.</li>
-    <li><strong>Storage</strong>: muestra datasets cacheados y uso de memoria.</li>
-    <li><strong>Environment</strong>: configuración activa de Spark.</li>
-    <li><strong>Executors</strong>: uso de CPU, memoria y número de tareas por executor.</li>
-    <li><strong>SQL</strong>: planes de ejecución y métricas de consultas SQL.</li>
-  </ul>
+<p>Los logs son registros textuales generados por los distintos componentes de Spark, principalmente el Driver y los Executors.</p>
 
-  <strong>Métricas importantes</strong>
-  <ul>
-    <li>Tiempo total por stage.</li>
-    <li>Shuffle read/write.</li>
-    <li>Skew (desequilibrio entre tareas).</li>
-    <li>Uso de memoria por executor.</li>
-    <li>GC time (tiempo de recolección de basura).</li>
-  </ul>
+<p>Sus principales características son:</p>
 
-  <h4>Logs y eventos</h4>
+<ul>
+  <li>Formato generalmente no estructurado.</li>
+  <li>Uso orientado a depuración y diagnóstico.</li>
+  <li>Incluyen niveles de severidad como INFO, WARN, ERROR y DEBUG.</li>
+</ul>
 
-  <strong>Logs de aplicación</strong>
-  <p>
-    Spark utiliza sistemas de logging (por ejemplo, Log4j) para registrar eventos de ejecución.
-  </p>
+<pre><code  class=language-bash bash-code">INFO TaskSetManager: Starting task 0.0 in stage 1.0
+WARN Executor: Lost task 3.0 due to node failure
+ERROR Executor: Exception in task
+</code></pre>
 
-  <strong>Event Logs</strong>
-  <p>
-    Puede activarse el historial de aplicaciones:
-  </p>
-  <pre><code  class="language-python python-code">spark.eventLog.enabled=true
-spark.eventLog.dir=/ruta/a/logs</code></pre>
+<strong>Eventos</strong>
 
-  <p>
-    Posteriormente, estos logs pueden visualizarse mediante el Spark History Server.
-  </p>
+<p>Los eventos son registros estructurados que describen acciones internas del sistema durante la ejecución de una aplicación Spark.</p>
 
-  <h4>Configuración de Spark</h4>
+<p>Sus principales características son:</p>
 
-  <strong>Formas de configuración</strong>
-  <ul>
-    <li>Parámetros en <code>spark-submit</code>.</li>
-    <li>Archivo <code>spark-defaults.conf</code>.</li>
-    <li>Configuración programática en <code>SparkSession.builder</code>.</li>
-  </ul>
+<ul>
+  <li>Suelen almacenarse en formato JSON.</li>
+  <li>Están diseñados para ser analizados automáticamente.</li>
+  <li>Son utilizados por herramientas como Spark UI para reconstruir la ejecución de una aplicación.</li>
+</ul>
 
-  <strong>Ejemplo programático</strong>
-  <pre><code  class="language-python python-code">from pyspark.sql import SparkSession
+<pre><code  class=language-bash bash-code">{
+  "Event": "SparkListenerTaskEnd",
+  "Stage ID": 1,
+  "Task Info": {
+    "Task ID": 10,
+    "Launch Time": 123456789
+  }
+}
+</code></pre>
+<hr>
+<h4>Sistema de logging en Spark</h4>
 
-spark = (SparkSession.builder
-    .appName("MiApp")
-    .config("spark.executor.memory", "4g")
-    .config("spark.executor.cores", "2")
-    .config("spark.sql.shuffle.partitions", "200")
-    .getOrCreate())</code></pre>
+<p>Spark utiliza <strong>Log4j</strong> como sistema de logging. Este framework permite configurar el nivel de detalle de los logs, el destino de salida y el formato de los mensajes.</p>
 
-  <h4>Parámetros clave de configuración</h4>
+<p>Gracias a esta configuración es posible adaptar la salida de logs al entorno de ejecución, diferenciando entre entornos de desarrollo, pruebas y producción.</p>
+          <p>Puedes encontrar más inforamción sobre este framewok en <a href="https://logging.apache.org/log4j/2.x/index.html">este enlace.</a></p>
+ <hr>
+<h4>Configuración de logs</h4>
 
-  <strong>Memoria</strong>
-  <ul>
-    <li><code>spark.executor.memory</code>: memoria por executor.</li>
-    <li><code>spark.driver.memory</code>: memoria del driver.</li>
-    <li><code>spark.memory.fraction</code>: fracción para ejecución y almacenamiento.</li>
-  </ul>
+<p>La configuración de logs suele realizarse mediante un archivo denominado <code>log4j.properties</code>.</p>
 
-  <strong>Paralelismo</strong>
-  <ul>
-    <li><code>spark.executor.cores</code>: núcleos por executor.</li>
-    <li><code>spark.default.parallelism</code>: número por defecto de particiones.</li>
-    <li><code>spark.sql.shuffle.partitions</code>: particiones tras operaciones de shuffle.</li>
-  </ul>
+<pre><code class=language-bash bash-code">log4j.rootCategory=INFO, console
 
-  <strong>Adaptive Query Execution (AQE)</strong>
-  <pre><code  class="language-python python-code">spark.sql.adaptive.enabled=true
-spark.sql.adaptive.skewJoin.enabled=true</code></pre>
+log4j.appender.console=org.apache.log4j.ConsoleAppender
+log4j.appender.console.layout=org.apache.log4j.PatternLayout
+log4j.appender.console.layout.ConversionPattern=%d{yy/MM/dd HH:mm:ss} %p %c{1}: %m%n
+</code></pre>
 
-  <p>
-    AQE permite optimizar dinámicamente joins y particiones durante la ejecución.
-  </p>
+<p>También es posible reducir el nivel de detalle de los mensajes generados por Spark:</p>
 
-  <h4>Optimización del rendimiento</h4>
+<pre><code class=language-bash bash-code">log4j.logger.org.apache.spark=ERROR
+</code></pre>
 
-  <strong>Gestión de particiones</strong>
-  <pre><code  class="language-python python-code">df.repartition(200)
-df.coalesce(10)</code></pre>
+<p>Esta configuración permite reducir el ruido en consola y centrarse únicamente en errores relevantes.</p>
+<hr>
+<h4>Event Logging en Spark</h4>
 
-  <p>
-    Repartition aumenta el paralelismo; coalesce reduce particiones sin shuffle completo.
-  </p>
+<p>Spark permite almacenar eventos de ejecución mediante el sistema de Event Logs. Estos eventos contienen información estructurada sobre la ejecución de jobs, stages y tasks.</p>
 
-  <strong>Cache y persistencia</strong>
-  <pre><code  class="language-python python-code">df.cache()
-df.persist()</code></pre>
+<p>Para activar el registro de eventos pueden utilizarse las siguientes propiedades:</p>
 
-  <p>
-    Útil cuando un dataset se reutiliza múltiples veces.
-  </p>
+<pre><code class=language-bash bash-code">spark.eventLog.enabled=true
+spark.eventLog.dir=/tmp/spark-events
+</code></pre>
 
-  <strong>Broadcast joins</strong>
-  <pre><code  class="language-python python-code">from pyspark.sql.functions import broadcast
+<p>El directorio indicado debe ser accesible por la aplicación Spark y puede encontrarse en el sistema de ficheros local, HDFS u otro almacenamiento compatible.</p>
+<hr>
+<h4>Spark UI y análisis de eventos</h4>
 
-df_join = df1.join(broadcast(df2), "id")</code></pre>
+<p>Los eventos generados por Spark son utilizados por Spark UI para mostrar información detallada sobre la ejecución de una aplicación.</p>
 
-  <h4>Monitorización en clúster</h4>
+<p>Spark UI permite visualizar:</p>
 
-  <strong>Standalone</strong>
-  <p>
-    Proporciona UI del Master y Workers para visualizar uso de recursos.
-  </p>
+<ul>
+  <li>Jobs ejecutados.</li>
+  <li>Stages generados.</li>
+  <li>Tasks lanzadas.</li>
+  <li>Tiempo de ejecución.</li>
+  <li>Uso de memoria.</li>
+  <li>Operaciones de shuffle.</li>
+  <li>Errores producidos durante la ejecución.</li>
+</ul>
 
-  <strong>YARN</strong>
-  <p>
-    Integración con ResourceManager y ApplicationMaster.
-  </p>
+<p>Esta herramienta resulta especialmente útil para comprender cómo Spark distribuye el trabajo y para detectar posibles cuellos de botella.</p>
+<hr>
+<h4>Flujo de eventos en Spark</h5>
 
-  <strong>Kubernetes</strong>
-  <p>
-    Monitorización mediante herramientas como kubectl, dashboards y métricas del clúster.
-  </p>
+<p>El flujo general de eventos en Spark puede describirse de la siguiente forma:</p>
 
-  <h4>Buenas prácticas</h4>
-  <ul>
-    <li>Evitar collect() en datasets grandes.</li>
-    <li>Analizar explain(True) para entender planes físicos.</li>
-    <li>Controlar número de particiones tras shuffle.</li>
-    <li>Monitorizar skew en stages largos.</li>
-    <li>Configurar adecuadamente memoria según volumen de datos.</li>
-  </ul>
+<ol>
+  <li>El Driver ejecuta la aplicación Spark.</li>
+  <li>Durante la ejecución se generan eventos internos.</li>
+  <li>Los eventos se almacenan en el directorio configurado.</li>
+  <li>Spark UI consume esta información.</li>
+  <li>El usuario puede visualizar métricas y detalles de ejecución.</li>
+</ol>
+<hr>
+<h4>Uso práctico en entornos de streaming</h4>
+
+<p>En aplicaciones de Spark Structured Streaming, los logs y eventos son especialmente importantes, ya que permiten observar el comportamiento de los micro-batches y detectar problemas en tiempo real.</p>
+
+<p>Mediante los logs es posible identificar errores relacionados con:</p>
+
+<ul>
+  <li>Lectura de datos.</li>
+  <li>Parsing de JSON.</li>
+  <li>Problemas de esquema.</li>
+  <li>Fallos en la escritura de resultados.</li>
+  <li>Terminación inesperada de consultas streaming.</li>
+</ul>
+
+<pre><code class=language-bash bash-code">WARN StreamingQueryManager: Query terminated with exception
+</code></pre>
+
+<p>Por su parte, los eventos permiten analizar métricas como latencia, número de registros procesados, duración de cada micro-batch y estado de la consulta.</p>
+<hr>
+<h4>Buenas prácticas</h4>
+
+<p>Al trabajar con logs y eventos en Spark, es recomendable aplicar las siguientes buenas prácticas:</p>
+
+<ul>
+  <li>Ajustar el nivel de logs según el entorno de ejecución.</li>
+  <li>Utilizar niveles WARN o ERROR en producción para reducir ruido.</li>
+  <li>Separar los logs del Driver y de los Executors.</li>
+  <li>Persistir los eventos de ejecución mediante <code>spark.eventLog.enabled</code>.</li>
+  <li>Configurar correctamente el directorio de eventos.</li>
+  <li>Revisar Spark UI durante el desarrollo y pruebas.</li>
+  <li>Integrar los logs con herramientas externas de monitorización cuando sea necesario.</li>
+</ul>
 
 
 
@@ -221,7 +211,6 @@ df_join = df1.join(broadcast(df2), "id")</code></pre>
       </div>
     </section>
 
-    <!-- Sección CONCLUSIÓN separada -->
     <section id="conclusion">
       <div class="lesson-container">
         <h3>CONCLUSIÓN</h3>
@@ -232,6 +221,12 @@ df_join = df1.join(broadcast(df2), "id")</code></pre>
             La comprensión de métricas, configuración de memoria, paralelismo y optimización adaptativa
             permite ajustar aplicaciones a distintos entornos y cargas de trabajo.
           </p>
+
+
+<p>Los logs y eventos en Spark son elementos fundamentales para comprender el comportamiento interno de las aplicaciones distribuidas. Mientras que los logs permiten diagnosticar errores y revisar mensajes generados por los componentes del sistema, los eventos proporcionan una visión estructurada de la ejecución.</p>
+
+<p>Su correcta configuración y análisis permite mejorar la observabilidad, detectar problemas de rendimiento y optimizar aplicaciones Spark, especialmente en escenarios de procesamiento en streaming.</p>
+
 
         </div>
       </div>

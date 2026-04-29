@@ -30,7 +30,7 @@
       <div id="index-container" class="text-cell">
          <hr>
          <ul>
-           <li><a href="#descripcion">Descripción</a></li>
+           <li><a href="#descripcion">Introducción</a></li>
            <li><a href="#contenido">Contenido</a></li>
            <li><a href="#conclusion">Conclusión</a></li>
          </ul>
@@ -39,7 +39,7 @@
 
     <section id="descripcion">
       <div class="lesson-container">
-        <h3>DESCRIPCIÓN</h3>
+        <h3>INTRODUCCIÓN</h3>
         <hr>
         <div class="text-cell">
   <p>
@@ -65,7 +65,7 @@
 
   <h4>Errores relacionados con memoria</h4>
 
-  <strong>OutOfMemoryError (Java heap space)</strong>
+          <u><strong>OutOfMemoryError (Java heap space)</strong></u>
   <p><strong>Causa:</strong></p>
   <ul>
     <li>Dataset demasiado grande para la memoria asignada.</li>
@@ -81,7 +81,7 @@
     <li>Usar persist(StorageLevel.DISK_ONLY) si la memoria es limitada.</li>
   </ul>
 
-  <strong>GC Overhead Limit Exceeded</strong>
+  <u><strong>GC Overhead Limit Exceeded</strong></u>
   <p><strong>Causa:</strong> exceso de tiempo en recolección de basura debido a presión de memoria.</p>
 
   <p><strong>Soluciones:</strong></p>
@@ -90,10 +90,10 @@
     <li>Reducir número de objetos intermedios.</li>
     <li>Optimizar particionado y evitar estructuras complejas innecesarias.</li>
   </ul>
-
+<HR>
   <h4>Problemas de particionado y rendimiento</h4>
 
-  <strong>Tareas muy lentas (Data Skew)</strong>
+          <U><strong>Tareas muy lentas (Data Skew)</strong></U>
   <p><strong>Causa:</strong> distribución desigual de datos entre particiones.</p>
 
   <p><strong>Soluciones:</strong></p>
@@ -103,7 +103,7 @@
     <li>Aplicar técnicas de salting en claves con alta frecuencia.</li>
   </ul>
 
-  <strong>Demasiadas particiones pequeñas</strong>
+  <U><strong>Demasiadas particiones pequeñas</strong></u>
   <p><strong>Causa:</strong> exceso de <code>spark.sql.shuffle.partitions</code>.</p>
 
   <p><strong>Soluciones:</strong></p>
@@ -111,10 +111,10 @@
     <li>Ajustar <code>spark.sql.shuffle.partitions</code>.</li>
     <li>Usar <code>coalesce()</code> antes de escribir resultados.</li>
   </ul>
-
+<hr>
   <h4>Errores de serialización</h4>
 
-  <strong>Task not serializable</strong>
+  <U><strong>Task not serializable</strong></u>
   <p><strong>Causa:</strong> intento de enviar objetos no serializables a los executors.</p>
 
   <p><strong>Soluciones:</strong></p>
@@ -124,15 +124,15 @@
     <li>Usar variables broadcast para objetos grandes.</li>
   </ul>
 
-  <strong>Kryo serialization errors</strong>
+  <U><strong>Kryo serialization errors</strong></u>
   <p><strong>Causa:</strong> tipos no registrados correctamente en Kryo.</p>
 
   <p><strong>Solución:</strong> registrar clases personalizadas y habilitar Kryo:</p>
   <pre><code  class="language-python python-code">spark.serializer=org.apache.spark.serializer.KryoSerializer</code></pre>
-
+<hr>
   <h4>Errores en joins y shuffles</h4>
 
-  <strong>Shuffle fetch failed</strong>
+  <U><strong>Shuffle fetch failed</strong></u>
   <p><strong>Causa:</strong> fallo en transferencia de datos entre nodos.</p>
 
   <p><strong>Soluciones:</strong></p>
@@ -142,7 +142,7 @@
     <li>Reducir tamaño de particiones.</li>
   </ul>
 
-  <strong>Broadcast timeout</strong>
+  <U><strong>Broadcast timeout</strong></u>
   <p><strong>Causa:</strong> tabla demasiado grande para broadcast.</p>
 
   <p><strong>Soluciones:</strong></p>
@@ -150,10 +150,10 @@
     <li>Aumentar <code>spark.sql.broadcastTimeout</code>.</li>
     <li>Evitar broadcast manual si la tabla es grande.</li>
   </ul>
-
+<hr>
   <h4>Problemas en Structured Streaming</h4>
 
-  <strong>Checkpoint corruption</strong>
+  <U><strong>Checkpoint corruption</strong></u>
   <p><strong>Causa:</strong> interrupción inesperada o almacenamiento inconsistente.</p>
 
   <p><strong>Solución:</strong></p>
@@ -162,14 +162,14 @@
     <li>Usar almacenamiento fiable (HDFS, S3).</li>
   </ul>
 
-  <strong>Datos tardíos (late data)</strong>
+  <U><strong>Datos tardíos (late data)</strong></u>
   <p><strong>Causa:</strong> eventos fuera de la ventana esperada.</p>
 
   <p><strong>Solución:</strong> configurar watermark correctamente.</p>
-
+<hr>
   <h4>Errores de configuración y despliegue</h4>
 
-  <strong>Executor lost</strong>
+  <u><strong>Executor lost</strong></u>
   <p><strong>Causa:</strong> falta de recursos o fallo del nodo.</p>
 
   <p><strong>Soluciones:</strong></p>
@@ -179,7 +179,7 @@
     <li>Verificar configuración del cluster manager.</li>
   </ul>
 
-  <strong>Cannot allocate memory</strong>
+  <u><strong>Cannot allocate memory</strong></u>
   <p><strong>Causa:</strong> recursos insuficientes en el nodo.</p>
 
   <p><strong>Solución:</strong></p>
@@ -187,7 +187,7 @@
     <li>Ajustar memoria y cores.</li>
     <li>Reducir paralelismo.</li>
   </ul>
-
+<hr>
   <h4>Buenas prácticas para evitar errores</h4>
   <ul>
     <li>Analizar siempre el plan de ejecución con <code>explain(True)</code>.</li>
@@ -196,7 +196,7 @@
     <li>Evitar acciones costosas innecesarias.</li>
     <li>Separar entorno de desarrollo y producción.</li>
   </ul>
-
+<hr>
   <h4>Estrategia sistemática de diagnóstico</h4>
   <ol>
     <li>Revisar mensaje completo del error.</li>

@@ -30,7 +30,7 @@
       <div id="index-container" class="text-cell">
         <hr>
         <ul>
-          <li><a href="#descripcion">Descripción</a></li>
+          <li><a href="#descripcion">Introducción</a></li>
           <li><a href="#contenido">Contenido</a></li>
           <li><a href="#conclusion">Conclusión</a></li>
         </ul>
@@ -39,7 +39,7 @@
 
     <section id="descripcion">
       <div class="lesson-container">
-        <h3>DESCRIPCIÓN</h3>
+        <h3>INTRODUCCIÓN</h3>
         <hr>
         <div class="text-cell"><p>
     En entornos Big Data, la seguridad y el despliegue adecuado de la infraestructura son aspectos críticos.
@@ -48,8 +48,19 @@
     de autenticación, autorización, cifrado y aislamiento.
   </p>
   <p>
-    Esta lección aborda los principales mecanismos de seguridad disponibles en Spark y los modelos
-    habituales de despliegue en entornos productivos.        </div>
+    Esta lección aborda los principales mecanismos de seguridad disponibles en Spark que se apoya en varios pilares
+    fundamentales:</p>
+
+<ul>
+  <li>Autenticación.</li>
+  <li>Autorización.</li>
+  <li>Cifrado de comunicaciones.</li>
+  <li>Aislamiento de procesos.</li>
+  <li>Control de acceso a interfaces web.</li>
+  <li>Gestión segura de credenciales.</li>
+</ul>
+
+ </div>
       </div>
     </section>
 
@@ -60,148 +71,180 @@
         <div class="text-cell">
 
 
-  <h4>Modelos de despliegue</h4>
+<h4>Autenticación</h4>
 
-  <strong>Modo Local</strong>
-  <p>
-    Utilizado para desarrollo y pruebas. Spark se ejecuta en una única máquina utilizando múltiples hilos.
-    No es adecuado para producción.
-  </p>
+<p>La autenticación permite verificar la identidad de los componentes que participan en una aplicación Spark, como el Driver, los Executors y el gestor del clúster.</p>
 
-  <strong>Modo Standalone</strong>
-  <p>
-    Spark incluye su propio gestor de clúster (Spark Master y Workers). Es sencillo de configurar
-    y apropiado para entornos controlados o académicos.
-  </p>
+<strong>Autenticación mediante secreto compartido</strong>
 
-  <strong>YARN</strong>
-  <p>
-    Permite ejecutar Spark sobre el ecosistema Hadoop, integrándose con el ResourceManager.
-    Es habitual en infraestructuras empresariales tradicionales.
-  </p>
+<p>Spark permite activar autenticación básica mediante un secreto compartido entre los componentes del sistema.</p>
 
-  <strong>Kubernetes</strong>
-  <p>
-    Permite desplegar Spark como contenedores gestionados por Kubernetes.
-    Es el modelo preferido en arquitecturas cloud-native modernas.
-  </p>
+<pre><code class=language-bash bash-code">spark.authenticate=true
+spark.authenticate.secret=mi_secreto</code></pre>
 
-  <h4>Seguridad en Apache Spark</h4>
+<p>Este mecanismo ayuda a evitar que procesos no autorizados se conecten a la aplicación Spark.</p>
 
-  <strong>Autenticación</strong>
-  <p>
-    Spark puede configurarse para requerir autenticación entre el driver y los executors:
-  </p>
-  <pre><code  class="language-python python-code">spark.authenticate=true
-spark.authenticate.secret=clave_secreta</code></pre>
+<strong>Integración con Kerberos</strong>
 
-  <p>
-    En entornos Hadoop, suele integrarse con Kerberos para autenticación fuerte.
-  </p>
+<p>En entornos Hadoop empresariales, Spark puede integrarse con Kerberos para proporcionar autenticación fuerte basada en tickets.</p>
 
-  <strong>Autorización</strong>
-  <p>
-    Spark permite controlar acceso a la Spark UI mediante listas de control:
-  </p>
-  <pre><code  class="language-python python-code">spark.acls.enable=true
-spark.ui.view.acls=usuario1,usuario2
-spark.modify.acls=admin</code></pre>
+<pre><code class=language-bash bash-code">kinit usuario@REALM
 
-  <p>
-    En entornos empresariales, la autorización suele gestionarse a nivel de plataforma
-    (por ejemplo, mediante YARN, Kubernetes o soluciones externas).
-  </p>
-
-  <strong>Cifrado en tránsito (TLS/SSL)</strong>
-  <p>
-    Para proteger comunicaciones entre nodos, puede habilitarse cifrado:
-  </p>
-  <pre><code  class="language-python python-code">spark.ssl.enabled=true
-spark.ssl.keyStore=/ruta/keystore
-spark.ssl.keyStorePassword=********</code></pre>
-
-  <p>
-    Esto protege datos intercambiados entre driver, executors y servicios auxiliares.
-  </p>
-
-  <strong>Cifrado en reposo</strong>
-  <p>
-    El cifrado en reposo depende del sistema de almacenamiento subyacente
-    (HDFS, S3, discos locales, etc.).
-  </p>
-  <p>
-    Spark puede cifrar datos temporales (shuffle y spill):
-  </p>
-  <pre><code  class="language-python python-code">spark.io.encryption.enabled=true</code></pre>
-
-  <h4>Aislamiento y multi-tenancy</h4>
-  <p>
-    En clústeres compartidos, múltiples usuarios pueden ejecutar aplicaciones simultáneamente.
-    Para evitar interferencias:
-  </p>
-  <ul>
-    <li>Definir límites de CPU y memoria por aplicación.</li>
-    <li>Utilizar colas en YARN.</li>
-    <li>Aplicar namespaces y cuotas en Kubernetes.</li>
-    <li>Separar entornos (desarrollo, preproducción, producción).</li>
-  </ul>
-
-  <h4>Seguridad de datos sensibles</h4>
-  <ul>
-    <li>Evitar imprimir datos sensibles en logs.</li>
-    <li>Controlar permisos de lectura/escritura en almacenamiento.</li>
-    <li>Usar variables de entorno seguras para credenciales.</li>
-    <li>No hardcodear claves en el código.</li>
-  </ul>
-
-  <h4>Despliegue con spark-submit</h4>
-
-  <strong>Ejemplo en modo Standalone</strong>
-  <pre><code  class="language-python python-code">spark-submit \
-  --master spark://master:7077 \
-  --deploy-mode cluster \
-  --executor-memory 4g \
-  --executor-cores 2 \
+spark-submit \
+  --principal usuario@REALM \
+  --keytab usuario.keytab \
   app.py</code></pre>
 
-  <strong>Ejemplo en Kubernetes</strong>
-  <pre><code  class="language-python python-code">spark-submit \
-  --master k8s://https://k8s-api:6443 \
-  --deploy-mode cluster \
-  --conf spark.executor.instances=3 \
-  --conf spark.kubernetes.container.image=spark-image \
+<p>Kerberos resulta especialmente relevante cuando Spark accede a servicios protegidos como HDFS, Hive o YARN.</p>
+<hr>
+<h4>Cifrado de comunicaciones</h4>
+
+<p>En una aplicación Spark distribuida, los datos circulan entre distintos componentes del sistema. Por ello, es importante proteger la comunicación entre Driver, Executors y otros servicios.</p>
+
+<p>Spark permite activar cifrado de red mediante propiedades de configuración:</p>
+
+<pre><code class=language-bash bash-code">spark.network.crypto.enabled=true
+spark.ssl.enabled=true</code></pre>
+
+<p>El cifrado ayuda a proteger los datos en tránsito y reduce el riesgo de exposición de información sensible dentro de la red del clúster.</p>
+<hr>
+<h4>Seguridad en Spark UI</h4>
+
+<p>Spark UI proporciona una interfaz web para consultar información detallada sobre la ejecución de una aplicación. Aunque resulta muy útil para depuración y monitorización, también puede exponer información sensible si no se protege adecuadamente.</p>
+
+<p>Entre los riesgos asociados a Spark UI se encuentran:</p>
+
+<ul>
+  <li>Exposición de nombres de aplicaciones.</li>
+  <li>Visualización de rutas de ficheros.</li>
+  <li>Acceso a métricas internas.</li>
+  <li>Consulta de errores y trazas de ejecución.</li>
+</ul>
+
+<p>Para limitar el acceso pueden activarse listas de control de acceso:</p>
+
+<pre><code class=language-bash bash-code">spark.ui.acls.enable=true
+spark.ui.view.acls=usuario1,usuario2</code></pre>
+
+<p>En entornos productivos también es recomendable proteger Spark UI mediante redes privadas, proxies autenticados o reglas de firewall.</p>
+<hr>
+<h4>Control de acceso a datos</h4>
+
+<p>Spark no implementa por sí mismo un sistema completo de gobierno y autorización sobre los datos. En la práctica, el control de acceso depende del sistema de almacenamiento o de herramientas externas.</p>
+
+<p>Algunos mecanismos habituales son:</p>
+
+<ul>
+  <li>Permisos de HDFS.</li>
+  <li>Políticas de acceso en sistemas cloud como Amazon S3, Azure Data Lake o Google Cloud Storage.</li>
+  <li>Herramientas de gobierno de datos como Apache Ranger o Apache Sentry.</li>
+  <li>Catálogos de metadatos con control de permisos.</li>
+</ul>
+
+<p>De esta forma, Spark actúa como motor de procesamiento, mientras que la autorización sobre los datos se gestiona en las capas de almacenamiento y gobierno.</p>
+<hr>
+<h4>Seguridad en entornos Docker y Kubernetes</h4>
+
+<p>Es habitual desplegar Spark mediante Docker, ya que permite crear un entorno reproducible y sencillo de ejecutar. Sin embargo, incluso en este contexto deben considerarse ciertos aspectos de seguridad.</p>
+
+<strong>Seguridad en Docker</strong>
+
+<p>Algunas buenas prácticas en entornos Docker son:</p>
+
+<ul>
+  <li>Utilizar redes privadas entre contenedores.</li>
+  <li>No exponer puertos innecesarios al exterior.</li>
+  <li>Evitar incluir credenciales directamente en las imágenes.</li>
+  <li>Usar variables de entorno o ficheros externos para configuración sensible.</li>
+  <li>Mantener las imágenes actualizadas.</li>
+  <li>Ejecutar los contenedores con los mínimos privilegios necesarios.</li>
+</ul>
+
+<strong>Seguridad en Kubernetes</strong>
+
+<p>En Kubernetes, Spark puede beneficiarse de mecanismos adicionales de seguridad y aislamiento.</p>
+
+<ul>
+  <li><strong>Namespaces:</strong> permiten separar entornos o aplicaciones.</li>
+  <li><strong>RBAC:</strong> controla qué usuarios o servicios pueden realizar acciones sobre el clúster.</li>
+  <li><strong>Secrets:</strong> permiten gestionar credenciales de forma más segura.</li>
+  <li><strong>Resource limits:</strong> evitan que una aplicación consuma más recursos de los asignados.</li>
+  <li><strong>Network policies:</strong> restringen la comunicación entre pods.</li>
+</ul>
+<hr>
+<h4>Despliegue de aplicaciones Spark</h4>
+
+<p>La herramienta principal para desplegar aplicaciones Spark es <code>spark-submit</code>. Esta utilidad permite enviar una aplicación al entorno de ejecución indicando el modo de despliegue, recursos necesarios y dependencias.</p>
+
+<pre><code class=language-bash bash-code">spark-submit \
+  --master spark://spark-master:7077 \
+  --deploy-mode client \
   app.py</code></pre>
 
-  <h4>Gestión de dependencias</h4>
-  <ul>
-    <li>Uso de paquetes mediante <code>--packages</code>.</li>
-    <li>Incluir dependencias en un JAR (Scala/Java).</li>
-    <li>Uso de entornos virtuales en PySpark.</li>
-    <li>Construcción de imágenes Docker en entornos Kubernetes.</li>
-  </ul>
+<strong>Modo client</strong>
 
-  <h4>Buenas prácticas de despliegue</h4>
-  <ul>
-    <li>Versionar configuraciones.</li>
-    <li>Separar configuración de código.</li>
-    <li>Automatizar despliegues (CI/CD).</li>
-    <li>Monitorizar recursos tras despliegue.</li>
-    <li>Probar cargas antes de producción.</li>
-  </ul>
+<p>En el modo client, el Driver se ejecuta en la máquina desde la que se lanza la aplicación. Este modo facilita la depuración, ya que los logs del Driver aparecen directamente en la consola del usuario.</p>
 
-  <h4>Alta disponibilidad</h4>
+<strong>Modo cluster</strong>
 
-  <strong>Master en modo HA (Standalone)</strong>
-  <p>
-    Puede configurarse más de un master utilizando ZooKeeper para coordinación.
-  </p>
+<p>En el modo cluster, el Driver se ejecuta dentro del clúster. Este enfoque es más adecuado para entornos productivos, ya que no depende de la máquina cliente una vez enviada la aplicación.</p>
+<hr>
+<h4>Gestión de dependencias</h4>
 
-  <strong>Tolerancia a fallos</strong>
-  <ul>
-    <li>Reintento automático de tareas.</li>
-    <li>Recomputación basada en lineage.</li>
-    <li>Reinicio automático de pods en Kubernetes.</li>
-  </ul>
+<p>Una parte importante del despliegue consiste en garantizar que todas las dependencias necesarias estén disponibles en tiempo de ejecución.</p>
+
+<p>En Spark pueden incluirse dependencias mediante diferentes opciones:</p>
+
+<ul>
+  <li><code>--jars</code> para añadir ficheros JAR.</li>
+  <li><code>--packages</code> para descargar paquetes Maven.</li>
+  <li><code>--py-files</code> para distribuir código Python adicional.</li>
+  <li>Imágenes Docker personalizadas en entornos contenerizados.</li>
+</ul>
+
+<pre><code class=language-bash bash-code">spark-submit \
+  --packages org.apache.spark:spark-sql-kafka-0-10_2.12:3.5.0 \
+  app.py</code></pre>
+
+<p>Una gestión incorrecta de dependencias puede provocar errores de compatibilidad, fallos en tiempo de ejecución o comportamientos inesperados.</p>
+<hr>
+<h4>Monitorización y observabilidad</h4>
+
+<p>El despliegue de aplicaciones Spark en entornos reales requiere mecanismos de monitorización y observabilidad. Estos permiten conocer el estado de las aplicaciones, analizar su rendimiento y detectar errores.</p>
+
+<p>Algunas herramientas habituales son:</p>
+
+<ul>
+  <li><strong>Spark UI:</strong> permite visualizar jobs, stages, tasks y métricas de ejecución.</li>
+  <li><strong>History Server:</strong> permite consultar ejecuciones anteriores a partir de event logs.</li>
+  <li><strong>Prometheus:</strong> permite recolectar métricas.</li>
+  <li><strong>Grafana:</strong> permite construir dashboards de monitorización.</li>
+  <li><strong>ELK:</strong> permite centralizar y analizar logs.</li>
+</ul>
+<hr>
+<h4>Buenas prácticas de seguridad y despliegue</h4>
+
+<strong>Buenas prácticas de seguridad</strong>
+
+<ul>
+  <li>Activar autenticación en entornos distribuidos.</li>
+  <li>Usar cifrado de red cuando se transmitan datos sensibles.</li>
+  <li>Limitar el acceso a Spark UI.</li>
+  <li>No almacenar credenciales en código fuente.</li>
+  <li>Gestionar permisos en la capa de almacenamiento.</li>
+  <li>Revisar logs para detectar accesos o errores anómalos.</li>
+</ul>
+
+<strong>Buenas prácticas de despliegue</strong>
+
+<ul>
+  <li>Separar entornos de desarrollo, pruebas y producción.</li>
+  <li>Automatizar despliegues siempre que sea posible.</li>
+  <li>Definir recursos adecuados para Driver y Executors.</li>
+  <li>Controlar versiones de Spark, Python, Java y librerías externas.</li>
+  <li>Configurar correctamente logs y event logs.</li>
+  <li>Probar las aplicaciones con volúmenes de datos representativos.</li>
+</ul>
 
 
         </div>
@@ -214,15 +257,10 @@ spark.ssl.keyStorePassword=********</code></pre>
         <hr>
         <div class="text-cell">
           <p>
-    La seguridad y el despliegue adecuado de Spark son fundamentales para entornos productivos.
-    No basta con desarrollar aplicaciones eficientes; es necesario proteger datos,
-    asegurar comunicaciones y garantizar disponibilidad.
-  </p>
-  <p>
-    La correcta configuración de autenticación, cifrado, aislamiento de recursos
-    y alta disponibilidad permite construir plataformas de datos robustas y alineadas
-    con requisitos empresariales y normativos.
-  </p>
+<p>La seguridad y el despliegue son aspectos esenciales en cualquier arquitectura basada en Apache Spark. Aunque durante el desarrollo académico pueden simplificarse, en entornos profesionales resultan necesarios para garantizar la protección de los datos, la estabilidad del sistema y la escalabilidad de las aplicaciones.</p>
+
+<p>Comprender los distintos modos de despliegue, los mecanismos de autenticación, el cifrado de comunicaciones, la gestión de dependencias y la monitorización permite diseñar soluciones Spark más robustas, mantenibles y preparadas para escenarios reales de Big Data.</p>
+
         </div>
       </div>
     </section>
