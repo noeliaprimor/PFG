@@ -29,7 +29,7 @@
     <div id="index-container" class="text-cell">
       <hr>
       <ul>
-        <li><a href="#descripcion">Descripción</a></li>
+        <li><a href="#descripcion">Introducción</a></li>
         <li><a href="#contenido">Contenido</a></li>
         <li><a href="#conclusion">Conclusión</a></li>
       </ul>
@@ -38,7 +38,7 @@
 
   <section id="descripcion">
     <div class="lesson-container">
-      <h3>DESCRIPCIÓN</h3>
+      <h3>INTRODUCCIÓN</h3>
       <hr>
       <div class="text-cell">
   <p>
@@ -70,32 +70,31 @@
 
 
 
-  <h3>Conceptos clave del streaming en Spark</h3>
+  <h4>Conceptos clave del streaming en Spark</h4>
 
-  <strong>Evento</strong>
-  <p>
+  <P><strong>Evento:</strong>
     Unidad de información generada por un sistema externo (por ejemplo, una transacción,
-    un clic web o una lectura de sensor).
+    un clic web o una lectura de sensor) o como en el ejercicio del Modulo 2, tema 4 por una API de obtención de información de precio de criptomonedas.
   </p>
 
-  <strong>Flujo de datos (Stream)</strong>
-  <p>
+  <p><strong>Flujo de datos (Stream):</strong>
+
     Secuencia continua y potencialmente infinita de eventos.
   </p>
 
-  <strong>Micro-batch</strong>
-  <p>
+  <p><strong>Micro-batch:</strong>
+
     Modelo en el cual los datos se agrupan en pequeños intervalos temporales
     (por ejemplo, cada pocos segundos) y se procesan como mini-lotes.
   </p>
 
-  <strong>Procesamiento incremental</strong>
-  <p>
+  <p><strong>Procesamiento incremental:</strong>
+
     Cada nueva llegada de datos actualiza los resultados previos sin recalcular
     el dataset completo.
   </p>
-
-  <h3>Evolución del streaming en Spark</h3>
+<hr>
+  <h4>Evolución del streaming en Spark</h4>
 
   <strong>Spark Streaming (DStreams)</strong>
   <p>
@@ -112,15 +111,15 @@
     se trata como una tabla infinita. El desarrollador define una consulta
     utilizando DataFrames, y Spark ejecuta dicha consulta de forma incremental.
   </p>
-
-  <h3>Arquitectura típica de streaming con Spark</h3>
+<hr>
+  <h4>Arquitectura típica de streaming con Spark</h4>
   <ol>
     <li>Fuente de datos (Kafka, archivos, sockets, etc.).</li>
     <li>Ingesta mediante readStream.</li>
     <li>Transformaciones (filter, groupBy, window, join).</li>
     <li>Escritura con writeStream hacia un sink (console, Parquet, base de datos).</li>
   </ol>
-
+<hr>
   <h3>Ejemplo básico en Structured Streaming (PySpark)</h3>
   <pre><code class="language-python python-code">from pyspark.sql import SparkSession
 
@@ -149,8 +148,8 @@ query.awaitTermination()</code></pre>
     <li><strong>Update</strong>: filas actualizadas.</li>
     <li><strong>Complete</strong>: resultado completo en cada trigger.</li>
   </ul>
-
-  <h3>Gestión de ventanas temporales</h3>
+<hr>
+  <h4>Gestión de ventanas temporales</h4>
   <pre><code class="language-python python-code">from pyspark.sql.functions import window
 
 windowed = (stream_df
@@ -161,30 +160,30 @@ windowed = (stream_df
     Las ventanas permiten agrupar eventos por intervalos temporales,
     fundamentales en análisis de series temporales.
   </p>
-
-  <h3>Watermarking y datos tardíos</h3>
+<hr>
+  <h4>Watermarking y datos tardíos</h4>
   <p>
     En escenarios reales, algunos eventos pueden llegar con retraso.
     Structured Streaming permite definir un watermark para establecer
     cuánto tiempo se aceptan eventos tardíos.
   </p>
   <pre><code class="language-python python-code">stream_df.withWatermark("timestamp", "5 minutes")</code></pre>
-
-  <h3>Garantías de procesamiento</h3>
+<hr>
+  <h4>Garantías de procesamiento</h4>
   <ul>
     <li>At-least-once: el evento puede procesarse más de una vez.</li>
     <li>Exactly-once (según fuente y sink): cada evento se procesa exactamente una vez.</li>
   </ul>
-
-  <h3>Ventajas del streaming en Spark</h3>
+<hr>
+  <h4>Ventajas del streaming en Spark</h4>
   <ul>
     <li>API unificada para batch y streaming.</li>
     <li>Optimización automática.</li>
     <li>Escalabilidad distribuida.</li>
     <li>Integración con ecosistema Big Data.</li>
   </ul>
-
-  <h3>Retos técnicos</h3>
+<hr>
+  <h4>Retos técnicos</h4>
   <ul>
     <li>Gestión eficiente del estado.</li>
     <li>Control de latencia.</li>
