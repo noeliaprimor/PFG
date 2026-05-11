@@ -30,6 +30,7 @@
       <ul>
         <li><a href="#descripcion">Descripción</a></li>
         <li><a href="#contenido">Contenido</a></li>
+        <li><a href="#conclusion">Conclusión</a></li>
 
       </ul>
     </div>
@@ -50,6 +51,11 @@
     Los ejemplos están diseñados para un entorno típico de laboratorio: un clúster Spark (por ejemplo, Standalone en
     Docker Compose), un broker Kafka accesible desde Spark, y un sistema de ficheros (local o volumen montado) donde se
     persisten los resultados y el estado del streaming (checkpoints).
+  </p>
+  <p>
+    El objetivo no es solo ejecutar código, sino aprender a razonar sobre decisiones de arquitectura:
+    qué datos conservar en bruto, qué métricas calcular en tiempo real, cómo controlar eventos tardíos,
+    cómo diseñar checkpoints y cómo verificar que los resultados son reproducibles.
   </p>      </div>
     </div>
   </section>
@@ -62,6 +68,10 @@
 
 
   <h3>Consideraciones generales del entorno</h3>
+
+  <img src="/img/M3T3L3_1.svg" alt="Casos prácticos de streaming con Spark">
+  <p class="img-caption">Imagen 1: Casos prácticos de streaming con Spark Structured Streaming</p>
+
   <ul>
     <li>
       <strong>Fuente</strong>: Kafka (topics con eventos en JSON).
@@ -76,6 +86,22 @@
       <strong>Tiempo de evento</strong>: se asume un campo <code>ts</code> de tipo timestamp (event time) dentro del JSON.
     </li>
   </ul>
+
+  <h3>Criterios para seleccionar un caso práctico</h3>
+  <p>
+    Antes de implementar un pipeline conviene definir qué se quiere medir y qué nivel de latencia
+    es aceptable. No todos los casos necesitan el mismo diseño.
+  </p>
+  <ul>
+    <li><strong>Clickstream:</strong> prioriza volumen, ventanas cortas y métricas agregadas.</li>
+    <li><strong>Fraude:</strong> prioriza detección rápida, reglas claras y baja latencia.</li>
+    <li><strong>Bronze-Silver:</strong> prioriza calidad, deduplicación, trazabilidad y datos reutilizables.</li>
+  </ul>
+
+  <p>
+    También es importante decidir si los resultados se necesitan para una alerta inmediata, para
+    analítica posterior o para alimentar otro sistema de eventos.
+  </p>
 
 
   <h3>Base técnica: lectura desde Kafka y parseo de JSON</h3>
@@ -115,6 +141,21 @@ events = (raw.select(from_json(col("value").cast("string"), schema).alias("e"))
   <p>
     A partir de este patrón se construyen los tres casos prácticos del capítulo.
   </p>
+
+  <h3>Validación común de eventos</h3>
+  <p>
+    Los tres casos deben validar datos antes de agregarlos o escribirlos. Una validación mínima
+    suele incluir:
+  </p>
+  <ul>
+    <li>Comprobar que el timestamp de evento existe y se puede parsear.</li>
+    <li>Eliminar o enviar a cuarentena registros sin identificador.</li>
+    <li>Validar rangos numéricos, por ejemplo importes no negativos.</li>
+    <li>Registrar eventos descartados para poder auditar pérdidas de calidad.</li>
+  </ul>
+
+  <pre><code class="language-python python-code">valid_events = events.dropna(subset=["ts", "id"])
+invalid_events = events.filter(col("ts").isNull() | col("id").isNull())</code></pre>
 
   <hr />
 
@@ -211,6 +252,13 @@ spark.streams.awaitAnyTermination()</code></pre>
     </li>
   </ul>
 
+  <strong>5. Posibles ampliaciones</strong>
+  <ul>
+    <li>Calcular sesiones de usuario agrupando eventos cercanos en el tiempo.</li>
+    <li>Separar tráfico por dispositivo, país o campaña.</li>
+    <li>Publicar alertas en Kafka cuando una URL supere un umbral de visitas.</li>
+  </ul>
+
   <hr />
 
   <h3>Caso práctico 2: Detección de fraude simple (picos de transacciones) y persistencia de alertas</h3>
@@ -295,6 +343,13 @@ q.awaitTermination()</code></pre>
     <li>
       <strong>Watermark</strong>: evita que el estado crezca indefinidamente en presencia de eventos tardíos.
     </li>
+  </ul>
+
+  <strong>5. Posibles ampliaciones</strong>
+  <ul>
+    <li>Añadir reglas por importe total acumulado, no solo por número de transacciones.</li>
+    <li>Incorporar una tabla estática de tarjetas bloqueadas o comercios de riesgo.</li>
+    <li>Escribir alertas en un topic Kafka para que otro servicio las consuma.</li>
   </ul>
 
   <hr />
@@ -386,6 +441,13 @@ q.awaitTermination()</code></pre>
     </li>
   </ul>
 
+  <strong>5. Posibles ampliaciones</strong>
+  <ul>
+    <li>Crear una salida de cuarentena para registros inválidos.</li>
+    <li>Guardar métricas de calidad por micro-lote.</li>
+    <li>Usar Delta Lake para aplicar <code>MERGE</code> y deduplicación idempotente.</li>
+  </ul>
+
   <hr />
 
   <h3>Buenas prácticas para Kafka + Parquet en Structured Streaming</h3>
@@ -428,6 +490,12 @@ q.awaitTermination()</code></pre>
     <li>
       Monitorizar latencia y progreso mediante <code>StreamingQuery</code> y logs del Driver.
     </li>
+    <li>
+      Controlar la carga por trigger con opciones como <code>maxOffsetsPerTrigger</code> cuando la fuente sea Kafka.
+    </li>
+    <li>
+      Evitar demasiados ficheros pequeños ajustando particiones y frecuencia de escritura.
+    </li>
   </ul>
 
   <strong>Gestión de offsets y reprocesamiento</strong>
@@ -445,9 +513,61 @@ q.awaitTermination()</code></pre>
 
   <hr />
 
+  <h3>Pruebas recomendadas</h3>
+  <p>
+    Un pipeline streaming debe probarse con datos normales, datos tardíos, duplicados y registros
+    corruptos. Estas pruebas ayudan a confirmar que las ventanas, watermarks y sinks se comportan
+    como se espera.
+  </p>
+  <ul>
+    <li><strong>Prueba de volumen:</strong> aumentar la tasa de eventos y observar latencia.</li>
+    <li><strong>Prueba de reinicio:</strong> detener la consulta y arrancarla con el mismo checkpoint.</li>
+    <li><strong>Prueba de duplicados:</strong> reenviar eventos con el mismo identificador.</li>
+    <li><strong>Prueba de tardanza:</strong> insertar eventos con timestamps antiguos.</li>
+    <li><strong>Prueba de sink lento:</strong> simular escrituras más lentas y observar acumulación de lag.</li>
+  </ul>
+
+  <h3>Métricas a documentar</h3>
+  <ul>
+    <li>Registros procesados por segundo.</li>
+    <li>Duración media de micro-batch.</li>
+    <li>Latencia aproximada entre tiempo de evento y escritura final.</li>
+    <li>Número de registros válidos, inválidos y duplicados.</li>
+    <li>Tamaño del estado en agregaciones con ventana.</li>
+    <li>Número de ficheros generados en el sink.</li>
+  </ul>
+
+  <h3>Checklist antes de producción</h3>
+  <ul>
+    <li>Esquema de eventos documentado y versionado.</li>
+    <li>Checkpoint persistente y exclusivo por consulta.</li>
+    <li>Retención Kafka suficiente para recuperación.</li>
+    <li>Sinks idempotentes o estrategia de deduplicación.</li>
+    <li>Alertas sobre lag, errores de parseo y fallos de escritura.</li>
+    <li>Procedimiento claro para reprocesar datos.</li>
+  </ul>
 
 
 
+
+      </div>
+    </div>
+  </section>
+
+  <section id="conclusion">
+    <div class="lesson-container">
+      <h3>CONCLUSIÓN</h3>
+      <hr>
+      <div class="text-cell">
+        <p>
+          Los casos prácticos muestran cómo pasar de una integración básica Kafka-Spark a pipelines
+          completos con ventanas, alertas, capas Bronze-Silver, checkpoints y escritura analítica.
+        </p>
+        <p>
+          La clave para que estos pipelines sean útiles en un entorno real está en validar datos,
+          controlar eventos tardíos, documentar métricas y probar la recuperación ante fallos antes
+          de depender de ellos en producción.
+        </p>
       </div>
     </div>
   </section>

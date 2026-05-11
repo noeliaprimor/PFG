@@ -22,7 +22,7 @@
     </div>
   </nav>
 
-  <h4 class="titulos-leccion">Recursos y lecturas</h4>
+  <h2 class="titulos-leccion">Recursos y lecturas</h2>
 
   <div class="indice-container">
     <div id="index-container" class="text-cell">
@@ -30,65 +30,188 @@
       <ul>
         <li><a href="#descripcion">Descripción</a></li>
         <li><a href="#contenido">Contenido</a></li>
-        <li><a href="#conclusion">Conclusión</a></li>
-        <li><a href="#ejercicio">Ejercicio</a></li>
+
       </ul>
     </div>
   </div>
 
   <section id="descripcion">
     <div class="lesson-container">
-      <strong>DESCRIPCIÓN</strong>
+      <h3>DESCRIPCIÓN</h3>
       <hr>
       <div class="text-cell">
-        <p>Recopilación de documentación, tutoriales y enlaces útiles para trabajar con Kafka y Spark.</p>
+        <p>
+          Esta lección recopila recursos para profundizar en los contenidos del tema:
+          adquisición de eventos, Apache Kafka, integración con Spark Structured Streaming,
+          conectores, sinks, Kafka Connect, CDC, formatos de serialización y buenas prácticas
+          de operación.
+        </p>
+        <p>
+          La selección combina documentación oficial, guías prácticas y referencias útiles para
+          reforzar el ejercicio propuesto del tema, especialmente el flujo productor-consumidor,
+          la escritura en sinks y el uso de checkpoints.
+        </p>
       </div>
     </div>
   </section>
 
   <section id="contenido">
     <div class="lesson-container">
-      <strong>CONTENIDO</strong>
+      <h3>CONTENIDO</h3>
       <hr>
       <div class="text-cell">
-        <strong>DOCUMENTACIÓN</strong>
+
+        <h4>Documentación oficial imprescindible</h4>
         <ul>
-          <li><a href="https://kafka.apache.org/documentation/">Apache Kafka docs</a></li>
-          <li><a href="https://spark.apache.org/docs/latest/structured-streaming-programming-guide.html">Spark Structured Streaming</a></li>
+          <li>
+            <a href="https://kafka.apache.org/documentation/" target="_blank">Apache Kafka Documentation</a>:
+            referencia principal para brokers, topics, productores, consumidores, replicación,
+            configuración, seguridad y operación del clúster.
+          </li>
+          <li>
+            <a href="https://spark.apache.org/docs/latest/streaming/index.html" target="_blank">Spark Structured Streaming Programming Guide</a>:
+            guía oficial del modelo de programación, microbatches, ventanas, watermarks,
+            output modes, triggers y tolerancia a fallos.
+          </li>
+          <li>
+            <a href="https://spark.apache.org/docs/latest/structured-streaming-kafka-integration.html" target="_blank">Structured Streaming + Kafka Integration Guide</a>:
+            referencia específica para leer desde Kafka y escribir resultados en topics Kafka
+            usando Spark.
+          </li>
+          <li>
+            <a href="https://docs.confluent.io/platform/current/connect/index.html" target="_blank">Kafka Connect</a>:
+            explicación de Kafka Connect como herramienta para mover datos de forma escalable
+            entre Kafka y sistemas externos.
+          </li>
         </ul>
-        <strong>TUTORIALS</strong>
+
+        <h4>Kafka en detalle</h4>
         <ul>
-          <li><a href="https://www.cloudduggu.com/spark/">CloudDuggu - Spark</a></li>
-          <li><a href="https://www.confluent.io/learn/kafka/">Confluent Kafka tutorials</a></li>
+          <li>
+            <a href="https://kafka.apache.org/intro" target="_blank">Apache Kafka Introduction</a>:
+            visión general de Kafka, su modelo distribuido y los casos de uso habituales.
+          </li>
+          <li>
+            <a href="https://kafka.apache.org/documentation/#producerconfigs" target="_blank">Producer Configs</a>:
+            recurso para revisar parámetros como <code>acks</code>, idempotencia, batching,
+            compresión y reintentos.
+          </li>
+          <li>
+            <a href="https://kafka.apache.org/documentation/#consumerconfigs" target="_blank">Consumer Configs</a>:
+            referencia para entender opciones de consumidores, commits de offsets, grupos y
+            comportamiento de lectura.
+          </li>
+          <li>
+            <a href="https://kafka.apache.org/documentation/#topicconfigs" target="_blank">Topic Configs</a>:
+            documentación de retención, compactación, segmentos y configuraciones clave de topics.
+          </li>
         </ul>
-        <strong>ENLACES ÚTILES</strong>
+
+        <h4>Spark Structured Streaming</h4>
         <ul>
-          <li><a href="https://spark-packages.org">Spark Packages</a></li>
-          <li><a href="https://github.com/apache/spark">Apache Spark GitHub</a></li>
+          <li>
+            <a href="https://spark.apache.org/docs/latest/streaming/apis-on-dataframes-and-datasets.html" target="_blank">APIs on DataFrames and Datasets</a>:
+            operaciones disponibles sobre flujos, agregaciones, ventanas y consultas continuas.
+          </li>
+          <li>
+            <a href="https://spark.apache.org/docs/latest/streaming/apis-on-dataframes-and-datasets.html#handling-late-data-and-watermarking" target="_blank">Watermarking</a>:
+            apartado específico para eventos tardíos, tiempo de evento y limpieza de estado.
+          </li>
+          <li>
+            <a href="https://spark.apache.org/docs/latest/streaming/apis-on-dataframes-and-datasets.html#output-modes" target="_blank">Output Modes</a>:
+            explicación de los modos <code>append</code>, <code>update</code> y
+            <code>complete</code>.
+          </li>
+          <li>
+            <a href="https://spark.apache.org/docs/latest/streaming/apis-on-dataframes-and-datasets.html#triggers" target="_blank">Triggers</a>:
+            referencia para controlar la frecuencia de ejecución de las consultas streaming.
+          </li>
         </ul>
+
+        <h4>Conectores, sinks y Kafka Connect</h4>
+        <ul>
+          <li>
+            <a href="https://docs.confluent.io/platform/current/connect/kafka_connectors.html" target="_blank">Kafka Connectors for Confluent Platform</a>:
+            catálogo de conectores habituales, incluyendo JDBC, Elasticsearch, S3 y HDFS.
+          </li>
+          <li>
+            <a href="https://docs.confluent.io/kafka-connectors/jdbc/current/index.html" target="_blank">JDBC Source and Sink Connector</a>:
+            documentación para mover datos entre Kafka y bases de datos relacionales mediante JDBC.
+          </li>
+          <li>
+            <a href="https://docs.confluent.io/kafka-connectors/s3-sink/current/overview.html" target="_blank">Amazon S3 Sink Connector</a>:
+            referencia para exportar topics Kafka a almacenamiento S3 usando formatos como Avro,
+            JSON o Parquet según configuración.
+          </li>
+          <li>
+            <a href="https://spark.apache.org/docs/latest/sql-data-sources-parquet.html" target="_blank">Spark Parquet Data Source</a>:
+            guía para lectura y escritura en Parquet, formato recomendado para analítica.
+          </li>
+        </ul>
+
+        <h4>CDC y eventos desde bases de datos</h4>
+        <ul>
+          <li>
+            <a href="https://debezium.io/documentation/reference/stable/index.html" target="_blank">Debezium Documentation</a>:
+            documentación de referencia para capturar cambios de bases de datos como eventos.
+          </li>
+          <li>
+            <a href="https://debezium.io/documentation/reference/stable/architecture.html" target="_blank">Debezium Architecture</a>:
+            explicación de cómo Debezium se despliega normalmente sobre Kafka Connect para crear
+            pipelines CDC.
+          </li>
+          <li>
+            <a href="https://debezium.io/documentation/reference/stable/tutorial.html" target="_blank">Debezium Tutorial</a>:
+            tutorial práctico para entender un flujo CDC completo con Kafka.
+          </li>
+        </ul>
+
+        <h4>Formatos, esquemas y contratos de datos</h4>
+        <ul>
+          <li>
+            <a href="https://avro.apache.org/docs/" target="_blank">Apache Avro Documentation</a>:
+            formato binario orientado a esquemas, frecuente en pipelines Kafka.
+          </li>
+          <li>
+            <a href="https://protobuf.dev/overview/" target="_blank">Protocol Buffers Overview</a>:
+            referencia de Protobuf como alternativa eficiente para contratos estrictos de datos.
+          </li>
+          <li>
+            <a href="https://json-schema.org/learn/getting-started-step-by-step" target="_blank">JSON Schema Getting Started</a>:
+            recurso para validar eventos JSON y documentar su estructura.
+          </li>
+          <li>
+            <a href="https://docs.confluent.io/platform/current/schema-registry/index.html" target="_blank">Schema Registry</a>:
+            documentación para gestionar compatibilidad y evolución de esquemas.
+          </li>
+        </ul>
+
+        <h4>Práctica y entornos locales</h4>
+        <ul>
+          <li>
+            <a href="https://github.com/apache/kafka" target="_blank">Apache Kafka GitHub</a>:
+            código fuente, ejemplos y referencias del proyecto Kafka.
+          </li>
+          <li>
+            <a href="https://github.com/apache/spark" target="_blank">Apache Spark GitHub</a>:
+            repositorio oficial de Spark, útil para ejemplos, issues y documentación técnica.
+          </li>
+          <li>
+            <a href="https://spark-packages.org" target="_blank">Spark Packages</a>:
+            buscador de paquetes y conectores para ampliar aplicaciones Spark.
+          </li>
+          <li>
+            <a href="https://docs.docker.com/compose/" target="_blank">Docker Compose Documentation</a>:
+            recurso práctico para levantar entornos locales con Kafka, Kafka Connect, bases de datos
+            y servicios auxiliares.
+          </li>
+        </ul>
+
+
       </div>
     </div>
   </section>
 
-  <section id="conclusion">
-    <div class="lesson-container">
-      <strong>CONCLUSIÓN</strong>
-      <hr>
-      <div class="text-cell">
-        <p>Estos recursos son el punto de partida para profundizar y practicar con ejemplos y documentación oficial.</p>
-      </div>
-    </div>
-  </section>
-
-  <section id="ejercicio">
-    <div class="lesson-container">
-      <strong>EJERCICIO</strong>
-      <hr>
-      <div class="text-cell">
-        <p>Elige 2 recursos y resume sus aportaciones en el contexto del TFG.</p>
-      </div>
-    </div>
-  </section>
 
   <div class="navigation-buttons">
     <button onclick="window.location.href='M3T2L3.html'">Anterior</button>

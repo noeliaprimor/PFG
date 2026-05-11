@@ -29,7 +29,7 @@
     <div id="index-container" class="text-cell">
       <hr>
       <ul>
-        <li><a href="#descripcion">Descripción</a></li>
+        <li><a href="#descripcion">Introducción</a></li>
         <li><a href="#contenido">Contenido</a></li>
         <li><a href="#conclusion">Conclusión</a></li>
       </ul>
@@ -38,7 +38,7 @@
 
   <section id="descripcion">
     <div class="lesson-container">
-      <h3>DESCRIPCIÓN</h3>
+      <h3>INTRODUCCIÓN</h3>
       <hr>
       <div class="text-cell">
   <p>
@@ -50,6 +50,12 @@
   <p>
     Esta fase es crítica, ya que impacta directamente en la latencia, consistencia,
     escalabilidad y resiliencia de la solución completa.
+  </p>
+  <p>
+    El objetivo de esta lección es entender cómo se producen, capturan, transportan y preparan
+    los eventos antes de llegar a una herramienta de procesamiento como Spark. Una buena
+    estrategia de adquisición evita pérdidas de datos, reduce duplicados y permite escalar
+    el sistema cuando aumenta el volumen de información.
   </p>      </div>
     </div>
   </section>
@@ -74,6 +80,37 @@
     <li>Metadatos adicionales.</li>
   </ul>
 
+  <p>
+    En la práctica, un evento debe representar un hecho ya ocurrido, no una orden ni una
+    intención futura. Por ejemplo, <code>pedido_creado</code>, <code>pago_confirmado</code>
+    o <code>sensor_temperatura_leido</code> son buenos nombres porque describen hechos
+    concretos del dominio.
+  </p>
+
+  <strong>Anatomía habitual de un evento</strong>
+  <pre><code class="language-json">{
+  "event_id": "evt-2026-0001",
+  "event_type": "pedido_creado",
+  "event_time": "2026-05-08T10:15:30Z",
+  "source": "checkout-service",
+  "key": "pedido-8421",
+  "payload": {
+    "cliente_id": "cli-91",
+    "importe": 129.95,
+    "moneda": "EUR"
+  },
+  "metadata": {
+    "version": "1.0",
+    "trace_id": "trc-556"
+  }
+}</code></pre>
+
+  <p>
+    El campo <code>event_id</code> ayuda a detectar duplicados, <code>event_type</code>
+    permite enrutar o clasificar eventos, <code>event_time</code> indica cuándo ocurrió
+    realmente el hecho y <code>payload</code> contiene los datos de negocio.
+  </p>
+
   <p>Ejemplos de eventos:</p>
   <ul>
     <li>Una transacción financiera.</li>
@@ -81,7 +118,23 @@
     <li>Una lectura de sensor IoT.</li>
     <li>Un log generado por un servidor.</li>
   </ul>
+        <hr>
 
+  <h4>Tiempo de evento y tiempo de procesamiento</h4>
+  <p>
+    En streaming conviene distinguir entre dos momentos diferentes:
+  </p>
+  <ul>
+    <li><strong>Tiempo de evento:</strong> instante en el que el hecho ocurrió en el sistema origen.</li>
+    <li><strong>Tiempo de procesamiento:</strong> instante en el que Spark recibe y procesa el evento.</li>
+  </ul>
+  <p>
+    Esta diferencia es importante porque los eventos pueden llegar tarde, repetidos o fuera de orden.
+    Por ejemplo, un sensor puede quedarse sin conexión durante unos minutos y enviar sus lecturas
+    acumuladas más tarde. Aunque Spark las procese después, su análisis debería respetar el momento
+    real en el que se generaron.
+  </p>
+        <hr>
   <h4>Fuentes de eventos</h4>
   <ul>
     <li>Aplicaciones web y móviles.</li>
@@ -95,9 +148,84 @@
     Las fuentes pueden generar eventos de forma continua y a gran velocidad,
     lo que requiere sistemas intermedios capaces de absorber picos de carga.
   </p>
+        <hr>
+  <h3>Formas de adquisición de eventos</h3>
 
+  <strong>Ingesta directa desde aplicaciones</strong>
+  <p>
+    La propia aplicación publica eventos cada vez que ocurre una acción relevante. Es un patrón
+    habitual en microservicios, comercio electrónico, banca digital o plataformas SaaS. Permite
+    capturar eventos con baja latencia, aunque exige cuidar la fiabilidad del productor.
+  </p>
 
-  <h3>Sistemas de transmisión de eventos</h3>
+  <strong>Captura desde logs</strong>
+  <p>
+    Algunos sistemas generan logs que posteriormente son recogidos por agentes como Filebeat,
+    Fluent Bit o Logstash. Esta aproximación es útil para observabilidad, auditoría y análisis
+    de comportamiento, pero requiere normalizar el formato de los registros.
+  </p>
+
+  <strong>CDC (Change Data Capture)</strong>
+  <p>
+    La captura de cambios en bases de datos convierte inserciones, actualizaciones y borrados
+    en eventos. Herramientas como Debezium permiten publicar esos cambios en Kafka para que
+    otros sistemas los consuman sin consultar continuamente la base de datos.
+  </p>
+
+  <strong>Ingesta IoT</strong>
+  <p>
+    En escenarios IoT, los dispositivos suelen enviar datos mediante protocolos ligeros como
+    MQTT o HTTP. Un gateway puede validar, enriquecer y reenviar las lecturas hacia Kafka u otro
+    sistema de mensajería antes de que sean procesadas por Spark.
+  </p>
+        <hr>
+  <h4>Diseño del evento</h4>
+  <p>
+    Diseñar correctamente el evento es tan importante como elegir la tecnología de transporte.
+    Un evento mal definido puede complicar el procesamiento posterior, provocar ambigüedad o
+    hacer difícil evolucionar el sistema.
+  </p>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Elemento</th>
+        <th>Función</th>
+        <th>Recomendación</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Clave</td>
+        <td>Determina agrupación, orden y particionado.</td>
+        <td>Usar una clave estable, como id de pedido, cliente o dispositivo.</td>
+      </tr>
+      <tr>
+        <td>Timestamp</td>
+        <td>Permite ordenar y calcular ventanas temporales.</td>
+        <td>Guardar el tiempo de evento en UTC y con formato consistente.</td>
+      </tr>
+      <tr>
+        <td>Payload</td>
+        <td>Contiene la información de negocio.</td>
+        <td>Evitar campos innecesarios y documentar unidades, tipos y significado.</td>
+      </tr>
+      <tr>
+        <td>Versión</td>
+        <td>Facilita la evolución del esquema.</td>
+        <td>Versionar cambios incompatibles y mantener compatibilidad hacia atrás.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <p>
+    También es recomendable definir un esquema de datos mediante JSON Schema, Avro o Protobuf.
+    Esto reduce errores entre productores y consumidores, especialmente cuando varios equipos
+    publican y consumen eventos del mismo dominio.
+  </p>
+
+        <hr>
+  <h4>Sistemas de transmisión de eventos</h4>
 
   <strong>Sistemas de mensajería</strong>
   <p>
@@ -117,31 +245,75 @@
     suelen complementarse con sistemas de mensajería para mayor escalabilidad.
   </p>
 
+  <strong>Colas tradicionales</strong>
+  <p>
+    Soluciones como RabbitMQ o ActiveMQ se utilizan cuando interesa una entrega orientada a cola,
+    con confirmaciones explícitas y patrones de enrutamiento flexibles. Son útiles para tareas
+    asíncronas y comunicación entre servicios, aunque no siempre ofrecen el mismo modelo de
+    retención y reprocesamiento que Kafka.
+  </p>
+
+  <strong>Gateways y agentes de ingesta</strong>
+  <p>
+    En muchos sistemas existe una capa intermedia que valida credenciales, normaliza formatos,
+    añade metadatos y aplica reglas básicas antes de publicar los eventos. Esta capa evita que
+    Spark reciba datos incompletos o con formatos heterogéneos.
+  </p>
+<hr>
   <h3>Flujo típico de adquisición y transmisión</h3>
 
-  <ol>
-    <li>Generación del evento en la fuente.</li>
-    <li>Envío al sistema de mensajería (por ejemplo, Kafka).</li>
-    <li>Almacenamiento temporal en particiones.</li>
-    <li>Consumo por parte del motor de procesamiento (Spark).</li>
-    <li>Transformación y persistencia del resultado.</li>
-  </ol>
+  <img src="/img/M3T2L1_1.png" alt="Flujo típico de adquisición y transmisión de un evento">
+  <p class="img-caption">Imagen 1: Flujo típico de adquisición y transmisión de un evento</p>
 
-  <h3>Requisitos clave en la transmisión de eventos</h3>
+
+  <p>
+    En una arquitectura real, este flujo suele incorporar validación, serialización, compresión,
+    autenticación, monitorización y mecanismos de reintento. Estas piezas no modifican el objetivo
+    principal, pero sí determinan si el pipeline será fiable cuando aparezcan fallos o picos de carga.
+  </p>
+<hr>
+  <h3>Productores y consumidores</h3>
+
+  <strong>Productores</strong>
+  <p>
+    Son los componentes que generan y publican eventos. Un productor debe encargarse de serializar
+    los datos, elegir una clave adecuada, gestionar reintentos y confirmar que el evento ha sido
+    aceptado por el sistema de mensajería.
+  </p>
+
+  <strong>Consumidores</strong>
+  <p>
+    Son los procesos que leen eventos para transformarlos, almacenarlos o reaccionar ante ellos.
+    Spark Structured Streaming actúa como consumidor cuando lee desde Kafka, procesa los registros
+    de forma continua y mantiene el progreso mediante offsets y checkpoints.
+  </p>
+
+  <strong>Desacoplamiento</strong>
+  <p>
+    Una ventaja clave de usar un sistema de transmisión es que productores y consumidores no tienen
+    que ejecutarse al mismo ritmo. Kafka puede almacenar temporalmente los eventos mientras Spark
+    los procesa, lo que permite absorber picos de carga y recuperar el consumo tras una parada.
+  </p>
+        <hr>
+  <h4>Requisitos clave en la transmisión de eventos</h4>
 
   <strong>Escalabilidad</strong>
   <p>
     El sistema debe soportar incrementos en el volumen de eventos sin degradar el rendimiento.
+    Para conseguirlo se distribuyen los datos en particiones y se añaden consumidores en paralelo.
   </p>
 
   <strong>Tolerancia a fallos</strong>
   <p>
     Los eventos no deben perderse ante fallos de red o caída de nodos.
+    Esto requiere replicación, confirmaciones de escritura y reintentos controlados.
   </p>
 
   <strong>Orden</strong>
   <p>
     En muchos casos es importante mantener el orden dentro de una clave específica.
+    Kafka garantiza orden dentro de una partición, por lo que la elección de la clave influye
+    directamente en este requisito.
   </p>
 
   <strong>Persistencia</strong>
@@ -151,12 +323,42 @@
 
   <strong>Garantías de entrega</strong>
   <ul>
-    <li>At-most-once.</li>
-    <li>At-least-once.</li>
-    <li>Exactly-once (según configuración).</li>
+    <li><strong>At-most-once:</strong> el evento puede perderse, pero no se procesa más de una vez.</li>
+    <li><strong>At-least-once:</strong> el evento no debería perderse, aunque puede procesarse más de una vez.</li>
+    <li><strong>Exactly-once:</strong> busca evitar pérdidas y duplicados, pero depende de la configuración y del sink utilizado.</li>
   </ul>
 
-  <h3>Integración con Spark Structured Streaming</h3>
+  <strong>Latencia</strong>
+  <p>
+    La latencia mide el tiempo transcurrido desde que el evento ocurre hasta que el resultado está
+    disponible. Depende del productor, la red, el broker, el motor de procesamiento y el destino final.
+  </p>
+
+  <strong>Backpressure</strong>
+  <p>
+    Se produce cuando los eventos llegan más rápido de lo que pueden procesarse. En estos casos,
+    el sistema debe regular la velocidad de consumo, escalar recursos o almacenar temporalmente
+    los datos sin perderlos.
+  </p>
+<hr>
+  <h4>Serialización y formatos</h4>
+  <p>
+    Antes de transmitirse, los eventos se convierten a un formato concreto. La elección afecta al
+    rendimiento, compatibilidad y facilidad de depuración.
+  </p>
+  <ul>
+    <li><strong>JSON:</strong> legible y sencillo, aunque menos eficiente en tamaño y validación.</li>
+    <li><strong>Avro:</strong> compacto, orientado a esquemas y muy usado con Kafka.</li>
+    <li><strong>Protobuf:</strong> eficiente y adecuado para contratos estrictos entre servicios.</li>
+    <li><strong>CSV:</strong> simple, pero menos recomendable para eventos complejos o anidados.</li>
+  </ul>
+
+  <p>
+    En entornos productivos es común combinar Avro o Protobuf con un registro de esquemas
+    para controlar la evolución de los eventos y evitar incompatibilidades entre versiones.
+  </p>
+        <hr>
+  <h4>Integración con Spark Structured Streaming</h4>
 
   <p>
     Spark puede consumir eventos desde sistemas como Kafka utilizando la API <code>readStream</code>.
@@ -170,18 +372,68 @@
     .load())</code></pre>
 
   <p>
-    Una vez adquiridos, los eventos pueden transformarse, agregarse o almacenarse
-    mediante <code>writeStream</code>.
+    El DataFrame resultante contiene columnas propias de Kafka, como <code>key</code>,
+    <code>value</code>, <code>topic</code>, <code>partition</code>, <code>offset</code>
+    y <code>timestamp</code>. Normalmente, el contenido del evento llega en la columna
+    <code>value</code> en formato binario, por lo que debe convertirse y parsearse.
   </p>
 
-  <h3>Problemas comunes en adquisición de eventos</h3>
+  <pre><code class="language-python python-code">from pyspark.sql.functions import col, from_json
+from pyspark.sql.types import StructType, StructField, StringType, DoubleType
+
+schema = StructType([
+    StructField("event_id", StringType()),
+    StructField("event_type", StringType()),
+    StructField("event_time", StringType()),
+    StructField("key", StringType()),
+    StructField("payload", StructType([
+        StructField("cliente_id", StringType()),
+        StructField("importe", DoubleType()),
+        StructField("moneda", StringType())
+    ]))
+])
+
+eventos_df = (stream_df
+    .selectExpr("CAST(key AS STRING)", "CAST(value AS STRING) AS json_value", "timestamp")
+    .select(from_json(col("json_value"), schema).alias("evento"), "timestamp")
+    .select("evento.*", "timestamp"))</code></pre>
+
+  <p>
+    Una vez adquiridos y parseados, los eventos pueden filtrarse, enriquecerse, agregarse por
+    ventanas temporales o almacenarse mediante <code>writeStream</code>.
+  </p>
+        <hr>
+
+  <h4>Control de offsets y checkpoints</h4>
+  <p>
+    Spark utiliza offsets para saber qué mensajes de Kafka ya han sido leídos. Para recuperarse
+    correctamente ante fallos, Structured Streaming guarda esta información en una ubicación de
+    checkpoint. Sin checkpoint, una aplicación puede repetir trabajo o perder la posición de consumo.
+  </p>
+
+  <pre><code class="language-python python-code">query = (eventos_df
+    .writeStream
+    .format("parquet")
+    .option("path", "/datos/eventos")
+    .option("checkpointLocation", "/checkpoints/eventos")
+    .start())</code></pre>
+
+  <p>
+    La ubicación de checkpoint debe estar en un almacenamiento persistente y accesible por el clúster,
+    no en un directorio temporal local que pueda desaparecer al reiniciar el proceso.
+  </p>
+<hr>
+  <h4>Problemas comunes en adquisición de eventos</h4>
   <ul>
     <li>Eventos duplicados.</li>
     <li>Pérdida de eventos por mala configuración.</li>
     <li>Desorden temporal (late events).</li>
     <li>Cuellos de botella en productores.</li>
+    <li>Esquemas incompatibles entre productores y consumidores.</li>
+    <li>Particiones desbalanceadas por una mala elección de clave.</li>
+    <li>Retención insuficiente para reprocesar datos tras una incidencia.</li>
   </ul>
-
+<hr>
   <h3>Buenas prácticas</h3>
   <ul>
     <li>Diseñar correctamente particiones en el sistema de mensajería.</li>
@@ -189,7 +441,29 @@
     <li>Configurar retención suficiente para reprocesamiento.</li>
     <li>Implementar monitorización continua.</li>
     <li>Evitar dependencias síncronas innecesarias.</li>
+    <li>Usar identificadores únicos para facilitar deduplicación.</li>
+    <li>Separar eventos por dominio o tipo en topics bien definidos.</li>
+    <li>Validar los eventos antes de publicarlos.</li>
+    <li>Documentar contratos de datos y versionar esquemas.</li>
+    <li>Configurar checkpoints persistentes en las aplicaciones de Spark.</li>
   </ul>
+<hr>
+  <h4>Ejemplo de arquitectura completa</h4>
+  <ol>
+    <li>Una aplicación de comercio electrónico genera eventos de compra.</li>
+    <li>El productor publica cada evento en un topic Kafka llamado <code>pedidos</code>.</li>
+    <li>Kafka distribuye los eventos por particiones usando el identificador de pedido como clave.</li>
+    <li>Spark Structured Streaming consume el topic, parsea el JSON y valida el esquema.</li>
+    <li>Los eventos se enriquecen con información de clientes o productos.</li>
+    <li>Los resultados se escriben en un Data Lake y en una tabla analítica.</li>
+    <li>Un dashboard consulta los datos procesados para mostrar métricas casi en tiempo real.</li>
+  </ol>
+
+  <p>
+    Este tipo de arquitectura permite separar responsabilidades: la aplicación solo publica eventos,
+    Kafka se encarga del transporte y retención, Spark procesa los datos y los sistemas de destino
+    almacenan resultados listos para análisis.
+  </p>
 
 
 

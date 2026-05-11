@@ -49,6 +49,11 @@
   <p>
     Esta combinación permite construir pipelines escalables, tolerantes a fallos
     y con baja latencia.
+  </p>
+  <p>
+    En esta lección se trabaja el patrón completo: lectura desde topics Kafka, conversión de
+    mensajes binarios, aplicación de esquemas, gestión de offsets, escritura hacia sinks y
+    monitorización de consultas de streaming.
   </p>      </div>
     </div>
   </section>
@@ -64,6 +69,9 @@
 
   <h3>Arquitectura típica</h3>
 
+  <img src="/img/M3T3L2_1.svg" alt="Patrón de integración entre Spark Structured Streaming y Kafka">
+  <p class="img-caption">Imagen 1: Patrón de integración entre Spark Structured Streaming y Kafka</p>
+
   <ol>
     <li>Productores envían eventos a un topic Kafka.</li>
     <li>Kafka almacena eventos en particiones distribuidas.</li>
@@ -71,6 +79,20 @@
     <li>Los datos se transforman y agregan.</li>
     <li>Resultados se escriben en un sink (Data Lake, base de datos, Kafka, etc.).</li>
   </ol>
+  <p>
+    Kafka y Spark cumplen responsabilidades distintas. Kafka conserva el log de eventos,
+    permite desacoplar productores y consumidores y mantiene offsets. Spark consume esos eventos
+    para aplicar lógica analítica distribuida: parseo, validación, agregaciones, enriquecimiento
+    y escritura en destinos finales.
+  </p>
+
+  <h3>Responsabilidades de cada componente</h3>
+  <ul>
+    <li><strong>Kafka:</strong> almacenamiento temporal, particionado, retención y entrega de eventos.</li>
+    <li><strong>Spark:</strong> procesamiento distribuido, ventanas, estado, enriquecimiento y escritura.</li>
+    <li><strong>Checkpoint:</strong> progreso de la consulta, offsets procesados y estado de agregaciones.</li>
+    <li><strong>Sink:</strong> materialización del resultado en Parquet, Delta, Kafka, JDBC u otro destino.</li>
+  </ul>
 
   <h3>Dependencias necesarias</h3>
 
@@ -82,6 +104,11 @@
 
   <p>
     La versión debe coincidir con la versión instalada de Spark.
+  </p>
+  <p>
+    En PySpark local, el paquete puede añadirse al iniciar la sesión o al ejecutar
+    <code>spark-submit</code>. En entornos gestionados, la dependencia suele configurarse en el
+    clúster o en la definición del job.
   </p>
 
   <h3>Lectura desde Kafka (Structured Streaming)</h3>
@@ -103,6 +130,10 @@
     <li>offset</li>
     <li>timestamp</li>
   </ul>
+  <p>
+    Las columnas <code>key</code> y <code>value</code> llegan como binario. La clave suele usarse
+    para particionado lógico y orden por entidad; el valor contiene el payload del evento.
+  </p>
 
   <p>
     Es necesario convertir el campo <code>value</code> desde binario a string:
@@ -111,6 +142,35 @@
   <pre><code class="language-python python-code">from pyspark.sql.functions import col
 
 parsed_df = stream_df.selectExpr("CAST(value AS STRING)")</code></pre>
+
+  <h3>Parseo con esquema explícito</h3>
+  <p>
+    En producción no conviene tratar el JSON como texto indefinidamente. Definir un esquema permite
+    validar tipos, seleccionar columnas y evitar inferencias costosas.
+  </p>
+
+  <pre><code class="language-python python-code">from pyspark.sql.functions import col, from_json
+from pyspark.sql.types import StructType, StructField, StringType, DoubleType, TimestampType
+
+schema = StructType([
+    StructField("event_time", TimestampType(), True),
+    StructField("event_id", StringType(), True),
+    StructField("customer_id", StringType(), True),
+    StructField("amount", DoubleType(), True),
+    StructField("country", StringType(), True)
+])
+
+events_df = (stream_df
+    .selectExpr("CAST(key AS STRING) AS key", "CAST(value AS STRING) AS json_value",
+                "topic", "partition", "offset", "timestamp AS kafka_timestamp")
+    .select(from_json(col("json_value"), schema).alias("event"),
+            "key", "topic", "partition", "offset", "kafka_timestamp")
+    .select("event.*", "key", "topic", "partition", "offset", "kafka_timestamp"))</code></pre>
+
+  <p>
+    Conservar <code>topic</code>, <code>partition</code> y <code>offset</code> durante el
+    desarrollo ayuda a depurar problemas de duplicados, reprocesamiento o eventos inesperados.
+  </p>
 
   <h3>Escritura hacia Kafka</h3>
 
@@ -122,6 +182,19 @@ parsed_df = stream_df.selectExpr("CAST(value AS STRING)")</code></pre>
     .option("topic", "output_topic")
     .option("checkpointLocation", "/checkpoint")
     .start())</code></pre>
+
+  <p>
+    Para escribir en Kafka, el DataFrame debe tener una columna <code>value</code> y puede incluir
+    <code>key</code>. Si se escribe un resultado estructurado, se suele convertir a JSON con
+    <code>to_json(struct(...))</code>.
+  </p>
+
+  <pre><code class="language-python python-code">from pyspark.sql.functions import to_json, struct
+
+out_df = events_df.select(
+    col("customer_id").cast("string").alias("key"),
+    to_json(struct("event_id", "event_time", "customer_id", "amount", "country")).alias("value")
+)</code></pre>
 
   <h3>Gestión de offsets</h3>
 
@@ -136,6 +209,20 @@ parsed_df = stream_df.selectExpr("CAST(value AS STRING)")</code></pre>
     Spark guarda offsets procesados en el directorio de checkpoint,
     permitiendo reanudar procesamiento tras fallos.
   </p>
+  <p>
+    Si existe checkpoint, Spark prioriza la posición guardada y no vuelve a aplicar
+    <code>startingOffsets</code>. Por eso borrar un checkpoint puede cambiar el punto de arranque
+    y provocar reprocesamiento o pérdida de eventos según la configuración.
+  </p>
+
+  <strong>failOnDataLoss</strong>
+  <p>
+    Esta opción controla cómo reacciona Spark si intenta leer offsets que Kafka ya no conserva por
+    retención. En entornos críticos conviene revisar este comportamiento y dimensionar la retención
+    del topic para permitir recuperación.
+  </p>
+
+  <pre><code class="language-python python-code">.option("failOnDataLoss", "true")</code></pre>
 
   <h3>Garantías de procesamiento</h3>
 
@@ -143,6 +230,10 @@ parsed_df = stream_df.selectExpr("CAST(value AS STRING)")</code></pre>
     <li>At-least-once por defecto.</li>
     <li>Exactly-once posible combinando Kafka idempotente y sinks compatibles.</li>
   </ul>
+  <p>
+    La garantía final depende de toda la cadena. Aunque Spark gestione offsets y checkpoints, un
+    sink no idempotente puede generar duplicados si un micro-batch se reintenta tras un fallo.
+  </p>
 
   <h3>Procesamiento típico</h3>
 
@@ -158,6 +249,24 @@ parsed = (stream_df
     .select(from_json(col("value"), schema).alias("data"))
     .select("data.*"))</code></pre>
 
+  <h3>Ventanas y tiempo de evento</h3>
+  <p>
+    Cuando el evento incluye un timestamp de negocio, las agregaciones deberían basarse en tiempo
+    de evento, no solo en el timestamp de Kafka o en el tiempo de procesamiento.
+  </p>
+
+  <pre><code class="language-python python-code">from pyspark.sql.functions import window, sum as spark_sum
+
+ventas_5m = (events_df
+    .withWatermark("event_time", "10 minutes")
+    .groupBy(window(col("event_time"), "5 minutes"), col("country"))
+    .agg(spark_sum("amount").alias("total_amount")))</code></pre>
+
+  <p>
+    El watermark limita cuánto tiempo espera Spark eventos tardíos y permite limpiar estado de
+    ventanas antiguas.
+  </p>
+
   <h3>Rendimiento y particionado</h3>
 
   <ul>
@@ -165,6 +274,32 @@ parsed = (stream_df
     <li>Cada partición Kafka puede mapearse a una partición Spark.</li>
     <li>Evitar skew en claves.</li>
   </ul>
+  <p>
+    Un topic con pocas particiones limitará el paralelismo máximo de lectura. Por el contrario,
+    demasiadas particiones pueden aumentar metadatos, ficheros de salida y coste de coordinación.
+  </p>
+
+  <strong>Control de carga</strong>
+  <p>
+    En algunos entornos se limita la cantidad de datos leídos por trigger para evitar saturar el
+    clúster o el sink de salida.
+  </p>
+
+  <pre><code class="language-python python-code">.option("maxOffsetsPerTrigger", "50000")</code></pre>
+
+  <h3>Escritura en Parquet o Delta</h3>
+  <p>
+    Además de escribir a Kafka, Spark puede materializar resultados en un Data Lake. Parquet es una
+    opción eficiente para analítica; Delta Lake añade transacciones, evolución de esquema y operaciones
+    como <code>MERGE</code>.
+  </p>
+
+  <pre><code class="language-python python-code">query = (events_df.writeStream
+    .format("parquet")
+    .option("path", "/data/bronze/events")
+    .option("checkpointLocation", "/data/checkpoints/events")
+    .outputMode("append")
+    .start())</code></pre>
 
   <h3>Seguridad</h3>
 
@@ -174,6 +309,11 @@ parsed = (stream_df
 
   <strong>SSL</strong>
   <pre><code class="language-python python-code">.option("kafka.ssl.truststore.location", "/path/truststore")</code></pre>
+  <p>
+    Las credenciales, certificados y rutas de truststore no deberían quedar embebidas en notebooks
+    compartidos. En producción se gestionan mediante variables de entorno, secretos del clúster o
+    mecanismos de la plataforma cloud.
+  </p>
 
   <h3>Monitorización</h3>
 
@@ -183,6 +323,14 @@ parsed = (stream_df
     <li>Latencia end-to-end.</li>
     <li>Errores de conexión.</li>
   </ul>
+  <p>
+    Spark expone información de progreso mediante objetos <code>StreamingQueryProgress</code>,
+    que permiten observar registros de entrada, duración de batches y estado de operadores.
+  </p>
+
+  <pre><code class="language-python python-code">query.lastProgress
+query.status
+spark.streams.active</code></pre>
 
   <h3>Problemas comunes</h3>
 
@@ -191,6 +339,9 @@ parsed = (stream_df
     <li>Checkpoint corrupto.</li>
     <li>Desajuste de versiones Kafka-Spark.</li>
     <li>Particiones insuficientes.</li>
+    <li>JSON mal formado o cambios de esquema no controlados.</li>
+    <li>Sinks lentos que provocan acumulación de lag.</li>
+    <li>Borrado accidental de checkpoints.</li>
   </ul>
 
   <h3>Buenas prácticas</h3>
@@ -200,6 +351,10 @@ parsed = (stream_df
     <li>Definir claves adecuadas para particionado.</li>
     <li>Evitar transformaciones costosas antes de parseo.</li>
     <li>Monitorizar lag constantemente.</li>
+    <li>Definir esquemas explícitos para los eventos.</li>
+    <li>Separar checkpoints por consulta.</li>
+    <li>Usar sinks idempotentes o deduplicación cuando haya reintentos.</li>
+    <li>Probar recuperación ante fallos y reprocesamiento desde offsets antiguos.</li>
   </ul>
 
 

@@ -28,7 +28,7 @@
     <div id="index-container" class="text-cell">
         <hr>
         <ul>
-          <li><a href="#descripcion">Descripción</a></li>
+          <li><a href="#descripcion">Introducción</a></li>
           <li><a href="#contenido">Contenido</a></li>
           <li><a href="#conclusion">Conclusión</a></li>
         </ul>
@@ -37,7 +37,7 @@
 
   <section id="descripcion">
     <div class="lesson-container">
-      <h3>DESCRIPCIÓN</h3>
+      <h3>INTRODUCCIÓN</h3>
       <hr>
       <div class="text-cell">
   <p>
@@ -49,7 +49,14 @@
     En el contexto de procesamiento batch y streaming, los conectores y sinks
     son fundamentales para construir pipelines completos que integren fuentes de datos,
     motores de procesamiento y sistemas de almacenamiento o visualización.
-  </p>      </div>
+  </p>
+  <p>
+    Elegir correctamente un conector o un sink no es solo una decisión técnica de compatibilidad.
+    También afecta a la consistencia, latencia, coste, seguridad, recuperación ante fallos y facilidad
+    de explotación del pipeline.
+  </p>
+
+      </div>
     </div>
   </section>
 
@@ -66,14 +73,42 @@
     Componente que permite a Spark leer o escribir datos desde o hacia
     sistemas externos (bases de datos, sistemas de mensajería, almacenamiento cloud, etc.).
   </p>
+  <p>
+    Un conector traduce la API de Spark al protocolo del sistema externo. Por ejemplo, el conector
+    JDBC convierte operaciones de Spark en consultas SQL, mientras que el conector Kafka convierte
+    lecturas y escrituras en operaciones sobre topics, particiones y offsets.
+  </p>
 
   <strong>Sink</strong>
   <p>
     Destino final donde se escriben los datos procesados.
     En streaming, el sink define cómo se materializan los resultados de una consulta continua.
   </p>
+  <p>
+    El sink puede ser definitivo, como un Data Lake o una base de datos analítica, o intermedio,
+    como otro topic Kafka que alimentará un segundo pipeline.
+  </p>
 
-  <h3>Conectores en Spark (Batch)</h3>
+  <strong>Source</strong>
+  <p>
+    Aunque esta lección se centra en sinks y conectores, también conviene recordar el concepto
+    de <strong>source</strong>: el origen desde el que Spark lee datos. En Structured Streaming,
+    una consulta suele tener una source, un conjunto de transformaciones y un sink.
+  </p>
+         <img src ="/img/M3T2L3_1.png">
+        <p class="img-caption"> Figura 1: Flujo de datos desde Spark </p>
+        <hr>
+  <h4>Criterios para elegir conectores y sinks</h4>
+  <ul>
+    <li><strong>Semántica:</strong> si permite escrituras idempotentes, transacciones o solo append.</li>
+    <li><strong>Latencia:</strong> si el destino necesita resultados en segundos, minutos o modo batch.</li>
+    <li><strong>Formato:</strong> si el sistema trabaja mejor con Parquet, Delta, JSON, Avro o tablas SQL.</li>
+    <li><strong>Escalabilidad:</strong> si soporta escritura concurrente desde varios ejecutores.</li>
+    <li><strong>Recuperación:</strong> si funciona correctamente con checkpoints y reintentos.</li>
+    <li><strong>Seguridad:</strong> si permite autenticación, cifrado y control de permisos.</li>
+  </ul>
+        <hr>
+  <h4>Conectores en Spark (Batch)</h4>
 
   <strong>Archivos y formatos soportados</strong>
   <ul>
@@ -83,6 +118,12 @@
     <li>JSON</li>
     <li>Avro (mediante dependencia adicional)</li>
   </ul>
+
+  <p>
+    Los formatos columnares como Parquet y ORC suelen ser preferibles para analítica porque reducen
+    tamaño en disco y permiten leer solo las columnas necesarias. JSON y CSV son cómodos para
+    intercambio o depuración, pero resultan menos eficientes en grandes volúmenes.
+  </p>
 
   <strong>JDBC</strong>
   <p>
@@ -97,6 +138,28 @@
     .option("password", "password")
     .load())</code></pre>
 
+  <p>
+    En lecturas grandes por JDBC es recomendable particionar la lectura para evitar que una sola
+    conexión concentre todo el trabajo.
+  </p>
+
+  <pre><code class="language-python python-code">df = (spark.read
+    .format("jdbc")
+    .option("url", "jdbc:postgresql://host:5432/db")
+    .option("dbtable", "ventas")
+    .option("user", "usuario")
+    .option("password", "password")
+    .option("partitionColumn", "id")
+    .option("lowerBound", "1")
+    .option("upperBound", "1000000")
+    .option("numPartitions", "8")
+    .load())</code></pre>
+
+  <p>
+    Esta configuración permite que Spark divida la lectura en rangos y ejecute varias tareas en
+    paralelo, reduciendo el tiempo total de ingesta.
+  </p>
+
   <strong>Almacenamiento en la nube</strong>
   <ul>
     <li>AWS S3</li>
@@ -104,7 +167,32 @@
     <li>Google Cloud Storage</li>
   </ul>
 
-  <h3>Conectores en Structured Streaming</h3>
+  <p>
+    En almacenamiento cloud es importante configurar credenciales, permisos, endpoint correcto,
+    políticas de ciclo de vida y formato de salida. También hay que vigilar el problema de muchos
+    archivos pequeños, especialmente en streaming.
+  </p>
+        <hr>
+  <h4>Escritura batch con Spark</h4>
+  <p>
+    En modo batch, Spark escribe un DataFrame completo y finaliza el trabajo. Es común utilizar
+    <code>mode</code> para controlar qué ocurre si el destino ya existe.
+  </p>
+
+  <pre><code class="language-python python-code">(df.write
+    .format("parquet")
+    .mode("overwrite")
+    .partitionBy("fecha")
+    .save("/data/ventas_parquet"))</code></pre>
+
+  <ul>
+    <li><code>append</code>: añade datos al destino.</li>
+    <li><code>overwrite</code>: sustituye datos existentes.</li>
+    <li><code>ignore</code>: no escribe si el destino existe.</li>
+    <li><code>error</code>: falla si el destino ya existe.</li>
+  </ul>
+        <hr>
+  <h4>Conectores en Structured Streaming</h4>
 
   <strong>Fuentes comunes</strong>
   <ul>
@@ -121,7 +209,29 @@
     .option("subscribe", "mi_topic")
     .load())</code></pre>
 
-  <h3>Sinks en Structured Streaming</h3>
+  <p>
+    En streaming, Spark no carga un conjunto finito de datos, sino que mantiene una consulta activa.
+    Cada microbatch procesa los registros disponibles desde la última posición confirmada.
+  </p>
+
+  <strong>Lectura de archivos en streaming</strong>
+  <p>
+    Spark también puede monitorizar un directorio y procesar nuevos archivos conforme aparecen.
+    Es útil para integraciones con sistemas que depositan ficheros periódicamente.
+  </p>
+
+  <pre><code class="language-python python-code">stream_files_df = (spark
+    .readStream
+    .schema(schema)
+    .format("json")
+    .load("/landing/eventos"))</code></pre>
+
+  <p>
+    En este patrón se debe definir el esquema de forma explícita. Inferir esquemas automáticamente
+    en streaming puede ser costoso y provocar comportamientos inconsistentes.
+  </p>
+        <hr>
+  <h4>Sinks en Structured Streaming</h4>
 
   <strong>Console Sink</strong>
   <p>
@@ -133,6 +243,11 @@
     .format("console")
     .start())</code></pre>
 
+  <p>
+    No debe usarse como destino productivo porque imprime resultados en la salida estándar y no
+    ofrece persistencia ni garantías útiles para recuperación.
+  </p>
+
   <strong>File Sink (Parquet, CSV, etc.)</strong>
   <pre><code class="language-python python-code">query = (df
     .writeStream
@@ -140,6 +255,11 @@
     .option("path", "/output")
     .option("checkpointLocation", "/checkpoint")
     .start())</code></pre>
+
+  <p>
+    El file sink es habitual para construir zonas de datos en un Data Lake. Parquet suele ser una
+    opción adecuada para analítica por su compresión y lectura columnar.
+  </p>
 
   <strong>Kafka Sink</strong>
   <p>
@@ -154,13 +274,62 @@
     .option("checkpointLocation", "/checkpoint")
     .start())</code></pre>
 
+  <p>
+    Para escribir en Kafka, el DataFrame debe contener una columna <code>value</code> y, opcionalmente,
+    <code>key</code>, ambas en formato binario o string. Si se quiere publicar un evento estructurado,
+    normalmente se convierte a JSON antes de enviarlo.
+  </p>
+
+  <pre><code class="language-python python-code">from pyspark.sql.functions import col, to_json, struct
+
+kafka_output_df = df.select(
+    col("pedido_id").cast("string").alias("key"),
+    to_json(struct("pedido_id", "cliente_id", "importe", "fecha")).alias("value")
+)
+
+query = (kafka_output_df
+    .writeStream
+    .format("kafka")
+    .option("kafka.bootstrap.servers", "localhost:9092")
+    .option("topic", "pedidos_procesados")
+    .option("checkpointLocation", "/checkpoint/pedidos_procesados")
+    .start())</code></pre>
+
   <strong>Foreach Sink</strong>
   <p>
     Permite definir lógica personalizada para escribir resultados
     (por ejemplo, hacia una API externa o sistema especializado).
   </p>
 
-  <h3>Checkpointing</h3>
+  <strong>ForeachBatch</strong>
+  <p>
+    <code>foreachBatch</code> permite ejecutar lógica batch sobre cada microbatch. Es útil para
+    escribir en sistemas que no tienen sink nativo de streaming o para aplicar operaciones
+    transaccionales por lote.
+  </p>
+
+  <pre><code class="language-python python-code">def escribir_microbatch(batch_df, batch_id):
+    (batch_df.write
+        .format("jdbc")
+        .option("url", "jdbc:postgresql://host:5432/db")
+        .option("dbtable", "eventos_procesados")
+        .option("user", "usuario")
+        .option("password", "password")
+        .mode("append")
+        .save())
+
+query = (df.writeStream
+    .foreachBatch(escribir_microbatch)
+    .option("checkpointLocation", "/checkpoint/jdbc")
+    .start())</code></pre>
+
+  <p>
+    Al usar <code>foreachBatch</code>, la función debe diseñarse para tolerar reintentos. Si un
+    microbatch se ejecuta de nuevo tras un fallo, el destino no debería quedar con duplicados
+    incoherentes.
+  </p>
+        <hr>
+  <h4>Checkpointing</h4>
   <p>
     En streaming, los sinks requieren una ubicación de checkpoint
     para almacenar offsets y estado, permitiendo recuperación ante fallos.
@@ -168,7 +337,19 @@
 
   <pre><code class="language-python python-code">.option("checkpointLocation", "/ruta/checkpoint")</code></pre>
 
-  <h3>Modos de salida</h3>
+  <p>
+    El checkpoint debe estar en almacenamiento persistente y exclusivo para cada consulta. Reutilizar
+    el mismo directorio para consultas diferentes puede corromper el estado o provocar resultados
+    incorrectos.
+  </p>
+
+  <p>
+    También es importante no borrar checkpoints en producción sin una estrategia clara. Si se elimina
+    el checkpoint, Spark puede perder la referencia de offsets procesados y empezar desde una posición
+    distinta según la configuración de la fuente.
+  </p>
+        <hr>
+  <h4>Modos de salida</h4>
   <ul>
     <li><strong>Append</strong></li>
     <li><strong>Update</strong></li>
@@ -179,34 +360,130 @@
     El modo elegido afecta cómo se escriben los datos en el sink.
   </p>
 
-  <h3>Consideraciones de rendimiento</h3>
+  <strong>Append</strong>
+  <p>
+    Solo escribe filas nuevas cuando Spark considera que ya no cambiarán. Es habitual en flujos sin
+    agregaciones o con ventanas cerradas mediante watermark.
+  </p>
+
+  <strong>Update</strong>
+  <p>
+    Escribe únicamente las filas que han cambiado desde el último microbatch. Puede ser útil en
+    agregaciones incrementales.
+  </p>
+
+  <strong>Complete</strong>
+  <p>
+    Escribe todo el resultado agregado en cada microbatch. Puede ser costoso si el estado crece mucho.
+  </p>
+        <hr>
+  <h4>Triggers</h4>
+  <p>
+    Los triggers controlan cada cuánto se ejecuta una consulta de streaming. Elegirlos bien ayuda a
+    equilibrar latencia y coste de procesamiento.
+  </p>
+
+  <pre><code class="language-python python-code">query = (df.writeStream
+    .format("parquet")
+    .option("path", "/output")
+    .option("checkpointLocation", "/checkpoint")
+    .trigger(processingTime="30 seconds")
+    .start())</code></pre>
+
+  <p>
+    Un trigger muy frecuente reduce latencia, pero puede aumentar la sobrecarga. Un trigger más
+    espaciado reduce coste, aunque los datos tardarán más en estar disponibles.
+  </p>
+<hr>
+  <h4>Consideraciones de rendimiento</h4>
   <ul>
     <li>Evitar demasiados archivos pequeños.</li>
     <li>Configurar particiones adecuadas.</li>
     <li>Optimizar número de particiones en Kafka.</li>
     <li>Usar formatos columnares (Parquet) para analítica.</li>
+    <li>Ajustar el número de particiones antes de escribir en destinos sensibles.</li>
+    <li>Evitar escrituras fila a fila hacia bases de datos externas.</li>
+    <li>Controlar la frecuencia de microbatches mediante triggers.</li>
   </ul>
 
-  <h3>Seguridad en conectores</h3>
+  <p>
+    En sinks de archivos, el exceso de archivos pequeños complica consultas posteriores y aumenta
+    costes de metadatos. En sinks JDBC, demasiadas conexiones simultáneas pueden saturar la base de
+    datos. En Kafka, un mal particionado puede concentrar carga en pocas particiones.
+  </p>
+        <hr>
+  <h4>Seguridad en conectores</h4>
   <ul>
     <li>Uso de SSL/TLS en Kafka.</li>
     <li>Credenciales seguras en JDBC.</li>
     <li>Gestión de secretos mediante variables de entorno o vaults.</li>
   </ul>
 
-  <h3>Arquitectura típica con conectores</h3>
+  <p>
+    Las credenciales no deberían quedar escritas directamente en notebooks o ficheros HTML de ejemplo
+    usados en producción. En entornos reales conviene usar gestores de secretos, variables de entorno
+    o mecanismos propios de la plataforma cloud.
+  </p>
+        <hr>
+  <h4>Consistencia e idempotencia</h4>
+  <p>
+    Un sink es idempotente cuando repetir la misma escritura no cambia el resultado final de forma
+    incorrecta. Esta propiedad es muy importante en streaming porque un microbatch puede repetirse
+    tras un fallo.
+  </p>
+
+  <ul>
+    <li>En Kafka, usar claves estables ayuda a compactar o deduplicar resultados posteriores.</li>
+    <li>En bases de datos, pueden usarse claves primarias, <code>UPSERT</code> o tablas intermedias.</li>
+    <li>En Data Lakes, formatos transaccionales como Delta Lake facilitan operaciones consistentes.</li>
+  </ul>
+
+  <p>
+    Si el sink no es idempotente, el pipeline debe incorporar deduplicación mediante identificadores
+    de evento, control de lotes o lógica transaccional en el destino.
+  </p>
+<hr>
+  <h4>Arquitectura típica con conectores</h4>
   <ol>
     <li>Fuente (Kafka).</li>
     <li>Procesamiento (Spark).</li>
     <li>Sink (Data Lake, Base de datos, Kafka, Dashboard).</li>
   </ol>
 
-  <h3>Buenas prácticas</h3>
+  <p>
+    Una arquitectura más completa puede incluir una zona raw donde se guardan los eventos originales,
+    una zona procesada con datos limpios y una zona de consumo optimizada para dashboards, modelos
+    analíticos o APIs.
+  </p>
+
+  <pre><code class="language-text">Kafka topic
+    -> Spark Structured Streaming
+    -> Data Lake raw
+    -> Transformaciones y validaciones
+    -> Data Lake curado / Base analítica
+    -> Dashboard o aplicación de consumo</code></pre>
+<hr>
+  <h4>Errores comunes</h4>
+  <ul>
+    <li>Usar console sink como si fuera un destino real.</li>
+    <li>No configurar <code>checkpointLocation</code> en consultas de streaming.</li>
+    <li>Escribir demasiados archivos pequeños en almacenamiento cloud.</li>
+    <li>Saturar una base de datos relacional con escrituras paralelas sin control.</li>
+    <li>Guardar credenciales en texto plano dentro del código.</li>
+    <li>No diseñar deduplicación cuando se trabaja con semántica at-least-once.</li>
+  </ul>
+<hr>
+  <h4>Buenas prácticas</h4>
   <ul>
     <li>Separar entorno de desarrollo y producción.</li>
     <li>Monitorizar latencia y throughput.</li>
     <li>Configurar correctamente checkpointing.</li>
     <li>Validar compatibilidad de versiones.</li>
+    <li>Preferir formatos columnares para analítica.</li>
+    <li>Diseñar escrituras idempotentes siempre que sea posible.</li>
+    <li>Documentar contratos de datos entre fuentes, Spark y destinos.</li>
+    <li>Probar recuperación ante fallos antes de pasar a producción.</li>
+    <li>Dimensionar el sink, no solo el clúster Spark.</li>
   </ul>
 
 

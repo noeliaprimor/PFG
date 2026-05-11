@@ -22,89 +22,83 @@
     </div>
   </nav>
 
-  <h4 class="titulos-leccion">Ejercicio propuesto</h4>
+  <h2 class="titulos-leccion">Ejercicio propuesto</h2>
 
   <div class="indice-container">
     <div id="index-container" class="text-cell">
         <hr>
         <ul>
-          <li><a href="#descripcion">Descripción</a></li>
-          <li><a href="#contenido">Contenido</a></li>
-          <li><a href="#conclusion">Conclusión</a></li>
+          <li><a href="#enunciado">Enunciado</a></li>
           <li><a href="#ejercicio">Ejercicio</a></li>
         </ul>
       </div>
     </div>
 
-  <section id="descripcion">
+  <section id="enunciado">
     <div class="lesson-container">
-      <strong>DESCRIPCIÓN</strong>
+      <h3>ENUNCIADO</h3>
       <hr>
       <div class="text-cell">
- <h2>Ejercicios propuestos </h2>
-
-  <h3>Ejercicio 1: Clickstream con métricas y persistencia</h3>
-  <ol>
-    <li>Genera eventos JSON en el topic <code>clicks</code> con campos <code>ts</code>, <code>userId</code> y <code>url</code>.</li>
-    <li>Implementa el pipeline del Caso 1.</li>
-    <li>Comprueba que se crean ficheros Parquet y que el checkpoint crece con el progreso del streaming.</li>
-    <li>Consulta los Parquet resultantes con Spark batch (por ejemplo, <code>spark.read.parquet(...)</code>) y valida resultados.</li>
-  </ol>
-
-  <h3>Ejercicio 2: Ajuste de watermark y eventos tardíos</h3>
-  <ol>
-    <li>Inyecta eventos “tardíos” (con <code>ts</code> antiguo) en el topic correspondiente.</li>
-    <li>Varía el watermark (por ejemplo, 2, 10 y 30 minutos) y documenta cómo afecta al resultado y al estado.</li>
-    <li>Explica el compromiso entre precisión y consumo de memoria/estado.</li>
-  </ol>
-
-  <h3>Ejercicio 3: Bronze → Silver con validación</h3>
-  <ol>
-    <li>Amplía el Caso 3 para invalidar registros con valores fuera de rango (por ejemplo, <code>value &lt; 0</code>).</li>
-    <li>Escribe registros inválidos en un directorio Parquet separado (por ejemplo, <code>/data/out/case3_quarantine</code>).</li>
-    <li>Incluye métricas por micro-lote (conteo de válidos e inválidos) en logs del Driver.</li>
-  </ol>
-
-  <hr />
-
-       </div>
-    </div>
-  </section>
-
-  <section id="contenido">
-    <div class="lesson-container">
-      <strong>CONTENIDO</strong>
-      <hr>
-      <div class="text-cell">
-        <p>Pasos sugeridos para implementar el pipeline: configuración de topics, productor, job de Structured Streaming y registro de métricas.</p>
-        <ol>
-          <li>Configura topics y productores de prueba.</li>
-          <li>Implementa job de Structured Streaming con agregaciones por ventana.</li>
-          <li>Escribe resultados y mide métricas clave.</li>
-        </ol>
-      </div>
-    </div>
-  </section>
-
-  <section id="conclusion">
-    <div class="lesson-container">
-      <strong>CONCLUSIÓN</strong>
-      <hr>
-      <div class="text-cell">
-        <p>El ejercicio permite validar diseño y rendimiento de pipelines en tiempo real y documentar trade-offs.</p>
+        <p>
+          El objetivo de este ejercicio es construir un mini-pipeline de streaming con Spark
+          Structured Streaming. El flujo simula eventos de clickstream y transacciones, los procesa
+          por ventanas de tiempo de evento y escribe resultados en varios sinks Parquet.
+        </p>
+        <p>
+          La práctica está diseñada para trabajar los elementos centrales del tema: esquemas
+          explícitos, microbatches, watermarks, checkpoints, métricas por ventana,
+          detección simple de alertas, escritura raw y uso de <code>foreachBatch</code>.
+        </p>
+        <p>
+          El ejercicio se estructura en dos cuadernos:
+        </p>
+        <ul>
+          <li>
+            <strong>Productor:</strong> genera eventos JSON de navegación y transacciones en una
+            carpeta de entrada simulando una fuente continua.
+            <a href="notebooks/M3T3_productor_eventos_streaming.ipynb">Disponible aquí</a>
+          </li>
+          <li>
+            <strong>Consumidor:</strong> lee los eventos con Spark Structured Streaming, calcula
+            métricas, genera alertas y escribe resultados en sinks.
+            <a href="notebooks/M3T3_consumidor_pipeline_streaming.ipynb">Disponible aquí</a>
+          </li>
+        </ul>
+        <p>
+          Para ejecutarlo, abre primero el cuaderno consumidor y prepara las consultas de streaming.
+          Después ejecuta el productor para generar nuevos ficheros y observar cómo Spark procesa
+          los microbatches de forma incremental.
+        </p>
       </div>
     </div>
   </section>
 
   <section id="ejercicio">
     <div class="lesson-container">
-      <strong>EJERCICIO</strong>
+      <h3>EJERCICIO</h3>
       <hr>
       <div class="text-cell">
-        <ul>
-          <li>Pipeline reproducible y documentado.</li>
-          <li>Métricas y análisis de rendimiento.</li>
-        </ul>
+        <p>
+          Una vez ejecutados los notebooks, realiza las siguientes actividades:
+        </p>
+        <ol>
+          <li>Aumenta <code>EVENTS_PER_BATCH</code> y observa cómo cambia el tiempo de procesamiento.</li>
+          <li>Modifica la probabilidad de eventos tardíos y documenta su efecto en las ventanas.</li>
+          <li>Cambia el watermark de 10 minutos a 2 minutos y después a 20 minutos.</li>
+          <li>Cambia la ventana de clickstream de 2 minutos a 5 minutos.</li>
+          <li>Añade una métrica de usuarios únicos por tipo de evento.</li>
+          <li>Crea un sink separado para eventos inválidos o incompletos.</li>
+          <li>Modifica la regla de alertas para detectar importes acumulados superiores a otro umbral.</li>
+          <li>Consulta los ficheros Parquet generados con Spark batch y valida los resultados.</li>
+          <li>Detén y reinicia el consumidor manteniendo los checkpoints para comprobar la recuperación.</li>
+          <li>Borra un checkpoint en un entorno de prueba y explica qué cambia en el reprocesamiento.</li>
+          <li>Usa <code>query.lastProgress</code> para documentar registros procesados y duración de microbatch.</li>
+          <li>Propón cómo adaptarías el ejercicio para leer desde Kafka real en lugar de ficheros.</li>
+        </ol>
+        <p>
+          Como entrega, incluye los notebooks modificados, una breve memoria con decisiones de diseño
+          y capturas o salidas que demuestren los resultados de los sinks y las métricas de ejecución.
+        </p>
       </div>
     </div>
   </section>

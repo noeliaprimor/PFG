@@ -30,7 +30,7 @@
     <div id="index-container" class="text-cell">
       <hr>
       <ul>
-        <li><a href="#descripcion">Descripción</a></li>
+        <li><a href="#descripcion">Introducción</a></li>
         <li><a href="#contenido">Contenido</a></li>
         <li><a href="#conclusion">Conclusión</a></li>
       </ul>
@@ -39,7 +39,7 @@
 
   <section id="descripcion">
     <div class="lesson-container">
-      <h3>DESCRIPCIÓN</h3>
+      <h3>INTRODUCCIÓN</h3>
       <hr>
       <div class="text-cell">
   <p>
@@ -97,7 +97,7 @@
     <li>API menos declarativa.</li>
     <li>Optimización limitada frente a DataFrames.</li>
   </ul>
-
+<HR>
   <h3>Structured Streaming</h3>
 
   <strong>Concepto</strong>
@@ -124,7 +124,7 @@
     Structured Streaming funciona principalmente en modo micro-batch, aunque internamente
     aplica procesamiento incremental y mantiene el estado cuando es necesario.
   </p>
-
+<hr>
   <h3>Ejemplo básico en Structured Streaming (PySpark)</h3>
 
   <pre><code class="language-python python-code">from pyspark.sql import SparkSession
@@ -147,14 +147,14 @@ query = (result
     .start())
 
 query.awaitTermination()</code></pre>
-
+<hr>
   <h3>Modos de salida</h3>
   <ul>
     <li><strong>Append</strong>: solo nuevas filas.</li>
     <li><strong>Update</strong>: filas actualizadas.</li>
     <li><strong>Complete</strong>: resultado completo en cada trigger.</li>
   </ul>
-
+<hr>
   <h3>Ventanas temporales</h3>
   <p>
     Permiten agrupar eventos según intervalos de tiempo.
@@ -165,7 +165,7 @@ query.awaitTermination()</code></pre>
 windowed = (stream_df
     .groupBy(window(stream_df.timestamp, "10 minutes"))
     .count())</code></pre>
-
+<hr>
   <h3>Gestión de datos tardíos (Watermarking)</h3>
   <p>
     En sistemas reales, algunos eventos pueden llegar con retraso.
@@ -173,7 +173,7 @@ windowed = (stream_df
   </p>
 
   <pre><code class="language-python python-code">stream_df.withWatermark("timestamp", "5 minutes")</code></pre>
-
+<hr>
   <h3>Comparativa general</h3>
 
   <div class="table-responsive">
@@ -209,7 +209,7 @@ windowed = (stream_df
       </tbody>
     </table>
   </div>
-
+<hr>
   <h3>Casos de uso habituales</h3>
   <ul>
     <li>Procesamiento de logs en tiempo real.</li>

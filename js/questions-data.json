@@ -656,285 +656,627 @@
 
   },
   "modulo3_tema1": {
-    "titulo": "Autoevaluación - Módulo 3, Tema 1: Kafka",
-    "preguntas": [
-      {
-        "pregunta": "¿Qué es Apache Kafka?",
-        "opciones": {
-          "A": "Una base de datos relacional",
-          "B": "Una plataforma de streaming distribuida y de tolerancia a fallos",
-          "C": "Un framework de procesamiento por lotes"
-        },
-        "respuestaCorrecta": "B"
+    "titulo": "Autoevaluación - Módulo 3, Tema 1: Introducción al Procesamiento de Streaming y Arquitecturas Lambda/Kappa",
+    "preguntas":  [
+    {
+      "pregunta": "¿Cuál es la principal característica del procesamiento en tiempo real?",
+      "opciones": {
+        "A": "Procesar datos únicamente en lotes",
+        "B": "Procesar y analizar datos a medida que se generan",
+        "C": "Reducir el tamaño de los datos almacenados"
       },
-      {
-        "pregunta": "¿Cuál es la unidad básica de datos en Kafka?",
-        "opciones": {
-          "A": "Record o Mensaje",
-          "B": "Tabla",
-          "C": "Batch"
-        },
-        "respuestaCorrecta": "A"
+      "respuestaCorrecta": "B"
+    },
+    {
+      "pregunta": "¿Qué diferencia principal existe entre procesamiento batch y procesamiento streaming?",
+      "opciones": {
+        "A": "El batch trabaja con datos históricos y el streaming con datos continuos",
+        "B": "El streaming no utiliza memoria",
+        "C": "El batch siempre es más rápido"
       },
-      {
-        "pregunta": "¿Qué es un Topic en Kafka?",
-        "opciones": {
-          "A": "Un archivo de configuración",
-          "B": "Un canal de streaming donde se publican mensajes",
-          "C": "Un contenedor de bases de datos"
-        },
-        "respuestaCorrecta": "B"
+      "respuestaCorrecta": "A"
+    },
+    {
+      "pregunta": "¿Qué tipo de aplicación requiere normalmente procesamiento en tiempo real?",
+      "opciones": {
+        "A": "Análisis de logs históricos una vez al mes",
+        "B": "Monitorización de sensores IoT",
+        "C": "Archivado de copias de seguridad"
       },
-      {
-        "pregunta": "¿Cuál es el rol de un Productor en Kafka?",
-        "opciones": {
-          "A": "Consumir mensajes del topic",
-          "B": "Publicar mensajes en un topic",
-          "C": "Procesar mensajes en tiempo real"
-        },
-        "respuestaCorrecta": "B"
+      "respuestaCorrecta": "B"
+    },
+    {
+      "pregunta": "¿Cuál es uno de los principales retos del procesamiento en tiempo real?",
+      "opciones": {
+        "A": "Gestión de latencia y escalabilidad",
+        "B": "Eliminación de bases de datos",
+        "C": "Reducción de almacenamiento físico"
       },
-      {
-        "pregunta": "¿Cómo garantiza Kafka la tolerancia a fallos?",
-        "opciones": {
-          "A": "Replicando particiones entre brokers",
-          "B": "Almacenando solo un backup",
-          "C": "Usando una base de datos centralizada"
-        },
-        "respuestaCorrecta": "A"
+      "respuestaCorrecta": "A"
+    },
+    {
+      "pregunta": "¿Qué característica define a la arquitectura Lambda?",
+      "opciones": {
+        "A": "Uso exclusivo de procesamiento batch",
+        "B": "Combinación de capas batch y streaming",
+        "C": "Uso obligatorio de Kafka"
       },
-      {
-        "pregunta": "¿Qué permite un Consumer Group en Kafka?",
-        "opciones": {
-          "A": "Paralelizar consumo repartiendo particiones",
-          "B": "Crear topics automáticamente",
-          "C": "Eliminar mensajes confirmados"
-        },
-        "respuestaCorrecta": "A"
+      "respuestaCorrecta": "B"
+    },
+    {
+      "pregunta": "¿Qué objetivo tiene la capa batch en arquitectura Lambda?",
+      "opciones": {
+        "A": "Procesar datos históricos completos con alta precisión",
+        "B": "Procesar datos únicamente en memoria",
+        "C": "Gestionar mensajes en cola"
       },
-      {
-        "pregunta": "En <code>kafka-topics --create --topic eventos --partitions 3</code>, ¿qué indica el 3?",
-        "opciones": {
-          "A": "Número de particiones del topic",
-          "B": "Número de brokers mínimos",
-          "C": "Número de consumidores activos"
-        },
-        "respuestaCorrecta": "A"
+      "respuestaCorrecta": "A"
+    },
+    {
+      "pregunta": "¿Qué función cumple la capa speed layer en arquitectura Lambda?",
+      "opciones": {
+        "A": "Procesar datos recientes con baja latencia",
+        "B": "Guardar copias de seguridad",
+        "C": "Reducir particiones"
       },
-      {
-        "pregunta": "¿Qué es un offset en Kafka?",
-        "opciones": {
-          "A": "Posición de lectura de un mensaje en una partición",
-          "B": "Clave de cifrado del broker",
-          "C": "Nombre alternativo del topic"
-        },
-        "respuestaCorrecta": "A"
+      "respuestaCorrecta": "A"
+    },
+    {
+      "pregunta": "¿Cuál es una desventaja importante de la arquitectura Lambda?",
+      "opciones": {
+        "A": "Complejidad de mantenimiento por duplicar lógica",
+        "B": "No soporta procesamiento distribuido",
+        "C": "No permite escalabilidad"
       },
-      {
-        "pregunta": "¿Qué ventaja aporta particionar un topic?",
-        "opciones": {
-          "A": "Escalado horizontal de lectura/escritura",
-          "B": "Desactivar replicación",
-          "C": "Eliminar la retención"
-        },
-        "respuestaCorrecta": "A"
+      "respuestaCorrecta": "A"
+    },
+    {
+      "pregunta": "¿Qué simplificación propone la arquitectura Kappa frente a Lambda?",
+      "opciones": {
+        "A": "Eliminar el procesamiento streaming",
+        "B": "Usar una única capa basada en streaming",
+        "C": "Eliminar almacenamiento distribuido"
       },
-      {
-        "pregunta": "¿Qué comando consume mensajes desde el inicio? <code>kafka-console-consumer --from-beginning ...</code>",
-        "opciones": {
-          "A": "Lee desde el offset inicial",
-          "B": "Borra el topic",
-          "C": "Reduce el número de particiones"
-        },
-        "respuestaCorrecta": "A"
-      }
-    ]
+      "respuestaCorrecta": "B"
+    },
+    {
+      "pregunta": "¿Qué tecnología suele utilizarse como backbone en arquitecturas Kappa?",
+      "opciones": {
+        "A": "Kafka",
+        "B": "Excel",
+        "C": "FTP"
+      },
+      "respuestaCorrecta": "A"
+    },
+    {
+      "pregunta": "¿Cuál es la principal función de Apache Kafka?",
+      "opciones": {
+        "A": "Entrenar modelos de Machine Learning",
+        "B": "Actuar como sistema distribuido de mensajería y streaming",
+        "C": "Procesar grafos"
+      },
+      "respuestaCorrecta": "B"
+    },
+    {
+      "pregunta": "¿Qué elemento de Kafka almacena los mensajes?",
+      "opciones": {
+        "A": "RDD",
+        "B": "Topic",
+        "C": "Executor"
+      },
+      "respuestaCorrecta": "B"
+    },
+    {
+      "pregunta": "¿Qué ventaja proporciona la partición de topics en Kafka?",
+      "opciones": {
+        "A": "Paralelismo y escalabilidad",
+        "B": "Reducción del uso de memoria",
+        "C": "Eliminación de consumidores"
+      },
+      "respuestaCorrecta": "A"
+    },
+    {
+      "pregunta": "¿Qué ocurre si varios consumidores pertenecen al mismo consumer group en Kafka?",
+      "opciones": {
+        "A": "Todos leen exactamente los mismos mensajes",
+        "B": "Los mensajes se distribuyen entre los consumidores",
+        "C": "Kafka deja de funcionar"
+      },
+      "respuestaCorrecta": "B"
+    },
+    {
+      "pregunta": "¿Qué hace el siguiente código en PySpark?\n\nspark.readStream.format(\"kafka\").option(\"subscribe\", \"crypto\").load()",
+      "opciones": {
+        "A": "Escribe mensajes en Kafka",
+        "B": "Lee datos en streaming desde un topic Kafka",
+        "C": "Crea un topic automáticamente"
+      },
+      "respuestaCorrecta": "B"
+    },
+    {
+      "pregunta": "¿Qué modelo de procesamiento utiliza Spark Streaming clásico?",
+      "opciones": {
+        "A": "Procesamiento continuo puro",
+        "B": "Micro-batches",
+        "C": "Procesamiento exclusivamente batch"
+      },
+      "respuestaCorrecta": "B"
+    },
+    {
+      "pregunta": "¿Qué ventaja principal ofrece Structured Streaming frente al Spark Streaming clásico?",
+      "opciones": {
+        "A": "API unificada basada en DataFrames",
+        "B": "Eliminación de SparkContext",
+        "C": "Procesamiento únicamente batch"
+      },
+      "respuestaCorrecta": "A"
+    },
+    {
+      "pregunta": "¿Qué representa una ventana temporal en Spark Streaming?",
+      "opciones": {
+        "A": "Una tabla SQL",
+        "B": "Un intervalo de tiempo usado para agrupar eventos",
+        "C": "Un fichero de configuración"
+      },
+      "respuestaCorrecta": "B"
+    },
+    {
+      "pregunta": "¿Qué problema resuelve withWatermark() en Structured Streaming?",
+      "opciones": {
+        "A": "Gestión de eventos tardíos",
+        "B": "Compresión de datos",
+        "C": "Creación de topics Kafka"
+      },
+      "respuestaCorrecta": "A"
+    },
+    {
+      "pregunta": "¿Qué arquitectura sería más adecuada para un sistema moderno basado completamente en eventos y streaming?",
+      "opciones": {
+        "A": "Arquitectura Kappa",
+        "B": "Arquitectura monolítica",
+        "C": "Arquitectura cliente-servidor tradicional"
+      },
+      "respuestaCorrecta": "A"
+    }
+  ]
   },
   "modulo3_tema2": {
-    "titulo": "Autoevaluación - Módulo 3, Tema 2: Structured Streaming",
+    "titulo": "Autoevaluación - Módulo 3, Tema 2: Adquisición, Kafka, sinks y conectores",
     "preguntas": [
       {
-        "pregunta": "¿Qué es Structured Streaming?",
+        "pregunta": "¿Qué describe mejor un evento en una arquitectura de datos en tiempo real?",
         "opciones": {
-          "A": "Un API de Spark para procesamiento de streaming",
-          "B": "Una base de datos para datos no estructurados",
-          "C": "Un sistema de almacenamiento distribuido"
+          "A": "Una unidad de información que representa algo que ya ha ocurrido",
+          "B": "Una consulta SQL ejecutada al final del día",
+          "C": "Un fichero comprimido usado solo para backup"
         },
         "respuestaCorrecta": "A"
       },
       {
-        "pregunta": "¿Cuál es el concepto fundamental de Structured Streaming?",
+        "pregunta": "¿Para qué sirve normalmente el campo <code>event_id</code> en un evento?",
         "opciones": {
-          "A": "Procesar flujos como DataFrames ilimitados",
-          "B": "Dividir el stream en lotes pequeños",
-          "C": "Procesar un mensaje a la vez"
+          "A": "Para identificar el evento y facilitar deduplicación",
+          "B": "Para definir el número de brokers del clúster",
+          "C": "Para sustituir el checkpoint de Spark"
         },
         "respuestaCorrecta": "A"
       },
       {
-        "pregunta": "¿Qué es un micro-batch en Spark Streaming?",
+        "pregunta": "¿Cuál es la diferencia entre tiempo de evento y tiempo de procesamiento?",
         "opciones": {
-          "A": "Un pequeño lote de datos procesado en cada intervalo",
-          "B": "Un error de compresión",
-          "C": "Un tipo de partición"
+          "A": "El tiempo de evento indica cuándo ocurrió el hecho; el de procesamiento, cuándo Spark lo procesa",
+          "B": "Son equivalentes en todos los sistemas de streaming",
+          "C": "El tiempo de procesamiento siempre se genera en Kafka Connect"
+        },
+        "respuestaCorrecta": "A"
+      },
+      {
+        "pregunta": "¿Qué patrón convierte cambios de una base de datos en eventos consumibles por otros sistemas?",
+        "opciones": {
+          "A": "CDC (Change Data Capture)",
+          "B": "CSS",
+          "C": "RAID"
+        },
+        "respuestaCorrecta": "A"
+      },
+      {
+        "pregunta": "¿Qué ventaja aporta Kafka al situarse entre productores y consumidores?",
+        "opciones": {
+          "A": "Desacopla ritmos de producción y consumo y permite retención/reprocesamiento",
+          "B": "Elimina la necesidad de definir esquemas",
+          "C": "Convierte automáticamente todos los datos en tablas relacionales"
+        },
+        "respuestaCorrecta": "A"
+      },
+      {
+        "pregunta": "¿Dónde garantiza Kafka el orden de los mensajes?",
+        "opciones": {
+          "A": "Dentro de una misma partición",
+          "B": "Dentro de todo el clúster sin importar la clave",
+          "C": "Solo cuando el consumidor usa CSV"
+        },
+        "respuestaCorrecta": "A"
+      },
+      {
+        "pregunta": "¿Qué representa el offset en Kafka?",
+        "opciones": {
+          "A": "La posición de un mensaje dentro de una partición",
+          "B": "El tamaño máximo de un topic",
+          "C": "La contraseña del consumidor"
+        },
+        "respuestaCorrecta": "A"
+      },
+      {
+        "pregunta": "¿Qué indica un <code>consumer lag</code> creciente?",
+        "opciones": {
+          "A": "Que los consumidores procesan más despacio de lo que llegan los eventos",
+          "B": "Que el topic no tiene particiones",
+          "C": "Que Spark ha borrado el esquema"
+        },
+        "respuestaCorrecta": "A"
+      },
+      {
+        "pregunta": "¿Qué configuración de productor ayuda a evitar duplicados causados por reintentos?",
+        "opciones": {
+          "A": "<code>enable.idempotence=true</code>",
+          "B": "<code>retention.ms=0</code>",
+          "C": "<code>cleanup.policy=delete</code>"
+        },
+        "respuestaCorrecta": "A"
+      },
+      {
+        "pregunta": "¿Qué hace la compactación de un topic Kafka?",
+        "opciones": {
+          "A": "Conserva el último valor conocido para cada clave",
+          "B": "Ordena todos los mensajes por timestamp global",
+          "C": "Convierte mensajes JSON en Parquet automáticamente"
+        },
+        "respuestaCorrecta": "A"
+      },
+      {
+        "pregunta": "¿Para qué sirve <code>checkpointLocation</code> en Spark Structured Streaming?",
+        "opciones": {
+          "A": "Para almacenar estado y offsets y poder recuperarse ante fallos",
+          "B": "Para definir el número de particiones de Kafka",
+          "C": "Para instalar conectores JDBC"
+        },
+        "respuestaCorrecta": "A"
+      },
+      {
+        "pregunta": "¿Qué contiene normalmente la columna <code>value</code> al leer desde Kafka con Spark?",
+        "opciones": {
+          "A": "El contenido del mensaje, normalmente en binario, que debe convertirse y parsearse",
+          "B": "El número total de brokers",
+          "C": "El directorio de checkpoint"
         },
         "respuestaCorrecta": "A"
       },
       {
         "pregunta": "¿Cuál es la función del Output Mode en Structured Streaming?",
         "opciones": {
-          "A": "Definir cómo se escriben los resultados",
-          "B": "Controlar la velocidad del procesamiento",
-          "C": "Establecer el nivel de replicación"
+          "A": "Definir cómo se escriben los resultados en el sink",
+          "B": "Configurar la autenticación SASL",
+          "C": "Crear automáticamente una SparkSession"
         },
         "respuestaCorrecta": "A"
       },
       {
-        "pregunta": "¿Cuáles son los Output Modes disponibles?",
+        "pregunta": "¿Cuáles son los modos de salida principales en Structured Streaming?",
         "opciones": {
-          "A": "Append, Update, Complete",
-          "B": "Read, Write, Transform",
-          "C": "Batch, Streaming, Hybrid"
+          "A": "Append, Update y Complete",
+          "B": "Read, Parse y Delete",
+          "C": "Leader, Follower y Controller"
         },
         "respuestaCorrecta": "A"
       },
       {
-        "pregunta": "¿Para qué sirve el checkpoint en streaming?",
+        "pregunta": "¿Qué controla un trigger en una consulta de streaming?",
         "opciones": {
-          "A": "Recuperar estado y offsets ante fallos",
-          "B": "Reducir tamaño de particiones",
-          "C": "Crear topics en Kafka"
+          "A": "La frecuencia con la que se ejecutan los microbatches",
+          "B": "El formato físico del log de Kafka",
+          "C": "La clave primaria de una tabla JDBC"
         },
         "respuestaCorrecta": "A"
       },
       {
-        "pregunta": "En <code>df.writeStream.outputMode('append')</code>, ¿cuándo se emiten filas?",
+        "pregunta": "¿Qué problema ayuda a gestionar un watermark?",
         "opciones": {
-          "A": "Cuando no volverán a cambiar",
-          "B": "Solo al final del día",
-          "C": "Nunca"
+          "A": "Eventos tardíos y limpieza de estado en agregaciones temporales",
+          "B": "Cifrado de credenciales",
+          "C": "Creación de topics compactados"
         },
         "respuestaCorrecta": "A"
       },
       {
-        "pregunta": "¿Qué controla un trigger en Structured Streaming?",
+        "pregunta": "¿Qué es un sink en Spark Structured Streaming?",
         "opciones": {
-          "A": "Frecuencia de ejecución de micro-batches",
-          "B": "Número de columnas",
-          "C": "Número de brokers Kafka"
+          "A": "El destino donde se escriben los resultados de una consulta continua",
+          "B": "El nodo que coordina particiones de Kafka",
+          "C": "El esquema usado para inferir JSON automáticamente"
         },
         "respuestaCorrecta": "A"
       },
       {
-        "pregunta": "¿Qué problema resuelve un watermark?",
+        "pregunta": "¿Por qué Parquet suele ser adecuado como sink analítico?",
         "opciones": {
-          "A": "Gestión de eventos tardíos y limpieza de estado",
-          "B": "Compresión de mensajes",
-          "C": "Autenticación de usuarios"
+          "A": "Porque es columnar, comprimible y eficiente para leer subconjuntos de columnas",
+          "B": "Porque solo permite almacenar texto plano",
+          "C": "Porque no necesita particiones ni metadatos"
         },
         "respuestaCorrecta": "A"
       },
       {
-        "pregunta": "¿Qué hace este patrón? <code>query.awaitTermination()</code>",
+        "pregunta": "Para escribir en Kafka desde Spark, ¿qué columna debe contener el DataFrame como mínimo?",
         "opciones": {
-          "A": "Mantiene activa la consulta streaming",
-          "B": "Detiene inmediatamente el job",
-          "C": "Borra el checkpoint"
+          "A": "<code>value</code>",
+          "B": "<code>checkpoint</code>",
+          "C": "<code>broker_count</code>"
+        },
+        "respuestaCorrecta": "A"
+      },
+      {
+        "pregunta": "¿Para qué se usa <code>foreachBatch</code>?",
+        "opciones": {
+          "A": "Para aplicar lógica batch personalizada sobre cada microbatch",
+          "B": "Para borrar offsets antiguos de Kafka",
+          "C": "Para reemplazar el esquema de un topic"
+        },
+        "respuestaCorrecta": "A"
+      },
+      {
+        "pregunta": "¿Qué significa que un sink sea idempotente?",
+        "opciones": {
+          "A": "Que repetir la misma escritura no deja el destino en un estado incorrecto",
+          "B": "Que solo puede escribir una fila por segundo",
+          "C": "Que no necesita autenticación"
+        },
+        "respuestaCorrecta": "A"
+      },
+      {
+        "pregunta": "En el ejercicio propuesto del tema, ¿qué genera el notebook productor?",
+        "opciones": {
+          "A": "Eventos JSON de pedidos en una carpeta de entrada",
+          "B": "Tablas Delta con datos históricos ya agregados",
+          "C": "Usuarios y permisos de Kafka"
+        },
+        "respuestaCorrecta": "A"
+      },
+      {
+        "pregunta": "En el ejercicio propuesto, ¿qué tarea realiza el notebook consumidor?",
+        "opciones": {
+          "A": "Lee eventos con Spark Structured Streaming, valida datos, calcula métricas y escribe sinks",
+          "B": "Entrena un modelo de deep learning",
+          "C": "Compila el sitio web estático"
+        },
+        "respuestaCorrecta": "A"
+      },
+      {
+        "pregunta": "¿Qué riesgo aparece si se borra un checkpoint de una consulta de streaming sin estrategia clara?",
+        "opciones": {
+          "A": "Spark puede perder la referencia de offsets procesados y repetir o cambiar la posición de lectura",
+          "B": "Kafka elimina todos los brokers del clúster",
+          "C": "Parquet deja de ser un formato columnar"
         },
         "respuestaCorrecta": "A"
       }
     ]
   },
   "modulo3_tema3": {
-    "titulo": "Autoevaluación - Módulo 3, Tema 3: Arquitectura y Pipelines Avanzados",
+    "titulo": "Autoevaluación - Módulo 3, Tema 3: Procesamiento de streams con Spark",
     "preguntas": [
       {
-        "pregunta": "¿Qué es el Medallion Architecture?",
+        "pregunta": "¿Qué es un DStream en Spark Streaming clásico?",
         "opciones": {
-          "A": "Un modelo de datos con capas Bronze, Silver y Gold",
-          "B": "Un protocolo de cifrado",
-          "C": "Una estrategia de particionamiento"
+          "A": "Una secuencia de RDDs generados a intervalos regulares",
+          "B": "Una tabla Delta con transacciones ACID",
+          "C": "Un broker Kafka embebido en Spark"
         },
         "respuestaCorrecta": "A"
       },
       {
-        "pregunta": "¿Cuál es el propósito de la capa Bronze?",
+        "pregunta": "¿Qué compromiso introduce el intervalo de micro-batch?",
         "opciones": {
-          "A": "Almacenar datos crudos sin procesar",
-          "B": "Datos transformados y limpios",
-          "C": "Datos listos para reportes ejecutivos"
+          "A": "Equilibra latencia y sobrecarga de planificación",
+          "B": "Define el número de topics Kafka",
+          "C": "Elimina la necesidad de checkpoints"
         },
         "respuestaCorrecta": "A"
       },
       {
-        "pregunta": "¿Qué se realiza en la capa Silver?",
+        "pregunta": "¿Cuál es la API recomendada para nuevos desarrollos de streaming en Spark?",
         "opciones": {
-          "A": "Limpieza, validación y enriquecimiento de datos",
-          "B": "Apenas se modifican los datos",
-          "C": "Se crean visualizaciones"
+          "A": "Structured Streaming con DataFrames/Datasets",
+          "B": "DStreams obligatoriamente",
+          "C": "RDDs manuales sin SparkSession"
         },
         "respuestaCorrecta": "A"
       },
       {
-        "pregunta": "¿Qué es Delta Lake?",
+        "pregunta": "¿Para qué se usa checkpointing en operaciones de streaming con estado?",
         "opciones": {
-          "A": "Una capa de almacenamiento que añade ACID a Parquet",
-          "B": "Una base de datos relacional",
-          "C": "Un tipo de compresión"
+          "A": "Para recuperar estado y progreso tras fallos",
+          "B": "Para comprimir mensajes JSON",
+          "C": "Para crear automáticamente topics Kafka"
         },
         "respuestaCorrecta": "A"
       },
       {
-        "pregunta": "¿Cuál es el propósito principal del checkpoint en Structured Streaming?",
+        "pregunta": "En la integración Spark-Kafka, ¿qué contiene normalmente la columna <code>value</code>?",
         "opciones": {
-          "A": "Almacenar resultados finales en Parquet",
-          "B": "Mantener el estado del procesamiento y permitir recuperación ante fallos",
-          "C": "Comprimir datos de salida"
-        },
-        "respuestaCorrecta": "B"
-      },
-      {
-        "pregunta": "¿Qué ventaja principal aporta ACID en Delta Lake?",
-        "opciones": {
-          "A": "Consistencia en escrituras concurrentes",
-          "B": "Eliminar necesidad de metadatos",
-          "C": "Aumentar latencia de lectura"
+          "A": "El payload del mensaje en formato binario",
+          "B": "El número de executors de Spark",
+          "C": "La ruta del sink Parquet"
         },
         "respuestaCorrecta": "A"
       },
       {
-        "pregunta": "¿Qué describe mejor <code>MERGE INTO destino USING fuente ...</code> en Delta?",
+        "pregunta": "¿Por qué conviene definir un esquema explícito al leer JSON en streaming?",
         "opciones": {
-          "A": "Upsert de registros (insert/update)",
-          "B": "Borrado completo de tabla",
-          "C": "Cambio de partición física"
+          "A": "Para validar tipos y evitar inferencias costosas o inestables",
+          "B": "Para desactivar todos los microbatches",
+          "C": "Para impedir la escritura en Parquet"
         },
         "respuestaCorrecta": "A"
       },
       {
-        "pregunta": "¿Cuál es el objetivo de la capa Gold?",
+        "pregunta": "Si ya existe un checkpoint, ¿qué ocurre con <code>startingOffsets</code>?",
         "opciones": {
-          "A": "Datos agregados y listos para consumo analítico",
-          "B": "Guardar datos sin validar",
-          "C": "Reemplazar Kafka"
+          "A": "Spark usa la posición guardada en el checkpoint",
+          "B": "Spark ignora siempre el checkpoint",
+          "C": "Kafka borra los offsets antiguos"
         },
         "respuestaCorrecta": "A"
       },
       {
-        "pregunta": "¿Qué permite el versionado (time travel) en Delta Lake?",
+        "pregunta": "¿Para qué sirve <code>maxOffsetsPerTrigger</code> al leer desde Kafka?",
         "opciones": {
-          "A": "Consultar versiones anteriores de los datos",
-          "B": "Ignorar el esquema",
-          "C": "Reducir nodos del clúster"
+          "A": "Para limitar la cantidad de datos leídos por trigger",
+          "B": "Para cambiar el formato de JSON a Avro",
+          "C": "Para borrar particiones vacías"
         },
         "respuestaCorrecta": "A"
       },
       {
-        "pregunta": "¿Qué indica una buena práctica en pipelines Bronze->Silver->Gold?",
+        "pregunta": "¿Qué permite un watermark en agregaciones por tiempo de evento?",
         "opciones": {
-          "A": "Separar responsabilidades y validaciones por capa",
-          "B": "Mezclar todas las transformaciones en una sola capa",
-          "C": "Evitar controles de calidad"
+          "A": "Gestionar eventos tardíos y limpiar estado de ventanas antiguas",
+          "B": "Autenticar productores Kafka",
+          "C": "Aumentar automáticamente el número de brokers"
+        },
+        "respuestaCorrecta": "A"
+      },
+      {
+        "pregunta": "¿Cuándo es adecuado el modo de salida <code>append</code> en ventanas?",
+        "opciones": {
+          "A": "Cuando Spark puede emitir resultados finales, normalmente con watermark",
+          "B": "Cuando se quiere reescribir todo el resultado en cada microbatch",
+          "C": "Solo cuando no existe checkpoint"
+        },
+        "respuestaCorrecta": "A"
+      },
+      {
+        "pregunta": "¿Qué controla un trigger en Structured Streaming?",
+        "opciones": {
+          "A": "La frecuencia de ejecución de microbatches",
+          "B": "El nombre del topic de salida",
+          "C": "El tipo de compresión de Parquet"
+        },
+        "respuestaCorrecta": "A"
+      },
+      {
+        "pregunta": "¿Para qué se usa <code>foreachBatch</code>?",
+        "opciones": {
+          "A": "Para aplicar lógica batch personalizada a cada microbatch",
+          "B": "Para crear particiones Kafka desde Spark",
+          "C": "Para leer datos sin esquema"
+        },
+        "respuestaCorrecta": "A"
+      },
+      {
+        "pregunta": "¿Qué precaución debe tomarse al usar <code>foreachBatch</code> en producción?",
+        "opciones": {
+          "A": "Diseñar escrituras idempotentes ante reintentos",
+          "B": "Eliminar siempre el checkpoint antes de arrancar",
+          "C": "Usar únicamente salida por consola"
+        },
+        "respuestaCorrecta": "A"
+      },
+      {
+        "pregunta": "En el caso de clickstream, ¿qué métrica se calcula típicamente por ventana?",
+        "opciones": {
+          "A": "Usuarios activos o URLs más visitadas",
+          "B": "Número de brokers instalados",
+          "C": "Tamaño del fichero CSS"
+        },
+        "respuestaCorrecta": "A"
+      },
+      {
+        "pregunta": "En el caso de detección de fraude simple, ¿qué patrón se busca?",
+        "opciones": {
+          "A": "Picos de transacciones por tarjeta en ventanas cortas",
+          "B": "Cambios en la hoja de estilos",
+          "C": "Duplicación de notebooks"
+        },
+        "respuestaCorrecta": "A"
+      },
+      {
+        "pregunta": "¿Qué representa una capa Bronze en un pipeline de streaming?",
+        "opciones": {
+          "A": "Datos crudos o casi crudos conservados para trazabilidad",
+          "B": "Solo métricas finales para dashboards",
+          "C": "El fichero de configuración de Kafka"
+        },
+        "respuestaCorrecta": "A"
+      },
+      {
+        "pregunta": "¿Qué representa una capa Silver en un pipeline Bronze-Silver?",
+        "opciones": {
+          "A": "Datos limpios, validados, deduplicados o enriquecidos",
+          "B": "Datos sin parsear y sin control de calidad",
+          "C": "Un checkpoint corrupto"
+        },
+        "respuestaCorrecta": "A"
+      },
+      {
+        "pregunta": "¿Por qué Parquet es útil como sink analítico?",
+        "opciones": {
+          "A": "Porque es columnar, comprimible y eficiente para consultas posteriores",
+          "B": "Porque solo admite datos sin esquema",
+          "C": "Porque sustituye a Kafka como broker"
+        },
+        "respuestaCorrecta": "A"
+      },
+      {
+        "pregunta": "¿Qué añade Delta Lake sobre Parquet en escenarios de streaming?",
+        "opciones": {
+          "A": "Transacciones, log de cambios y mejor soporte para escrituras consistentes",
+          "B": "Una API para crear páginas HTML",
+          "C": "Un algoritmo para eliminar SparkSession"
+        },
+        "respuestaCorrecta": "A"
+      },
+      {
+        "pregunta": "¿Qué prueba ayuda a verificar la recuperación de un pipeline streaming?",
+        "opciones": {
+          "A": "Detener y reiniciar la consulta usando el mismo checkpoint",
+          "B": "Cambiar todos los timestamps a texto libre",
+          "C": "Eliminar todos los sinks antes de validar"
+        },
+        "respuestaCorrecta": "A"
+      },
+      {
+        "pregunta": "¿Qué métrica conviene documentar en una consulta streaming?",
+        "opciones": {
+          "A": "Registros procesados por segundo y duración de microbatch",
+          "B": "Número de etiquetas HTML del índice",
+          "C": "Cantidad de colores usados en CSS"
+        },
+        "respuestaCorrecta": "A"
+      },
+      {
+        "pregunta": "En el ejercicio final del tema, ¿qué genera el notebook productor?",
+        "opciones": {
+          "A": "Eventos JSON de clickstream y transacciones",
+          "B": "Un clúster Kubernetes completo",
+          "C": "Una base de datos relacional con usuarios reales"
+        },
+        "respuestaCorrecta": "A"
+      },
+      {
+        "pregunta": "En el ejercicio final, ¿qué realiza el notebook consumidor?",
+        "opciones": {
+          "A": "Lee eventos, calcula métricas por ventana, genera alertas y escribe sinks Parquet",
+          "B": "Publica una página de marketing",
+          "C": "Instala Kafka Connect automáticamente"
+        },
+        "respuestaCorrecta": "A"
+      },
+      {
+        "pregunta": "¿Qué riesgo existe al borrar un checkpoint sin estrategia clara?",
+        "opciones": {
+          "A": "La consulta puede reprocesar datos o arrancar desde una posición distinta",
+          "B": "Parquet deja de ser columnar",
+          "C": "El navegador deja de cargar HTML"
         },
         "respuestaCorrecta": "A"
       }

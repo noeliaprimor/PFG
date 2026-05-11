@@ -29,7 +29,7 @@
     <div id="index-container" class="text-cell">
       <hr>
       <ul>
-        <li><a href="#descripcion">Descripción</a></li>
+        <li><a href="#descripcion">Introducción</a></li>
         <li><a href="#contenido">Contenido</a></li>
         <li><a href="#conclusion">Conclusión</a></li>
       </ul>
@@ -38,7 +38,7 @@
 
   <section id="descripcion">
     <div class="lesson-container">
-      <h3>DESCRIPCIÓN</h3>
+      <h3>INTRODUCCIÓN</h3>
       <hr>
       <div class="text-cell">
   <p>
@@ -63,68 +63,33 @@
 
   <h3>Conceptos fundamentales</h3>
 
-  <strong>Evento</strong>
-  <p>
-    Unidad básica de información transmitida en Kafka. Un evento contiene una clave, un valor
-    y metadatos (timestamp, offset, etc.).
-  </p>
+  <p>Apache Kafka es una plataforma distribuida de procesamiento de eventos y mensajería diseñada para gestionar grandes volúmenes de datos en tiempo real. Su principal objetivo es permitir la transmisión, almacenamiento y procesamiento de flujos de información de manera rápida, escalable y tolerante a fallos.</p>
 
-  <strong>Topic</strong>
-  <p>
-    Canal lógico donde se publican los eventos. Los productores escriben en topics
-    y los consumidores leen desde ellos.
-  </p>
+<p>Kafka funciona mediante un sistema basado en productores y consumidores. Los productores envían mensajes o eventos a diferentes canales llamados topics, mientras que los consumidores leen y procesan esa información según las necesidades de la aplicación.</p>
 
-  <strong>Partición</strong>
-  <p>
-    Cada topic se divide en particiones que permiten paralelismo y escalabilidad.
-    Cada partición es una secuencia ordenada de eventos.
-  </p>
+<p>La arquitectura de Apache Kafka se compone de varios elementos principales:</p>
 
-  <strong>Offset</strong>
-  <p>
-    Identificador único de cada evento dentro de una partición.
-    Permite a los consumidores controlar su posición de lectura.
-  </p>
+<ul>
+  <li><strong>Brokers:</strong> servidores encargados de almacenar y distribuir los mensajes dentro del clúster.</li>
+  <li><strong>Topicos (Topics): </strong>canales donde se organizan los eventos o mensajes.</li>
+  <li><strong>Productores: </strong>aplicaciones que envían datos a Kafka.</li>
+  <li><strong>Consumidores: </strong>aplicaciones que leen y procesan los datos almacenados.</li>
+  <li><strong>Zookeeper o KRaft: </strong>sistemas utilizados para coordinar y gestionar el clúster.</li>
+</ul>
 
-  <strong>Broker</strong>
-  <p>
-    Servidor que almacena y gestiona datos Kafka.
-    Un clúster Kafka está compuesto por múltiples brokers.
-  </p>
+                        <img src="/img/M3T1L3_1.png">
+        <p class="img-caption">Imagen 1: Arquitectura de Apache Kafka</p>
 
-  <strong>Producer</strong>
-  <p>
-    Aplicación que envía eventos a un topic.
-  </p>
 
-  <strong>Consumer</strong>
-  <p>
-    Aplicación que lee eventos desde un topic.
-  </p>
+<p>Una de las principales características de Apache Kafka es su capacidad para procesar datos en tiempo real con baja latencia. Además, permite escalar horizontalmente distribuyendo la carga entre múltiples servidores.</p>
 
-  <strong>Consumer Group</strong>
-  <p>
-    Conjunto de consumidores que trabajan conjuntamente para procesar un topic,
-    permitiendo paralelismo y tolerancia a fallos.
-  </p>
+<p>Kafka también ofrece tolerancia a fallos gracias a la replicación de datos entre diferentes brokers. Esto garantiza que la información permanezca disponible incluso si alguno de los servidores falla.</p>
 
-  <h3>Arquitectura de Kafka</h3>
-  <ol>
-    <li>Productores envían eventos a un topic.</li>
-    <li>El topic se divide en particiones distribuidas en brokers.</li>
-    <li>Los consumidores leen eventos según su offset.</li>
-    <li>Los eventos se almacenan de forma persistente durante un periodo configurable.</li>
-  </ol>
+<p>En muchos entornos Big Data, Apache Kafka se utiliza como sistema central de comunicación entre aplicaciones, plataformas de análisis, motores de streaming y sistemas de almacenamiento. Tecnologías como Apache Spark, Flink o Hadoop suelen integrarse con Kafka para procesar grandes flujos de datos en tiempo real.</p>
 
-  <h3>Características principales</h3>
-  <ul>
-    <li>Alta escalabilidad horizontal.</li>
-    <li>Tolerancia a fallos mediante replicación.</li>
-    <li>Persistencia configurable (retention policy).</li>
-    <li>Alto throughput.</li>
-    <li>Baja latencia.</li>
-  </ul>
+<p>Apache Kafka es ampliamente utilizado en sectores como banca, comercio electrónico, monitorización de sistemas, IoT, análisis de logs y plataformas de recomendación, donde se requiere una gestión eficiente y continua de eventos.</p>
+<hr>
+
 
   <h3>Modelo de almacenamiento</h3>
   <p>
@@ -135,14 +100,14 @@
     Los datos se conservan durante un tiempo determinado o hasta alcanzar un tamaño límite,
     independientemente de si han sido consumidos.
   </p>
-
+<hr>
   <h3>Garantías de entrega</h3>
   <ul>
     <li><strong>At-most-once:</strong> puede perder mensajes.</li>
     <li><strong>At-least-once:</strong> puede duplicar mensajes.</li>
     <li><strong>Exactly-once:</strong> evita duplicaciones (requiere configuración específica).</li>
   </ul>
-
+<hr>
   <h3>Kafka y procesamiento en tiempo real</h3>
   <p>
     Kafka suele actuar como sistema de mensajería intermedio entre aplicaciones
@@ -157,14 +122,14 @@
     <li>Un motor de streaming procesa los eventos en tiempo real.</li>
     <li>Los resultados se almacenan en bases de datos o data lakes.</li>
   </ol>
-
+<hr>
   <h3>Ejemplo conceptual de flujo con Spark</h3>
   <pre><code class="language-python python-code">spark.readStream
     .format("kafka")
     .option("kafka.bootstrap.servers", "localhost:9092")
     .option("subscribe", "mi_topic")
     .load()</code></pre>
-
+<hr>
   <h3>Casos de uso habituales</h3>
   <ul>
     <li>Streaming de logs.</li>
@@ -173,7 +138,7 @@
     <li>IoT y sensores.</li>
     <li>Integración entre microservicios.</li>
   </ul>
-
+<hr>
   <h3>Ventajas frente a sistemas tradicionales de mensajería</h3>
   <ul>
     <li>Mayor rendimiento.</li>
@@ -181,7 +146,7 @@
     <li>Escalabilidad horizontal sencilla.</li>
     <li>Reprocesamiento de datos históricos.</li>
   </ul>
-
+<hr>
   <h3>Retos y consideraciones</h3>
   <ul>
     <li>Gestión de particiones y replicación.</li>

@@ -29,9 +29,7 @@
     <div id="index-container" class="text-cell">
         <hr>
         <ul>
-          <li><a href="#descripcion">Descripción</a></li>
-          <li><a href="#contenido">Contenido</a></li>
-          <li><a href="#conclusion">Conclusión</a></li>
+          <li><a href="#descripcion">Enunciado</a></li>
           <li><a href="#ejercicio">Ejercicio</a></li>
         </ul>
       </div>
@@ -39,47 +37,43 @@
 
   <section id="descripcion">
     <div class="lesson-container">
-      <strong>DESCRIPCIÓN</strong>
+      <strong>ENUNCIADO</strong>
       <hr>
       <div class="text-cell">
-        <p>Construye un pipeline de ingestión que lea eventos desde Kafka, procese con Spark Structured Streaming y escriba resultados a Parquet. Mide latencias y documenta la arquitectura.</p>
-      </div>
-    </div>
-  </section>
+        <p>Continuando con el ejercicio del <a href="../../modulo2/Tema3/M2T3L7.html"> Modulo 2 </a> relacionado con la API
+        de criptomonedas CoinGecko, vamos a evolucionar los cuadernos Jupyter presentados para incluir Kafka en el productor de eventos.</p>
+      <ul>
+            <li><strong>Productor:</strong> Creación de los ficheros, configuración del streaming y generación de información. <a href="M3T1_productor.ipynb">Disponible aqui</a></li>
+            <li><strong>Consumidor:</strong> Consumo de datos en tiempo real, análisis de los datos obtenidos y visualización de resultados.<a href="M3T1_consumidor_kafka_basico.ipynb">Disponible aqui</a></li>
 
-  <section id="contenido">
-    <div class="lesson-container">
-      <strong>CONTENIDO</strong>
-      <hr>
-      <div class="text-cell">
-        <p>Sugerencia de pasos: definir topics, configurar particiones, preparar entornos de prueba, generar datos sintéticos y capturar métricas.</p>
-      </div>
-    </div>
-  </section>
+          </ul>
 
-  <section id="conclusion">
-    <div class="lesson-container">
-      <strong>CONCLUSIÓN</strong>
-      <hr>
-      <div class="text-cell">
-        <p>El ejercicio demostrará la capacidad para diseñar pipelines resilientes y medir su comportamiento bajo carga.</p>
       </div>
     </div>
   </section>
 
   <section id="ejercicio">
     <div class="lesson-container">
-      <strong>EJERCICIO</strong>
-      <hr>
-      <div class="text-cell">
-        <ol>
-          <li>Especifica topics y particiones en Kafka.</li>
-          <li>Implementa productor/consumidor de prueba.</li>
-          <li>Implementa job de Structured Streaming y mide latencias.</li>
-        </ol>
-      </div>
+
+  <h3>EJERCICIO</h3>
+        <hr>
+        <div class="text-cell">
+          <p>Una vez creado el proyecto Spark y comprobado que se crean y se consumen los datos en tiempo real, realiza los siguiente ejercicios:</p>
+<ol>
+  <li>Cambiar <code>startingOffsets</code> de <code>latest</code> a <code>earliest</code> y observar el resultado.</li>
+  <li>Añadir una columna calculada con el precio redondeado a dos decimales.</li>
+  <li>Filtrar solo los eventos de <code>bitcoin</code>.</li>
+  <li>Calcular ventanas de 5 minutos en lugar de 1 minuto.</li>
+  <li>Guardar las métricas agregadas en Parquet.</li>
+  <li>Crear una alerta cuando el precio de Bitcoin supere un umbral definido.</li>
+  <li>Comparar <code>event_time</code> con <code>kafka_timestamp</code>.</li>
+  <li>Modificar el productor para enviar la criptomoneda como <code>key</code> del mensaje Kafka.</li>
+</ol>   </div>
     </div>
   </section>
+
+
+
 
   <div class="navigation-buttons">
     <button onclick="window.location.href='M3T1L5.html'">Anterior</button>

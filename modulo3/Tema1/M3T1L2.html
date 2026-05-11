@@ -29,7 +29,7 @@
     <div id="index-container" class="text-cell">
       <hr>
       <ul>
-        <li><a href="#descripcion">Descripción</a></li>
+        <li><a href="#descripcion">Introducción</a></li>
         <li><a href="#lambda">Arquitectura Lambda</a></li>
         <li><a href="#kappa">Arquitectura Kappa</a></li>
         <li><a href="#comparativa">Comparativa Lambda vs Kappa</a></li>
@@ -39,7 +39,7 @@
 
   <section id="descripcion">
     <div class="lesson-container">
-      <h3>DESCRIPCIÓN</h3>
+      <h3>INTRODUCCIÓN</h3>
       <hr>
       <div class="text-cell">
   <p>
@@ -65,56 +65,22 @@
 
 
 
-  <strong>Definición y objetivo</strong>
-  <p>
-    La Arquitectura Lambda persigue combinar lo mejor de dos mundos:
-  </p>
-  <ul>
-    <li><strong>Precisión y consistencia</strong> mediante procesamiento batch sobre el histórico completo.</li>
-    <li><strong>Baja latencia</strong> mediante procesamiento streaming sobre los datos más recientes.</li>
-  </ul>
-  <p>
-    Para ello, separa el procesamiento en capas diferenciadas que operan sobre los mismos datos, pero con diferentes
-    requisitos de latencia y estrategias de cálculo.
-  </p>
+  <p>La arquitectura Lambda es un modelo diseñado para procesar grandes volúmenes de datos combinando el procesamiento en tiempo real y el procesamiento por lotes. Su objetivo principal es ofrecer resultados rápidos sin perder precisión en el análisis de la información.</p>
 
-  <h4>Capas principales</h4>
+<p>Este tipo de arquitectura trabaja con dos flujos de procesamiento. Por un lado, la capa batch analiza todos los datos almacenados de forma periódica para generar resultados completos y precisos. Por otro lado, la capa de streaming procesa los datos en tiempo real para proporcionar respuestas inmediatas, aunque inicialmente puedan ser menos exactas.</p>
 
-  <strong>Batch Layer</strong>
-  <p>
-    La capa batch procesa el dataset completo (histórico) para generar resultados exactos. Su función principal es
-    construir vistas o agregaciones de alta calidad, asumiendo que el tiempo de cómputo puede ser elevado.
-  </p>
-  <p>
-    En Spark, esta capa suele implementarse mediante:
-  </p>
-  <ul>
-    <li>Jobs batch con Spark SQL / DataFrames.</li>
-    <li>Lectura desde almacenamiento distribuido (HDFS, S3, data lake).</li>
-    <li>Reprocesamiento completo cuando se corrigen errores lógicos o cambian los requisitos de negocio.</li>
-  </ul>
+<p>El funcionamiento de Lambda suele dividirse en varias capas principales:</p>
 
-  <strong>Speed Layer</strong>
-  <p>
-    La capa speed (o capa de velocidad) procesa eventos recientes para proporcionar resultados con baja latencia, antes de
-    que el batch se ejecute y “consolide” el estado final. Normalmente opera sobre ventanas temporales cortas y produce
-    resultados aproximados o parciales.
-  </p>
-  <p>
-    En Spark, esta capa se implementa típicamente con:
-  </p>
-  <ul>
-    <li>Structured Streaming (micro-batch o continuous processing, según configuración y versión).</li>
-    <li>Lectura desde sistemas de mensajería (por ejemplo, Kafka) o desde ficheros en modo streaming.</li>
-    <li>Agregaciones incrementales (por ventanas) y actualizaciones de estado.</li>
-  </ul>
+<ul>
+  <li><strong>Capa de ingesta de datos: </strong>recibe información desde diferentes fuentes mediante herramientas como Kafka, NiFi o Flume.</li>
+  <li><strong>Capa batch:</strong>procesa grandes cantidades de datos históricos utilizando tecnologías distribuidas.</li>
+  <li><strong>Capa streaming:</strong> analiza eventos en tiempo real con baja latencia.</li>
+  <li><strong>Capa de servicio: </strong>combina la información generada por las capas anteriores y la deja disponible para consultas y visualizaciones.</li>
+</ul>
 
-  <strong>Serving Layer</strong>
-  <p>
-    La capa serving expone las vistas calculadas para consulta por aplicaciones o usuarios. En Lambda, el serving suele
-    combinar los resultados provenientes de la capa batch y de la capa speed para dar una visión “casi” completa y con
-    baja latencia.
-  </p>
+<p>En muchos proyectos de Big Data, Apache Spark es una de las tecnologías más utilizadas dentro de esta arquitectura, ya que permite realizar tanto procesamiento batch como streaming de forma distribuida y eficiente. Gracias a Spark Streaming o Structured Streaming, es posible analizar datos prácticamente en tiempo real manteniendo una alta escalabilidad.</p>
+
+<p>La arquitectura Lambda se utiliza habitualmente en sistemas que requieren análisis inmediatos, como plataformas de recomendación, monitorización de eventos, detección de fraude o aplicaciones IoT. Entre sus ventajas destacan la tolerancia a fallos, la capacidad de escalar y la reducción de latencia. Sin embargo, también puede aumentar la complejidad del sistema, ya que obliga a mantener dos pipelines de procesamiento diferentes.</p>
   <p>
     En Spark, la integración con la serving layer suele hacerse escribiendo resultados a sistemas externos:
   </p>
@@ -129,10 +95,12 @@
   <ol>
     <li>Los eventos se ingieren desde fuentes (aplicaciones, logs, sensores) hacia un bus o cola (p. ej., Kafka).</li>
     <li>Los datos se almacenan de forma duradera en un almacenamiento distribuido (histórico).</li>
-    <li>La capa speed procesa el stream y publica resultados recientes.</li>
+    <li>La capa streaming procesa el stream y publica resultados recientes.</li>
     <li>La capa batch recalcula periódicamente vistas exactas sobre todo el histórico.</li>
-    <li>La capa serving ofrece resultados combinados (batch + speed) a consumidores finales.</li>
+    <li>La capa de servicio ofrece resultados combinados (batch + speed) a consumidores finales.</li>
   </ol>
+        <img src="/img/M3T1L2_1.png">
+        <p class="img-caption">Imagen 1: Capas de la arquitectura Lamba</p>
 
   <h4>Ventajas</h4>
   <ul>
@@ -158,20 +126,26 @@
       <div class="text-cell">
 
 
-  <strong>Definición y objetivo</strong>
-  <p>
-    La Arquitectura Kappa simplifica Lambda eliminando la separación entre batch y speed. El principio base es tratar todos
-    los datos como un <strong>flujo inmutable</strong> (log) y construir el procesamiento como una única canalización streaming.
-    Si se necesita recalcular el histórico, se “reproduce” el stream desde el origen (por ejemplo, releyendo Kafka desde
-    offsets anteriores o reinyectando eventos).
-  </p>
+ <p>La arquitectura Kappa es un modelo de procesamiento de datos orientado completamente al streaming o procesamiento en tiempo real. Su objetivo principal es simplificar la gestión de sistemas Big Data <strong>eliminando la separación entre procesamiento batch y streaming que existe en la arquitectura Lambda.</strong></p>
 
-  <h4>Componentes principales</h4>
-  <ul>
-    <li><strong>Log inmutable</strong> de eventos (p. ej., Kafka) que actúa como fuente de verdad.</li>
-    <li><strong>Motor de procesamiento streaming</strong> (Structured Streaming) con lógica única.</li>
-    <li><strong>Almacenamiento de resultados</strong> para consultas (serving), similar a Lambda, pero alimentado por una sola vía.</li>
-  </ul>
+<p>En este enfoque, todos los datos se consideran eventos continuos que fluyen constantemente a través del sistema. En lugar de mantener dos pipelines diferentes, Kappa utiliza una única capa de procesamiento capaz de manejar tanto los datos en tiempo real como el reprocesamiento de información histórica.</p>
+
+<p>La arquitectura Kappa se basa principalmente en plataformas de streaming distribuidas como Apache Kafka, Apache Flink o Spark Structured Streaming. Gracias a estas tecnologías, es posible almacenar eventos y volver a procesarlos cuando sea necesario utilizando la misma lógica de procesamiento.</p>
+
+<p>El funcionamiento de la arquitectura Kappa suele dividirse en varias partes:</p>
+
+<ul>
+  <li><strong>Capa de ingesta de eventos: </strong>recibe datos procedentes de múltiples fuentes en tiempo real.</li>
+  <li><strong>Capa de procesamiento streaming: </strong>procesa continuamente los eventos conforme llegan al sistema.</li>
+  <li><strong>Capa de almacenamiento:</strong> conserva los eventos para permitir reprocesamientos futuros.</li>
+  <li><strong>Capa de servicio:</strong> expone los resultados procesados para aplicaciones, consultas y visualizaciones.</li>
+</ul>
+
+<p>Una de las principales ventajas de la arquitectura Kappa es la reducción de complejidad, ya que solo existe un único flujo de procesamiento. Esto facilita el mantenimiento, disminuye la duplicidad de código y permite una mayor coherencia en el tratamiento de los datos.</p>
+
+<p>La arquitectura Kappa suele utilizarse en sistemas que requieren baja latencia y análisis continuo, como monitorización de eventos, análisis de logs, IoT, detección de anomalías o plataformas de seguimiento en tiempo real.</p>
+
+<p>Sin embargo, este modelo también presenta algunos desafíos. El reprocesamiento de grandes volúmenes históricos puede resultar costoso y depende en gran medida de la capacidad de las plataformas de streaming utilizadas.</p>
 
   <h4>Flujo de datos típico</h4>
   <ol>
@@ -180,6 +154,8 @@
     <li>Los resultados se escriben en un sistema de serving (almacenamiento analítico, base NoSQL, etc.).</li>
     <li>Para reprocesar histórico se reejecuta el job consumiendo el log desde el inicio (o desde un offset objetivo).</li>
   </ol>
+                <img src="/img/M3T1L2_2.png">
+        <p class="img-caption">Imagen 2: Capas de la arquitectura Kappa</p>
 
   <h4>Ventajas</h4>
   <ul>

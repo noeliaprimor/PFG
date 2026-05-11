@@ -28,7 +28,7 @@
     <div id="index-container" class="text-cell">
         <hr>
         <ul>
-          <li><a href="#descripcion">Descripción</a></li>
+          <li><a href="#descripcion">Introducción</a></li>
           <li><a href="#contenido">Contenido</a></li>
           <li><a href="#conclusion">Conclusión</a></li>
         </ul>
@@ -37,7 +37,7 @@
 
   <section id="descripcion">
     <div class="lesson-container">
-      <h3>DESCRIPCIÓN</h3>
+      <h3>INTRODUCCIÓN</h3>
       <hr>
       <div class="text-cell">
   <p>
@@ -49,6 +49,11 @@
   <p>
     En entornos Big Data, Kafka suele situarse entre las fuentes de datos y motores de procesamiento
     como Spark Structured Streaming, proporcionando alta disponibilidad y capacidad de reprocesamiento.
+  </p>
+  <p>
+    En esta lección se profundiza en los elementos internos de Kafka y en las decisiones de diseño
+    que condicionan su rendimiento: topics, particiones, productores, consumidores, offsets,
+    replicación, seguridad y monitorización.
   </p>      </div>
     </div>
   </section>
@@ -67,12 +72,20 @@
   <p>
     Un clúster Kafka está compuesto por uno o más <strong>brokers</strong>, que son servidores
     responsables de almacenar datos y atender peticiones de productores y consumidores.
+    Cada broker gestiona un subconjunto de particiones y coordina operaciones de lectura,
+    escritura y replicación.
   </p>
 
   <strong>Topics</strong>
   <p>
     Un topic es una categoría lógica donde se publican los eventos. Los topics permiten
     organizar datos por dominio o tipo de evento.
+  </p>
+  <p>
+    Por ejemplo, una plataforma de comercio electrónico podría tener topics como
+    <code>pedidos</code>, <code>pagos</code>, <code>envios</code> o
+    <code>eventos_web</code>. Separar los topics por dominio facilita la seguridad,
+    la retención y el consumo independiente por parte de distintos equipos.
   </p>
 
   <strong>Particiones</strong>
@@ -84,11 +97,21 @@
     <li>Distribuyen carga entre brokers.</li>
     <li>Mantienen orden interno de los mensajes.</li>
   </ul>
+  <p>
+    Kafka solo garantiza el orden dentro de una partición, no dentro de todo el topic. Por esta razón,
+    la clave del mensaje es una decisión importante: si todos los eventos de un pedido usan el mismo
+    identificador como clave, Kafka los enviará a la misma partición y mantendrá su orden relativo.
+  </p>
 
   <strong>Réplicas</strong>
   <p>
     Para tolerancia a fallos, cada partición puede replicarse en múltiples brokers.
     Existe un <strong>líder</strong> y uno o más <strong>followers</strong>.
+  </p>
+  <p>
+    Los productores y consumidores se comunican con el líder de la partición. Los followers replican
+    los datos y pueden asumir el liderazgo si el broker principal falla. El factor de replicación
+    suele ser 3 en entornos productivos para equilibrar disponibilidad y coste de almacenamiento.
   </p>
 
   <strong>Controlador (Controller)</strong>
@@ -96,13 +119,45 @@
     Nodo responsable de gestionar liderazgo de particiones y cambios en el clúster.
     En versiones modernas, Kafka utiliza el modo KRaft para eliminar dependencia de ZooKeeper.
   </p>
+<HR>
+  <h4>Conceptos clave del modelo Kafka</h4>
 
-  <h3>Modelo de almacenamiento</h3>
+  <strong>Productor</strong>
+  <p>
+    Aplicación que publica mensajes en uno o varios topics. Decide la clave, el valor, los headers
+    y las configuraciones de fiabilidad de escritura.
+  </p>
+
+  <strong>Consumidor</strong>
+  <p>
+    Aplicación que lee mensajes de un topic. Puede formar parte de un grupo de consumidores para
+    repartir la carga de lectura entre varios procesos.
+  </p>
+
+  <strong>Offset</strong>
+  <p>
+    Número incremental que identifica la posición de un mensaje dentro de una partición. El offset
+    permite reanudar lecturas, reprocesar datos y saber hasta dónde ha avanzado cada consumidor.
+  </p>
+
+  <strong>Consumer lag</strong>
+  <p>
+    Diferencia entre el último offset disponible en una partición y el último offset procesado por
+    un consumidor. Un lag creciente indica que los consumidores no procesan al ritmo al que llegan
+    los eventos.
+  </p>
+        <hr>
+  <h4>Modelo de almacenamiento</h4>
 
   <strong>Log append-only</strong>
   <p>
     Kafka almacena datos como un log secuencial en disco.
     Cada mensaje recibe un <strong>offset</strong> único dentro de la partición.
+  </p>
+  <p>
+    Este modelo append-only es eficiente porque Kafka escribe de forma secuencial y evita modificar
+    mensajes ya almacenados. Los consumidores no eliminan datos al leerlos; simplemente avanzan su
+    posición de lectura.
   </p>
 
   <strong>Retención</strong>
@@ -117,7 +172,21 @@
     Los mensajes no se eliminan tras ser consumidos, lo que permite reprocesamiento.
   </p>
 
-  <h3>Productores</h3>
+  <strong>Compactación</strong>
+  <p>
+    Además de la retención por tiempo o tamaño, Kafka puede compactar topics conservando el último
+    valor conocido para cada clave. Este modo es útil para mantener estados actualizados, como
+    perfiles de cliente, catálogos o configuraciones.
+  </p>
+
+  <strong>Segmentos de log</strong>
+  <p>
+    Internamente, cada partición se divide en segmentos. Kafka puede cerrar segmentos antiguos,
+    aplicar políticas de retención y eliminar o compactar datos sin afectar a la escritura de nuevos
+    mensajes.
+  </p>
+<hr>
+  <h4>Productores</h4>
 
   <strong>Funcionamiento</strong>
   <p>
@@ -136,7 +205,34 @@
     <li><strong>acks=all</strong>: espera confirmación de todas las réplicas sincronizadas.</li>
   </ul>
 
-  <h3>Consumidores</h3>
+  <strong>Claves y particionado</strong>
+  <p>
+    Cuando un mensaje incluye clave, Kafka usa esa clave para seleccionar la partición. Esto permite
+    agrupar eventos relacionados, pero también puede provocar desbalanceo si unas pocas claves
+    concentran demasiados mensajes.
+  </p>
+
+  <strong>Idempotencia</strong>
+  <p>
+    La idempotencia del productor ayuda a evitar duplicados causados por reintentos. Es especialmente
+    importante cuando se configura <code>acks=all</code> y se quiere priorizar fiabilidad sin aceptar
+    duplicados innecesarios.
+  </p>
+
+  <strong>Batching y compresión</strong>
+  <p>
+    Kafka puede agrupar mensajes antes de enviarlos para mejorar throughput. Parámetros como
+    <code>batch.size</code>, <code>linger.ms</code> y <code>compression.type</code> permiten
+    equilibrar latencia, coste de red y rendimiento.
+  </p>
+
+  <pre><code class="language-properties">acks=all
+enable.idempotence=true
+compression.type=snappy
+linger.ms=20
+batch.size=32768</code></pre>
+        <hr>
+  <h4>Consumidores</h4>
 
   <strong>Offset</strong>
   <p>
@@ -155,20 +251,53 @@
     <li>Manual (más control).</li>
   </ul>
 
-  <h3>Garantías de entrega</h3>
+  <p>
+    El commit automático es sencillo, pero puede confirmar mensajes antes de que la aplicación los
+    haya procesado completamente. El commit manual requiere más código, aunque permite confirmar
+    offsets únicamente cuando el procesamiento y la escritura en destino han finalizado.
+  </p>
+
+  <strong>Rebalanceo</strong>
+  <p>
+    Cuando entra o sale un consumidor de un grupo, Kafka reasigna particiones entre los consumidores
+    activos. Este proceso se denomina rebalanceo. Durante un rebalanceo mal gestionado pueden aparecer
+    pausas, duplicados o pérdida temporal de rendimiento.
+  </p>
+
+  <strong>Paralelismo real</strong>
+  <p>
+    En un grupo de consumidores, una partición solo puede ser leída por un consumidor a la vez.
+    Por tanto, si un topic tiene 4 particiones, como máximo 4 consumidores del mismo grupo trabajarán
+    en paralelo sobre ese topic. Añadir más consumidores que particiones no aumentará el paralelismo.
+  </p>
+<hr>
+  <h4>Garantías de entrega</h4>
 
   <strong>At-most-once</strong>
-  <p>Puede perder mensajes.</p>
+  <p>
+    Puede perder mensajes. Se produce cuando el consumidor confirma el offset antes de completar
+    el procesamiento y falla antes de terminar.
+  </p>
 
   <strong>At-least-once</strong>
-  <p>Puede duplicar mensajes.</p>
+  <p>
+    Puede duplicar mensajes. Es una estrategia frecuente porque prioriza no perder datos, pero exige
+    que el procesamiento o el sink sean idempotentes.
+  </p>
 
   <strong>Exactly-once</strong>
   <p>
     Requiere idempotencia en productor y configuración transaccional.
+    También depende del consumidor y del sistema de destino; no basta con activar una única opción.
   </p>
 
-  <h3>Escalabilidad y particionado</h3>
+  <p>
+    En pipelines con Spark Structured Streaming, la consistencia depende de la combinación entre
+    offsets, checkpoints y la semántica del sink. Por ejemplo, escribir en un sistema que no soporta
+    operaciones idempotentes puede generar duplicados tras una recuperación.
+  </p>
+        <hr>
+  <h4>Escalabilidad y particionado</h4>
 
   <p>
     La escalabilidad horizontal se logra añadiendo brokers y aumentando
@@ -180,9 +309,35 @@
     <li>Diseñar número adecuado de particiones.</li>
     <li>Elegir claves que distribuyan carga uniformemente.</li>
     <li>Evitar particiones con skew extremo.</li>
+    <li>No aumentar particiones sin evaluar el impacto sobre orden, almacenamiento y consumidores.</li>
+    <li>Separar topics de alto volumen de topics críticos o de baja latencia.</li>
   </ul>
 
-  <h3>Seguridad en Kafka</h3>
+  <p>
+    Aumentar particiones puede mejorar paralelismo, pero también incrementa metadatos, archivos,
+    conexiones y trabajo de coordinación. Además, si se cambia el número de particiones de un topic,
+    el cálculo de partición para una misma clave puede cambiar, afectando al orden futuro.
+  </p>
+        <hr>
+  <h4>Configuraciones habituales de topics</h4>
+
+  <ul>
+    <li><code>cleanup.policy</code>: define si el topic elimina mensajes por retención o compacta por clave.</li>
+    <li><code>retention.ms</code>: tiempo durante el cual Kafka conserva mensajes.</li>
+    <li><code>retention.bytes</code>: tamaño máximo retenido por partición.</li>
+    <li><code>min.insync.replicas</code>: mínimo de réplicas sincronizadas necesarias para aceptar escrituras seguras.</li>
+    <li><code>segment.bytes</code>: tamaño de los segmentos internos del log.</li>
+  </ul>
+
+  <pre><code class="language-bash">kafka-topics.sh --create \
+  --topic pedidos \
+  --bootstrap-server localhost:9092 \
+  --partitions 6 \
+  --replication-factor 3 \
+  --config retention.ms=604800000 \
+  --config min.insync.replicas=2</code></pre>
+        <hr>
+  <h4>Seguridad en Kafka</h4>
 
   <strong>Autenticación</strong>
   <ul>
@@ -200,7 +355,15 @@
     Cifrado en tránsito mediante TLS.
   </p>
 
-  <h3>Integración con Spark</h3>
+  <strong>Buenas prácticas de seguridad</strong>
+  <ul>
+    <li>Separar credenciales por aplicación o servicio.</li>
+    <li>Conceder permisos mínimos mediante ACLs.</li>
+    <li>Evitar credenciales embebidas en código fuente.</li>
+    <li>Auditar accesos a topics sensibles.</li>
+  </ul>
+        <hr>
+  <h4>Integración con Spark</h4>
 
   <p>
     Kafka se integra fácilmente con Spark Structured Streaming:
@@ -217,7 +380,39 @@
     Spark gestiona offsets y checkpoints para garantizar consistencia.
   </p>
 
-  <h3>Monitorización</h3>
+  <p>
+    En muchos casos será necesario convertir las columnas <code>key</code> y <code>value</code>
+    desde binario a texto, y después aplicar un esquema sobre el contenido del mensaje.
+  </p>
+
+  <pre><code class="language-python python-code">from pyspark.sql.functions import col, from_json
+from pyspark.sql.types import StructType, StructField, StringType
+
+schema = StructType([
+    StructField("event_id", StringType()),
+    StructField("event_type", StringType()),
+    StructField("event_time", StringType())
+])
+
+eventos_df = (stream_df
+    .selectExpr("CAST(key AS STRING) AS key", "CAST(value AS STRING) AS value")
+    .select("key", from_json(col("value"), schema).alias("event"))
+    .select("key", "event.*"))</code></pre>
+
+  <p>
+    La opción <code>startingOffsets</code> permite decidir si una consulta empieza desde los
+    mensajes más antiguos o desde los más recientes cuando todavía no existe checkpoint.
+  </p>
+
+  <pre><code class="language-python python-code">stream_df = (spark
+    .readStream
+    .format("kafka")
+    .option("kafka.bootstrap.servers", "localhost:9092")
+    .option("subscribe", "pedidos")
+    .option("startingOffsets", "earliest")
+    .load())</code></pre>
+        <hr>
+  <h4>Monitorización</h4>
 
   <ul>
     <li>Lag de consumidores.</li>
@@ -226,7 +421,34 @@
     <li>Replicación y particiones fuera de sincronía.</li>
   </ul>
 
-  <h3>Casos de uso avanzados</h3>
+  <p>
+    Además de estas métricas, conviene vigilar errores de producción, tiempo medio de respuesta
+    de brokers, tamaño de segmentos, reintentos, bytes de entrada/salida y frecuencia de rebalanceos.
+    La monitorización debe cubrir tanto el clúster Kafka como productores y consumidores.
+  </p>
+        <hr>
+  <h4>Operación y mantenimiento</h4>
+
+  <strong>Planificación de capacidad</strong>
+  <p>
+    Antes de crear topics críticos conviene estimar mensajes por segundo, tamaño medio del mensaje,
+    retención necesaria, factor de replicación y número de consumidores esperados.
+  </p>
+
+  <strong>Gestión de esquemas</strong>
+  <p>
+    Cuando varios equipos producen y consumen eventos, es recomendable usar un registro de esquemas
+    para validar compatibilidad y evitar cambios que rompan consumidores existentes.
+  </p>
+
+  <strong>Pruebas de recuperación</strong>
+  <p>
+    Un clúster Kafka debe probar fallos de broker, reinicios, pérdida temporal de consumidores y
+    reprocesamiento desde offsets antiguos. Estas pruebas confirman que la configuración es válida
+    antes de depender de ella en producción.
+  </p>
+        <hr>
+  <h4>Casos de uso avanzados</h4>
 
   <ul>
     <li>Event sourcing.</li>
@@ -234,14 +456,18 @@
     <li>Arquitecturas Lambda y Kappa.</li>
     <li>Integración entre microservicios.</li>
   </ul>
-
-  <h3>Retos comunes</h3>
+        <hr>
+  <h4>Retos comunes</h4>
 
   <ul>
     <li>Mala distribución de particiones.</li>
     <li>Configuración incorrecta de retención.</li>
     <li>Lag elevado en consumidores.</li>
     <li>Gestión inadecuada de offsets.</li>
+    <li>Topics con demasiadas particiones para el tamaño real del clúster.</li>
+    <li>Productores sin idempotencia en flujos críticos.</li>
+    <li>Consumidores que no son idempotentes y generan duplicados en el destino.</li>
+    <li>Ausencia de métricas y alertas sobre lag, disco o réplicas fuera de sincronía.</li>
   </ul>
 
 

@@ -22,7 +22,7 @@
     </div>
   </nav>
 
-  <h4 class="titulos-leccion">Recursos y lecturas</h4>
+  <h2 class="titulos-leccion">Recursos y lecturas</h2>
 
   <div class="indice-container">
     <div id="index-container" class="text-cell">
@@ -38,50 +38,188 @@
 
   <section id="descripcion">
     <div class="lesson-container">
-      <strong>DESCRIPCIÓN</strong>
+      <h3>DESCRIPCIÓN</h3>
       <hr>
       <div class="text-cell">
-        <p>Recursos, tutoriales y notebooks para practicar Structured Streaming y su integración con Kafka.</p>
+        <p>
+          Esta lección reúne recursos para profundizar en el procesamiento de streams con Spark:
+          Structured Streaming, integración con Kafka, ventanas, watermarks, checkpoints,
+          <code>foreachBatch</code>, escritura en Parquet/Delta y monitorización de consultas.
+        </p>
+        <p>
+          Los enlaces están pensados para acompañar los casos prácticos y el ejercicio final del
+          tema, donde se construye un mini-pipeline de eventos con productor, consumidor, métricas
+          por ventana y persistencia en sinks analíticos.
+        </p>
       </div>
     </div>
   </section>
 
   <section id="contenido">
     <div class="lesson-container">
-      <strong>CONTENIDO</strong>
+      <h3>CONTENIDO</h3>
       <hr>
       <div class="text-cell">
-        <strong>DOCUMENTACIÓN</strong>
+
+        <h4>Documentación oficial de Spark Structured Streaming</h4>
         <ul>
-          <li><a href="https://spark.apache.org/docs/latest/structured-streaming-programming-guide.html">Spark Structured Streaming guide</a></li>
-          <li><a href="https://kafka.apache.org/documentation/">Apache Kafka docs</a></li>
+          <li>
+            <a href="https://spark.apache.org/docs/latest/streaming/index.html" target="_blank">Structured Streaming Programming Guide</a>:
+            guía principal del modelo de programación, microbatches, tolerancia a fallos y APIs.
+          </li>
+          <li>
+            <a href="https://spark.apache.org/docs/latest/streaming/getting-started.html" target="_blank">Structured Streaming Getting Started</a>:
+            introducción al modelo de “stream como tabla” y a las primeras consultas.
+          </li>
+          <li>
+            <a href="https://spark.apache.org/docs/latest/streaming/apis-on-dataframes-and-datasets.html" target="_blank">APIs on DataFrames and Datasets</a>:
+            referencia para transformaciones, agregaciones, ventanas, joins y operaciones soportadas.
+          </li>
+          <li>
+            <a href="https://spark.apache.org/docs/latest/streaming/performance-tips.html" target="_blank">Performance Tips</a>:
+            recomendaciones para ajustar rendimiento, latencia y coste en consultas streaming.
+          </li>
         </ul>
-        <strong>TUTORIALS</strong>
+
+        <h4>Kafka + Spark</h4>
         <ul>
-          <li><a href="https://www.cloudduggu.com/spark/">CloudDuggu - Spark</a></li>
+          <li>
+            <a href="https://spark.apache.org/docs/latest/structured-streaming-kafka-integration.html" target="_blank">Structured Streaming + Kafka Integration Guide</a>:
+            lectura y escritura desde Kafka, columnas <code>key</code>/<code>value</code>,
+            offsets y opciones de configuración.
+          </li>
+          <li>
+            <a href="https://kafka.apache.org/documentation/" target="_blank">Apache Kafka Documentation</a>:
+            referencia de topics, particiones, consumidores, productores, retención y seguridad.
+          </li>
+          <li>
+            <a href="https://kafka.apache.org/documentation/#consumerconfigs" target="_blank">Kafka Consumer Configs</a>:
+            opciones útiles para entender offsets, grupos de consumo y comportamiento de lectura.
+          </li>
+          <li>
+            <a href="https://kafka.apache.org/documentation/#producerconfigs" target="_blank">Kafka Producer Configs</a>:
+            parámetros relacionados con acks, idempotencia, batching, compresión y reintentos.
+          </li>
         </ul>
-        <strong>EJEMPLOS</strong>
-        <p>Enlaces a notebooks y repos de ejemplo: <a href="/modulo3/Tema3/notebooks/">notebooks</a></p>
+
+        <h4>Ventanas, watermarks y estado</h4>
+        <ul>
+          <li>
+            <a href="https://spark.apache.org/docs/latest/streaming/apis-on-dataframes-and-datasets.html#window-operations-on-event-time" target="_blank">Window Operations on Event Time</a>:
+            operaciones por tiempo de evento, ventanas fijas, deslizantes y agregaciones.
+          </li>
+          <li>
+            <a href="https://spark.apache.org/docs/latest/streaming/apis-on-dataframes-and-datasets.html#handling-late-data-and-watermarking" target="_blank">Handling Late Data and Watermarking</a>:
+            control de eventos tardíos y limpieza de estado.
+          </li>
+          <li>
+            <a href="https://spark.apache.org/docs/latest/streaming/apis-on-dataframes-and-datasets.html#output-modes" target="_blank">Output Modes</a>:
+            explicación de <code>append</code>, <code>update</code> y <code>complete</code>.
+          </li>
+          <li>
+            <a href="https://spark.apache.org/docs/latest/streaming/apis-on-dataframes-and-datasets.html#triggers" target="_blank">Triggers</a>:
+            configuración de frecuencia de microbatches y ejecución incremental.
+          </li>
+        </ul>
+
+        <h4>Sinks, foreachBatch y Delta Lake</h4>
+        <ul>
+          <li>
+            <a href="https://spark.apache.org/docs/latest/streaming/apis-on-dataframes-and-datasets.html#using-foreach-and-foreachbatch" target="_blank">Using Foreach and ForeachBatch</a>:
+            escritura personalizada por microbatch, útil para múltiples destinos o sinks sin soporte nativo.
+          </li>
+          <li>
+            <a href="https://spark.apache.org/docs/latest/sql-data-sources-parquet.html" target="_blank">Spark Parquet Data Source</a>:
+            lectura y escritura en Parquet para salidas analíticas.
+          </li>
+          <li>
+            <a href="https://docs.delta.io/delta-streaming/" target="_blank">Delta Lake Streaming Reads and Writes</a>:
+            integración de Delta Lake con Structured Streaming, checkpoints y garantías de escritura.
+          </li>
+          <li>
+            <a href="https://docs.delta.io/latest/delta-update.html" target="_blank">Delta Lake Updates and Merges</a>:
+            uso de <code>MERGE</code>, deduplicación y upserts, especialmente útil con
+            <code>foreachBatch</code>.
+          </li>
+        </ul>
+
+        <h4>Monitorización, pruebas y operación</h4>
+        <ul>
+          <li>
+            <a href="https://spark.apache.org/docs/latest/monitoring.html" target="_blank">Spark Monitoring</a>:
+            Spark UI, métricas, logs y seguimiento de aplicaciones.
+          </li>
+          <li>
+            <a href="https://spark.apache.org/docs/latest/configuration.html" target="_blank">Spark Configuration</a>:
+            configuración general de aplicaciones, memoria, shuffle y parámetros de ejecución.
+          </li>
+          <li>
+            <a href="https://docs.docker.com/compose/" target="_blank">Docker Compose Documentation</a>:
+            útil para levantar laboratorios locales con Spark, Kafka y servicios auxiliares.
+          </li>
+          <li>
+            <a href="https://github.com/apache/spark" target="_blank">Apache Spark GitHub</a>:
+            repositorio oficial con código fuente, ejemplos y evolución del proyecto.
+          </li>
+        </ul>
+
+        <h4>Notebooks del tema</h4>
+        <p>
+          Los cuadernos del tema se encuentran en
+          <a href="/modulo3/Tema3/notebooks/">/modulo3/Tema3/notebooks/</a>. Se recomienda usarlos
+          como base para reproducir los casos prácticos y documentar resultados.
+        </p>
+
+        <h4>Ruta de lectura recomendada</h4>
+        <ol>
+          <li>Leer la guía principal de Structured Streaming para entender el modelo.</li>
+          <li>Revisar la integración Spark-Kafka antes de implementar productores y consumidores.</li>
+          <li>Estudiar ventanas y watermarks antes de resolver métricas por tiempo de evento.</li>
+          <li>Consultar <code>foreachBatch</code> y Delta/Parquet al diseñar sinks persistentes.</li>
+          <li>Revisar monitorización y rendimiento antes de documentar conclusiones del ejercicio.</li>
+        </ol>
       </div>
     </div>
   </section>
 
   <section id="conclusion">
     <div class="lesson-container">
-      <strong>CONCLUSIÓN</strong>
+      <h3>CONCLUSIÓN</h3>
       <hr>
       <div class="text-cell">
-        <p>Utiliza los recursos para montar un entorno de laboratorio y probar los casos prácticos presentados.</p>
+        <p>
+          Estos recursos permiten pasar de ejemplos básicos a pipelines streaming más robustos:
+          lectura desde Kafka, procesamiento por ventanas, control de eventos tardíos, escritura
+          fiable y observabilidad.
+        </p>
+        <p>
+          La documentación oficial debe usarse como referencia principal, especialmente cuando se
+          ajustan opciones de Kafka, checkpoints, triggers o sinks en un entorno real.
+        </p>
       </div>
     </div>
   </section>
 
   <section id="ejercicio">
     <div class="lesson-container">
-      <strong>EJERCICIO</strong>
+      <h3>EJERCICIO</h3>
       <hr>
       <div class="text-cell">
-        <p>Selecciona un notebook y ejecútalo en tu entorno; documenta resultados y ajustes necesarios.</p>
+        <p>
+          Selecciona al menos cuatro recursos de esta página y elabora una ficha breve para cada uno:
+        </p>
+        <ol>
+          <li>Recurso consultado y enlace.</li>
+          <li>Conceptos principales que aporta.</li>
+          <li>Relación con los casos prácticos del tema.</li>
+          <li>Opción, parámetro o patrón técnico que aplicarías en el ejercicio final.</li>
+          <li>Riesgo o limitación que conviene vigilar.</li>
+        </ol>
+        <p>
+          Como ampliación, compara dos decisiones de diseño: <code>append</code> frente a
+          <code>update</code>, Parquet frente a Delta, o escritura directa con
+          <code>writeStream</code> frente a escritura personalizada con <code>foreachBatch</code>.
+        </p>
       </div>
     </div>
   </section>

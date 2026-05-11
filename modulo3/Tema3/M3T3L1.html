@@ -48,6 +48,11 @@
   <p>
     Aunque en versiones actuales se recomienda Structured Streaming,
     comprender Spark Streaming es importante desde una perspectiva histórica y arquitectónica.
+  </p>
+  <p>
+    Esta lección ayuda a diferenciar el modelo clásico basado en DStreams del modelo moderno
+    basado en DataFrames. Esa comparación es útil para mantener aplicaciones heredadas y para
+    entender por qué Structured Streaming simplifica la construcción de pipelines en tiempo real.
   </p>      </div>
     </div>
   </section>
@@ -63,6 +68,9 @@
 
   <h3>Modelo de programación</h3>
 
+  <img src="/img/M3T3L1_1.svg" alt="Modelo de micro-batches en Spark Streaming">
+  <p class="img-caption">Imagen 1: Modelo de micro-batches en Spark Streaming clásico</p>
+
   <strong>DStream (Discretized Stream)</strong>
   <p>
     La abstracción principal en Spark Streaming es el <strong>DStream</strong>,
@@ -72,11 +80,37 @@
     Cada intervalo (por ejemplo, 5 segundos) genera un RDD que contiene los datos recibidos
     en ese periodo.
   </p>
+  <p>
+    Por tanto, un DStream no almacena un flujo infinito como una estructura única, sino que lo
+    divide en una sucesión de RDDs. Cada RDD se procesa con las transformaciones habituales de
+    Spark Core, como <code>map</code>, <code>filter</code> o <code>reduceByKey</code>.
+  </p>
 
   <strong>Micro-batch</strong>
   <p>
     En lugar de procesar cada evento individualmente,
     Spark Streaming agrupa eventos en pequeños lotes temporales.
+  </p>
+  <p>
+    El intervalo de micro-batch determina el compromiso entre latencia y coste de procesamiento.
+    Intervalos muy cortos reducen la latencia, pero incrementan la sobrecarga de planificación;
+    intervalos más largos aumentan throughput, aunque los resultados tardan más en emitirse.
+  </p>
+
+  <h3>Spark Streaming frente a Structured Streaming</h3>
+  <p>
+    Spark Streaming clásico trabaja con DStreams y RDDs. Structured Streaming trabaja con
+    DataFrames y considera el flujo como una tabla que se actualiza continuamente.
+  </p>
+  <ul>
+    <li><strong>Spark Streaming:</strong> API más cercana a RDD, útil para entender sistemas heredados.</li>
+    <li><strong>Structured Streaming:</strong> API declarativa, optimizada por Catalyst y mejor integrada con Spark SQL.</li>
+    <li><strong>Recomendación actual:</strong> usar Structured Streaming para nuevos desarrollos.</li>
+  </ul>
+
+  <p>
+    En proyectos reales es habitual encontrar ambos enfoques: aplicaciones antiguas con DStreams
+    y nuevos pipelines implementados con <code>readStream</code> y <code>writeStream</code>.
   </p>
 
   <h3>Arquitectura de ejecución</h3>
@@ -92,6 +126,11 @@
   <p>
     El procesamiento sigue el modelo DAG habitual de Spark,
     pero aplicado a cada micro-batch.
+  </p>
+  <p>
+    El driver crea jobs periódicos según el intervalo definido. Los executors procesan las tareas
+    de cada RDD y escriben los resultados en el destino configurado. Si un micro-batch tarda más
+    que el intervalo de generación, el sistema empieza a acumular retraso.
   </p>
 
   <h3>Creación de una aplicación básica</h3>
@@ -112,6 +151,22 @@ counts.print()
 ssc.start()
 ssc.awaitTermination()</code></pre>
 
+  <p>
+    En este ejemplo se abre un stream de texto desde un socket, se separan palabras y se calcula
+    un conteo por micro-batch. Es una práctica útil para entender el ciclo de vida de una aplicación
+    streaming: configuración, definición del flujo, inicio y espera de terminación.
+  </p>
+
+  <h3>Ciclo de vida de una aplicación Spark Streaming</h3>
+  <ol>
+    <li>Crear la configuración Spark y el <code>StreamingContext</code>.</li>
+    <li>Definir fuentes de entrada y transformaciones sobre DStreams.</li>
+    <li>Definir acciones o salidas, como impresión, escritura en ficheros o envío a otro sistema.</li>
+    <li>Ejecutar <code>start()</code> para iniciar la recepción y planificación de micro-batches.</li>
+    <li>Mantener la aplicación activa con <code>awaitTermination()</code>.</li>
+    <li>Detener el contexto de forma ordenada cuando termine el procesamiento.</li>
+  </ol>
+
   <h3>Transformaciones en DStreams</h3>
 
   <ul>
@@ -125,6 +180,18 @@ ssc.awaitTermination()</code></pre>
 
   <p>
     Las transformaciones aplicadas a DStreams se ejecutan internamente sobre los RDDs de cada micro-batch.
+  </p>
+
+  <strong>Transformaciones sin estado</strong>
+  <p>
+    Operan únicamente sobre los datos del micro-batch actual. Ejemplos: filtrar errores en logs,
+    convertir formatos o extraer campos.
+  </p>
+
+  <strong>Transformaciones con estado</strong>
+  <p>
+    Necesitan recordar información entre micro-batches. Ejemplos: conteos acumulados por clave,
+    sesiones de usuario o detección de patrones repetidos.
   </p>
 
   <h3>Ventanas temporales</h3>
@@ -142,6 +209,11 @@ ssc.awaitTermination()</code></pre>
   <p>
     Este ejemplo calcula conteos sobre una ventana de 30 segundos actualizada cada 10 segundos.
   </p>
+  <p>
+    Las ventanas permiten responder preguntas como “cuántos errores se han producido en los últimos
+    5 minutos” o “cuántos usuarios únicos han estado activos en el último minuto”. La duración de
+    ventana y el intervalo de deslizamiento deben ser múltiplos del intervalo de micro-batch.
+  </p>
 
   <h3>Gestión del estado</h3>
 
@@ -153,6 +225,15 @@ ssc.awaitTermination()</code></pre>
     <li><code>updateStateByKey</code></li>
     <li><code>mapWithState</code></li>
   </ul>
+  <p>
+    El estado permite mantener acumulados por clave, pero también introduce riesgos: mayor consumo
+    de memoria, necesidad de checkpointing y posibilidad de crecimiento indefinido si no se eliminan
+    claves antiguas.
+  </p>
+
+  <pre><code class="language-python python-code"># Ejemplo conceptual: mantener conteo acumulado por clave
+def update_count(new_values, current_state):
+    return sum(new_values) + (current_state or 0)</code></pre>
 
   <h3>Fuentes soportadas</h3>
 
@@ -163,6 +244,11 @@ ssc.awaitTermination()</code></pre>
     <li>Archivos</li>
     <li>HDFS</li>
   </ul>
+  <p>
+    En el modelo clásico, algunas fuentes utilizan receivers, procesos que reciben datos y los
+    almacenan temporalmente antes de que Spark los procese. En integraciones modernas con Kafka
+    se prefiere un consumo directo basado en offsets.
+  </p>
 
   <h3>Checkpointing</h3>
 
@@ -172,6 +258,34 @@ ssc.awaitTermination()</code></pre>
   </p>
 
   <pre><code class="language-python python-code">ssc.checkpoint("/ruta/checkpoint")</code></pre>
+  <p>
+    El checkpoint debe ubicarse en almacenamiento fiable, como HDFS o un sistema distribuido, no en
+    un directorio temporal local. Es especialmente importante cuando se usan operaciones con estado.
+  </p>
+
+  <h3>Receivers, WAL y tolerancia a fallos</h3>
+  <p>
+    En fuentes basadas en receivers, Spark puede utilizar Write-Ahead Logs (WAL) para registrar los
+    datos recibidos antes de procesarlos. Esto reduce el riesgo de pérdida si falla un executor,
+    aunque añade coste de escritura.
+  </p>
+  <ul>
+    <li><strong>Sin WAL:</strong> menor latencia, pero más riesgo ante fallos.</li>
+    <li><strong>Con WAL:</strong> mayor fiabilidad, a cambio de más E/S.</li>
+    <li><strong>Fuentes directas:</strong> suelen apoyarse en offsets del sistema externo.</li>
+  </ul>
+
+  <h3>Monitorización básica</h3>
+  <p>
+    Para evaluar una aplicación Spark Streaming conviene observar:
+  </p>
+  <ul>
+    <li>Tiempo de procesamiento de cada micro-batch.</li>
+    <li>Retraso acumulado si el procesamiento tarda más que el intervalo configurado.</li>
+    <li>Número de registros recibidos y procesados por segundo.</li>
+    <li>Uso de memoria cuando existen operaciones con estado.</li>
+    <li>Errores de conexión con fuentes externas.</li>
+  </ul>
 
   <h3>Ventajas</h3>
 
@@ -187,6 +301,8 @@ ssc.awaitTermination()</code></pre>
     <li>Basado en RDD, menor optimización que DataFrames.</li>
     <li>Mayor latencia comparado con sistemas puramente event-driven.</li>
     <li>Menor integración con Spark SQL.</li>
+    <li>Modelo menos declarativo que Structured Streaming.</li>
+    <li>Mayor complejidad en pipelines con esquemas, ventanas y sinks transaccionales.</li>
   </ul>
 
 
@@ -197,6 +313,17 @@ ssc.awaitTermination()</code></pre>
     <li>Procesamiento de logs.</li>
     <li>Monitorización básica.</li>
     <li>Prototipos de streaming.</li>
+    <li>Mantenimiento de aplicaciones heredadas basadas en DStreams.</li>
+    <li>Aprendizaje del modelo micro-batch antes de pasar a Structured Streaming.</li>
+  </ul>
+
+  <h3>Buenas prácticas</h3>
+  <ul>
+    <li>Usar Structured Streaming para nuevos desarrollos salvo que exista una restricción clara.</li>
+    <li>Ajustar el intervalo de micro-batch según latencia y capacidad real del clúster.</li>
+    <li>Activar checkpointing en operaciones con estado.</li>
+    <li>Evitar lógica pesada o bloqueante dentro de cada micro-batch.</li>
+    <li>Monitorizar retraso de procesamiento y crecimiento del estado.</li>
   </ul>
 
 

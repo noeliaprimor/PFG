@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>M3T2L5 — Ejercicio propuesto</title>
+  <title>M3T2L5 - Ejercicio propuesto</title>
   <link rel="stylesheet" href="/css/styles.css" />
   <script src="/js/jquery-3.6.0.min.js"></script>
   <link rel="stylesheet" href="/css/prism-1.29.0.min.css" />
@@ -22,59 +22,406 @@
     </div>
   </nav>
 
-  <h4 class="titulos-leccion">Ejercicio propuesto</h4>
+  <h2 class="titulos-leccion">Ejercicio propuesto: Kafka + Spark Structured Streaming</h2>
 
   <div class="indice-container">
     <div id="index-container" class="text-cell">
-        <hr>
-        <ul>
-          <li><a href="#descripcion">Descripción</a></li>
-          <li><a href="#contenido">Contenido</a></li>
-          <li><a href="#conclusion">Conclusión</a></li>
-          <li><a href="#ejercicio">Ejercicio</a></li>
-        </ul>
-      </div>
+      <hr>
+      <ul>
+        <li><a href="#enunciado">Enunciado</a></li>
+        <li><a href="#ficheros">Ficheros disponibles</a></li>
+        <li><a href="#ejecucion">Ejecución paso a paso</a></li>
+        <li><a href="#validacion">Validación</a></li>
+        <li><a href="#mejoras">Ejercicios de mejora</a></li>
+        <li><a href="#problemas">Problemas frecuentes</a></li>
+        <li><a href="#entrega">Entrega</a></li>
+      </ul>
     </div>
+  </div>
 
-  <section id="descripcion">
+  <section id="enunciado">
     <div class="lesson-container">
-      <strong>DESCRIPCIÓN</strong>
+      <h3>ENUNCIADO</h3>
       <hr>
       <div class="text-cell">
-        <p>Configura un conector sink (por ejemplo S3 o HDFS) para Kafka Connect y procesa un topic de ejemplo.</p>
-      </div>
-    </div>
-  </section>
+        <p>
+          En esta práctica vas a ejecutar una versión actualizada del ejemplo
+          <a href="https://github.com/dbusteed/kafka-spark-streaming-example" target="_blank">kafka-spark-streaming-example</a>.
+          El repositorio original trabaja con ZooKeeper, Spark Streaming clásico, Kafka 0.8,
+          Hive local y una instalación manual extensa. En esta versión se mantiene el objetivo
+          didáctico, pero se moderniza el laboratorio usando Docker Compose, Kafka en modo KRaft,
+          Spark Structured Streaming, eventos JSON y salida en Parquet.
+        </p>
 
-  <section id="contenido">
-    <div class="lesson-container">
-      <strong>CONTENIDO</strong>
-      <hr>
-      <div class="text-cell">
-        <p>Plantilla de configuración y pasos para desplegar un sink connector (S3/HDFS) y pruebas de ingestión.
+        <h4>Objetivo</h4>
+        <ol>
+          <li>Generar eventos simulados tipo tweet en formato JSON desde un productor Python.</li>
+          <li>Publicar los eventos en un topic Kafka llamado <code>tweets</code>.</li>
+          <li>Consumir el topic desde Spark Structured Streaming.</li>
+          <li>Validar y transformar los eventos recibidos.</li>
+          <li>Guardar eventos válidos en Parquet.</li>
+          <li>Enviar eventos inválidos a una zona de cuarentena.</li>
+          <li>Generar métricas por microbatch para comprobar el procesamiento.</li>
+        </ol>
+
+        <h4>Cambios respecto al ejemplo original</h4>
+        <table>
+          <thead>
+          <tr>
+            <th>Aspecto</th>
+            <th>Ejemplo original</th>
+            <th>Versión actualizada</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr>
+            <td>Kafka</td>
+            <td>Kafka + ZooKeeper</td>
+            <td>Kafka 4.2 en modo KRaft</td>
+          </tr>
+          <tr>
+            <td>Spark</td>
+            <td>Spark Streaming clásico / DStreams</td>
+            <td>Spark Structured Streaming</td>
+          </tr>
+          <tr>
+            <td>Integración Kafka</td>
+            <td><code>spark-streaming-kafka-0-8</code></td>
+            <td><code>spark-sql-kafka-0-10</code></td>
+          </tr>
+          <tr>
+            <td>Sink</td>
+            <td>Hive textfile</td>
+            <td>Parquet local</td>
+          </tr>
+          <tr>
+            <td>Instalación</td>
+            <td>Manual en VM</td>
+            <td>Docker Compose</td>
+          </tr>
+          <tr>
+            <td>Productor</td>
+            <td>Tweets reales o texto simulado</td>
+            <td>Eventos JSON simulados</td>
+          </tr>
+          <tr>
+            <td>Validación</td>
+            <td>Mínima</td>
+            <td>Válidos, inválidos y métricas</td>
+          </tr>
+          </tbody>
+        </table>
+
+        <p>
+          La guía completa de referencia está disponible en
+          <a href="KAFKA_SPARK_STREAMING_EXAMPLE_ACTUALIZADO.md">KAFKA_SPARK_STREAMING_EXAMPLE_ACTUALIZADO.md</a>.
         </p>
       </div>
     </div>
   </section>
 
-  <section id="conclusion">
+  <section id="ficheros">
     <div class="lesson-container">
-      <strong>CONCLUSIÓN</strong>
+      <h3>FICHEROS DISPONIBLES</h3>
       <hr>
       <div class="text-cell">
-        <p>Documenta resultados: tiempos de ingestión y consistencia en el destino.</p>
+        <p>
+          Los ficheros del proyecto ya están proporcionados en esta carpeta del tema. No tienes que
+          copiarlos desde la guía ni generar de nuevo el proyecto desde cero. Trabaja directamente
+          con los materiales entregados:
+        </p>
+        <ul>
+          <li><a href="Dockerfile">Dockerfile</a>: imagen del contenedor de laboratorio con Python, Java y PySpark.</li>
+          <li><a href="docker-compose.yml">docker-compose.yml</a>: servicios <code>kafka</code> y <code>lab</code>.</li>
+          <li><a href="crear_laboratorio.sh">crear_laboratorio.sh</a>: script de apoyo para recrear la estructura si fuera necesario.</li>
+          <li><a href="KAFKA_SPARK_STREAMING_EXAMPLE_ACTUALIZADO.md">KAFKA_SPARK_STREAMING_EXAMPLE_ACTUALIZADO.md</a>: documentación completa del ejercicio.</li>
+        </ul>
+        <p>
+          Si tu copia local ya contiene la carpeta <code>app/</code>, <code>output/</code> y
+          <code>checkpoint/</code>, no ejecutes el script de creación. Si falta la aplicación Python,
+          puedes usar <code>crear_laboratorio.sh</code> como mecanismo de recuperación.
+        </p>
       </div>
     </div>
   </section>
 
-  <section id="ejercicio">
+  <section id="ejecucion">
     <div class="lesson-container">
-      <strong>EJERCICIO</strong>
+      <h3>EJECUCIÓN PASO A PASO</h3>
       <hr>
       <div class="text-cell">
+        <h4>0. Requisitos</h4>
+        <p>
+          Necesitas Docker y Docker Compose. En Ubuntu/Debian puedes comprobarlo con:
+        </p>
+        <pre><code class="language-bash">docker --version
+docker compose version
+docker run --rm hello-world</code></pre>
+
+        <h4>1. Sitúate en la carpeta de la práctica</h4>
+        <pre><code class="language-bash">cd modulo3/Tema2</code></pre>
+
+        <p>
+          Comprueba que están los ficheros principales:
+        </p>
+        <pre><code class="language-bash">ls -la
+ls -la app output checkpoint</code></pre>
+
+        <h4>2. Construir la imagen del laboratorio</h4>
+        <p>
+          La primera ejecución puede tardar varios minutos porque descarga Python, Java, PySpark y
+          sus dependencias.
+        </p>
+        <pre><code class="language-bash">docker compose build</code></pre>
+
+        <p>
+          El resultado esperado es una construcción sin errores, con un mensaje final similar a
+          <code>DONE</code> o <code>Successfully built</code>.
+        </p>
+
+        <h4>3. Arrancar Kafka</h4>
+        <pre><code class="language-bash">docker compose up -d kafka</code></pre>
+
+        <p>
+          Comprueba el estado del servicio y espera hasta que Kafka aparezca como
+          <code>healthy</code>:
+        </p>
+        <pre><code class="language-bash">docker compose ps</code></pre>
+
+        <h4>4. Crear el topic <code>tweets</code></h4>
+        <pre><code class="language-bash">docker compose exec kafka /opt/kafka/bin/kafka-topics.sh \
+  --bootstrap-server kafka:9092 \
+  --create \
+  --if-not-exists \
+  --topic tweets \
+  --partitions 3 \
+  --replication-factor 1</code></pre>
+
+        <p>
+          Verifica que el topic existe y que tiene tres particiones:
+        </p>
+        <pre><code class="language-bash">docker compose exec kafka /opt/kafka/bin/kafka-topics.sh \
+  --bootstrap-server kafka:9092 \
+  --describe \
+  --topic tweets</code></pre>
+
+        <h4>5. Producir eventos JSON</h4>
+        <pre><code class="language-bash">docker compose run --rm lab \
+  python /workspace/app/producer_json.py \
+  --bootstrap-server kafka:9092 \
+  --topic tweets \
+  --messages 300 \
+  --sleep 0.01</code></pre>
+
+        <p>
+          La salida esperada debe mostrar el avance de envío:
+        </p>
+        <pre><code class="language-text">Eventos enviados: 25
+Eventos enviados: 50
+...
+Finalizado. Total eventos enviados: 300</code></pre>
+
+        <h4>6. Ver mensajes en Kafka</h4>
+        <pre><code class="language-bash">docker compose exec kafka /opt/kafka/bin/kafka-console-consumer.sh \
+  --bootstrap-server kafka:9092 \
+  --topic tweets \
+  --from-beginning \
+  --max-messages 5</code></pre>
+
+        <p>
+          Deben verse mensajes JSON con campos como <code>event_id</code>,
+          <code>event_time</code>, <code>source</code>, <code>text</code>,
+          <code>hashtags</code> y <code>mentions</code>.
+        </p>
+
+        <h4>7. Ejecutar Spark Structured Streaming</h4>
+        <pre><code class="language-bash">docker compose run --rm lab \
+  spark-submit \
+  --packages org.apache.spark:spark-sql-kafka-0-10_2.12:3.5.1 \
+  /workspace/app/streaming_job.py \
+  --bootstrap-server kafka:9092 \
+  --topic tweets \
+  --output /workspace/output \
+  --checkpoint /workspace/checkpoint/tweets_stream</code></pre>
+
+        <p>
+          La primera ejecución puede tardar porque Spark descarga el conector Kafka desde Maven.
+          Una salida válida debe indicar que se ha procesado al menos un batch:
+        </p>
+        <pre><code class="language-text">Batch 0: validos=300, invalidos=0, metricas=1
+Consulta finalizada.</code></pre>
+      </div>
+    </div>
+  </section>
+
+  <section id="validacion">
+    <div class="lesson-container">
+      <h3>VALIDACIÓN</h3>
+      <hr>
+      <div class="text-cell">
+        <p>
+          Ejecuta el validador incluido en la aplicación:
+        </p>
+        <pre><code class="language-bash">docker compose run --rm lab \
+  python /workspace/app/validate_outputs.py</code></pre>
+
+        <p>
+          Resultado esperado:
+        </p>
+        <pre><code class="language-text">== tweets_valid ==
+Registros: 300
+
+== tweets_quarantine ==
+Registros: 0
+
+== tweets_metrics ==
+Registros: 1</code></pre>
+
+        <p>
+          También puedes revisar los ficheros generados desde tu máquina:
+        </p>
+        <pre><code class="language-bash">find output -maxdepth 3 -type f | sort
+find checkpoint -maxdepth 3 -type f | sort</code></pre>
+
+        <h4>Repetir desde cero</h4>
+        <p>
+          Para limpiar resultados y checkpoints de una ejecución anterior:
+        </p>
+        <pre><code class="language-bash">rm -rf output/* checkpoint/*</code></pre>
+
+        <p>
+          Después vuelve a producir eventos y ejecuta de nuevo el job Spark.
+        </p>
+
+        <h4>Parar el laboratorio</h4>
+        <pre><code class="language-bash">docker compose down</code></pre>
+
+        <p>
+          Para borrar también los volúmenes internos de Kafka:
+        </p>
+        <pre><code class="language-bash">docker compose down -v</code></pre>
+      </div>
+    </div>
+  </section>
+
+  <section id="mejoras">
+    <div class="lesson-container">
+      <h3>EJERCICIOS DE MEJORA</h3>
+      <hr>
+      <div class="text-cell">
+        <ol>
+          <li>
+            <strong>Latencia extremo a extremo:</strong> calcula la diferencia entre
+            <code>event_ts</code> y <code>processed_time</code>. Guarda media, mínimo y máximo por
+            microbatch.
+          </li>
+          <li>
+            <strong>Particionado:</strong> compara una ejecución con un topic de una partición y
+            otra con tres particiones. Analiza tiempo total, distribución de offsets, número de
+            ficheros generados y efecto sobre el paralelismo.
+          </li>
+          <li>
+            <strong>Eventos inválidos:</strong> modifica el productor para generar un 5% de
+            mensajes sin <code>event_id</code>, sin <code>text</code> o con JSON mal formado.
+            Comprueba que aparecen en <code>output/tweets_quarantine</code>.
+          </li>
+          <li>
+            <strong>Salida agregada por ventana:</strong> genera métricas por ventana de evento de
+            un minuto con total de eventos, longitud media, hashtags y menciones.
+          </li>
+          <li>
+            <strong>Migración conceptual:</strong> documenta qué partes del ejemplo original se han
+            sustituido: ZooKeeper por KRaft, Spark Streaming clásico por Structured Streaming, Hive
+            textfile por Parquet, texto plano por JSON y ejecución manual por Docker Compose.
+          </li>
+          <li>
+            <strong>Sink alternativo:</strong> escribe los eventos enriquecidos en otro topic Kafka
+            llamado <code>tweets_enriched</code>.
+          </li>
+          <li>
+            <strong>Idempotencia:</strong> ejecuta dos veces el job con el mismo checkpoint y
+            comprueba que no reprocesa los mismos offsets. Después borra <code>checkpoint/</code>,
+            ejecuta otra vez y explica qué ocurre.
+          </li>
+        </ol>
+
+        <h4>Pistas útiles</h4>
+        <p>
+          Para calcular latencia puedes usar <code>unix_timestamp</code>:
+        </p>
+        <pre><code class="language-python">from pyspark.sql.functions import unix_timestamp
+
+latency_seconds = unix_timestamp("processed_time") - unix_timestamp("event_ts")</code></pre>
+
+        <p>
+          Para preparar un mensaje JSON de salida hacia Kafka puedes usar:
+        </p>
+        <pre><code class="language-python">from pyspark.sql.functions import to_json, struct
+
+out = valid.selectExpr("CAST(event_id AS STRING) AS key") \
+    .withColumn("value", to_json(struct("*"))) \
+    .select("key", "value")</code></pre>
+      </div>
+    </div>
+  </section>
+
+  <section id="problemas">
+    <div class="lesson-container">
+      <h3>PROBLEMAS FRECUENTES</h3>
+      <hr>
+      <div class="text-cell">
+        <h4>Kafka no está listo</h4>
+        <p>
+          Espera a que el healthcheck termine y revisa el estado:
+        </p>
+        <pre><code class="language-bash">docker compose ps
+docker compose logs kafka --tail=50</code></pre>
+
+        <h4><code>UnknownHostException: kafka</code></h4>
+        <p>
+          Este error suele aparecer cuando ejecutas Spark fuera de Docker. La guía está pensada
+          para ejecutar productor y Spark dentro del servicio <code>lab</code>, usando
+          <code>kafka:9092</code> como bootstrap server.
+        </p>
+
+        <h4>Error descargando paquetes Maven</h4>
+        <p>
+          El primer <code>spark-submit --packages</code> necesita internet para descargar el
+          conector Spark-Kafka. Repite cuando haya red o configura un repositorio Maven interno.
+        </p>
+
+        <h4>No aparecen nuevos datos</h4>
+        <p>
+          Si usas el mismo checkpoint, Spark continúa desde el último offset procesado. Para una
+          prueba desde cero:
+        </p>
+        <pre><code class="language-bash">rm -rf checkpoint/* output/*</code></pre>
+
+        <h4>Hay muchos ficheros pequeños</h4>
+        <p>
+          Es normal en laboratorios con microbatches. En producción se ajustan particiones,
+          frecuencia de trigger y procesos de compactación.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section id="entrega">
+    <div class="lesson-container">
+      <h3>ENTREGA</h3>
+      <hr>
+      <div class="text-cell">
+        <p>
+          Entrega una memoria breve con:
+        </p>
         <ul>
-          <li>Conector funcionando y datos persistidos en destino.</li>
-          <li>Documentación de configuración y métricas de rendimiento.</li>
+          <li>Comandos ejecutados y capturas de los servicios Docker en ejecución.</li>
+          <li>Evidencia de creación del topic <code>tweets</code> con tres particiones.</li>
+          <li>Ejemplo de mensajes JSON consumidos desde Kafka.</li>
+          <li>Salida del job Spark Structured Streaming.</li>
+          <li>Salida de <code>validate_outputs.py</code> con registros válidos, cuarentena y métricas.</li>
+          <li>Explicación de al menos dos ejercicios de mejora implementados.</li>
+          <li>Comparación razonada entre el ejemplo original y la versión actualizada.</li>
         </ul>
       </div>
     </div>
