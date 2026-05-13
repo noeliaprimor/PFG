@@ -315,6 +315,26 @@ La asistencia incluyo explicaciones sobre:
 - recomendaciones de configuracion;
 - errores comunes en entornos Docker.
 
+### 4.6 Interacciones con GitHub Copilot
+
+Tambien se han registrado interacciones con GitHub Copilot relacionadas con el desarrollo y documentacion del proyecto. Estas interacciones han sido aportadas manualmente por la autora y se han incorporado con detalle en `REGISTRO_USO_IA.md`.
+
+Los usos principales de GitHub Copilot fueron:
+
+- propuesta de generacion del modulo 3 a partir de `structure.json` y del modulo 2 como plantilla;
+- propuesta de correccion de `modulo3/modulo3.html`;
+- mejora del comportamiento del menu desplegable en `partials/header.html`;
+- diseno de estilos para tablas mediante `css/tables.css`;
+- aplicacion de estilos de tablas en HTML bajo `modulo2` y `modulo3`;
+- generacion de una seccion docente sobre proyectos Spark en PyCharm;
+- revision conceptual de autoevaluaciones y cobertura de preguntas en `questions-data.json`;
+- orientacion para reconstruir el uso de IA en conversaciones anteriores;
+- orientacion para buscar evidencias de uso de Codex o Copilot en el repositorio;
+- propuesta de comandos Git para reconstruir cambios historicos;
+- exportacion de una ventana de chat en formato pregunta/respuesta.
+
+Estas interacciones se consideran asistencia de apoyo. Algunas fueron propuestas o guias de actuacion y no necesariamente cambios aplicados directamente en el repositorio.
+
 ## 5. Control humano y validacion
 
 Todas las propuestas generadas con IA han requerido revision humana antes de considerarse definitivas.
