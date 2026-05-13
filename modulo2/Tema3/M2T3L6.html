@@ -3,90 +3,209 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Módulo 2 — Tema 3 — Lección 6: Recursos y lecturas</title>
+  <title>M2T3L6 - Recursos y lecturas</title>
   <link rel="stylesheet" href="/css/styles.css" />
   <script src="/js/jquery-3.6.0.min.js"></script>
   <link rel="stylesheet" href="/css/prism-1.29.0.min.css" />
   <script src="/js/prism-1.29.0.min.js"></script>
 </head>
 <body>
-  <div data-include="/partials/header.html"></div>
-  <main>
-
- <nav class="lesson-nav">
-      <div class="crumbs">
-       <a href="/modulo2/modulo2.html">Módulo 2</a>
-         <span class="sep">/</span>
-    <a href="/modulo2/Tema3/index.html">Tema 3</a>
-    <span class="sep">/</span>
-    <a href="/modulo2/Tema3/M2T3L6.html" class="current" aria-current="page">Lección 6</a>
-      </div>
-    </nav>
-    <br>
-
-    <h2 class="titulos-leccion">Recursos y lecturas</h2>
-
-    <div class="indice-container">
-      <div id="index-container" class="text-cell">
-         <hr>
-         <ul>
-           <li><a href="#enlaces">Enlaces Externos</a></li>
-           <li><a href="#libros">Libros Recomendados</a></li>
-           <li><a href="#paquetes">Repositorios y Paquetes</a></li>
-
-         </ul>
-       </div>
-     </div>
-
-    <section id="enlaces">
-      <div class="lesson-container">
-        <h3>ENLACES EXTERNOS</h3>
-        <hr>
-        <div class="text-cell">
-          <p>A continuación se enumeran algunos enlaces interesantes para completar la información de este tama</p>
-          <ul>
-            <li><a href="https://spark.apache.org/docs/latest/">Apache Spark — Documentación</a></li>
-            <li><a href="https://spark.apache.org/mllib/">MLlib — Guía</a></li>
-             <li><a href="https://spark.apache.org/docs/latest/sql-programming-guide.html">Spark SQL Programming Guide</a></li>
-          </ul>
-        </div>
-      </div>
-    </section>
-
-    <section id="libros">
-      <div class="lesson-container">
-        <h3>LIBROS</h3>
-        <hr>
-        <div class="text-cell">
-          <ul>
-           <li><a href="https://www.oreilly.com/library/view/designing-data-intensive-applications/9781098119058/" target="_blank" rel="noopener noreferrer">Designing Data-Intensive Applications (Martin Kleppmann)</a></li>
-            <li><a href="https://www.oreilly.com/library/view/sistemas-de-streaming/9781098188498/" target="_blank" rel="noopener noreferrer">Streaming Systems (Akidau, Lax, Chernyak)</a></li>
-          </ul>
-        </div>
-      </div>
-    </section>
-
-    <section id="paquetes">
-      <div class="lesson-container">
-        <h3>REPOSITORIOS Y PAQUETES</h3>
-        <hr>
-        <div class="text-cell">
-          <ul>
-            <li><a href="https://github.com/apache/spark">Apache Spark (GitHub)</a></li>
-            <li><a href="https://spark-packages.org">Spark Packages</a></li>
-          </ul>
-        </div>
-      </div>
-    </section>
-
-    <div class="navigation-buttons">
-      <button onclick="window.location.href='M2T3L5.html'">Anterior</button>
-      <button onclick="window.location.href='M2T3L7.html'">Siguiente</button>
+<div data-include="/partials/header.html"></div>
+<main>
+  <nav class="lesson-nav">
+    <div class="crumbs">
+      <a href="/modulo2/modulo2.html">Módulo 2</a>
+      <span class="sep">/</span>
+      <a href="/modulo2/Tema3/index.html">Tema 3</a>
+      <span class="sep">/</span>
+      <a href="/modulo2/Tema3/M2T3L6.html" class="current" aria-current="page">Lección 6</a>
     </div>
+  </nav>
 
-  </main>
-  <div data-include="/partials/footer.html"></div>
-  <script src="/js/include.js"></script>
-  <script src="/js/script.js"></script>
+  <h2 class="titulos-leccion">Recursos y lecturas</h2>
+
+  <div class="indice-container">
+    <div id="index-container" class="text-cell">
+      <hr>
+      <ul>
+        <li><a href="#descripcion">Descripción</a></li>
+        <li><a href="#contenido">Contenido</a></li>
+        <li><a href="#ruta">Ruta recomendada</a></li>
+        <li><a href="#ejercicio">Aplicación al ejercicio</a></li>
+      </ul>
+    </div>
+  </div>
+
+  <section id="descripcion">
+    <div class="lesson-container">
+      <h3>DESCRIPCIÓN</h3>
+      <hr>
+      <div class="text-cell">
+        <p>
+          Esta lección recopila recursos para profundizar en las librerías principales de Spark:
+          Spark SQL, GraphX, Structured Streaming y MLlib. El objetivo es entender cuándo usar cada
+          componente y cómo se integra con el resto de la plataforma.
+        </p>
+        <p>
+          La selección combina documentación oficial, guías de programación, referencias de APIs y
+          lecturas útiles para resolver casos prácticos con datos estructurados, grafos, flujos y
+          modelos de aprendizaje automático.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section id="contenido">
+    <div class="lesson-container">
+      <h3>CONTENIDO</h3>
+      <hr>
+      <div class="text-cell">
+        <h4>Vista general de librerías Spark</h4>
+        <ul>
+          <li>
+            <a href="https://spark.apache.org/docs/latest/" target="_blank">Apache Spark Documentation</a>:
+            índice oficial de SQL, streaming, MLlib, GraphX, APIs y despliegue.
+          </li>
+          <li>
+            <a href="https://spark.apache.org/docs/latest/api/python/index.html" target="_blank">PySpark API Reference</a>:
+            referencia de clases y funciones para Python.
+          </li>
+          <li>
+            <a href="https://spark.apache.org/docs/latest/api/scala/index.html" target="_blank">Scala API Docs</a>:
+            documentación de APIs Scala, especialmente útil para Dataset y GraphX.
+          </li>
+        </ul>
+
+        <h4>Spark SQL</h4>
+        <ul>
+          <li>
+            <a href="https://spark.apache.org/docs/latest/sql-programming-guide.html" target="_blank">Spark SQL, DataFrames and Datasets Guide</a>:
+            consultas SQL, DataFrames, Datasets, vistas temporales y catálogo.
+          </li>
+          <li>
+            <a href="https://spark.apache.org/docs/latest/sql-ref.html" target="_blank">Spark SQL Reference</a>:
+            sintaxis SQL, funciones, tipos de datos y comportamiento del motor SQL.
+          </li>
+          <li>
+            <a href="https://spark.apache.org/docs/latest/sql-performance-tuning.html" target="_blank">Spark SQL Performance Tuning</a>:
+            optimización Catalyst, AQE, particionado, caché y joins.
+          </li>
+        </ul>
+
+        <h4>GraphX y análisis de grafos</h4>
+        <ul>
+          <li>
+            <a href="https://spark.apache.org/docs/latest/graphx-programming-guide.html" target="_blank">GraphX Programming Guide</a>:
+            guía de grafos, vértices, aristas, triplets, PageRank y componentes conectados.
+          </li>
+          <li>
+            <a href="https://spark.apache.org/docs/latest/api/scala/org/apache/spark/graphx/index.html" target="_blank">GraphX Scala API</a>:
+            referencia de clases, operadores y algoritmos de GraphX.
+          </li>
+          <li>
+            <a href="https://spark.apache.org/docs/latest/graphx-programming-guide.html#pregel-api" target="_blank">Pregel API</a>:
+            patrón de cómputo iterativo sobre grafos para algoritmos distribuidos.
+          </li>
+        </ul>
+
+        <h4>Structured Streaming</h4>
+        <ul>
+          <li>
+            <a href="https://spark.apache.org/docs/latest/streaming/index.html" target="_blank">Structured Streaming Programming Guide</a>:
+            modelo de stream como tabla, microbatches, checkpoints y tolerancia a fallos.
+          </li>
+          <li>
+            <a href="https://spark.apache.org/docs/latest/streaming/apis-on-dataframes-and-datasets.html" target="_blank">Streaming APIs on DataFrames and Datasets</a>:
+            operaciones soportadas, ventanas, joins, triggers y output modes.
+          </li>
+          <li>
+            <a href="https://spark.apache.org/docs/latest/structured-streaming-kafka-integration.html" target="_blank">Structured Streaming + Kafka Integration</a>:
+            lectura y escritura de eventos Kafka desde Spark.
+          </li>
+        </ul>
+
+        <h4>MLlib</h4>
+        <ul>
+          <li>
+            <a href="https://spark.apache.org/docs/latest/ml-guide.html" target="_blank">MLlib Main Guide</a>:
+            pipelines de machine learning, transformers, estimators y evaluadores.
+          </li>
+          <li>
+            <a href="https://spark.apache.org/docs/latest/ml-classification-regression.html" target="_blank">Classification and Regression</a>:
+            algoritmos supervisados, parámetros y ejemplos.
+          </li>
+          <li>
+            <a href="https://spark.apache.org/docs/latest/ml-clustering.html" target="_blank">Clustering</a>:
+            algoritmos no supervisados como K-means y Gaussian Mixture.
+          </li>
+          <li>
+            <a href="https://spark.apache.org/docs/latest/ml-tuning.html" target="_blank">ML Tuning</a>:
+            validación cruzada, búsqueda de hiperparámetros y evaluación.
+          </li>
+        </ul>
+
+        <h4>Lecturas complementarias</h4>
+        <ul>
+          <li>
+            <a href="https://www.oreilly.com/library/view/learning-spark-2nd/9781492050032/" target="_blank">Learning Spark, 2nd Edition</a>:
+            recorrido práctico por SQL, streaming y machine learning.
+          </li>
+          <li>
+            <a href="https://www.oreilly.com/library/view/graph-algorithms/9781492047674/" target="_blank">Graph Algorithms</a>:
+            lectura útil para entender PageRank, comunidades y caminos en grafos.
+          </li>
+          <li>
+            <a href="https://spark-packages.org" target="_blank">Spark Packages</a>:
+            paquetes externos para conectar Spark con otros sistemas.
+          </li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section id="ruta">
+    <div class="lesson-container">
+      <h3>RUTA RECOMENDADA</h3>
+      <hr>
+      <div class="text-cell">
+        <ol>
+          <li>Empezar por Spark SQL, porque es la base de DataFrames y Structured Streaming.</li>
+          <li>Revisar GraphX si el problema puede modelarse como relaciones entre entidades.</li>
+          <li>Estudiar Structured Streaming antes de integrar Kafka o procesar eventos.</li>
+          <li>Practicar MLlib con pipelines reproducibles y evaluación de modelos.</li>
+          <li>Comparar qué componente resuelve mejor cada caso de uso del ejercicio final.</li>
+        </ol>
+      </div>
+    </div>
+  </section>
+
+  <section id="ejercicio">
+    <div class="lesson-container">
+      <h3>APLICACIÓN AL EJERCICIO</h3>
+      <hr>
+      <div class="text-cell">
+        <p>
+          Para el ejercicio final del tema, selecciona un caso práctico y documenta:
+        </p>
+        <ul>
+          <li>Qué librería de Spark usarías como componente principal.</li>
+          <li>Qué esquema de datos o grafo necesita el problema.</li>
+          <li>Qué transformaciones y salidas produciría el pipeline.</li>
+          <li>Qué métricas usarías para validar el resultado.</li>
+          <li>Qué limitaciones tiene la solución en un entorno distribuido.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <div class="navigation-buttons">
+    <button onclick="window.location.href='M2T3L5.html'">Anterior</button>
+    <button onclick="window.location.href='M2T3L7.html'">Siguiente</button>
+  </div>
+
+</main>
+<div data-include="/partials/footer.html"></div>
+<script src="/js/include.js"></script>
+<script src="/js/script.js"></script>
 </body>
 </html>

@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>M3T1L5 — Recursos y lecturas</title>
+  <title>M3T1L5 - Recursos y lecturas</title>
   <link rel="stylesheet" href="/css/styles.css" />
   <link rel="stylesheet" href="/css/tables.css" />
   <script src="/js/jquery-3.6.0.min.js"></script>
@@ -23,64 +23,169 @@
     </div>
   </nav>
 
-  <h4 class="titulos-leccion">Recursos y lecturas</h4>
+  <h2 class="titulos-leccion">Recursos y lecturas</h2>
 
   <div class="indice-container">
     <div id="index-container" class="text-cell">
-        <hr>
-        <ul>
-          <li><a href="#descripcion">Descripción</a></li>
-          <li><a href="#contenido">Contenido</a></li>
-          <li><a href="#conclusion">Conclusión</a></li>
-
-        </ul>
-      </div>
+      <hr>
+      <ul>
+        <li><a href="#descripcion">Descripción</a></li>
+        <li><a href="#contenido">Contenido</a></li>
+        <li><a href="#ruta">Ruta recomendada</a></li>
+        <li><a href="#aplicacion">Aplicación al tema</a></li>
+      </ul>
     </div>
+  </div>
 
   <section id="descripcion">
     <div class="lesson-container">
-      <strong>DESCRIPCIÓN</strong>
+      <h3>DESCRIPCIÓN</h3>
       <hr>
       <div class="text-cell">
-        <p>Recursos, documentación y papers relevantes para el módulo sobre procesamiento en tiempo real.</p>
+        <p>
+          Esta lección recopila recursos para profundizar en arquitecturas de datos en tiempo real:
+          procesamiento de eventos, patrones Lambda y Kappa, Kafka, Spark Streaming, tolerancia a
+          fallos, consistencia, latencia y diseño de pipelines orientados a eventos.
+        </p>
+        <p>
+          Los enlaces ayudan a conectar la teoría del tema con decisiones prácticas: cuándo mantener
+          una capa batch, cuándo apostar por un log de eventos, cómo reprocesar datos y cómo diseñar
+          pipelines auditables.
+        </p>
       </div>
     </div>
   </section>
 
   <section id="contenido">
     <div class="lesson-container">
-      <strong>CONTENIDO</strong>
+      <h3>CONTENIDO</h3>
       <hr>
       <div class="text-cell">
-        <strong>DOCUMENTACIÓN</strong>
+        <h4>Arquitecturas Lambda y Kappa</h4>
         <ul>
-          <li><a href="https://spark.apache.org/docs/latest/structured-streaming-programming-guide.html">Spark Structured Streaming guide</a></li>
-          <li><a href="https://kafka.apache.org/documentation/">Apache Kafka docs</a></li>
+          <li>
+            <a href="https://www.oreilly.com/library/view/big-data/9781617290343/" target="_blank">Big Data: Principles and best practices</a>:
+            libro de referencia sobre arquitectura Lambda, batch layer, serving layer y speed layer.
+          </li>
+          <li>
+            <a href="https://www.oreilly.com/library/view/designing-data-intensive-applications/9781098119058/" target="_blank">Designing Data-Intensive Applications</a>:
+            lectura clave para entender logs, replicación, consistencia, stream processing y sistemas distribuidos.
+          </li>
+          <li>
+            <a href="https://www.oreilly.com/library/view/streaming-systems/9781491983867/" target="_blank">Streaming Systems</a>:
+            referencia sobre tiempo de evento, watermarks, ventanas, triggers y modelos de streaming.
+          </li>
         </ul>
-        <strong>TUTORIALS</strong>
+
+        <h4>Kafka como log de eventos</h4>
         <ul>
-          <li><a href="https://www.cloudduggu.com/spark/">CloudDuggu - Spark</a></li>
+          <li>
+            <a href="https://kafka.apache.org/intro" target="_blank">Apache Kafka Introduction</a>:
+            visión general de Kafka como plataforma distribuida de eventos.
+          </li>
+          <li>
+            <a href="https://kafka.apache.org/documentation/" target="_blank">Apache Kafka Documentation</a>:
+            documentación de topics, particiones, productores, consumidores, retención, seguridad y operación.
+          </li>
+          <li>
+            <a href="https://kafka.apache.org/documentation/#design" target="_blank">Kafka Design</a>:
+            explicación del diseño interno, log, replicación, consumidores y garantías.
+          </li>
+          <li>
+            <a href="https://docs.confluent.io/platform/current/schema-registry/index.html" target="_blank">Schema Registry</a>:
+            gestión de contratos de datos y compatibilidad de esquemas en pipelines de eventos.
+          </li>
         </ul>
-        <strong>PAPERS</strong>
+
+        <h4>Spark Streaming y procesamiento incremental</h4>
         <ul>
-          <li><a href="https://www.usenix.org/legacy/event/hotcloud10/tech/full_papers/Zaharia.pdf">Resilient Distributed Datasets (Zaharia)</a></li>
+          <li>
+            <a href="https://spark.apache.org/docs/latest/streaming/index.html" target="_blank">Structured Streaming Programming Guide</a>:
+            guía oficial para procesamiento incremental con DataFrames y Datasets.
+          </li>
+          <li>
+            <a href="https://spark.apache.org/docs/latest/structured-streaming-kafka-integration.html" target="_blank">Structured Streaming + Kafka Integration</a>:
+            lectura y escritura de topics Kafka desde Spark.
+          </li>
+          <li>
+            <a href="https://spark.apache.org/docs/latest/streaming/apis-on-dataframes-and-datasets.html#handling-late-data-and-watermarking" target="_blank">Watermarking</a>:
+            control de eventos tardíos y limpieza de estado.
+          </li>
+        </ul>
+
+        <h4>CDC, event sourcing y captura de cambios</h4>
+        <ul>
+          <li>
+            <a href="https://debezium.io/documentation/reference/stable/index.html" target="_blank">Debezium Documentation</a>:
+            captura de cambios de bases de datos como eventos.
+          </li>
+          <li>
+            <a href="https://debezium.io/documentation/reference/stable/architecture.html" target="_blank">Debezium Architecture</a>:
+            arquitectura habitual con Kafka Connect y conectores CDC.
+          </li>
+          <li>
+            <a href="https://martinfowler.com/eaaDev/EventSourcing.html" target="_blank">Event Sourcing</a>:
+            patrón de diseño basado en almacenar cambios como secuencia de eventos.
+          </li>
+        </ul>
+
+        <h4>Diseño, operación y buenas prácticas</h4>
+        <ul>
+          <li>
+            <a href="https://docs.confluent.io/platform/current/connect/index.html" target="_blank">Kafka Connect</a>:
+            integración de Kafka con bases de datos, sistemas de ficheros, almacenes cloud y buscadores.
+          </li>
+          <li>
+            <a href="https://docs.docker.com/compose/" target="_blank">Docker Compose Documentation</a>:
+            herramienta útil para reproducir laboratorios con Kafka, Spark y servicios auxiliares.
+          </li>
+          <li>
+            <a href="https://spark.apache.org/docs/latest/monitoring.html" target="_blank">Spark Monitoring</a>:
+            monitorización de aplicaciones Spark, logs y métricas.
+          </li>
+          <li>
+            <a href="https://prometheus.io/docs/introduction/overview/" target="_blank">Prometheus Overview</a>:
+            base para monitorizar throughput, latencia y disponibilidad de pipelines.
+          </li>
         </ul>
       </div>
     </div>
   </section>
 
-  <section id="conclusion">
+  <section id="ruta">
     <div class="lesson-container">
-      <strong>CONCLUSIÓN</strong>
+      <h3>RUTA RECOMENDADA</h3>
       <hr>
       <div class="text-cell">
-        <p>Los recursos listados ofrecen tanto la teoría como ejemplos prácticos para apoyar el trabajo del TFG.</p>
+        <ol>
+          <li>Leer primero las diferencias entre procesamiento batch, microbatch y streaming.</li>
+          <li>Comparar Lambda y Kappa en términos de complejidad, reprocesamiento y latencia.</li>
+          <li>Revisar Kafka como log de eventos antes de diseñar consumidores.</li>
+          <li>Estudiar Structured Streaming para conectar tiempo de evento, estado y checkpoints.</li>
+          <li>Analizar CDC y Schema Registry cuando el origen sean bases de datos o contratos de eventos.</li>
+        </ol>
       </div>
     </div>
   </section>
 
-
-
+  <section id="aplicacion">
+    <div class="lesson-container">
+      <h3>APLICACIÓN AL TEMA</h3>
+      <hr>
+      <div class="text-cell">
+        <p>
+          Para consolidar el tema, elabora una ficha comparando Lambda y Kappa con estos criterios:
+        </p>
+        <ul>
+          <li>Capas de la arquitectura y responsabilidades.</li>
+          <li>Tratamiento de datos históricos y datos en tiempo real.</li>
+          <li>Coste operativo y duplicación de lógica.</li>
+          <li>Estrategia de reprocesamiento.</li>
+          <li>Herramientas candidatas: Kafka, Spark, almacenamiento analítico y conectores.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
 
   <div class="navigation-buttons">
     <button onclick="window.location.href='M3T1L4.html'">Anterior</button>
@@ -90,7 +195,6 @@
 </main>
 <div data-include="/partials/footer.html"></div>
 <script src="/js/include.js"></script>
-<script src="/js/prism-1.29.0.min.js"></script>
 <script src="/js/script.js"></script>
 </body>
 </html>

@@ -160,7 +160,7 @@ services:
 EOF
 
 cat > Dockerfile <<'EOF'
-FROM python:3.11-slim
+FROM python:3.11-slim-bookworm
 
 RUN apt-get update \
     && apt-get install -y --no-install-recommends openjdk-17-jre-headless curl procps \
@@ -795,6 +795,25 @@ Ejecuta dos veces el job con el mismo checkpoint y comprueba que no reprocesa lo
 Despues borra `checkpoint/` y ejecuta otra vez. Explica que ocurre y por que.
 
 ## 14. Problemas frecuentes
+
+### Error instalando `openjdk-17-jre-headless` durante `docker compose build`
+
+Si el build falla en la instruccion `apt-get update && apt-get install ...` con
+`exit code: 100`, revisa que el `Dockerfile` use una base Debian Bookworm:
+
+```dockerfile
+FROM python:3.11-slim-bookworm
+```
+
+No uses `FROM python:3.11-slim` sin fijar la variante de Debian, porque esa
+etiqueta puede cambiar con el tiempo y dejar de tener disponible el paquete
+`openjdk-17-jre-headless`.
+
+Despues reconstruye sin cache:
+
+```bash
+docker compose build --no-cache lab
+```
 
 ### Kafka no esta listo
 

@@ -34,7 +34,7 @@
         <li><a href="#validacion">Validación</a></li>
         <li><a href="#mejoras">Ejercicios de mejora</a></li>
         <li><a href="#problemas">Problemas frecuentes</a></li>
-        <li><a href="#entrega">Entrega</a></li>
+
       </ul>
     </div>
   </div>
@@ -64,58 +64,7 @@
           <li>Generar métricas por microbatch para comprobar el procesamiento.</li>
         </ol>
 
-        <h4>Cambios respecto al ejemplo original</h4>
-        <table>
-          <thead>
-          <tr>
-            <th>Aspecto</th>
-            <th>Ejemplo original</th>
-            <th>Versión actualizada</th>
-          </tr>
-          </thead>
-          <tbody>
-          <tr>
-            <td>Kafka</td>
-            <td>Kafka + ZooKeeper</td>
-            <td>Kafka 4.2 en modo KRaft</td>
-          </tr>
-          <tr>
-            <td>Spark</td>
-            <td>Spark Streaming clásico / DStreams</td>
-            <td>Spark Structured Streaming</td>
-          </tr>
-          <tr>
-            <td>Integración Kafka</td>
-            <td><code>spark-streaming-kafka-0-8</code></td>
-            <td><code>spark-sql-kafka-0-10</code></td>
-          </tr>
-          <tr>
-            <td>Sink</td>
-            <td>Hive textfile</td>
-            <td>Parquet local</td>
-          </tr>
-          <tr>
-            <td>Instalación</td>
-            <td>Manual en VM</td>
-            <td>Docker Compose</td>
-          </tr>
-          <tr>
-            <td>Productor</td>
-            <td>Tweets reales o texto simulado</td>
-            <td>Eventos JSON simulados</td>
-          </tr>
-          <tr>
-            <td>Validación</td>
-            <td>Mínima</td>
-            <td>Válidos, inválidos y métricas</td>
-          </tr>
-          </tbody>
-        </table>
 
-        <p>
-          La guía completa de referencia está disponible en
-          <a href="KAFKA_SPARK_STREAMING_EXAMPLE_ACTUALIZADO.md">KAFKA_SPARK_STREAMING_EXAMPLE_ACTUALIZADO.md</a>.
-        </p>
       </div>
     </div>
   </section>
@@ -126,15 +75,12 @@
       <hr>
       <div class="text-cell">
         <p>
-          Los ficheros del proyecto ya están proporcionados en esta carpeta del tema. No tienes que
-          copiarlos desde la guía ni generar de nuevo el proyecto desde cero. Trabaja directamente
-          con los materiales entregados:
+         A continuación se proporcionan los ficheros necesarios para ejecutar este ejercicio:
         </p>
         <ul>
           <li><a href="Dockerfile">Dockerfile</a>: imagen del contenedor de laboratorio con Python, Java y PySpark.</li>
           <li><a href="docker-compose.yml">docker-compose.yml</a>: servicios <code>kafka</code> y <code>lab</code>.</li>
           <li><a href="crear_laboratorio.sh">crear_laboratorio.sh</a>: script de apoyo para recrear la estructura si fuera necesario.</li>
-          <li><a href="KAFKA_SPARK_STREAMING_EXAMPLE_ACTUALIZADO.md">KAFKA_SPARK_STREAMING_EXAMPLE_ACTUALIZADO.md</a>: documentación completa del ejercicio.</li>
         </ul>
         <p>
           Si tu copia local ya contiene la carpeta <code>app/</code>, <code>output/</code> y
@@ -157,15 +103,11 @@
         <pre><code class="language-bash">docker --version
 docker compose version
 docker run --rm hello-world</code></pre>
+        <h4>1. Creamos la estructura del laboratorio</h4>
 
-        <h4>1. Sitúate en la carpeta de la práctica</h4>
-        <pre><code class="language-bash">cd modulo3/Tema2</code></pre>
-
-        <p>
-          Comprueba que están los ficheros principales:
-        </p>
-        <pre><code class="language-bash">ls -la
-ls -la app output checkpoint</code></pre>
+        <p>Ejecutamos el script para crear las carpetas y ficheros necesarios, para ello</p>
+<img src="/img/M3T2L4_1.png" height="249" width="827"/>
+        <p class="img-caption">Imagen 1: creación de la estructura del proyecto</p>
 
         <h4>2. Construir la imagen del laboratorio</h4>
         <p>
@@ -178,6 +120,7 @@ ls -la app output checkpoint</code></pre>
           El resultado esperado es una construcción sin errores, con un mensaje final similar a
           <code>DONE</code> o <code>Successfully built</code>.
         </p>
+
 
         <h4>3. Arrancar Kafka</h4>
         <pre><code class="language-bash">docker compose up -d kafka</code></pre>
@@ -390,6 +333,14 @@ docker compose logs kafka --tail=50</code></pre>
           conector Spark-Kafka. Repite cuando haya red o configura un repositorio Maven interno.
         </p>
 
+        <h4>Error instalando <code>openjdk-17-jre-headless</code></h4>
+        <p>
+          Si <code>docker compose build</code> falla en la línea de <code>apt-get install</code>
+          con <code>exit code: 100</code>, asegúrate de que el <code>Dockerfile</code> use la
+          imagen base <code>python:3.11-slim-bookworm</code>. Después ejecuta:
+        </p>
+        <pre><code class="language-bash">docker compose build --no-cache lab</code></pre>
+
         <h4>No aparecen nuevos datos</h4>
         <p>
           Si usas el mismo checkpoint, Spark continúa desde el último offset procesado. Para una
@@ -406,26 +357,7 @@ docker compose logs kafka --tail=50</code></pre>
     </div>
   </section>
 
-  <section id="entrega">
-    <div class="lesson-container">
-      <h3>ENTREGA</h3>
-      <hr>
-      <div class="text-cell">
-        <p>
-          Entrega una memoria breve con:
-        </p>
-        <ul>
-          <li>Comandos ejecutados y capturas de los servicios Docker en ejecución.</li>
-          <li>Evidencia de creación del topic <code>tweets</code> con tres particiones.</li>
-          <li>Ejemplo de mensajes JSON consumidos desde Kafka.</li>
-          <li>Salida del job Spark Structured Streaming.</li>
-          <li>Salida de <code>validate_outputs.py</code> con registros válidos, cuarentena y métricas.</li>
-          <li>Explicación de al menos dos ejercicios de mejora implementados.</li>
-          <li>Comparación razonada entre el ejemplo original y la versión actualizada.</li>
-        </ul>
-      </div>
-    </div>
-  </section>
+
 
   <div class="navigation-buttons">
     <button onclick="window.location.href='M3T2L4.html'">Anterior</button>

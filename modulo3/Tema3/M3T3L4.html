@@ -28,17 +28,16 @@
     <div id="index-container" class="text-cell">
         <hr>
         <ul>
-          <li><a href="#descripcion">Descripción</a></li>
+          <li><a href="#descripcion">Introducción</a></li>
           <li><a href="#contenido">Contenido</a></li>
-          <li><a href="#conclusion">Conclusión</a></li>
-          <li><a href="#ejercicio">Ejercicio</a></li>
+
         </ul>
       </div>
     </div>
 
   <section id="descripcion">
     <div class="lesson-container">
-      <h3>DESCRIPCIÓN</h3>
+      <h3>INTRODUCCIÓN</h3>
       <hr>
       <div class="text-cell">
         <p>
@@ -163,12 +162,41 @@
           </li>
         </ul>
 
-        <h4>Notebooks del tema</h4>
+        <h4>Kafka, contratos de datos y operación del pipeline</h4>
+        <ul>
+          <li>
+            <a href="https://kafka.apache.org/documentation/#topicconfigs" target="_blank">Kafka Topic Configs</a>:
+            retención, compactación, segmentos y parámetros que afectan al reprocesamiento.
+          </li>
+          <li>
+            <a href="https://kafka.apache.org/documentation/#consumerconfigs" target="_blank">Kafka Consumer Configs</a>:
+            opciones para interpretar offsets, grupos de consumo, commits y comportamiento de lectura.
+          </li>
+          <li>
+            <a href="https://docs.confluent.io/platform/current/schema-registry/index.html" target="_blank">Schema Registry</a>:
+            gestión de esquemas Avro, JSON Schema o Protobuf para evitar romper consumidores.
+          </li>
+          <li>
+            <a href="https://json-schema.org/learn/getting-started-step-by-step" target="_blank">JSON Schema Getting Started</a>:
+            recurso práctico para documentar y validar contratos JSON de eventos.
+          </li>
+        </ul>
+
+        <h4>Relación con el laboratorio avanzado</h4>
         <p>
-          Los cuadernos del tema se encuentran en
-          <a href="/modulo3/Tema3/notebooks/">/modulo3/Tema3/notebooks/</a>. Se recomienda usarlos
-          como base para reproducir los casos prácticos y documentar resultados.
+          La lección siguiente incluye un laboratorio completo de Kafka + Spark Structured Streaming
+          en <a href="kafka_spark_advanced_lab/">kafka_spark_advanced_lab/</a>. Estos recursos son
+          especialmente útiles para justificar sus decisiones técnicas:
         </p>
+        <ul>
+          <li>Kafka como fuente de eventos y como sink de eventos enriquecidos.</li>
+          <li>Structured Streaming con checkpoints para controlar offsets procesados.</li>
+          <li>Separación entre datos válidos, cuarentena, métricas y alertas.</li>
+          <li>Uso de Parquet como formato analítico para salidas batch.</li>
+          <li>Medición de latencia, throughput y recuperación tras reinicios.</li>
+        </ul>
+
+
 
         <h4>Ruta de lectura recomendada</h4>
         <ol>
@@ -182,47 +210,7 @@
     </div>
   </section>
 
-  <section id="conclusion">
-    <div class="lesson-container">
-      <h3>CONCLUSIÓN</h3>
-      <hr>
-      <div class="text-cell">
-        <p>
-          Estos recursos permiten pasar de ejemplos básicos a pipelines streaming más robustos:
-          lectura desde Kafka, procesamiento por ventanas, control de eventos tardíos, escritura
-          fiable y observabilidad.
-        </p>
-        <p>
-          La documentación oficial debe usarse como referencia principal, especialmente cuando se
-          ajustan opciones de Kafka, checkpoints, triggers o sinks en un entorno real.
-        </p>
-      </div>
-    </div>
-  </section>
 
-  <section id="ejercicio">
-    <div class="lesson-container">
-      <h3>EJERCICIO</h3>
-      <hr>
-      <div class="text-cell">
-        <p>
-          Selecciona al menos cuatro recursos de esta página y elabora una ficha breve para cada uno:
-        </p>
-        <ol>
-          <li>Recurso consultado y enlace.</li>
-          <li>Conceptos principales que aporta.</li>
-          <li>Relación con los casos prácticos del tema.</li>
-          <li>Opción, parámetro o patrón técnico que aplicarías en el ejercicio final.</li>
-          <li>Riesgo o limitación que conviene vigilar.</li>
-        </ol>
-        <p>
-          Como ampliación, compara dos decisiones de diseño: <code>append</code> frente a
-          <code>update</code>, Parquet frente a Delta, o escritura directa con
-          <code>writeStream</code> frente a escritura personalizada con <code>foreachBatch</code>.
-        </p>
-      </div>
-    </div>
-  </section>
 
   <div class="navigation-buttons">
     <button onclick="window.location.href='M3T3L3.html'">Anterior</button>

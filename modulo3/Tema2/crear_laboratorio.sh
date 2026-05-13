@@ -46,7 +46,7 @@ services:
 EOF
 
 cat > Dockerfile <<'EOF'
-FROM python:3.11-slim
+FROM python:3.11-slim-bookworm
 
 RUN apt-get update \
     && apt-get install -y --no-install-recommends openjdk-17-jre-headless curl procps \

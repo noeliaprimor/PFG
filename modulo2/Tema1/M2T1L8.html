@@ -3,114 +3,173 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Recursos y lecturas recomendadas</title>
+  <title>M2T1L8 - Recursos y lecturas</title>
   <link rel="stylesheet" href="/css/styles.css" />
+  <script src="/js/jquery-3.6.0.min.js"></script>
+  <link rel="stylesheet" href="/css/prism-1.29.0.min.css" />
+  <script src="/js/prism-1.29.0.min.js"></script>
 </head>
 <body>
 <div data-include="/partials/header.html"></div>
 <main>
-
-
- <nav class="lesson-nav">
-      <div class="crumbs">
-       <a href="/modulo2/Tema1/index.html">Módulo 2</a>
-         <span class="sep">/</span>
-    <a href="/modulo2/Tema1/index.html">Tema 1</a>
-    <span class="sep">/</span>
-    <a href="/modulo2/Tema1/M2T1L8.html" class="current" aria-current="page">Lección 8</a>
-      </div>
-    </nav>
-    <br>
-    <br>
-    <h2 class="titulos-leccion">Recursos y Ejercicios Propuestos</h2>
-    <div class="indice-container">
-        <div id="index-container" class="text-cell">
-            <hr>
-            <ul>
-
-
-                <li><a href="#saber-mas">Para saber más</a></li>
-                <li><a href="#ejercicio-propuesto">Ejercicios propuestos</a></li>
-            </ul>
-        </div>
+  <nav class="lesson-nav">
+    <div class="crumbs">
+      <a href="/modulo2/modulo2.html">Módulo 2</a>
+      <span class="sep">/</span>
+      <a href="/modulo2/Tema1/index.html">Tema 1</a>
+      <span class="sep">/</span>
+      <a href="/modulo2/Tema1/M2T1L8.html" class="current" aria-current="page">Lección 8</a>
     </div>
+  </nav>
 
+  <h2 class="titulos-leccion">Recursos y lecturas</h2>
 
-    <section  id="saber-mas">
-         <!-- Para saber más -->
-        <div class="lesson-container indice-modulos">
-            <h3>Para saber más</h3>
-            <hr>
-            <div class="text-cell">
-                <ul>
-                    <li><a href="https://spark-packages.org">Enlaces</a></li>
-                    <li><a href="https://www.usenix.org/legacy/event/hotcloud10/tech/full_papers/Zaharia.pdf">Proyecto de investigación de Spar</a></li>
-                   <li><a href="https://spark.apache.org/docs/latest/">Spark docs</a></li>
-                    <li><a href="https://www.cloudduggu.com/spark/">CloudDuggu</a></li>
-                    <li><a href="https://databricks.com/">Databricks</a></li>
-  </ul>
-            </div>
+  <div class="indice-container">
+    <div id="index-container" class="text-cell">
+      <hr>
+      <ul>
+        <li><a href="#descripcion">Descripción</a></li>
+        <li><a href="#contenido">Contenido</a></li>
+        <li><a href="#ruta">Ruta recomendada</a></li>
+        <li><a href="#ejercicios">Ejercicios propuestos</a></li>
+      </ul>
+    </div>
+  </div>
 
-        </div>
-    </section>
-    <section id="ejercicio-propuesto">
+  <section id="descripcion">
+    <div class="lesson-container">
+      <h3>DESCRIPCIÓN</h3>
+      <hr>
+      <div class="text-cell">
+        <p>
+          Esta lección recopila recursos para reforzar los contenidos del Tema 1:
+          arquitectura de Apache Spark, componentes de la pila unificada, gestores de clúster,
+          RDD, instalación, configuración y ejecución de las shells de Spark.
+        </p>
+        <p>
+          La selección está orientada a consolidar una base técnica fiable antes de trabajar con
+          APIs avanzadas, librerías de Spark, optimización y procesamiento en tiempo real.
+        </p>
+      </div>
+    </div>
+  </section>
 
-        <!-- Ejercicio propuesto -->
-        <div class="lesson-container">
-            <h3>Ejercicios Propuestos</h3>
-            <hr>
-            <div class="text-cell">
+  <section id="contenido">
+    <div class="lesson-container">
+      <h3>CONTENIDO</h3>
+      <hr>
+      <div class="text-cell">
+        <h4>Documentación oficial imprescindible</h4>
+        <ul>
+          <li>
+            <a href="https://spark.apache.org/docs/latest/" target="_blank">Apache Spark Documentation</a>:
+            punto de entrada a la documentación oficial, instalación, ejecución, APIs y componentes.
+          </li>
+          <li>
+            <a href="https://spark.apache.org/docs/latest/quick-start.html" target="_blank">Spark Quick Start</a>:
+            primera guía práctica para ejecutar Spark localmente, crear datasets y lanzar acciones.
+          </li>
+          <li>
+            <a href="https://spark.apache.org/docs/latest/cluster-overview.html" target="_blank">Cluster Mode Overview</a>:
+            explicación de driver, executors, cluster manager y flujo de ejecución de una aplicación.
+          </li>
+          <li>
+            <a href="https://spark.apache.org/docs/latest/submitting-applications.html" target="_blank">Submitting Applications</a>:
+            referencia para ejecutar jobs con <code>spark-submit</code> y configurar dependencias.
+          </li>
+        </ul>
 
-              <p>Instala Spark en un cluster kubernetes y a continuación realiza las siguientes tareas:</p>
-                          <h4>Ejercicio 1 – Escalado del clúster</h4>
-<p>
-Escalar el número de <em>workers</em> a 4:
-</p>
-<pre><code class="language-python python-code">docker compose up -d --scale spark-worker=4</code></pre>
-<p>
-Analizar:
-</p>
-<ul>
-  <li>¿Cómo cambia la distribución de tareas?</li>
-  <li>¿Se reduce el tiempo de ejecución?</li>
-</ul>
-<hr>
-<h4>Ejercicio 2 – Modificación de recursos</h4>
-<p>
-Reducir la memoria del <em>worker</em> a 512MB y ejecutar un job que requiera más recursos (por ejemplo, leyendo un fichero grande o aumentando el número de particiones).
-</p>
-<p>
-Analizar:
-</p>
-<ul>
-  <li>¿Qué ocurre cuando la memoria asignada no es suficiente?</li>
-  <li>¿Se produce algún error (por ejemplo, out-of-memory) o se degrada el rendimiento?</li>
-</ul>
-<hr>
-<h4>Ejercicio 3 – Análisis de logs</h4>
-<p>
-Ejecutar un job y analizar los logs del clúster:
-</p>
-<pre><code class="language-python python-code">docker compose logs spark-master</code></pre>
-<p>
-Identificar:
-</p>
-<ul>
-  <li>Inicio del job (submit del trabajo)</li>
-  <li>Asignación de ejecutores y recursos a los workers</li>
-  <li>Finalización del job (éxito o error)</li>
-</ul>
-<hr>
-            </div>
+        <h4>Gestores de clúster</h4>
+        <ul>
+          <li>
+            <a href="https://spark.apache.org/docs/latest/spark-standalone.html" target="_blank">Spark Standalone Mode</a>:
+            despliegue propio de Spark, útil para laboratorios y clústeres sencillos.
+          </li>
+          <li>
+            <a href="https://spark.apache.org/docs/latest/running-on-yarn.html" target="_blank">Running Spark on YARN</a>:
+            integración con Hadoop YARN, habitual en plataformas Big Data tradicionales.
+          </li>
+          <li>
+            <a href="https://spark.apache.org/docs/latest/running-on-kubernetes.html" target="_blank">Running Spark on Kubernetes</a>:
+            ejecución de aplicaciones Spark en contenedores, con pods para driver y executors.
+          </li>
+        </ul>
 
-        </div>
-    </section>
-        <div>
-            <div class="navigation-buttons">
-                <button onclick="window.location.href='M2T1L7.html'">Anterior</button>
-              <button onclick="window.location.href='M2T1auto.html'">Siguiente: Autoevaluación</button>
-            </div>
-        </div>
+        <h4>RDD y modelo de ejecución</h4>
+        <ul>
+          <li>
+            <a href="https://spark.apache.org/docs/latest/rdd-programming-guide.html" target="_blank">RDD Programming Guide</a>:
+            referencia para comprender particiones, transformaciones, acciones, persistencia y tolerancia a fallos.
+          </li>
+          <li>
+            <a href="https://www.usenix.org/legacy/event/hotcloud10/tech/full_papers/Zaharia.pdf" target="_blank">Spark research paper</a>:
+            artículo original que ayuda a entender el diseño de Spark y el procesamiento en memoria.
+          </li>
+          <li>
+            <a href="https://spark.apache.org/docs/latest/tuning.html" target="_blank">Spark Tuning</a>:
+            introducción a memoria, serialización, particionado y coste de operaciones distribuidas.
+          </li>
+        </ul>
+
+        <h4>Entornos locales y aprendizaje práctico</h4>
+        <ul>
+          <li>
+            <a href="https://docs.docker.com/compose/" target="_blank">Docker Compose Documentation</a>:
+            útil para levantar laboratorios reproducibles con master, workers y servicios auxiliares.
+          </li>
+          <li>
+            <a href="https://spark-packages.org" target="_blank">Spark Packages</a>:
+            catálogo de conectores y extensiones para ampliar aplicaciones Spark.
+          </li>
+          <li>
+            <a href="https://github.com/apache/spark" target="_blank">Apache Spark GitHub</a>:
+            código fuente, ejemplos, issues y evolución del proyecto.
+          </li>
+          <li>
+            <a href="https://www.databricks.com/glossary/what-is-apache-spark" target="_blank">Databricks: What is Apache Spark?</a>:
+            explicación conceptual del ecosistema Spark y sus casos de uso.
+          </li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section id="ruta">
+    <div class="lesson-container">
+      <h3>RUTA RECOMENDADA</h3>
+      <hr>
+      <div class="text-cell">
+        <ol>
+          <li>Revisar <em>Quick Start</em> para ejecutar Spark localmente.</li>
+          <li>Leer <em>Cluster Mode Overview</em> para diferenciar driver, executors y cluster manager.</li>
+          <li>Practicar con <code>spark-submit</code> y shells de PySpark o Scala.</li>
+          <li>Profundizar en RDD para entender particiones, transformaciones perezosas y acciones.</li>
+          <li>Comparar Standalone, YARN y Kubernetes en función del entorno de despliegue.</li>
+        </ol>
+      </div>
+    </div>
+  </section>
+
+  <section id="ejercicios">
+    <div class="lesson-container">
+      <h3>EJERCICIOS PROPUESTOS</h3>
+      <hr>
+      <div class="text-cell">
+        <ol>
+          <li>Ejecuta un ejemplo con <code>spark-submit</code> y documenta driver, executors y stages en la Spark UI.</li>
+          <li>Escala un entorno Standalone a varios workers y compara la distribución de tareas.</li>
+          <li>Reduce memoria de executor y analiza el efecto sobre tiempo, spills o errores.</li>
+          <li>Consulta logs del master y workers para localizar inicio, asignación de recursos y finalización del job.</li>
+          <li>Elabora una tabla comparando Standalone, YARN y Kubernetes para un laboratorio docente.</li>
+        </ol>
+      </div>
+    </div>
+  </section>
+
+  <div class="navigation-buttons">
+    <button onclick="window.location.href='M2T1L7.html'">Anterior</button>
+    <button onclick="window.location.href='M2T1auto.html'">Siguiente: Autoevaluación</button>
+  </div>
 
 </main>
 <div data-include="/partials/footer.html"></div>

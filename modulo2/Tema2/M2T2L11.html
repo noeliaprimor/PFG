@@ -3,92 +3,184 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Módulo 2 — Tema 2 — Lección 11: Recursos y lecturas</title>
+  <title>M2T2L11 - Recursos y lecturas</title>
   <link rel="stylesheet" href="/css/styles.css" />
   <script src="/js/jquery-3.6.0.min.js"></script>
   <link rel="stylesheet" href="/css/prism-1.29.0.min.css" />
   <script src="/js/prism-1.29.0.min.js"></script>
 </head>
 <body>
-  <div data-include="/partials/header.html"></div>
-  <main>
-
- <nav class="lesson-nav">
-      <div class="crumbs">
-       <a href="/modulo2/modulo2.html">Módulo 2</a>
-         <span class="sep">/</span>
-    <a href="/modulo2/Tema2/index.html">Tema 2</a>
-    <span class="sep">/</span>
-    <a href="/modulo2/Tema2/M2T2L11.html" class="current" aria-current="page">Lección 11</a>
-      </div>
-    </nav>
-    <br>
-
-    <h2 class="titulos-leccion">Recursos y lecturas</h2>
-
-    <div class="indice-container">
-      <div id="index-container" class="text-cell">
-         <hr>
-         <ul>
-           <li><a href="#docs">Enlaces Externos</a></li>
-           <li><a href="#libros">Libros Recomendados</a></li>
-           <li><a href ="#tutorials">Tutoriales de Spark</a></li>
-         </ul>
-       </div>
-     </div>
-
-    <section id="docs">
-      <div class="lesson-container">
-        <h3>ENLACES EXTERNOS</h3>
-        <hr>
-        <div class="text-cell">
-          <p>Aquí encontrarás enlaces a la documentación oficial de Apache Spark, así como guías y recursos adicionales para profundizar en el aprendizaje de Spark SQL y su ecosistema.
-
-          </p>
-          <ul>
-            <li><a href="https://spark.apache.org/docs/latest/">Apache Spark — Documentación oficial</a></li>
-            <li><a href="https://spark.apache.org/docs/latest/sql-programming-guide.html">Spark SQL Programming Guide</a></li>
-
-          </ul>
-        </div>
-      </div>
-    </section>
-
-    <section id="libros">
-      <div class="lesson-container">
-        <h3>LIBROS RECOMENDADOS</h3>
-        <hr>
-        <div class="text-cell">
-          <p>Para completar esta lección, te recomendamos que revises los siguientes libros de la bibliografía, disponible para los estudiantes de la UNED en </p>
-          <ul>
-          <li><a href="https://www.oreilly.com/library/view/designing-data-intensive-applications/9781098119058/" target="_blank" rel="noopener noreferrer">Designing Data-Intensive Applications (Martin Kleppmann)</a></li>
-          <li><a href="https://www.oreilly.com/library/view/spark-in-action/9781617295522/" target="_blank" rel="noopener noreferrer">Spark in Action (Zeevi, Bonaci)</a></li>
-          </ul>
-        </div>
-      </div>
-    </section>
-
-    <section id="tutorials">
-      <div class="lesson-container">
-        <h3>TUTORIALS Y WEBS</h3>
-        <hr>
-        <div class="text-cell">
-          <ul>
-            <li><a href="https://www.cloudduggu.com/spark/">CloudDuggu — Tutorial de Spark</a></li>
-            <li><a href="https://spark-packages.org">Spark Packages</a></li>
-          </ul>
-        </div>
-      </div>
-    </section>
-
-    <div class="navigation-buttons">
-      <button onclick="window.location.href='M2T2L10.html'">Anterior</button>
-      <button onclick="window.location.href='M2T2L12.html'">Siguiente</button>
+<div data-include="/partials/header.html"></div>
+<main>
+  <nav class="lesson-nav">
+    <div class="crumbs">
+      <a href="/modulo2/modulo2.html">Módulo 2</a>
+      <span class="sep">/</span>
+      <a href="/modulo2/Tema2/index.html">Tema 2</a>
+      <span class="sep">/</span>
+      <a href="/modulo2/Tema2/M2T2L11.html" class="current" aria-current="page">Lección 11</a>
     </div>
+  </nav>
 
-  </main>
-  <div data-include="/partials/footer.html"></div>
-  <script src="/js/include.js"></script>
-  <script src="/js/script.js"></script>
+  <h2 class="titulos-leccion">Recursos y lecturas</h2>
+
+  <div class="indice-container">
+    <div id="index-container" class="text-cell">
+      <hr>
+      <ul>
+        <li><a href="#descripcion">Descripción</a></li>
+        <li><a href="#contenido">Contenido</a></li>
+        <li><a href="#ruta">Ruta recomendada</a></li>
+        <li><a href="#ejercicio">Aplicación al ejercicio</a></li>
+      </ul>
+    </div>
+  </div>
+
+  <section id="descripcion">
+    <div class="lesson-container">
+      <h3>DESCRIPCIÓN</h3>
+      <hr>
+      <div class="text-cell">
+        <p>
+          Esta lección reúne recursos para profundizar en el desarrollo de aplicaciones Spark:
+          creación de <code>SparkSession</code>, carga y guardado de datos, RDD, DataFrames,
+          Datasets, particionado, transformaciones, acciones y optimización de consultas.
+        </p>
+        <p>
+          Los enlaces están seleccionados para acompañar el ejercicio final del tema, donde se
+          espera razonar sobre la elección de APIs, formatos de datos, paralelismo y rendimiento.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section id="contenido">
+    <div class="lesson-container">
+      <h3>CONTENIDO</h3>
+      <hr>
+      <div class="text-cell">
+        <h4>APIs principales de Spark</h4>
+        <ul>
+          <li>
+            <a href="https://spark.apache.org/docs/latest/rdd-programming-guide.html" target="_blank">RDD Programming Guide</a>:
+            transformaciones, acciones, particiones, persistencia y variables compartidas.
+          </li>
+          <li>
+            <a href="https://spark.apache.org/docs/latest/sql-programming-guide.html" target="_blank">Spark SQL, DataFrames and Datasets Guide</a>:
+            referencia central para trabajar con datos estructurados.
+          </li>
+          <li>
+            <a href="https://spark.apache.org/docs/latest/api/python/index.html" target="_blank">PySpark API Reference</a>:
+            documentación de clases y funciones usadas en aplicaciones Python.
+          </li>
+          <li>
+            <a href="https://spark.apache.org/docs/latest/api/scala/org/apache/spark/sql/index.html" target="_blank">Spark SQL Scala API</a>:
+            referencia útil cuando se trabaja con Dataset tipado en Scala.
+          </li>
+        </ul>
+
+        <h4>Carga, guardado y formatos</h4>
+        <ul>
+          <li>
+            <a href="https://spark.apache.org/docs/latest/sql-data-sources.html" target="_blank">Generic Load/Save Functions</a>:
+            lectura y escritura con <code>DataFrameReader</code> y <code>DataFrameWriter</code>.
+          </li>
+          <li>
+            <a href="https://spark.apache.org/docs/latest/sql-data-sources-parquet.html" target="_blank">Parquet Data Source</a>:
+            formato columnar recomendado para analítica por rendimiento y compresión.
+          </li>
+          <li>
+            <a href="https://spark.apache.org/docs/latest/sql-data-sources-json.html" target="_blank">JSON Data Source</a>:
+            lectura de datos semiestructurados, inferencia de esquema y opciones de parseo.
+          </li>
+          <li>
+            <a href="https://spark.apache.org/docs/latest/sql-data-sources-jdbc.html" target="_blank">JDBC To Other Databases</a>:
+            integración con bases relacionales, particionado de lectura y escritura.
+          </li>
+        </ul>
+
+        <h4>Particionado y optimización</h4>
+        <ul>
+          <li>
+            <a href="https://spark.apache.org/docs/latest/tuning.html" target="_blank">Spark Tuning</a>:
+            memoria, serialización, caché, shuffle y recomendaciones generales de rendimiento.
+          </li>
+          <li>
+            <a href="https://spark.apache.org/docs/latest/sql-performance-tuning.html" target="_blank">Spark SQL Performance Tuning</a>:
+            particionado, broadcast joins, caché, Adaptive Query Execution y configuración SQL.
+          </li>
+          <li>
+            <a href="https://spark.apache.org/docs/latest/configuration.html" target="_blank">Spark Configuration</a>:
+            parámetros de ejecución, memoria, cores, shuffle y propiedades de aplicación.
+          </li>
+        </ul>
+
+        <h4>Bibliografía y aprendizaje complementario</h4>
+        <ul>
+          <li>
+            <a href="https://www.oreilly.com/library/view/learning-spark-2nd/9781492050032/" target="_blank">Learning Spark, 2nd Edition</a>:
+            libro práctico sobre DataFrames, Spark SQL, streaming y MLlib.
+          </li>
+          <li>
+            <a href="https://www.oreilly.com/library/view/designing-data-intensive-applications/9781098119058/" target="_blank">Designing Data-Intensive Applications</a>:
+            referencia para entender sistemas distribuidos, almacenamiento y procesamiento.
+          </li>
+          <li>
+            <a href="https://github.com/apache/spark/tree/master/examples" target="_blank">Spark Examples</a>:
+            ejemplos oficiales del repositorio de Apache Spark.
+          </li>
+          <li>
+            <a href="https://spark-packages.org" target="_blank">Spark Packages</a>:
+            catálogo de conectores y librerías externas para aplicaciones Spark.
+          </li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section id="ruta">
+    <div class="lesson-container">
+      <h3>RUTA RECOMENDADA</h3>
+      <hr>
+      <div class="text-cell">
+        <ol>
+          <li>Repasar RDD para comprender el modelo distribuido y la evaluación perezosa.</li>
+          <li>Pasar a DataFrames y Spark SQL para trabajar con optimización Catalyst.</li>
+          <li>Practicar lectura y escritura en CSV, JSON, Parquet y JDBC.</li>
+          <li>Medir el impacto de <code>repartition</code>, <code>coalesce</code>, caché y particionado físico.</li>
+          <li>Usar la Spark UI para interpretar stages, tasks, shuffle y tiempos de ejecución.</li>
+        </ol>
+      </div>
+    </div>
+  </section>
+
+  <section id="ejercicio">
+    <div class="lesson-container">
+      <h3>APLICACIÓN AL EJERCICIO</h3>
+      <hr>
+      <div class="text-cell">
+        <p>
+          Para el ejercicio final del tema, usa estos recursos para justificar:
+        </p>
+        <ul>
+          <li>Qué API eliges para cada operación: RDD, DataFrame o Dataset.</li>
+          <li>Qué formato de almacenamiento conviene usar y por qué.</li>
+          <li>Cómo particionas datos de entrada y salida.</li>
+          <li>Qué transformaciones provocan shuffle y cómo reducir su coste.</li>
+          <li>Qué evidencias de rendimiento aporta la Spark UI.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <div class="navigation-buttons">
+    <button onclick="window.location.href='M2T2L10.html'">Anterior</button>
+    <button onclick="window.location.href='M2T2L12.html'">Siguiente</button>
+  </div>
+
+</main>
+<div data-include="/partials/footer.html"></div>
+<script src="/js/include.js"></script>
+<script src="/js/script.js"></script>
 </body>
 </html>

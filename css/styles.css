@@ -141,6 +141,7 @@ section {
 .header-section{
   position: fixed;
   width: 100%;
+  z-index: 1000;
 }
 
 .header-content {
@@ -265,8 +266,12 @@ nav ul {
   position: absolute;
   top: 100%; /* Justo debajo del elemento padre */
   left: 0;
-  background-color: #e4f1ed;
-  min-width: 150px;
+  min-width: 280px;
+  text-align: left;
+  background-color: #ffffff;
+  border: 1px solid #c7ddd5;
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.18);
+  z-index: 2000;
 }
 
 /* --- MOSTRAR SUBMENÚ AL PASAR EL RATÓN --- */
@@ -283,23 +288,34 @@ nav li:focus-within > .submenu,
 .navbar li:hover > .submenu,
 .navbar li:focus-within > .submenu {
   display: block;
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
 }
 
 .submenu li {
   display: block; /* Vertical dentro del desplegable */
+  margin: 0;
+  background-color: #ffffff;
 }
 
 .submenu a {
-  width: max-content;
-  padding: 10px 12px;
+  width: auto;
+  min-width: 100%;
+  padding: 11px 14px;
   display: block;
   text-decoration: none;
-  color: #004d35;
+  color: #004d35 !important;
+  background-color: #ffffff;
+  line-height: 1.35;
+  white-space: normal;
 }
 
-.submenu a:hover {
-  background-color: #dbe3eb;
+.submenu a:hover,
+.submenu a:focus {
+  background-color: #e4f1ed;
   color: #1a3f33 !important;
+  outline: none;
 }
 
 /* Submenús anidados: mostrar a la derecha del elemento padre */
@@ -1734,4 +1750,3 @@ textarea {
     margin: 1.5em 0;
   }
 }
-

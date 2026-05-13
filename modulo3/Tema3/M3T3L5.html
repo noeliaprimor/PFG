@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>M3T3L5 — Ejercicio propuesto</title>
+  <title>M3T3L5 - Ejercicio avanzado Kafka + Spark Streaming</title>
   <link rel="stylesheet" href="/css/styles.css" />
   <script src="/js/jquery-3.6.0.min.js"></script>
   <link rel="stylesheet" href="/css/prism-1.29.0.min.css" />
@@ -22,17 +22,22 @@
     </div>
   </nav>
 
-  <h2 class="titulos-leccion">Ejercicio propuesto</h2>
+  <h2 class="titulos-leccion">Ejercicio avanzado: Kafka + Spark Structured Streaming</h2>
 
   <div class="indice-container">
     <div id="index-container" class="text-cell">
-        <hr>
-        <ul>
-          <li><a href="#enunciado">Enunciado</a></li>
-          <li><a href="#ejercicio">Ejercicio</a></li>
-        </ul>
-      </div>
+      <hr>
+      <ul>
+        <li><a href="#enunciado">Enunciado</a></li>
+        <li><a href="#arquitectura">Arquitectura</a></li>
+        <li><a href="#ficheros">Ficheros del laboratorio</a></li>
+        <li><a href="#ejecucion">Ejecución guiada</a></li>
+        <li><a href="#validacion">Validación</a></li>
+        <li><a href="#ampliaciones">Ampliaciones avanzadas</a></li>
+
+      </ul>
     </div>
+  </div>
 
   <section id="enunciado">
     <div class="lesson-container">
@@ -40,68 +45,250 @@
       <hr>
       <div class="text-cell">
         <p>
-          El objetivo de este ejercicio es construir un mini-pipeline de streaming con Spark
-          Structured Streaming. El flujo simula eventos de clickstream y transacciones, los procesa
-          por ventanas de tiempo de evento y escribe resultados en varios sinks Parquet.
+          En esta práctica vas a construir una evolución avanzada del pipeline de streaming del tema anterior,
+          en lugar de leer ficheros generados por un productor local, Spark Structured Streaming
+          consumirá eventos reales desde Kafka. El dominio elegido es un flujo de pedidos y
+          transacciones de comercio electrónico, con eventos válidos, eventos tardíos y registros
+          erróneos para forzar validación y cuarentena.
         </p>
         <p>
-          La práctica está diseñada para trabajar los elementos centrales del tema: esquemas
-          explícitos, microbatches, watermarks, checkpoints, métricas por ventana,
-          detección simple de alertas, escritura raw y uso de <code>foreachBatch</code>.
+          El objetivo no es solo arrancar Kafka y Spark, sino diseñar un pipeline reproducible con
+          lectura de Kafka, parseo JSON con esquema explícito, control de offsets mediante
+          checkpoints, enriquecimiento de eventos, múltiples sinks Parquet, alertas y escritura de
+          eventos enriquecidos en un segundo topic Kafka.
         </p>
+
+        <h4>Objetivos técnicos</h4>
+        <ol>
+          <li>Levantar Kafka en modo KRaft y un contenedor de laboratorio con PySpark.</li>
+          <li>Crear los topics <code>orders</code> y <code>orders_enriched</code>.</li>
+          <li>Generar eventos JSON con un productor Python.</li>
+          <li>Consumir Kafka desde Spark Structured Streaming con <code>spark-sql-kafka-0-10</code>.</li>
+          <li>Validar eventos y separar datos correctos de datos en cuarentena.</li>
+          <li>Calcular latencia de extremo a extremo y métricas por comercio, país y canal.</li>
+          <li>Detectar alertas por importes altos o eventos muy tardíos.</li>
+          <li>Persistir resultados en Parquet y publicar eventos enriquecidos de nuevo en Kafka.</li>
+        </ol>
+      </div>
+    </div>
+  </section>
+
+  <section id="arquitectura">
+    <div class="lesson-container">
+      <h3>ARQUITECTURA</h3>
+      <hr>
+      <div class="text-cell">
         <p>
-          El ejercicio se estructura en dos cuadernos:
+          El flujo del laboratorio es el siguiente:
+        </p>
+        <pre><code class="language-text">producer_orders.py
+        |
+        v
+Kafka topic: orders
+        |
+        v
+Spark Structured Streaming
+        |-- output/silver_orders
+        |-- output/quarantine_orders
+        |-- output/merchant_metrics
+        |-- output/alerts
+        |
+        v
+Kafka topic: orders_enriched</code></pre>
+
+        <h4>Esquema de evento</h4>
+        <pre><code class="language-json">{
+  "event_id": "uuid",
+  "event_time": "2026-05-11T10:30:00Z",
+  "source": "orders-simulator",
+  "customer_id": "c-0001",
+  "merchant_id": "m-100",
+  "country": "ES",
+  "channel": "web",
+  "amount": 125.50,
+  "currency": "EUR",
+  "device_id": "d-0007"
+}</code></pre>
+
+        <h4>Sinks generados</h4>
+        <ul>
+          <li><code>silver_orders</code>: eventos válidos enriquecidos con latencia, bucket de importe y batch.</li>
+          <li><code>quarantine_orders</code>: eventos mal formados o incompletos con motivo de error.</li>
+          <li><code>merchant_metrics</code>: métricas agregadas por comercio, país y canal.</li>
+          <li><code>alerts</code>: operaciones con importe alto o latencia excesiva.</li>
+          <li><code>orders_enriched</code>: topic Kafka con eventos válidos enriquecidos.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section id="ficheros">
+    <div class="lesson-container">
+      <h3>FICHEROS DEL LABORATORIO</h3>
+      <hr>
+      <div class="text-cell">
+        <p>
+          El laboratorio completo está en
+          <a href="kafka_spark_advanced_lab.zip">kafka_spark_advanced_lab.zip</a>.
         </p>
         <ul>
-          <li>
-            <strong>Productor:</strong> genera eventos JSON de navegación y transacciones en una
-            carpeta de entrada simulando una fuente continua.
-            <a href="notebooks/M3T3_productor_eventos_streaming.ipynb">Disponible aquí</a>
-          </li>
-          <li>
-            <strong>Consumidor:</strong> lee los eventos con Spark Structured Streaming, calcula
-            métricas, genera alertas y escribe resultados en sinks.
-            <a href="notebooks/M3T3_consumidor_pipeline_streaming.ipynb">Disponible aquí</a>
-          </li>
+          <li><a href="kafka_spark_advanced_lab/docker-compose.yml">docker-compose.yml</a>: Kafka y contenedor Spark.</li>
+          <li><a href="kafka_spark_advanced_lab/Dockerfile">Dockerfile</a>: imagen Python + Java + PySpark.</li>
+          <li><a href="kafka_spark_advanced_lab/requirements.txt">requirements.txt</a>: dependencias Python.</li>
+          <li><a href="kafka_spark_advanced_lab/app/producer_orders.py">producer_orders.py</a>: productor Kafka de pedidos.</li>
+          <li><a href="kafka_spark_advanced_lab/app/streaming_pipeline.py">streaming_pipeline.py</a>: pipeline Spark.</li>
+          <li><a href="kafka_spark_advanced_lab/app/validate_outputs.py">validate_outputs.py</a>: lectura batch de resultados Parquet.</li>
+          <li><a href="kafka_spark_advanced_lab/README.md">README.md</a>: comandos rápidos del laboratorio.</li>
         </ul>
+      </div>
+    </div>
+  </section>
+
+  <section id="ejecucion">
+    <div class="lesson-container">
+      <h3>EJECUCIÓN GUIADA</h3>
+      <hr>
+      <div class="text-cell">
+        <h4>1. Entrar en el laboratorio</h4>
+        <pre><code class="language-bash">cd modulo3/Tema3/kafka_spark_advanced_lab</code></pre>
+
+        <h4>2. Construir la imagen</h4>
+        <pre><code class="language-bash">docker compose build</code></pre>
+
         <p>
-          Para ejecutarlo, abre primero el cuaderno consumidor y prepara las consultas de streaming.
-          Después ejecuta el productor para generar nuevos ficheros y observar cómo Spark procesa
-          los microbatches de forma incremental.
+          Si hay un error de paquetes durante la construcción, reconstruye sin caché:
+        </p>
+        <pre><code class="language-bash">docker compose build --no-cache lab</code></pre>
+
+        <h4>3. Arrancar Kafka</h4>
+        <pre><code class="language-bash">docker compose up -d kafka
+docker compose ps</code></pre>
+
+        <h4>4. Crear topics</h4>
+        <p>
+          Crea primero el topic de entrada <code>orders</code>. El productor publicará aquí los
+          eventos JSON de pedidos.
+        </p>
+        <pre><code class="language-bash">docker compose exec kafka /opt/kafka/bin/kafka-topics.sh \
+  --bootstrap-server kafka:9092 \
+  --create \
+  --if-not-exists \
+  --topic orders \
+  --partitions 3 \
+  --replication-factor 1</code></pre>
+
+        <p>
+          Crea después el topic de salida <code>orders_enriched</code>. El job Spark escribirá aquí
+          los eventos válidos ya enriquecidos.
+        </p>
+        <pre><code class="language-bash">docker compose exec kafka /opt/kafka/bin/kafka-topics.sh \
+  --bootstrap-server kafka:9092 \
+  --create \
+  --if-not-exists \
+  --topic orders_enriched \
+  --partitions 3 \
+  --replication-factor 1</code></pre>
+
+        <p>
+          Comprueba la configuración:
+        </p>
+        <pre><code class="language-bash">docker compose exec kafka /opt/kafka/bin/kafka-topics.sh \
+  --bootstrap-server kafka:9092 \
+  --describe \
+  --topic orders</code></pre>
+
+        <h4>5. Producir eventos</h4>
+        <pre><code class="language-bash">docker compose run --rm lab \
+  python /workspace/app/producer_orders.py \
+  --bootstrap-server kafka:9092 \
+  --topic orders \
+  --messages 1000 \
+  --sleep 0.01 \
+  --invalid-rate 0.03 \
+  --late-rate 0.08</code></pre>
+
+        <h4>6. Inspeccionar mensajes en Kafka</h4>
+        <pre><code class="language-bash">docker compose exec kafka /opt/kafka/bin/kafka-console-consumer.sh \
+  --bootstrap-server kafka:9092 \
+  --topic orders \
+  --from-beginning \
+  --max-messages 5</code></pre>
+
+        <h4>7. Ejecutar el pipeline Spark</h4>
+        <pre><code class="language-bash">docker compose run --rm lab \
+  spark-submit \
+  --packages org.apache.spark:spark-sql-kafka-0-10_2.12:3.5.1 \
+  /workspace/app/streaming_pipeline.py \
+  --bootstrap-server kafka:9092 \
+  --input-topic orders \
+  --enriched-topic orders_enriched \
+  --output /workspace/output \
+  --checkpoint /workspace/checkpoint/orders_stream</code></pre>
+
+        <p>
+          La salida debe mostrar los registros válidos, inválidos, métricas y alertas procesadas por batch.
+        </p>
+
+        <h4>8. Comprobar el topic enriquecido</h4>
+        <pre><code class="language-bash">docker compose exec kafka /opt/kafka/bin/kafka-console-consumer.sh \
+  --bootstrap-server kafka:9092 \
+  --topic orders_enriched \
+  --from-beginning \
+  --max-messages 5</code></pre>
+      </div>
+    </div>
+  </section>
+
+  <section id="validacion">
+    <div class="lesson-container">
+      <h3>VALIDACIÓN</h3>
+      <hr>
+      <div class="text-cell">
+        <p>
+          Lee los Parquet generados con Spark en modo batch:
+        </p>
+        <pre><code class="language-bash">docker compose run --rm lab \
+  python /workspace/app/validate_outputs.py</code></pre>
+
+        <p>
+          Deben aparecer registros en <code>silver_orders</code>, <code>merchant_metrics</code> y,
+          si el productor generó importes altos o eventos tardíos, también en <code>alerts</code>.
+          La cuarentena puede contener registros si se usó <code>--invalid-rate</code> mayor que cero.
+        </p>
+
+        <h4>Repetir una prueba desde cero</h4>
+        <pre><code class="language-bash">rm -rf output/* checkpoint/*
+docker compose down -v</code></pre>
+
+        <p>
+          Después arranca de nuevo Kafka, crea los topics y repite la producción y el consumo.
         </p>
       </div>
     </div>
   </section>
 
-  <section id="ejercicio">
+  <section id="ampliaciones">
     <div class="lesson-container">
-      <h3>EJERCICIO</h3>
+      <h3>AMPLIACIONES AVANZADAS</h3>
       <hr>
       <div class="text-cell">
-        <p>
-          Una vez ejecutados los notebooks, realiza las siguientes actividades:
-        </p>
         <ol>
-          <li>Aumenta <code>EVENTS_PER_BATCH</code> y observa cómo cambia el tiempo de procesamiento.</li>
-          <li>Modifica la probabilidad de eventos tardíos y documenta su efecto en las ventanas.</li>
-          <li>Cambia el watermark de 10 minutos a 2 minutos y después a 20 minutos.</li>
-          <li>Cambia la ventana de clickstream de 2 minutos a 5 minutos.</li>
-          <li>Añade una métrica de usuarios únicos por tipo de evento.</li>
-          <li>Crea un sink separado para eventos inválidos o incompletos.</li>
-          <li>Modifica la regla de alertas para detectar importes acumulados superiores a otro umbral.</li>
-          <li>Consulta los ficheros Parquet generados con Spark batch y valida los resultados.</li>
-          <li>Detén y reinicia el consumidor manteniendo los checkpoints para comprobar la recuperación.</li>
-          <li>Borra un checkpoint en un entorno de prueba y explica qué cambia en el reprocesamiento.</li>
-          <li>Usa <code>query.lastProgress</code> para documentar registros procesados y duración de microbatch.</li>
-          <li>Propón cómo adaptarías el ejercicio para leer desde Kafka real en lugar de ficheros.</li>
+          <li>Añade una agregación por ventanas de 5 minutos con watermark de 10 minutos.</li>
+          <li>Calcula usuarios únicos aproximados por país y canal con <code>approx_count_distinct</code>.</li>
+          <li>Implementa una regla de fraude por cliente: más de 5 operaciones en 2 minutos o importe acumulado superior a 1500 EUR.</li>
+          <li>Cambia el productor para generar claves Kafka por <code>customer_id</code> y analiza la distribución por particiones.</li>
+          <li>Activa compresión en el productor y compara el tiempo de envío.</li>
+          <li>Ejecuta el job dos veces con el mismo checkpoint y explica por qué no reprocesa offsets.</li>
+          <li>Borra solo el checkpoint, conserva Kafka, vuelve a ejecutar y documenta el reprocesamiento.</li>
+          <li>Publica alertas en un tercer topic <code>orders_alerts</code>.</li>
+          <li>Sustituye Parquet por Delta Lake y razona qué mejora en actualizaciones e idempotencia.</li>
+          <li>Documenta qué decisiones son de laboratorio y cuáles serían necesarias en producción: seguridad, retención, particionado, observabilidad y gestión de errores.</li>
         </ol>
-        <p>
-          Como entrega, incluye los notebooks modificados, una breve memoria con decisiones de diseño
-          y capturas o salidas que demuestren los resultados de los sinks y las métricas de ejecución.
-        </p>
       </div>
     </div>
   </section>
+
+
 
   <div class="navigation-buttons">
     <button onclick="window.location.href='M3T3L4.html'">Anterior</button>

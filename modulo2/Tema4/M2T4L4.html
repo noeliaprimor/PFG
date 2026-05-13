@@ -3,86 +3,197 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Módulo 2 — Tema 4 — Lección 4: Recursos y lecturas</title>
+  <title>M2T4L4 - Recursos y lecturas</title>
   <link rel="stylesheet" href="/css/styles.css" />
   <script src="/js/jquery-3.6.0.min.js"></script>
   <link rel="stylesheet" href="/css/prism-1.29.0.min.css" />
   <script src="/js/prism-1.29.0.min.js"></script>
 </head>
 <body>
-  <div data-include="/partials/header.html"></div>
-  <main>
-
- <nav class="lesson-nav">
-      <div class="crumbs">
-       <a href="/modulo2/modulo2.html">Módulo 2</a>
-         <span class="sep">/</span>
-    <a href="/modulo2/Tema4/index.html">Tema 4</a>
-    <span class="sep">/</span>
-    <a href="/modulo2/Tema4/M2T4L4.html" class="current" aria-current="page">Lección 4</a>
-      </div>
-    </nav>
-    <br>
-
-    <h2 class="titulos-leccion">Recursos y lecturas</h2>
-
-    <div class="indice-container">
-      <div id="index-container" class="text-cell">
-         <hr>
-         <ul>
-           <li><a href="#docs">Documentación</a></li>
-           <li><a href="#tools">Herramientas útiles</a></li>
-         </ul>
-       </div>
-     </div>
-
-    <section id="docs">
-      <div class="lesson-container">
-        <h3>DOCUMENTACIÓN</h3>
-        <hr>
-        <div class="text-cell">
-          <ul>
-            <li><a href="https://spark.apache.org/docs/latest/">Apache Spark docs</a></li>
-            <li><a href="https://spark.apache.org/docs/latest/monitoring.html">Monitoring Spark</a></li>
-          </ul>
-        </div>
-      </div>
-    </section>
-
-    <section id="tools">
-      <div class="lesson-container">
-        <h3>ENLACES EXTERNOS</h3>
-        <hr>
-        <div class="text-cell">
-          <ul>
-            <li><a href="https://grafana.com/es/go/webinar/metricas-con-grafana-labs-prometheus-llevado-al-siguiente-nivel/">Prometheus + Grafana (métricas)</a></li>
-            <li><a href="https://www.elastic.co/docs/deploy-manage/monitor/logging-configuration/kibana-logging">Elasticsearch / Kibana (logs)</a></li>
-          </ul>
-        </div>
-      </div>
-    </section>
-
-    <section id="articulos">
-      <div class="lesson-container">
-        <h3>ARTÍCULOS Y CASOS</h3>
-        <hr>
-        <div class="text-cell">
-          <ul>
-            <li><a href="https://databricks.com/blog/">Databricks blog (operaciones y optimizaciones)</a></li>
-            <li><a href="https://spark.apache.org/docs/latest/security.html">Spark Security</a></li>
-          </ul>
-        </div>
-      </div>
-    </section>
-
-    <div class="navigation-buttons">
-      <button onclick="window.location.href='M2T4L3.html'">Anterior</button>
-      <button onclick="window.location.href='M2T4L5.html'">Siguiente</button>
+<div data-include="/partials/header.html"></div>
+<main>
+  <nav class="lesson-nav">
+    <div class="crumbs">
+      <a href="/modulo2/modulo2.html">Módulo 2</a>
+      <span class="sep">/</span>
+      <a href="/modulo2/Tema4/index.html">Tema 4</a>
+      <span class="sep">/</span>
+      <a href="/modulo2/Tema4/M2T4L4.html" class="current" aria-current="page">Lección 4</a>
     </div>
+  </nav>
 
-  </main>
-  <div data-include="/partials/footer.html"></div>
-  <script src="/js/include.js"></script>
-  <script src="/js/script.js"></script>
+  <h2 class="titulos-leccion">Recursos y lecturas</h2>
+
+  <div class="indice-container">
+    <div id="index-container" class="text-cell">
+      <hr>
+      <ul>
+        <li><a href="#descripcion">Descripción</a></li>
+        <li><a href="#contenido">Contenido</a></li>
+        <li><a href="#ruta">Ruta recomendada</a></li>
+        <li><a href="#checklist">Checklist operativo</a></li>
+      </ul>
+    </div>
+  </div>
+
+  <section id="descripcion">
+    <div class="lesson-container">
+      <h3>DESCRIPCIÓN</h3>
+      <hr>
+      <div class="text-cell">
+        <p>
+          Esta lección agrupa recursos para operar aplicaciones Spark: monitorización, configuración,
+          ajuste de rendimiento, seguridad, despliegue, análisis de logs y resolución de errores.
+        </p>
+        <p>
+          Los enlaces están pensados para pasar de ejecutar notebooks o jobs locales a administrar
+          aplicaciones Spark de forma sistemática, con métricas, evidencias y criterios de diagnóstico.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section id="contenido">
+    <div class="lesson-container">
+      <h3>CONTENIDO</h3>
+      <hr>
+      <div class="text-cell">
+        <h4>Monitorización de Spark</h4>
+        <ul>
+          <li>
+            <a href="https://spark.apache.org/docs/latest/monitoring.html" target="_blank">Spark Monitoring</a>:
+            Spark UI, métricas, REST API, logs, event logs y seguimiento de aplicaciones.
+          </li>
+          <li>
+            <a href="https://spark.apache.org/docs/latest/web-ui.html" target="_blank">Spark Web UI</a>:
+            interpretación de jobs, stages, tasks, storage, environment y SQL plans.
+          </li>
+          <li>
+            <a href="https://spark.apache.org/docs/latest/job-scheduling.html" target="_blank">Job Scheduling</a>:
+            colas, pools, fair scheduler y aislamiento de cargas.
+          </li>
+        </ul>
+
+        <h4>Configuración y rendimiento</h4>
+        <ul>
+          <li>
+            <a href="https://spark.apache.org/docs/latest/configuration.html" target="_blank">Spark Configuration</a>:
+            propiedades de memoria, cores, ejecutores, red, shuffle y SQL.
+          </li>
+          <li>
+            <a href="https://spark.apache.org/docs/latest/tuning.html" target="_blank">Spark Tuning</a>:
+            serialización, uso de memoria, caché, GC y reducción de costes de shuffle.
+          </li>
+          <li>
+            <a href="https://spark.apache.org/docs/latest/sql-performance-tuning.html" target="_blank">SQL Performance Tuning</a>:
+            AQE, broadcast joins, particionado, coalescing y optimizaciones del motor SQL.
+          </li>
+          <li>
+            <a href="https://spark.apache.org/docs/latest/running-on-kubernetes.html" target="_blank">Running Spark on Kubernetes</a>:
+            configuración de recursos, imágenes, volúmenes y despliegue en contenedores.
+          </li>
+        </ul>
+
+        <h4>Seguridad y despliegue</h4>
+        <ul>
+          <li>
+            <a href="https://spark.apache.org/docs/latest/security.html" target="_blank">Spark Security</a>:
+            autenticación, cifrado, ACLs, SSL y recomendaciones de seguridad.
+          </li>
+          <li>
+            <a href="https://spark.apache.org/docs/latest/running-on-yarn.html" target="_blank">Running Spark on YARN</a>:
+            despliegue en entornos Hadoop, colas y configuración de recursos.
+          </li>
+          <li>
+            <a href="https://spark.apache.org/docs/latest/spark-standalone.html" target="_blank">Spark Standalone Mode</a>:
+            operación de master, workers, alta disponibilidad y recuperación.
+          </li>
+          <li>
+            <a href="https://docs.docker.com/compose/" target="_blank">Docker Compose Documentation</a>:
+            laboratorios reproducibles para validar configuraciones y escenarios de error.
+          </li>
+        </ul>
+
+        <h4>Logs, métricas externas y observabilidad</h4>
+        <ul>
+          <li>
+            <a href="https://prometheus.io/docs/introduction/overview/" target="_blank">Prometheus Overview</a>:
+            base conceptual para recoger series temporales de métricas.
+          </li>
+          <li>
+            <a href="https://grafana.com/docs/grafana/latest/" target="_blank">Grafana Documentation</a>:
+            creación de paneles y visualización de métricas operativas.
+          </li>
+          <li>
+            <a href="https://www.elastic.co/guide/index.html" target="_blank">Elastic Documentation</a>:
+            análisis centralizado de logs con Elasticsearch, Logstash, Beats y Kibana.
+          </li>
+          <li>
+            <a href="https://opentelemetry.io/docs/" target="_blank">OpenTelemetry Documentation</a>:
+            referencia para trazas, métricas y logs en sistemas distribuidos.
+          </li>
+        </ul>
+
+        <h4>Diagnóstico de errores frecuentes</h4>
+        <ul>
+          <li>
+            <a href="https://spark.apache.org/docs/latest/debugging.html" target="_blank">Debugging Spark Applications</a>:
+            pautas para investigar errores en aplicaciones Spark.
+          </li>
+          <li>
+            <a href="https://spark.apache.org/docs/latest/preview/configuration.html" target="_blank">Configuration Reference</a>:
+            recurso de apoyo para localizar parámetros relacionados con fallos de memoria, red o shuffle.
+          </li>
+          <li>
+            <a href="https://spark.apache.org/docs/latest/sql-migration-guide.html" target="_blank">SQL Migration Guide</a>:
+            útil cuando un error aparece tras cambiar de versión de Spark.
+          </li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section id="ruta">
+    <div class="lesson-container">
+      <h3>RUTA RECOMENDADA</h3>
+      <hr>
+      <div class="text-cell">
+        <ol>
+          <li>Ejecutar un job y analizar Spark UI antes de cambiar configuración.</li>
+          <li>Identificar cuellos de botella: CPU, memoria, shuffle, skew, entrada/salida o red.</li>
+          <li>Ajustar recursos de driver y executors con una hipótesis concreta.</li>
+          <li>Validar el efecto con métricas, no solo con tiempo total de ejecución.</li>
+          <li>Documentar configuración, versión, tamaño de datos, logs relevantes y resultado.</li>
+        </ol>
+      </div>
+    </div>
+  </section>
+
+  <section id="checklist">
+    <div class="lesson-container">
+      <h3>CHECKLIST OPERATIVO</h3>
+      <hr>
+      <div class="text-cell">
+        <ul>
+          <li>¿La aplicación tiene nombre, logs y configuración reproducible?</li>
+          <li>¿Se guardan event logs para investigar ejecuciones terminadas?</li>
+          <li>¿Se ha revisado el número de particiones y el coste del shuffle?</li>
+          <li>¿Los errores de memoria diferencian driver, executor y overhead?</li>
+          <li>¿Existen métricas para latencia, throughput, fallos y consumo de recursos?</li>
+          <li>¿La seguridad cubre autenticación, red, permisos y datos sensibles?</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <div class="navigation-buttons">
+    <button onclick="window.location.href='M2T4L3.html'">Anterior</button>
+    <button onclick="window.location.href='M2T4L5.html'">Siguiente</button>
+  </div>
+
+</main>
+<div data-include="/partials/footer.html"></div>
+<script src="/js/include.js"></script>
+<script src="/js/script.js"></script>
 </body>
 </html>

@@ -1253,24 +1253,8 @@
         },
         "respuestaCorrecta": "A"
       },
-      {
-        "pregunta": "En el ejercicio final del tema, ¿qué genera el notebook productor?",
-        "opciones": {
-          "A": "Eventos JSON de clickstream y transacciones",
-          "B": "Un clúster Kubernetes completo",
-          "C": "Una base de datos relacional con usuarios reales"
-        },
-        "respuestaCorrecta": "A"
-      },
-      {
-        "pregunta": "En el ejercicio final, ¿qué realiza el notebook consumidor?",
-        "opciones": {
-          "A": "Lee eventos, calcula métricas por ventana, genera alertas y escribe sinks Parquet",
-          "B": "Publica una página de marketing",
-          "C": "Instala Kafka Connect automáticamente"
-        },
-        "respuestaCorrecta": "A"
-      },
+
+
       {
         "pregunta": "¿Qué riesgo existe al borrar un checkpoint sin estrategia clara?",
         "opciones": {
