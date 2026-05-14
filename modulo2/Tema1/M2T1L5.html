@@ -38,17 +38,16 @@
         <div id="index-container" class="text-cell">
              <hr>
              <ul>
-                 <li><a href="#descripcion">Descripción</a></li>
+                 <li><a href="#descripcion">Introducción</a></li>
                  <li><a href="#standalone">Instalación Standalone</a></li>
                  <li><a href="docker">Instalación en cluster Docker</a></li>
-                 <li><a href="#saber-mas">Para saber más</a></li>
              </ul>
          </div>
      </div>
     <section id="descripcion">
     <!-- Descripcion -->
         <div class="lesson-container">
-            <h3>DESCRIPCIÓN</h3>
+            <h3>INTRODUCCIÓN</h3>
             <hr>
             <div class="text-cell">
             <p>El objetivo de esta lección es realizar la instalación de Apache Spark tanto en forma standalone como en un clúster dockers.
@@ -157,8 +156,8 @@ pyspark --master local[*]
 
                   </ul>
 
-                <p> En <a href="https://www.docker.com/101-tutorial/">este enlace</a>, hay un tutoarial sencillo sobre la instalación
-                y la puesta en marcha de doker en varios sitemas operativos. Nosotros como en el caso anterior, hemos realizado la
+                <p> En <a href="https://www.docker.com/101-tutorial/">este enlace</a>, hay un tutorial sencillo sobre la instalación
+                y la puesta en marcha de doker en varios sistemas operativos. Nosotros como en el caso anterior, hemos realizado la
                 instalación en un sistema Ubuntu.</p>
               </div>
 
@@ -167,7 +166,7 @@ pyspark --master local[*]
             <br>
             <img src="/img/M2T2L5_6.png">
             <p class="img-caption">Figura 6: Confirmación exitosa de instalación de Docker</p>
-            <p>Se recomienda tambien instalar la versión Docker Deskop para poder acceder de forma visual a los detalles de la herramienta
+            <p>Se recomienda también instalar la versión Docker Deskop para poder acceder de forma visual a los detalles de la herramienta
             para ello ha que descargar la última versión del paquete de la <a href="https://desktop.docker.com/linux/main/amd64/docker-desktop-amd64.deb?utm_source=docker&utm_medium=webreferral&utm_campaign=docs-driven-download-linux-amd64">Siguiente dirección y ejecutar:</a></p>
             <pre><code class="language-bash bash-code">
 sudo dpkg -i docker-desktop-amd64.deb
@@ -229,9 +228,9 @@ services:
 
 </code></pre>
               <div class="text-cell">
-                  <h4>Inicialización del cluster Docker</h4>
+                  <h4>Inicialización del clúster Docker</h4>
 
-                  <p>Este archivo define un cluster de Spark con un nodo maestro y dos nodos trabajadores. Para iniciar el cluster, simplemente ejecutamos:</p>
+                  <p>Este archivo define un cluster de Spark con un nodo maestro y dos nodos trabajadores. Para iniciar el clúster, simplemente ejecutamos:</p>
                   <pre><code class="language-bash bash-code">
 docker compose up -d
 docker compose up -d --scale spark-worker=2
@@ -323,22 +322,7 @@ docker compose down
 
 
       </section>
-    <section  id="saber-mas">
-         <!-- Para saber más -->
-        <div class="lesson-container indice-modulos">
-            <h3>Para saber más</h3>
-            <hr>
-            <div class="text-cell">
-                <ul>
-                       <li> <a href="https://spark.apache.org/docs/latest/">Documentación oficial de Spark</a></li>
-                        <li><a href="https://www.cloudduggu.com/spark/">Tutorial de referencia</a> </li>
-                        <li><a href="https://docs.docker.com/desktop/setup/install/linux/ubuntu">Instalación de Docker Descktop/</a></li>
-                        <li><a href="https://hub.docker.com/hardened-images/catalog/dhi/spark">Imagen docker de apache spark</a></li>
-                </ul>
-            </div>
 
-        </div>
-    </section>
 
         <div>
             <div class="navigation-buttons">

@@ -32,16 +32,15 @@
         <div id="index-container" class="text-cell">
             <hr>
             <ul>
-                <li><a href="#descripcion">Descripción</a></li>
-                <li><a href="#contenidos">Contenidos</a></li>
-                <li><a href="#saber-mas">Para saber más</a></li>
+                <li><a href="#descripcion">Introducción</a></li>
+                <li><a href="#contenidos">Contenido</a></li>
             </ul>
         </div>
     </div>
     <section id="descripcion">
     <!-- Descripcion -->
         <div class="lesson-container">
-            <h3>DESCRIPCIÓN</h3>
+            <h3>INTRODUCCIÓN</h3>
             <hr>
             <div class="text-cell">
 
@@ -51,8 +50,11 @@
                     <li><strong>Spark SQL:</strong> Permite a los usuarios ejecutar consultas SQL sobre datos estructurados utilizando el motor de Spark, lo que facilita el análisis de datos tabulares.</li>
                     <li><strong>Spark Streaming:</strong> Proporciona capacidades para procesar flujos de datos en tiempo real, lo que es útil para aplicaciones como la monitorización y el análisis de eventos en tiempo real.</li>
                     <li><strong>Spark MLlib:</strong> Es una biblioteca de aprendizaje automático que ofrece algoritmos y herramientas para construir modelos de machine learning sobre grandes conjuntos de datos.</li>
-                    <strong>Spark GraphX:</strong> Permite el procesamiento y análisis de grafos, lo que es útil para aplicaciones como la detección de comunidades y el análisis de redes sociales.
+                    <li><strong>Spark GraphX:</strong> Permite el procesamiento y análisis de grafos, lo que es útil para aplicaciones como la detección de comunidades y el análisis de redes sociales.</li>
                 </ul>
+              <img src="/img/M2T2L2_1.png" alt="Spark Core">
+       <p class="img-caption">Figura 1: Arquitectura de Spark Core como componente fundamental del motor de ejecución</p>
+
                 <p>Estos componentes trabajan juntos para proporcionar una plataforma unificada que puede manejar una amplia variedad de casos de uso en el ámbito del Big Data, desde el procesamiento por lotes hasta el análisis en tiempo real y el aprendizaje automático.</p>
               <p>A continuación vamos a revisar cada uno de ellos en profundidad.</p>
 
@@ -64,7 +66,7 @@
          <!-- Contenidos -->
         <div class="lesson-container">
 
-            <h3>CONTENIDOS</h3>
+            <h3>CONTENIDO</h3>
             <hr>
 
             <!-- Blóque con texto -->
@@ -83,10 +85,9 @@
                <li>Comunicación entre los elementos</li>
                <li>Planificación y ejecución de tareas</li>
              </ul>
-       <img src="/img/M2T2L2_1.png" alt="Spark Core" class="content-image">
-       <p class="img-caption">Figura 1: Arquitectura de Spark Core como componente fundamental del motor de ejecución</p>
        <p>Spark Core es la base sobre la que se construyen los demás componentes de Spark, como Spark SQL, Spark Streaming, MLlib y GraphX. Proporciona las funcionalidades necesarias para ejecutar operaciones de procesamiento de datos en paralelo y manejar grandes volúmenes de datos de manera eficiente.</p>
- <h4>Spark SQL</h4>
+              <hr>
+              <h4>Spark SQL</h4>
               <p>Spark SQL es un módulo de Spark que permite a los usuarios ejecutar consultas SQL sobre datos estructurados utilizando el motor de Spark. Proporciona una interfaz de alto nivel para trabajar con datos tabulares y es compatible con una amplia variedad de fuentes de datos, como archivos CSV, JSON, Parquet, bases de datos relacionales y más.</p> <p>Spark SQL se basa en el motor de ejecución de Spark Core y utiliza un optimizador llamado Catalyst para mejorar el rendimiento de las consultas. Además, Spark SQL ofrece una API de DataFrame que permite a los usuarios manipular datos estructurados de manera más intuitiva y eficiente.</p> <p>Con Spark SQL, los usuarios pueden realizar operaciones como filtrado, agregación, unión y ordenamiento de datos utilizando sintaxis SQL familiar, lo que facilita el análisis de grandes conjuntos de datos estructurados.</p>
 <br>
   <pre><code class="language-python python-code">
@@ -94,7 +95,7 @@ results = spark.sql("SELECT * FROM table")
 results.show()</code></pre>
   <p class="img-caption">Ejemplo de ejecución de spark sql para una cosulta simple</p>
 
-
+              <hr>
             <h4>Spark Streaming</h4>
 
 
@@ -151,7 +152,7 @@ query.awaitTermination()
   <p class="img-caption">Ejemplo de ejecución de Spark Steaming en Python</p>
 
 
-
+              <hr>
   <h4>Spark MLlib</h4>
   <p>Spark MLlib es una biblioteca de aprendizaje automático que ofrece
     algoritmos y herramientas para construir modelos de machine learning
@@ -216,7 +217,7 @@ print("AUC =", auc)
 
 </code></pre>
   <p class="img-caption">Ejemplo de ejecución de Spark MLlib en Pythom</p>
-
+              <hr>
 
             <h4>Spark GraphX</h4>
             <p>Spark GraphX es un módulo de Spark que permite el procesamiento y
@@ -302,22 +303,7 @@ object GraphXExample {
 </div>
 
     </section>
-    <section  id="saber-mas">
-         <!-- Para saber más -->
-        <div class="lesson-container indice-modulos">
-            <h3>Para saber más</h3>
-            <hr>
-            <div class="text-cell">
-                <ul>
-                       <li><a href="/modulo2/Tema3/M2T3L2.html">Gestión de datos al modo SQL: Spark SQL</a></li>
-      <li><a href="/modulo2/Tema3/M2T3L3.html">Procesamiento de grafos: GraphX</a></li>
-      <li><a href="/modulo2/Tema3/M2T3L4.html">Procesamiento de flujos: Spark Streaming / Structured Streaming</a></li>
-      <li><a href="/modulo2/Tema3/M2T3L5.html">Machine Learning con MLlib</a></li>
-                    </ul>
-            </div>
 
-        </div>
-    </section>
         <div>
             <div class="navigation-buttons">
     <button onclick="window.location.href='M2T1L1.html'">Anterior</button>
