@@ -4,25 +4,88 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Instalación y configuración de Spark</title>
-  <link rel="stylesheet" href="/css/styles.css" />
+  <link rel="stylesheet" href="../../css/styles.css" />
     <script src="https://kit.fontawesome.com/d8a0cf358f.js" crossorigin="anonymous"></script>
-  <script src="/js/jquery-3.6.0.min.js"></script>
+  <script src="../../js/jquery-3.6.0.min.js"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" />
 <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
 
 </head>
 <body>
-<div data-include="/partials/header.html"></div>
+<header class="header-section">
+      <div class="header-content">
+        <div class="title">
+          <a href="../../index.html">
+            <p id="titulo">Infraestructuras computacionales para el procesamiento de datos masivos</p>
+          </a>
+        </div>
+        <div class="logo">
+          <a target="_blank" href="https://www.uned.es/universidad/facultades/informatica.html">
+            <img src="../../img/logo_informatica.gif" alt="Logo ETSI Informatica UNED">
+          </a>
+        </div>
+      </div>
+
+      <div class="menu-section">
+        <nav class="navbar">
+
+
+          <ul class="nav_menu">
+
+
+            <li><a href="../../index.html">Inicio</a></li>
+
+            <li class="dropdown">
+              <a href="../../index.html"> Contenido de la asignatura <i class="fa-solid fa-caret-down" style="padding-left: 5px; color: #ffffff;"></i></a>
+              <ul class="submenu">
+                <li><a href="../../modulo1/index.html">Módulo 1: Ecosistema de procesamiento paralelo para datos masivos: Apache Hadoop</a></li>
+                <li><a href="../modulo2.html">Módulo 2:Procesamiento paralelo basado en memoria: Apache Spark</a></li>
+                <li><a href="../../modulo3/modulo3.html">Módulo 3: Gestión de datos en tiempo Real</a></li>
+              </ul>
+            </li>
+
+            <li class="dropdown">
+              <a href="../../modulo1/index.html"> Modulo 1 <i class="fa-solid fa-caret-down" style="padding-left: 5px; color: #ffffff;"></i></a>
+              <ul class="submenu">
+                <li><a href="../../modulo1/index.html">Preparación del Entorno</a></li>
+                <li><a href="../../modulo1/modulo1/index.html">Tema 1: Introducción a BigData</a></li>
+                <li><a href="../../modulo1/modulo2/index.html">Tema 2: El núcleo de Hadoop</a></li>
+              </ul>
+            </li>
+
+            <li class="dropdown">
+              <a href="../modulo2.html"> Modulo 2 <i class="fa-solid fa-caret-down" style="padding-left: 5px; color: #ffffff;"></i></a>
+              <ul class="submenu">
+                <li><a href="./index.html">Tema1: Introducción e instalación de Apache Spark</a></li>
+                <li><a href="../Tema2/index.html">Tema2: Programación de aplicaciones en Spark</a></li>
+                <li><a href="../Tema3/index.html">Tema 3: Librerías/Componentes de Spark</a></li>
+                <li><a href="../Tema4/index.html">Tema 4: Configuración, Monitorización y optimización de Spark</a></li>
+              </ul>
+            </li>
+
+            <li class="dropdown">
+              <a href="../../modulo3/modulo3.html"> Modulo 3 <i class="fa-solid fa-caret-down" style="padding-left: 5px; color: #ffffff;"></i></a>
+              <ul class="submenu">
+                <li><a href="../../modulo3/Tema1/index.html">Tema1: Introducción a las arquitecturas de procesamiento de streams: Lamba y Kappa</a></li>
+                <li><a href="../../modulo3/Tema2/index.html">Tema2:Componentes tecnológicos de adquisición y transmisión/distribución de eventos:Kafka</a></li>
+                <li><a href="../../modulo3/Tema3/index.html">Tema 3: Procesamiento de Stream: Spark Streaming</a></li>
+              </ul>
+            </li>
+
+          </ul>
+        </nav>
+      </div>
+    </header>
 <main>
 
 
  <nav class="lesson-nav">
       <div class="crumbs">
-       <a href="/modulo2/Tema1/index.html">Módulo 2</a>
+       <a href="./index.html">Módulo 2</a>
          <span class="sep">/</span>
-    <a href="/modulo2/Tema1/index.html">Tema 1</a>
+    <a href="./index.html">Tema 1</a>
     <span class="sep">/</span>
-    <a href="/modulo2/Tema1/M2T1L5.html" class="current" aria-current="page">Lección 5</a>
+    <a href="./M2T1L5.html" class="current" aria-current="page">Lección 5</a>
       </div>
     </nav>
     <br>
@@ -71,13 +134,13 @@
             <div class="text-cell">
                 <ul>
                     <li>Java 8 o superior (OpenJDK recomendado)</li>
-                  <img src="/img/M2T2L5_1.png">
+                  <img src="../../img/M2T2L5_1.png">
                   <p class="img-caption">Figura 1: Verificación de versión de Java requerida para Spark</p>
                     <li>Python 3.6 o superior</li>
-                  <img src="/img/M2T2L5_2.png">
+                  <img src="../../img/M2T2L5_2.png">
                   <p class="img-caption">Figura 2: Verificación de versión de Python requerida para PySpark</p>
                     <li>Al menos 4 GB de RAM para pruebas locales</li>
-                  <img src="/img/M2T2L5_3.png">
+                  <img src="../../img/M2T2L5_3.png">
                   <p class="img-caption">Figura 3: Verificación de requisitos de memoria del sistema</p>
                 </ul>
 
@@ -112,11 +175,11 @@ pyspark --master local[*]
 
 
 <p>Como resultado de la ejecución de codigo anterior nos saldrá la siguiente salida</p>
-              <img src="/img/M2T2L5_4.png">
+              <img src="../../img/M2T2L5_4.png">
               <p class="img-caption">Figura 4: Consola de PySpark indicando inicio correcto de la sesión Spark</p>
               <p>Si todo ha ido bien, deberíamos ver la consola de PySpark, lo que indica que Spark se ha instalado correctamente y está listo para usarse en modo local. Ademas podemos
               acceder al interfaz visual del usuario a través de la dirección local que aparece, en nuestro caso: http://192.168.68.66:4040</p>
-              <img src="/img/M2T2L5_5.png">
+              <img src="../../img/M2T2L5_5.png">
               <p class="img-caption">Figura 5: Interfaz web de Spark mostrando información de la aplicación en ejecución</p>
               <br>
               <p>Para salir, unicamente ejutamos quit en la shell de spark</p>
@@ -164,7 +227,7 @@ pyspark --master local[*]
 <br>
             <p>Una vez instalado comprobamos la instalación ejecutando: <code>$sudo docker run hello-world</code></p>
             <br>
-            <img src="/img/M2T2L5_6.png">
+            <img src="../../img/M2T2L5_6.png">
             <p class="img-caption">Figura 6: Confirmación exitosa de instalación de Docker</p>
             <p>Se recomienda también instalar la versión Docker Deskop para poder acceder de forma visual a los detalles de la herramienta
             para ello ha que descargar la última versión del paquete de la <a href="https://desktop.docker.com/linux/main/amd64/docker-desktop-amd64.deb?utm_source=docker&utm_medium=webreferral&utm_campaign=docs-driven-download-linux-amd64">Siguiente dirección y ejecutar:</a></p>
@@ -238,12 +301,12 @@ docker compose ps
 
 
 </code></pre>
-                <img src="/img/M2T2L5_7.png">
+                <img src="../../img/M2T2L5_7.png">
                 <p class="img-caption">Figura 7: Consola de Spark mostrando logs de configuración del cluster Standalone</p>
 
                   <p>Una vez que el cluster esté en funcionamiento, podemos acceder a la interfaz web
                   del maestro en http://localhost:8080, donde podremos ver el estado de los trabajadores y las aplicaciones en ejecución.</p>
-<img src="/img/M2T2L5_8.png">
+<img src="../../img/M2T2L5_8.png">
 <p class="img-caption">Figura 8: Interfaz web de administración del cluster Spark mostrando estado de workers y aplicaciones</p>
               </div>
             <div class="text-cell">
@@ -307,9 +370,9 @@ docker compose exec spark-master
 
 </code></pre>
                 <p>Esto ejecutará el script <code>mitrabajo.py</code> en el cluster de Spark, utilizando los recursos de los nodos trabajadores. Podemos monitorear el progreso del trabajo a través de la interfaz web del maestro.</p>
-<img src="/img/M2T2L5_9.png">
+<img src="../../img/M2T2L5_9.png">
 <p class="img-caption">Figura 9: Salida en el master de Spark mostrando logs de ejecución de la aplicación</p>
-              <img src="/img/M2T2L5_10.png">
+              <img src="../../img/M2T2L5_10.png">
               <p class="img-caption">Figura 10: Salida en la consola mostrando el DataFrame creado y procesado</p>
 
         <p>Para cerrar el entorno ejecutamos:</p>
@@ -330,8 +393,10 @@ docker compose down
               <button onclick="window.location.href='M2T1L6.html'">Siguiente</button>
             </div>
         </div>
-<div data-include="/partials/footer.html"></div>
-<script src="/js/include.js"></script>
-<script src="/js/script.js"></script>
+<footer>
+  <p id="piePagina">© 2026 PFG Noelia Prieto Morales. Todos los derechos reservados.</p>
+</footer>
+<script src="../../js/include.js"></script>
+<script src="../../js/script.js"></script>
 </body>
 </html>

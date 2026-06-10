@@ -19,6 +19,23 @@ function updateTitleAndFooter() {
   }
 }
 
+function siteUrl(sitePath) {
+  if (!sitePath || /^(?:https?:|mailto:|tel:|#)/.test(sitePath)) return sitePath;
+  if (window.location.protocol !== 'file:') return sitePath;
+
+  var cleanPath = sitePath.replace(/^\/+/, '') || 'index.html';
+  var currentPath = window.location.pathname || '';
+  var marker = '/PFG/';
+  var relativeCurrent = currentPath;
+  var markerIndex = currentPath.indexOf(marker);
+  if (markerIndex !== -1) {
+    relativeCurrent = currentPath.slice(markerIndex + marker.length);
+  }
+
+  var depth = relativeCurrent.split('/').slice(0, -1).filter(Boolean).length;
+  return (depth ? '../'.repeat(depth) : './') + cleanPath;
+}
+
 // Llamar una vez al cargar (si los elementos ya están presentes)
 document.addEventListener('DOMContentLoaded', updateTitleAndFooter);
 
@@ -36,11 +53,11 @@ document.addEventListener("DOMContentLoaded", function() {
               <svg class="close" viewBox="0 0 384 512" width="100"><path d="M242.72 256l100.07-100.07c12.28-12.28 12.28-32.19 0-44.48l-22.24-22.24c-12.28-12.28-32.19-12.28-44.48 0L176 189.28 75.93 89.21c-12.28-12.28-32.19-12.28-44.48 0L9.21 111.45c-12.28 12.28-12.28 32.19 0 44.48L109.28 256 9.21 356.07c-12.28 12.28-12.28 32.19 0 44.48l22.24 22.24c12.28 12.28 32.2 12.28 44.48 0L176 322.72l100.07 100.07c12.28 12.28 32.2 12.28 44.48 0l22.24-22.24c12.28-12.28 12.28-32.19 0-44.48L242.72 256z"/></svg>
             </label>
             <ul class="nav_menu">
-              <li><a href="/index.html">Inicio</a></li>
+              <li><a href="${siteUrl('/index.html')}">Inicio</a></li>
               <li><a href="#">Módulos</a>
                 <ul class="submenu">
-                  <li><a href="/modulo2/modulo2.html">Módulo 2</a></li>
-                  <li><a href="/modulo3/modulo3.html">Módulo 3</a></li>
+                  <li><a href="${siteUrl('/modulo2/modulo2.html')}">Módulo 2</a></li>
+                  <li><a href="${siteUrl('/modulo3/modulo3.html')}">Módulo 3</a></li>
                 </ul>
               </li>
             </ul>
@@ -148,7 +165,11 @@ document.addEventListener('DOMContentLoaded', function () {
     var normalized = path.replace(/\/+$/g, '');
     if (normalized.indexOf('/modulo1') === 0) return;
     function fetchAndInsert(url, selector, position) {
-      fetch(url, { cache: 'no-store' }).then(function (res) { if (!res.ok) return; return res.text(); }).then(function (html) {
+      if (document.querySelector(selector)) {
+        updateTitleAndFooter();
+        return;
+      }
+      fetch(siteUrl(url), { cache: 'no-store' }).then(function (res) { if (!res.ok) return; return res.text(); }).then(function (html) {
         if (!html) return;
         var parser = new DOMParser();
         var doc = parser.parseFromString(html, 'text/html');

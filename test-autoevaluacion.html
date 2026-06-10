@@ -4,15 +4,41 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Test de Autoevaluación - Módulo 2, Tema 1</title>
-  <link rel="stylesheet" href="/css/styles.css" />
-  <script src="/js/jquery-3.6.0.min.js"></script>
+  <link rel="stylesheet" href="./css/styles.css" />
+  <script src="./js/jquery-3.6.0.min.js"></script>
 </head>
 <body data-module-id="modulo2_tema1">
 <main>
   <h1>Test de Autoevaluación - Módulo 2, Tema 1</h1>
   <p>Esta es una página de prueba para verificar que el sistema de autoevaluación funciona correctamente.</p>
+<section id="autoevaluacion">
+  <div class="lesson-container">
+    <h3>AUTOEVALUACIÓN</h3>
+    <hr>
 
-  <div data-include="/partials/autoevaluacion.html"></div>
+    <div class="instructions-box">
+      <ul>
+        <li>Sólo hay una respuesta correcta por pregunta.</li>
+        <li>Haz clic en la respuesta que consideres correcta.</li>
+        <li>Contesta todas las preguntas y haz clic en <strong>Corregir</strong>.</li>
+        <li>Pulsa <strong>Restablecer</strong> para reiniciar.</li>
+      </ul>
+    </div>
+
+    <div id="quiz-form"></div>
+
+    <div class="button-container">
+      <button id="submit-btn">Corregir</button>
+      <button id="reset-btn" class="reset-button">Restablecer</button>
+    </div>
+
+    <div id="result-container" class="result-box" style="display: none;">
+      <h2>CALIFICACIÓN</h2>
+      <p id="result-text"></p>
+      <p id="result-message"></p>
+    </div>
+  </div>
+</section>
 
   <hr>
   <p>Instrucciones de prueba:</p>
@@ -23,8 +49,8 @@
   </ul>
 </main>
 
-<script src="/js/include.js"></script>
-<script src="/js/autoevaluacion.js"></script>
+<script src="./js/include.js"></script>
+<script src="./js/autoevaluacion.js"></script>
 </body>
 </html>
 

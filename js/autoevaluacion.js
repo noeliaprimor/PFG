@@ -1,3 +1,40 @@
+const autoevaluacionScriptBase = (() => {
+  const scripts = Array.from(document.scripts);
+  const script = scripts.reverse().find((item) => item.src && /(?:^|\/)autoevaluacion\.js(?:[?#].*)?$/.test(item.src));
+  return script ? new URL('.', script.src).href : './';
+})();
+
+function resolveSiteAsset(sitePath) {
+  if (window.location.protocol !== 'file:') return sitePath;
+  return new URL(sitePath.replace(/^\/+/, ''), autoevaluacionScriptBase.replace(/\/js\/?$/, '/')).href;
+}
+
+function loadQuestionsScript() {
+  return new Promise((resolve, reject) => {
+    if (window.AUTOEVALUACION_QUESTIONS) {
+      resolve(window.AUTOEVALUACION_QUESTIONS);
+      return;
+    }
+
+    const script = document.createElement('script');
+    script.src = new URL('questions-data.js', autoevaluacionScriptBase).href;
+    script.onload = () => resolve(window.AUTOEVALUACION_QUESTIONS);
+    script.onerror = () => reject(new Error('No se pudo cargar questions-data.js'));
+    document.head.appendChild(script);
+  });
+}
+
+async function loadQuestionsData() {
+  if (window.AUTOEVALUACION_QUESTIONS) return window.AUTOEVALUACION_QUESTIONS;
+
+  if (window.location.protocol !== 'file:') {
+    const response = await fetch(resolveSiteAsset('/js/questions-data.json'));
+    return response.json();
+  }
+
+  return loadQuestionsScript();
+}
+
 class AutoevaluacionQuiz {
   constructor(moduleId, containerSelector = '#quiz-form') {
     this.moduleId = moduleId;
@@ -27,8 +64,7 @@ class AutoevaluacionQuiz {
         return;
       }
 
-      const response = await fetch('/js/questions-data.json');
-      const data = await response.json();
+      const data = await loadQuestionsData();
       this.questions = data[this.moduleId]?.preguntas || [];
       if (this.questions.length === 0) {
         console.warn(`No preguntas encontradas para ${this.moduleId}`);

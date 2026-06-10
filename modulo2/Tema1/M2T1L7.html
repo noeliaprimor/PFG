@@ -4,20 +4,83 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Ejecución de ejemplo de Spark</title>
-  <link rel="stylesheet" href="/css/styles.css" />
+  <link rel="stylesheet" href="../../css/styles.css" />
 </head>
 <body>
-<div data-include="/partials/header.html"></div>
+<header class="header-section">
+      <div class="header-content">
+        <div class="title">
+          <a href="../../index.html">
+            <p id="titulo">Infraestructuras computacionales para el procesamiento de datos masivos</p>
+          </a>
+        </div>
+        <div class="logo">
+          <a target="_blank" href="https://www.uned.es/universidad/facultades/informatica.html">
+            <img src="../../img/logo_informatica.gif" alt="Logo ETSI Informatica UNED">
+          </a>
+        </div>
+      </div>
+
+      <div class="menu-section">
+        <nav class="navbar">
+
+
+          <ul class="nav_menu">
+
+
+            <li><a href="../../index.html">Inicio</a></li>
+
+            <li class="dropdown">
+              <a href="../../index.html"> Contenido de la asignatura <i class="fa-solid fa-caret-down" style="padding-left: 5px; color: #ffffff;"></i></a>
+              <ul class="submenu">
+                <li><a href="../../modulo1/index.html">Módulo 1: Ecosistema de procesamiento paralelo para datos masivos: Apache Hadoop</a></li>
+                <li><a href="../modulo2.html">Módulo 2:Procesamiento paralelo basado en memoria: Apache Spark</a></li>
+                <li><a href="../../modulo3/modulo3.html">Módulo 3: Gestión de datos en tiempo Real</a></li>
+              </ul>
+            </li>
+
+            <li class="dropdown">
+              <a href="../../modulo1/index.html"> Modulo 1 <i class="fa-solid fa-caret-down" style="padding-left: 5px; color: #ffffff;"></i></a>
+              <ul class="submenu">
+                <li><a href="../../modulo1/index.html">Preparación del Entorno</a></li>
+                <li><a href="../../modulo1/modulo1/index.html">Tema 1: Introducción a BigData</a></li>
+                <li><a href="../../modulo1/modulo2/index.html">Tema 2: El núcleo de Hadoop</a></li>
+              </ul>
+            </li>
+
+            <li class="dropdown">
+              <a href="../modulo2.html"> Modulo 2 <i class="fa-solid fa-caret-down" style="padding-left: 5px; color: #ffffff;"></i></a>
+              <ul class="submenu">
+                <li><a href="./index.html">Tema1: Introducción e instalación de Apache Spark</a></li>
+                <li><a href="../Tema2/index.html">Tema2: Programación de aplicaciones en Spark</a></li>
+                <li><a href="../Tema3/index.html">Tema 3: Librerías/Componentes de Spark</a></li>
+                <li><a href="../Tema4/index.html">Tema 4: Configuración, Monitorización y optimización de Spark</a></li>
+              </ul>
+            </li>
+
+            <li class="dropdown">
+              <a href="../../modulo3/modulo3.html"> Modulo 3 <i class="fa-solid fa-caret-down" style="padding-left: 5px; color: #ffffff;"></i></a>
+              <ul class="submenu">
+                <li><a href="../../modulo3/Tema1/index.html">Tema1: Introducción a las arquitecturas de procesamiento de streams: Lamba y Kappa</a></li>
+                <li><a href="../../modulo3/Tema2/index.html">Tema2:Componentes tecnológicos de adquisición y transmisión/distribución de eventos:Kafka</a></li>
+                <li><a href="../../modulo3/Tema3/index.html">Tema 3: Procesamiento de Stream: Spark Streaming</a></li>
+              </ul>
+            </li>
+
+          </ul>
+        </nav>
+      </div>
+    </header>
 <main>
 
 
  <nav class="lesson-nav">
       <div class="crumbs">
-       <a href="/modulo2/Tema1/index.html">Módulo 2</a>
+       <a href="./index.html">Módulo 2</a>
          <span class="sep">/</span>
-    <a href="/modulo2/Tema1/index.html">Tema 1</a>
+    <a href="./index.html">Tema 1</a>
     <span class="sep">/</span>
-    <a href="/modulo2/Tema1/M2T1L7.html" class="current" aria-current="page">Lección 7</a>
+    <a href="./M2T1L7.html" class="current" aria-current="page">Lección 7</a>
       </div>
     </nav>
     <br>
@@ -62,7 +125,7 @@
               <p>
               Para crear un dataframe a partir de un fichero csv, lo primero que tenemos que hacer es iniciar la consola de PySpark. Para ello, desde la terminal, ejecutamos el comando <code>pyspark</code>. Esto iniciará la consola y nos permitirá ejecutar código Python sobre <Spark class=""></Spark>
               </p>
-              <img src="/img/M2T2L7_1.png">
+              <img src="../../img/M2T2L7_1.png">
               <p class="img-caption">Figura 1: Sesión PySpark iniciada correctamente con SparkSession disponible</p>
               <p>
                 Ahora creamos el dataset a partir del fichero csv. Para ello, ejecutamos el siguiente código:
@@ -71,25 +134,25 @@
 df=spark.read.csv("heart.csv", header=True, inferSchema=True)
 df.show(5)
               </pre></code>
-          <img src="/img/M2T2L7_2.png">
+          <img src="../../img/M2T2L7_2.png">
           <p class="img-caption">Figura 2: Resultado de lectura de archivo CSV y visualización de primeras filas del DataFrame</p>
             <p>Podemos mostrar el esquema del dataframe con el siguiente código:</p>
               <pre><code class="language-python python-code">
 df.printSchema()
               </code></pre>
-              <img src="/img/M2T2L7_3.png">
+              <img src="../../img/M2T2L7_3.png">
               <p class="img-caption">Figura 3: Esquema del DataFrame mostrando nombres de columnas y tipos de datos</p>
               <p>Y podemos realizar operaciones sobre el dataframe, agrupar los datos por la columna "Age":</p>
               <pre><code class="language-python python-code">
 df.groupBy("Age").count().show()
               </code></pre>
-              <img src="/img/M2T2L7_4.png">
+              <img src="../../img/M2T2L7_4.png">
               <p class="img-caption">Figura 4: Resultado de agrupación de datos por edad con conteo de registros</p>
               <p>Incluso podemos realizar filtros sobre los datos:</p>
               <pre><code class="language-python python-code">
 df.filter(df.Age > 65).show(5)
               </code></pre>
-              <img src="/img/M2T2L7_5.png">
+              <img src="../../img/M2T2L7_5.png">
               <p class="img-caption">Figura 5: Resultado de filtración de registros con edad mayor a 65 años</p>
               <p>Podemos mostrar estadísticas descriptivas y numéricas:</p>
               <pre><code class="language-python python-code">
@@ -98,7 +161,7 @@ numeric_cols = ["Age", "Sex", "BP", "Cholesterol"]
 df.select(numeric_cols).describe().show()
 
               </code></pre>
-              <img src="/img/M2T2L7_6.png">
+              <img src="../../img/M2T2L7_6.png">
               <p class="img-caption">Figura 6: Estadísticas descriptivas del DataFrame mostrando resumen de valores numéricos</p>
 
 
@@ -118,8 +181,10 @@ df.select(numeric_cols).describe().show()
 
 
 </main>
-<div data-include="/partials/footer.html"></div>
-<script src="/js/include.js"></script>
-<script src="/js/script.js"></script>
+<footer>
+  <p id="piePagina">© 2026 PFG Noelia Prieto Morales. Todos los derechos reservados.</p>
+</footer>
+<script src="../../js/include.js"></script>
+<script src="../../js/script.js"></script>
 </body>
 </html>
