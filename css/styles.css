@@ -12,10 +12,6 @@ a {
   color: #004d35;
 }
 
-.indice-modulos .code-cell-header a:hover {
-  text-decoration: none;
-}
-
 a:hover {
   text-decoration: underline;
 }
@@ -57,22 +53,6 @@ a:hover {
   display: inline-block;
   margin-right: 10px; /* Espacio entre el símbolo y el texto del li */
   color: #1a3f33; /* Color del símbolo */
-}
-
-#index-container .subindice li::before{
-  content: '~'; /* Símbolo antes de cada li */
-  display: inline-block;
-  margin-right: 10px; /* Espacio entre el símbolo y el texto del li */
-  color: #1a3f33; /* Color del símbolo */
-}
-
-#index-container .subindice {
-  padding-left: 5px;
-  margin-left: 15px;
-  margin-top: 5px;
-  margin-bottom: 10px;
-  font-weight: normal;
-
 }
 
 .indice-container {
@@ -482,26 +462,6 @@ hr {
 
 /*Código python*/
 
-.code-solo {
-  background-color: #f8fae9;
-  border: 1px solid #ddd;
-  padding: 20px;
-  border-radius: 5px;
-  overflow: hidden;
-}
-
-.code-solo p{
-  margin: 0px;
-}
-
-
-#code-box {
-  position: relative;
-  max-width: 600px;
-  margin: 20px auto;
-  border: 1px solid #ddd;
-  padding: 15px;
-}
 pre code.bash-code,
 code.bash-code {
   display: block;
@@ -554,79 +514,6 @@ code.python-code {
 @media (max-width: 600px){
   pre code.python-code { font-size: 13px; padding: 10px; }
 }
-.python-code button {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  padding: 10px;
-  cursor: pointer;
-}
-
-.copy-button:hover::after {
-  content: "Copiar código";
-  font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
-  position: relative;
-  font-size: 14px;
-  transform: translateX(-80%);
-  padding: 5px;
-  display: inline-block;
-  margin: 10px;
-  background-color: #1a3f33;
-  color: white;
-}
-
-
-.copy-button {
-  font-size: large;
-  max-width: 30px;
-  max-height: 30px;
-  cursor: pointer;
-}
-
-.code-cell {
-  background-color: #f4f4f4;
-  border: 1px solid #ddd;
-  margin: 20px;
-  border-radius: 5px;
-  overflow: hidden;
-}
-
-.code-cell-header {
-  background-color: #f0f0f0;
-  padding: 10px;
-  border-bottom: 1px solid #ddd;
-  display: flex;
-  justify-content: space-between;
-}
-
-.code-cell-header a {
-  font-weight: bold;
-  align-self: center;
-}
-
-.code-cell-body {
-  padding: 15px;
-}
-
-.code-cell-footer {
-  background-color: #f0f0f0;
-  height: 10px;
-  border-top: 1px solid #ddd;
-}
-
-.comment {
-  color: green; /* Color para los comentarios */
-}
-
-.code {
-  color: black; /* Color para el código */
-}
-
-.code-cell-header a {
-  text-decoration: none;
-  color: #000000;
-}
-
 /* VIDEOS */
 .video-cell {
   display: flex;
@@ -651,40 +538,11 @@ section img {
   margin: 20px auto;
 }
 
-.img-referencia{
-  justify-content: center;
-  align-items: center;
-  margin-top: 40px;
-  margin-bottom: 40px;
-  display: flex;
-  flex-direction: column;
-}
-
-.img-referencia img{
-  max-width: 90%;
-  width: 100%;
-  height: auto;
-  padding: 10px;
-  border: 1px solid rgb(112, 112, 112);
-  margin-bottom: 10px;
-}
-
 .img-cell{
   display: flex;
   justify-content: center;
   align-items: center;
   margin: 34px 0 34px 0;
-}
-
-.img-resultados{
-  display: block;
-  text-align: center;
-  margin: 34px 0 34px 0;
-}
-
-.img-resultados .img-iframe {
-  max-width: 95%;
-  max-height: 800px;
 }
 
 .img-evaluacion{
@@ -713,13 +571,6 @@ section img {
   max-height: 800px;
 }
 
-.img-flotante-derecha{
-  float: right;
-  max-width: 40%;
-  height: auto;
-  margin: 15px;
-}
-
 .img-flotante-media{
   float: right;
   max-width: 40%;
@@ -740,39 +591,8 @@ section img {
 
 /* Textos */
 
-.ejercicioPropuesto-cell{
-  overflow-wrap: break-word;;
-  text-align: left;
-}
-
-.ejercicioPropuesto-cell ol{
-  padding-left: 30px;
-
-}
-
 li::marker {
   font-weight: bold;
-}
-
-.ejercicioPropuesto-cell ol ul{
-  padding-left: 30px;
-}
-
-.text-descriptivo{
-  margin: 30px;
-  padding: 20px;
-  border: 1px solid rgb(111, 126, 116);
-  border-radius: 3px;
-  overflow: hidden;
-  text-align: justify;
-}
-
-.text-descriptivo .cabecera{
-  background-color: rgb(217, 224, 221);
-  border: 1px solid rgb(111, 126, 116);
-  padding: 20px;
-  overflow: hidden;
-  text-align: justify;
 }
 
 .text-cell{
@@ -846,74 +666,6 @@ blockquote span{
 }
 
 
-.tabla-comandos {
-  width: 100%;
-
-  border-collapse: collapse;
-}
-
-.tabla-comandos tbody tr td{
-  padding-inline: 10px;
-  text-align: left;
-  padding-top: 5px;
-  padding-bottom: 5px;
-
-}
-
-.tabla-comandos tbody{
-  border: 1px solid #c9c9c9;
-}
-
-.tabla-comandos thead th{
-  padding-inline: 30px;
-  text-align: left;
-  border-bottom: 3px solid #6c7175;
-}
-
-
-.tabla-comandos tbody tr:nth-child(odd) {
-  background-color: #f5f6f7;
-}
-
-.tabla-comandos tbody tr:nth-child(even) {
-  background-color: #e7e8e9;
-}
-
-.tabla-comandos tbody td:nth-child(odd) {
-  width: 30%;
-}
-
-.tabla-comandos tbody td:nth-child(even) {
-  width: 70%;
-  border-left: 1px solid #c9c9c9;
-}
-
-.tabla-hive {
-  width: 100%;
-}
-
-.tabla-hive .titulo-contenido {
-  font-weight: bold;
-  font-size: larger;
-  margin-bottom: 2px;
-  margin-top: 2px;
-}
-
-.tabla-hive tbody tr td{
-  width: 100%;
-  padding: 20px;
-  border: 1px solid #dddddd;
-}
-
-.tabla-hive-estructura{
-  width: 100%;
-}
-
-.tabla-hive-estructura tbody tr td{
-  width: 100%;
-  padding-inline: 20px;
-}
-
 .tabla-v {
   width: 100%;
 
@@ -931,29 +683,6 @@ blockquote span{
 
 .tabla-v tbody tr:nth-child(even) {
   background-color: #bfd7ee;
-}
-
-
-.tabla-azul {
-  width: 100%;
-  background-color: #dce8f3;
-  padding-inline: 20px;
-
-}
-
-.tabla-verde {
-  width: 100%;
-  background-color: #f1e4cc;
-  padding-inline: 20px;
-
-}
-
-.tabla-azul tbody tr td{
-  border-bottom: 3px solid white;
-}
-
-.tabla-verde tbody tr td{
-  border-bottom: 3px solid white;
 }
 
 
@@ -976,85 +705,6 @@ blockquote span{
 .tabla-IA-ML-BD tbody td:nth-child(even) {
   background-color: #98d2db;
 }
-
-.tabla-hadoop-caracteristicas {
-  width: 100%;
-}
-
-.tabla-hadoop-caracteristicas tbody tr td{
-  width: 50%;
-  padding-inline: 20px;
-  padding-bottom: 15px;
-
-}
-
-.tabla-hadoop-caracteristicas tbody tr:nth-child(even) {
-  background-color: #ffffff;
-  text-align: center;
-}
-
-.tabla-hadoop-caracteristicas tbody tr:nth-child(odd) {
-  background-color: #e4c68e;
-  text-align: justify;
-}
-
-.tabla-batch-stream {
-  border-collapse: collapse;
-  width: 100%;
-  margin-top: 50px;
-}
-
-.tabla-batch-stream td {
-  text-align: left;
-  padding: 15px;
-  width: 40%;
-}
-
-.tabla-batch-stream th{
-  background-color: #3f7c41;
-  color: white;
-  text-align: center !important;
-  padding: 20px;
-
-}
-
-.tabla-batch-stream th, .tabla-batch-stream td {
-  border: 1px solid #dddddd;
-
-
-}
-
-.tabla-batch-stream td:first-child {
-  background-color: #3f7c41;
-  color: white;
-  text-align: center;
-  width: 20% !important;
-}
-
-
-.tabla-batch-stream-media  {
-  border-collapse: collapse;
-  width: 100%;
-  margin-top: 50px;
-  display: none;
-}
-
-.tabla-batch-stream-media td {
-  text-align: justify;
-  padding: 20px;
-  border: 1px solid #dddddd;
-}
-
-.tabla-batch-stream-media tbody tr:nth-child(odd) {
-  background-color: #3f7c41;
-  color: white;
-}
-
-
-
-
-
-
 
 .tabla-des {
   width: 100%;
@@ -1188,10 +838,6 @@ blockquote span{
   background-color: white;
 }
 
-.container .form-group {
-  margin-bottom: 20px;
-}
-
 .container label {
   display: block;
   font-weight: bold;
@@ -1228,14 +874,6 @@ textarea {
 .container button:hover {
   background-color: #c5967b; /* Nuevo color en el hover */
 }
-
-.img-certificacion{
-  border:0;
-  width:88px;
-  height:31px
-}
-
-
 
 .lesson-nav{
   background-color: #788885;
@@ -1287,18 +925,6 @@ textarea {
 }
 
 /* Accesibilidad: oculto visualmente, pero accesible para screen readers */
-.sr-only{
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  padding: 0;
-  margin: -1px;
-  overflow: hidden;
-  clip: rect(0,0,0,0);
-  white-space: nowrap;
-  border: 0;
-}
-
 /* Responsive */
 @media (max-width: 600px){
   .lesson-nav{ font-size: 13px; padding: 8px 10px; }
@@ -1337,17 +963,7 @@ textarea {
   .columna{
     max-width: 90%;
     align-self: center;
-  }
-
-  .tabla-batch-stream-media  {
-    display: flex;
-    flex-direction: column;
-  }
-
-  .tabla-batch-stream  {
-    display: none;
-  }
-}
+  }}
 
 
 /* Estilos para pantallas más pequeñas (ej. dispositivos móviles) */
@@ -1389,13 +1005,7 @@ textarea {
   .text-cell {
     text-align: left;
     padding: 10px;
-  }
-
-  #lesson-container {
-    max-width: 100%;
-  }
-
-  main {
+  }main {
     padding: 250px 20px 70px 20px;
   }
 
@@ -1446,22 +1056,6 @@ textarea {
     margin: 0px -15px 23px -15px;
   }
 
-
-  .tabla-hadoop-caracteristicas tbody tr td {
-    width: auto;
-    border-bottom: 3px solid white;
-
-  }
-
-  .tabla-hadoop-caracteristicas tbody tr {
-    display: flex;
-    flex-direction: column;
-  }
-
-  .tabla-hadoop-caracteristicas tbody tr:nth-child(odd) {
-    text-align: center;
-  }
-
   .tabla-des tbody tr td {
     width: auto;
     border-bottom: 3px solid white;
@@ -1499,40 +1093,10 @@ textarea {
     background-color: #98d2db;
   }
 
-  .text-descriptivo .cabecera {
-    text-align: center;
-  }
-
-  .tabla-batch-stream th {
-    font-size: 12px;
-    padding: 8px
-  }
-
-  .tabla-batch-stream th > a {
-    font-size: 12px
-  }
-
   blockquote {
     font-size: larger;
     padding: 1.2em 30px 1.2em 30px;
   }
-
-  .img-referencia img {
-    width: 100%;
-    height: auto;
-    padding: 10px;
-    border: 1px solid rgb(112, 112, 112);
-  }
-
-
-  .ejercicioPropuesto-cell ol {
-    padding-left: 10px;
-  }
-
-  .ejercicioPropuesto-cell ol ul {
-    padding-left: 10px;
-  }
-
 
   /* posicionar respecto al padre */
   .nav_menu li {

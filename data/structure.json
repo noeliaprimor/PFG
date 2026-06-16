@@ -1,59 +1,200 @@
 {
   "modulos": {
+    "M1": {
+      "titulo": "Ecosistema de procesamiento paralelo para datos masivos: Apache Hadoop",
+      "temas": {
+        "T1": {
+          "titulo": "Introducción a Big Data",
+          "lecciones": [
+            {
+              "file": "/modulo1/modulo1/leccion01/index.html",
+              "titulo": "Definición y conceptos básicos de Big Data"
+            },
+            {
+              "file": "/modulo1/modulo1/leccion02/index.html",
+              "titulo": "Características y desafíos de Big Data"
+            },
+            {
+              "file": "/modulo1/modulo1/leccion03/index.html",
+              "titulo": "Aplicaciones y casos de uso en diferentes industrias"
+            },
+            {
+              "file": "/modulo1/modulo1/autoevaluacion/index.html",
+              "titulo": "Autoevaluación del tema"
+            }
+          ]
+        }
+      }
+    },
     "M2": {
-      "titulo": "Procesamiento paralelo basado en Spark",
+      "titulo": "Procesamiento paralelo en memoria: Apache Spark",
       "temas": {
         "T1": {
           "titulo": "Introducción e instalación de Apache Spark",
           "lecciones": [
-            {"file": "/modulo2/Tema1/M2T1L1.html", "titulo": "Arquitectura y Propósito de Spark"},
-            {"file": "/modulo2/Tema1/M2T1L2.html", "titulo": "Componentes de la pila unificada de Spark"},
-            {"file": "/modulo2/Tema1/M2T1L3.html", "titulo": "Tipos gestores de clústeres (YARN, Standalone, Kubernetes)"},
-            {"file": "/modulo2/Tema1/M2T1L4.html", "titulo": "Resilient Distributed Datasets (RDDs)"},
-            {"file": "/modulo2/Tema1/M2T1L5.html", "titulo": "Instalación y configuración de Spark"},
-            {"file": "/modulo2/Tema1/M2T1L6.html", "titulo": "Ejecución y uso de las shells de Spark (Scala/Python)"},
-            {"file": "/modulo2/Tema1/M2T1L7.html", "titulo": "Ejecución de ejemplos de Spark"},
-            {"file": "/modulo2/Tema1/M2T1L8.html", "titulo": "Recursos y lecturas recomendadas"},
-            {"file": "/modulo2/Tema1/M2T1L9.html", "titulo": "Ejercicio propuesto"}
+            {
+              "file": "/modulo2/Tema1/M2T1L1.html",
+              "titulo": "Arquitectura y propósito de Spark"
+            },
+            {
+              "file": "/modulo2/Tema1/M2T1L2.html",
+              "titulo": "Componentes de la pila unificada de Spark"
+            },
+            {
+              "file": "/modulo2/Tema1/M2T1L3.html",
+              "titulo": "Tipos gestores de clústeres (YARN, Standalone, Kubernetes)"
+            },
+            {
+              "file": "/modulo2/Tema1/M2T1L4.html",
+              "titulo": "Resilient Distributed Datasets (RDDs)"
+            },
+            {
+              "file": "/modulo2/Tema1/M2T1L5.html",
+              "titulo": "Instalación y configuración de Spark"
+            },
+            {
+              "file": "/modulo2/Tema1/M2T1L6.html",
+              "titulo": "Ejecución y uso de las shells de Spark (Scala/Python)"
+            },
+            {
+              "file": "/modulo2/Tema1/M2T1L7.html",
+              "titulo": "Ejecución de ejemplo de Spark"
+            },
+            {
+              "file": "/modulo2/Tema1/M2T1L8.html",
+              "titulo": "Recursos y lecturas"
+            },
+            {
+              "file": "/modulo2/Tema1/M2T1L9.html",
+              "titulo": "Ejercicio propuesto"
+            },
+            {
+              "file": "/modulo2/Tema1/M2T1auto.html",
+              "titulo": "Autoevaluación del tema"
+            }
           ]
         },
         "T2": {
           "titulo": "Procesamiento paralelo con Spark (APIs y técnicas)",
           "lecciones": [
-            {"file": "/modulo2/Tema2/M2T2L1.html", "titulo": "Entornos de programación de aplicaciones Spark"},
-            {"file": "/modulo2/Tema2/M2T2L2.html", "titulo": "Desarrollo y ejecución de una aplicación Spark"},
-            {"file": "/modulo2/Tema2/M2T2L3.html", "titulo": "Creación de sesiones: SparkSession y SparkContext"},
-            {"file": "/modulo2/Tema2/M2T2L4.html", "titulo": "Inicialización de Spark en Scala y Python"},
-            {"file": "/modulo2/Tema2/M2T2L5.html", "titulo": "Cargar y guardar datos en Spark"},
-            {"file": "/modulo2/Tema2/M2T2L6.html", "titulo": "Colecciones de datos: RDD, DataFrame y Dataset"},
-            {"file": "/modulo2/Tema2/M2T2L7.html", "titulo": "Paralelización de colecciones y particionado"},
-            {"file": "/modulo2/Tema2/M2T2L8.html", "titulo": "Operaciones sobre RDD"},
-            {"file": "/modulo2/Tema2/M2T2L9.html", "titulo": "Operaciones y optimizaciones sobre DataFrames y Datasets"},
-            {"file": "/modulo2/Tema2/M2T2L10.html", "titulo": "El API de Datasets/DataFrames: ejemplos avanzados"},
-            {"file": "/modulo2/Tema2/M2T2L11.html", "titulo": "Recursos y lecturas"},
-            {"file": "/modulo2/Tema2/M2T2L12.html", "titulo": "Ejercicio propuesto"}
+            {
+              "file": "/modulo2/Tema2/M2T2L1.html",
+              "titulo": "Entornos de programación de aplicaciones Spark"
+            },
+            {
+              "file": "/modulo2/Tema2/M2T2L2.html",
+              "titulo": "Desarrollo y ejecución de una aplicación Spark"
+            },
+            {
+              "file": "/modulo2/Tema2/M2T2L3.html",
+              "titulo": "Creación de sesiones: SparkSession y SparkContext"
+            },
+            {
+              "file": "/modulo2/Tema2/M2T2L4.html",
+              "titulo": "Inicialización de Spark en Scala y Python"
+            },
+            {
+              "file": "/modulo2/Tema2/M2T2L5.html",
+              "titulo": "Cargar y guardar datos en Spark"
+            },
+            {
+              "file": "/modulo2/Tema2/M2T2L6.html",
+              "titulo": "Colecciones de datos: RDD, DataFrame y Dataset"
+            },
+            {
+              "file": "/modulo2/Tema2/M2T2L7.html",
+              "titulo": "Paralelización de colecciones y particionado"
+            },
+            {
+              "file": "/modulo2/Tema2/M2T2L8.html",
+              "titulo": "Operaciones sobre RDD"
+            },
+            {
+              "file": "/modulo2/Tema2/M2T2L9.html",
+              "titulo": "Operaciones y optimizaciones sobre DataFrames y Datasets"
+            },
+            {
+              "file": "/modulo2/Tema2/M2T2L10.html",
+              "titulo": "El API de Datasets/DataFrames: ejemplos avanzados"
+            },
+            {
+              "file": "/modulo2/Tema2/M2T2L11.html",
+              "titulo": "Recursos y lecturas"
+            },
+            {
+              "file": "/modulo2/Tema2/M2T2L12.html",
+              "titulo": "Ejercicio propuesto"
+            },
+            {
+              "file": "/modulo2/Tema2/M2T2auto.html",
+              "titulo": "Autoevaluación del tema"
+            }
           ]
         },
         "T3": {
-          "titulo": "Librerías y componentes avanzados de Spark",
+          "titulo": "Librerías y componentes de Spark",
           "lecciones": [
-            {"file": "/modulo2/Tema3/M2T3L1.html", "titulo": "Librerías disponibles en Spark"},
-            {"file": "/modulo2/Tema3/M2T3L2.html", "titulo": "Gestión de datos al modo SQL: Spark SQL"},
-            {"file": "/modulo2/Tema3/M2T3L3.html", "titulo": "Procesamiento de grafos: GraphX"},
-            {"file": "/modulo2/Tema3/M2T3L4.html", "titulo": "Procesamiento de flujos: Spark Streaming / Structured Streaming"},
-            {"file": "/modulo2/Tema3/M2T3L5.html", "titulo": "Machine Learning con MLlib"},
-            {"file": "/modulo2/Tema3/M2T3L6.html", "titulo": "Recursos y lecturas"},
-            {"file": "/modulo2/Tema3/M2T3L7.html", "titulo": "Ejercicio propuesto"}
+            {
+              "file": "/modulo2/Tema3/M2T3L1.html",
+              "titulo": "Librerías disponibles en Spark"
+            },
+            {
+              "file": "/modulo2/Tema3/M2T3L2.html",
+              "titulo": "Spark SQL: gestión de datos estructurados"
+            },
+            {
+              "file": "/modulo2/Tema3/M2T3L3.html",
+              "titulo": "GraphX: procesamiento y análisis de grafos"
+            },
+            {
+              "file": "/modulo2/Tema3/M2T3L4.html",
+              "titulo": "Spark Streaming y Structured Streaming"
+            },
+            {
+              "file": "/modulo2/Tema3/M2T3L5.html",
+              "titulo": "Machine Learning con MLlib"
+            },
+            {
+              "file": "/modulo2/Tema3/M2T3L6.html",
+              "titulo": "Recursos y lecturas"
+            },
+            {
+              "file": "/modulo2/Tema3/M2T3L7.html",
+              "titulo": "Ejercicio propuesto"
+            },
+            {
+              "file": "/modulo2/Tema3/M2T3auto.html",
+              "titulo": "Autoevaluación del tema"
+            }
           ]
         },
         "T4": {
-          "titulo": "Monitorización, despliegue y operación",
+          "titulo": "Configuración, monitorización y optimización de Spark",
           "lecciones": [
-            {"file": "/modulo2/Tema4/M2T4L1.html", "titulo": "Monitorización y configuración"},
-            {"file": "/modulo2/Tema4/M2T4L2.html", "titulo": "Seguridad y despliegue"},
-            {"file": "/modulo2/Tema4/M2T4L3.html", "titulo": "Errores frecuentes y cómo solucionarlos"},
-            {"file": "/modulo2/Tema4/M2T4L4.html", "titulo": "Recursos y lecturas"},
-            {"file": "/modulo2/Tema4/M2T4L5.html", "titulo": "Ejercicio propuesto"}
+            {
+              "file": "/modulo2/Tema4/M2T4L1.html",
+              "titulo": "Monitorización y configuración"
+            },
+            {
+              "file": "/modulo2/Tema4/M2T4L2.html",
+              "titulo": "Seguridad y despliegue"
+            },
+            {
+              "file": "/modulo2/Tema4/M2T4L3.html",
+              "titulo": "Errores frecuentes y cómo solucionarlos"
+            },
+            {
+              "file": "/modulo2/Tema4/M2T4L4.html",
+              "titulo": "Recursos y lecturas"
+            },
+            {
+              "file": "/modulo2/Tema4/M2T4L5.html",
+              "titulo": "Ejercicio propuesto"
+            },
+            {
+              "file": "/modulo2/Tema4/M2T4auto.html",
+              "titulo": "Autoevaluación del tema"
+            }
           ]
         }
       }
@@ -64,32 +205,92 @@
         "T1": {
           "titulo": "Arquitecturas Lambda y Kappa",
           "lecciones": [
-            {"file": "/modulo3/Tema1/M3T1L1.html", "titulo": "Introducción a procesamiento en tiempo real"},
-            {"file": "/modulo3/Tema1/M3T1L2.html", "titulo": "Arquitecturas Lambda y Kappa"},
-            {"file": "/modulo3/Tema1/M3T1L3.html", "titulo": "Introducción a Kafka"},
-            {"file": "/modulo3/Tema1/M3T1L4.html", "titulo": "Introducción a Spark Streaming"},
-            {"file": "/modulo3/Tema1/M3T1L5.html", "titulo": "Recursos y lecturas"},
-            {"file": "/modulo3/Tema1/M3T1L6.html", "titulo": "Ejercicio propuesto"}
+            {
+              "file": "/modulo3/Tema1/M3T1L1.html",
+              "titulo": "Introducción a procesamiento en tiempo real"
+            },
+            {
+              "file": "/modulo3/Tema1/M3T1L2.html",
+              "titulo": "Arquitecturas Lambda y Kappa"
+            },
+            {
+              "file": "/modulo3/Tema1/M3T1L3.html",
+              "titulo": "Introducción a Kafka"
+            },
+            {
+              "file": "/modulo3/Tema1/M3T1L4.html",
+              "titulo": "Introducción a Spark Streaming / Structured Streaming"
+            },
+            {
+              "file": "/modulo3/Tema1/M3T1L5.html",
+              "titulo": "Recursos y lecturas"
+            },
+            {
+              "file": "/modulo3/Tema1/M3T1L6.html",
+              "titulo": "Ejercicio propuesto"
+            },
+            {
+              "file": "/modulo3/Tema1/M3T1auto.html",
+              "titulo": "Autoevaluación del tema"
+            }
           ]
         },
         "T2": {
           "titulo": "Kafka y sistemas de mensajería",
           "lecciones": [
-            {"file": "/modulo3/Tema2/M3T2L1.html", "titulo": "Adquisición y transmisión de eventos"},
-            {"file": "/modulo3/Tema2/M3T2L2.html", "titulo": "Kafka en detalle"},
-            {"file": "/modulo3/Tema2/M3T2L3.html", "titulo": "Sinks y conectores"},
-            {"file": "/modulo3/Tema2/M3T2L4.html", "titulo": "Recursos y lecturas"},
-            {"file": "/modulo3/Tema2/M3T2L5.html", "titulo": "Ejercicio propuesto"}
+            {
+              "file": "/modulo3/Tema2/M3T2L1.html",
+              "titulo": "Adquisición y transmisión de eventos"
+            },
+            {
+              "file": "/modulo3/Tema2/M3T2L2.html",
+              "titulo": "Kafka en detalle"
+            },
+            {
+              "file": "/modulo3/Tema2/M3T2L3.html",
+              "titulo": "Sinks y conectores"
+            },
+            {
+              "file": "/modulo3/Tema2/M3T2L4.html",
+              "titulo": "Recursos y lecturas"
+            },
+            {
+              "file": "/modulo3/Tema2/M3T2L5.html",
+              "titulo": "Ejercicio propuesto: Kafka + Spark Structured Streaming"
+            },
+            {
+              "file": "/modulo3/Tema2/M3T2auto.html",
+              "titulo": "Autoevaluación del tema"
+            }
           ]
         },
         "T3": {
           "titulo": "Procesamiento de streams con Spark",
           "lecciones": [
-            {"file": "/modulo3/Tema3/M3T3L1.html", "titulo": "Spark Streaming"},
-            {"file": "/modulo3/Tema3/M3T3L2.html", "titulo": "Integración con Kafka"},
-            {"file": "/modulo3/Tema3/M3T3L3.html", "titulo": "Casos prácticos con Spark Streaming"},
-            {"file": "/modulo3/Tema3/M3T3L4.html", "titulo": "Recursos y lecturas"},
-            {"file": "/modulo3/Tema3/M3T3L5.html", "titulo": "Ejercicio propuesto"}
+            {
+              "file": "/modulo3/Tema3/M3T3L1.html",
+              "titulo": "Spark Streaming"
+            },
+            {
+              "file": "/modulo3/Tema3/M3T3L2.html",
+              "titulo": "Integración con Kafka"
+            },
+            {
+              "file": "/modulo3/Tema3/M3T3L3.html",
+              "titulo": "Casos prácticos con Spark Streaming"
+            },
+            {
+              "file": "/modulo3/Tema3/M3T3L4.html",
+              "titulo": "Recursos y lecturas"
+            },
+            {
+              "file": "/modulo3/Tema3/M3T3L5.html",
+              "titulo": "Ejercicio avanzado: Kafka + Spark Structured Streaming"
+            },
+            {
+              "file": "/modulo3/Tema3/M3T3auto.html",
+              "titulo": "Autoevaluación del tema"
+            }
           ]
         }
       }
