@@ -194,6 +194,7 @@ footer p{
     color: #fff;
     padding: 0.5em 0;
     text-align: center;
+    width: 100%;
 }
 
 nav ul {
@@ -745,10 +746,12 @@ blockquote span{
   cursor:pointer;
   margin: 0rem 1rem;
   right:0;
+  top: 0.55rem;
+  z-index: 2;
 }
 
 .nav .nav_toggle > svg {
- width: 1.5rem;
+ width: 1.75rem;
  fill: #ffffff;
 }
 
@@ -760,12 +763,18 @@ blockquote span{
  display: none;
 }
 
+.nav {
+ position: relative;
+}
+
 .nav .nav_menu {
  display: flex;
  flex-direction: column;
  align-items:center;
- gap: 1rem;
- max-height: 20px;
+ gap: 0;
+ max-height: 0;
+ overflow: hidden;
+ transition: max-height .25s ease;
 }
 
 .nav .nav_menu li {
@@ -782,24 +791,25 @@ blockquote span{
 
 /* activar/desactivar el menu en movil*/
 
-#nav_checkbox:checked ~ .nav_menu li {
+.nav_checkbox:checked ~ .nav_menu li {
   opacity: 1;
 
 }
 
-#nav_checkbox:checked ~ .nav_menu {
+.nav_checkbox:checked ~ .nav_menu {
   opacity: 1;
-  max-height: 138px;
+  max-height: calc(100vh - 120px);
+  overflow-y: auto;
 }
 
 
 /*  mostrar / ocultar iconos respectivos */
 
-#nav_checkbox:checked ~ label.nav_toggle .menu {
+.nav_checkbox:checked ~ label.nav_toggle .menu {
  display: none;
 }
 
-#nav_checkbox:checked ~ label.nav_toggle .close {
+.nav_checkbox:checked ~ label.nav_toggle .close {
  display: block;
 }
 
@@ -888,6 +898,7 @@ textarea {
   font-size: 14px;
   max-width: 100%;
   overflow: auto;
+  box-sizing: border-box;
 }
 
 /* Contenedor de migas */
@@ -927,14 +938,37 @@ textarea {
 /* Accesibilidad: oculto visualmente, pero accesible para screen readers */
 /* Responsive */
 @media (max-width: 600px){
-  .lesson-nav{ font-size: 13px; padding: 8px 10px; }
+  .lesson-nav{
+    font-size: 13px;
+    padding: 8px 10px;
+    margin: 0 auto 14px;
+    width: 100%;
+  }
+
+  .lesson-nav .crumbs{
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    gap: 3px;
+    scrollbar-width: thin;
+  }
+
+  .lesson-nav a{
+    flex: 0 0 auto;
+    padding: 4px 5px;
+    white-space: nowrap;
+  }
+
+  .lesson-nav .sep{
+    flex: 0 0 auto;
+    margin: 0 2px;
+  }
 }
 
 
 
 /*   Desktop  */
 
-@media only screen and (min-width:600px){
+@media only screen and (min-width:901px){
 
  .nav .nav_toggle {
    display: none;
@@ -943,6 +977,8 @@ textarea {
  .nav .nav_menu {
    flex-direction :row;
    gap: 2rem;
+   max-height: none;
+   overflow: visible;
  }
 
  .nav .nav_menu li {
@@ -951,6 +987,61 @@ textarea {
 
 
 
+}
+
+@media screen and (max-width: 900px){
+  .menu-section {
+    min-height: 52px;
+    padding: 0;
+  }
+
+  .nav {
+    min-height: 52px;
+    width: 100%;
+  }
+
+  .nav .nav_toggle {
+    align-items: center;
+    display: flex;
+    height: 52px;
+    justify-content: center;
+    margin: 0;
+    padding: 0 18px;
+    top: 0;
+  }
+
+  .nav .nav_menu {
+    align-items: stretch;
+    background-color: #004d35;
+    margin: 0;
+    padding: 52px 0.75rem 0;
+  }
+
+  .nav .nav_menu li {
+    display: block;
+    margin: 0;
+    text-align: left;
+  }
+
+  .nav .nav_menu > li > a {
+    color: #ffffff;
+    display: block;
+    padding: 12px 44px 12px 12px;
+  }
+
+  .nav .submenu,
+  .nav_menu .submenu {
+    position: static;
+    min-width: 0;
+    width: 100%;
+    border: 0;
+    box-shadow: none;
+    white-space: normal;
+  }
+
+  .nav .submenu a {
+    padding: 10px 14px;
+  }
 }
 
 @media screen and (max-width: 850px){
@@ -1106,10 +1197,11 @@ textarea {
   /* oculto por defecto */
   .nav_menu .submenu {
     display: none;
-    position: absolute;
-    left: 0;
-    top: 100%;
-    min-width: 160px;
+    position: static;
+    left: auto;
+    top: auto;
+    min-width: 0;
+    width: 100%;
     white-space: nowrap;
     z-index: 1000;
 

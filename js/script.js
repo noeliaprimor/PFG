@@ -1,9 +1,9 @@
-// Función segura para actualizar título y pie de página cuando los elementos existen
+﻿// Función segura para actualizar título y pie de página cuando los elementos existen
 function updateTitleAndFooter() {
   try {
     var tituloElement = document.getElementById("titulo");
     if (tituloElement) {
-      tituloElement.innerHTML = "Infraestruras computacionales para procesamiento de datos masivos";
+      tituloElement.innerHTML = "Infraestructuras computacionales para el procesamiento de datos masivos";
       tituloElement.style.cursor = "pointer";
     }
     var tituloPElement = document.getElementById("tituloP");
@@ -39,36 +39,81 @@ function siteUrl(sitePath) {
 // Llamar una vez al cargar (si los elementos ya están presentes)
 document.addEventListener('DOMContentLoaded', updateTitleAndFooter);
 
-// MENU Y SUBMENÚS (generación estática de HTML en elementos con id menuprincipal / menumodulo)
-document.addEventListener("DOMContentLoaded", function() {
-  try {
-    var el = document.getElementById('menumodulo');
-    if (el) {
-      el.innerHTML = `
-      <div class="menu-section">
-        <nav class="nav">
-            <input type="checkbox" id="nav_checkbox" class="nav_checkbox">
-            <label for="nav_checkbox" class="nav_toggle">
-              <svg class="menu" viewBox="0 0 448 512" width="100"><path d="M16 132h416c8.837 0 16-7.163 16-16V76c0-8.837-7.163-16-16-16H16C7.163 60 0 67.163 0 76v40c0 8.837 7.163 16 16 16zm0 160h416c8.837 0 16-7.163 16-16v-40c0-8.837-7.163-16-16-16H16c-8.837 0-16 7.163-16 16v40c0 8.837 7.163 16 16 16zm0 160h416c8.837 0 16-7.163 16-16v-40c0-8.837-7.163-16-16-16H16c-8.837 0-16 7.163-16 16v40c0 8.837 7.163 16 16 16z"/></svg>
-              <svg class="close" viewBox="0 0 384 512" width="100"><path d="M242.72 256l100.07-100.07c12.28-12.28 12.28-32.19 0-44.48l-22.24-22.24c-12.28-12.28-32.19-12.28-44.48 0L176 189.28 75.93 89.21c-12.28-12.28-32.19-12.28-44.48 0L9.21 111.45c-12.28 12.28-12.28 32.19 0 44.48L109.28 256 9.21 356.07c-12.28 12.28-12.28 32.19 0 44.48l22.24 22.24c12.28 12.28 32.2 12.28 44.48 0L176 322.72l100.07 100.07c12.28 12.28 32.2 12.28 44.48 0l22.24-22.24c12.28-12.28 12.28-32.19 0-44.48L242.72 256z"/></svg>
-            </label>
-            <ul class="nav_menu">
+function renderResponsiveMenu(el, mode) {
+  var checkboxId = 'nav_checkbox_' + mode;
+  var items = mode === 'module' ? `
               <li><a href="${siteUrl('/index.html')}">Inicio</a></li>
               <li><a href="#">Módulos</a>
                 <ul class="submenu">
                   <li><a href="${siteUrl('/modulo2/modulo2.html')}">Módulo 2</a></li>
                   <li><a href="${siteUrl('/modulo3/modulo3.html')}">Módulo 3</a></li>
                 </ul>
+              </li>` : `
+              <li><a href="${siteUrl('/index.html')}">Inicio</a></li>
+              <li><a href="${siteUrl('/index.html')}">Contenido de la asignatura</a>
+                <ul class="submenu">
+                  <li><a href="${siteUrl('/modulo1/index.html')}">Módulo 1: Ecosistema de procesamiento paralelo para datos masivos: Apache Hadoop</a></li>
+                  <li><a href="${siteUrl('/modulo2/modulo2.html')}">Módulo 2: Procesamiento paralelo basado en memoria: Apache Spark</a></li>
+                  <li><a href="${siteUrl('/modulo3/modulo3.html')}">Módulo 3: Gestión de datos en tiempo real</a></li>
+                </ul>
               </li>
+              <li><a href="${siteUrl('/modulo1/index.html')}">Módulo 1</a>
+                <ul class="submenu">
+                  <li><a href="${siteUrl('/modulo1/index.html')}">Preparación del Entorno</a></li>
+                  <li><a href="${siteUrl('/modulo1/modulo1/index.html')}">Tema 1: Introducción a Big Data</a></li>
+                  <li><a href="${siteUrl('/modulo1/modulo2/index.html')}">Tema 2: El núcleo de Hadoop</a></li>
+                </ul>
+              </li>
+              <li><a href="${siteUrl('/modulo2/modulo2.html')}">Módulo 2</a>
+                <ul class="submenu">
+                  <li><a href="${siteUrl('/modulo2/Tema1/index.html')}">Tema 1: Introducción e instalación de Apache Spark</a></li>
+                  <li><a href="${siteUrl('/modulo2/Tema2/index.html')}">Tema 2: Programación de aplicaciones en Spark</a></li>
+                  <li><a href="${siteUrl('/modulo2/Tema3/index.html')}">Tema 3: Librerías/Componentes de Spark</a></li>
+                  <li><a href="${siteUrl('/modulo2/Tema4/index.html')}">Tema 4: Configuración, monitorización y optimización de Spark</a></li>
+                </ul>
+              </li>
+              <li><a href="${siteUrl('/modulo3/modulo3.html')}">Módulo 3</a>
+                <ul class="submenu">
+                  <li><a href="${siteUrl('/modulo3/Tema1/index.html')}">Tema 1: Arquitecturas de procesamiento de streams: Lambda y Kappa</a></li>
+                  <li><a href="${siteUrl('/modulo3/Tema2/index.html')}">Tema 2: Adquisición y distribución de eventos: Kafka</a></li>
+                  <li><a href="${siteUrl('/modulo3/Tema3/index.html')}">Tema 3: Procesamiento de stream: Spark Streaming</a></li>
+                </ul>
+              </li>`;
+
+  el.innerHTML = `
+      <div class="menu-section">
+        <nav class="nav">
+            <input type="checkbox" id="${checkboxId}" class="nav_checkbox">
+            <label for="${checkboxId}" class="nav_toggle" aria-label="Abrir o cerrar menú">
+              <svg class="menu" viewBox="0 0 448 512" width="100"><path d="M16 132h416c8.837 0 16-7.163 16-16V76c0-8.837-7.163-16-16-16H16C7.163 60 0 67.163 0 76v40c0 8.837 7.163 16 16 16zm0 160h416c8.837 0 16-7.163 16-16v-40c0-8.837-7.163-16-16-16H16c-8.837 0-16 7.163-16 16v40c0 8.837 7.163 16 16 16zm0 160h416c8.837 0 16-7.163 16-16v-40c0-8.837-7.163-16-16-16H16c-8.837 0-16 7.163-16 16v40c0 8.837 7.163 16 16 16z"/></svg>
+              <svg class="close" viewBox="0 0 384 512" width="100"><path d="M242.72 256l100.07-100.07c12.28-12.28 12.28-32.19 0-44.48l-22.24-22.24c-12.28-12.28-32.19-12.28-44.48 0L176 189.28 75.93 89.21c-12.28-12.28-32.19-12.28-44.48 0L9.21 111.45c-12.28 12.28-12.28 32.19 0 44.48L109.28 256 9.21 356.07c-12.28 12.28-12.28 32.19 0 44.48l22.24 22.24c12.28 12.28 32.2 12.28 44.48 0L176 322.72l100.07 100.07c12.28 12.28 32.2 12.28 44.48 0l22.24-22.24c12.28-12.28 12.28-32.19 0-44.48L242.72 256z"/></svg>
+            </label>
+            <ul class="nav_menu">
+              ${items}
             </ul>
         </nav>
       </div>`;
+}
+
+// MENU Y SUBMENÚS (generación estática de HTML en elementos con id menuprincipal / menumodulo)
+document.addEventListener("DOMContentLoaded", function() {
+  try {
+    var mainMenu = document.getElementById('menuprincipal');
+    if (mainMenu) {
+      renderResponsiveMenu(mainMenu, 'main');
+    }
+
+    var moduleMenu = document.getElementById('menumodulo');
+    if (moduleMenu) {
+      renderResponsiveMenu(moduleMenu, 'module');
     }
   } catch (e) { /* ignore */ }
 });
 
 // Manejo simple de submenús (accesible y sin dependencia del índice dinámico)
 document.addEventListener('click', function (e) {
+  if (!window.matchMedia('(max-width: 900px)').matches) return;
+
   // Oculta submenus si se hace click fuera
   var submenus = document.querySelectorAll('.submenu');
   submenus.forEach(function(s){
@@ -80,10 +125,12 @@ document.addEventListener('DOMContentLoaded', function(){
   var items = document.querySelectorAll('nav li');
   items.forEach(function(it){
     it.addEventListener('click', function(ev){
+      if (!window.matchMedia('(max-width: 900px)').matches) return;
+
       ev.stopPropagation();
       var submenu = this.querySelector('.submenu');
       if (submenu) {
-        ev.preventDefault();
+        if (ev.target === this.querySelector(':scope > a')) ev.preventDefault();
         submenu.style.display = (submenu.style.display === 'block') ? 'none' : 'block';
       }
     });
@@ -141,9 +188,24 @@ function mostrarAviso(top, left) {
   setTimeout(function() { document.body.removeChild(aviso); }, 2000);
 }
 
+function ensureBackToTopButton() {
+  if (document.getElementById('scroll')) return;
+
+  var scrollButton = document.createElement('a');
+  scrollButton.href = '#';
+  scrollButton.id = 'scroll';
+  scrollButton.title = 'Volver Arriba';
+  scrollButton.setAttribute('aria-label', 'Volver arriba');
+  scrollButton.style.display = 'none';
+  scrollButton.appendChild(document.createElement('span'));
+  document.body.appendChild(scrollButton);
+}
+
 // BOTÓN IR ARRIBA (jQuery sigue en el proyecto)
 if (window.jQuery) {
   $(document).ready(function(){
+    ensureBackToTopButton();
+
     $(window).scroll(function(){
         if ($(this).scrollTop() > 150) {
             $('#scroll').fadeIn();
