@@ -2,7 +2,6 @@ services:
   kafka:
     image: apache/kafka:4.2.0
     container_name: m3t2-kafka
-    hostname: kafka
     ports:
       - "9092:9092"
     environment:
