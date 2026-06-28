@@ -34,3 +34,6 @@ output/
 out/
 *.crc
 _SUCCESS
+
+# Large local datasets
+DatasetTema2/
