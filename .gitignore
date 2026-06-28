@@ -23,3 +23,14 @@ build/
 
 # Python
 __pycache__/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Spark / streaming generated data
+checkpoint/
+checkpoints/
+output/
+out/
+*.crc
+_SUCCESS
