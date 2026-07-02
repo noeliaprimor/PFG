@@ -60,331 +60,137 @@
          </div>
      </div>
     <section id="descripcion">
-    <!-- Descripcion -->
         <div class="lesson-container">
-            <h3>Descripción</h3>
+            <h3>DESCRIPCIÓN</h3>
             <hr>
             <div class="text-cell">
-                Los <strong>RDD (Resilient Distributed Datasets)</strong> constituyen la abstracción fundamental de Apache Spark para el
-    procesamiento distribuido de datos. Introducidos como el núcleo del modelo de programación de Spark, los RDD permiten
-    trabajar con grandes volúmenes de datos distribuidos en múltiples nodos de un clúster de forma eficiente y tolerante a fallos.
-  </p>
-  <p>
-    Un RDD puede entenderse como una <strong>colección distribuida e inmutable</strong> de objetos, particionada entre varios nodos
-    y procesada en paralelo. Su principal innovación fue facilitar el <strong>procesamiento en memoria</strong>, reduciendo el coste
-    de acceso a disco característico de sistemas como MapReduce.
-  </p>
-  <p>
-    Aunque actualmente Spark ofrece APIs más modernas como <strong>DataFrames</strong> y <strong>Datasets</strong>, los RDD siguen siendo
-    esenciales para comprender el funcionamiento interno de Spark y se utilizan en escenarios donde se requiere mayor control sobre
-    el procesamiento.
-  </p>
+              <p>
+                Un <strong>RDD</strong> es una colección de datos distribuida, inmutable y dividida en particiones.
+                Fue la primera abstracción principal de Spark y ayuda a entender cómo se reparte el trabajo entre
+                executors.
+              </p>
+              <p>
+                En proyectos actuales se suelen preferir <strong>DataFrames</strong>, porque tienen esquema y Spark puede
+                optimizarlos automáticamente. Aun así, los RDD son útiles para aprender el modelo interno de Spark y para
+                transformaciones de bajo nivel.
+              </p>
             </div>
         </div>
     </section>
+
     <section id="contenidos">
-
-         <!-- Contenidos -->
         <div class="lesson-container">
-
             <h3>CONTENIDOS</h3>
             <hr>
-
             <div class="text-cell">
-               <h3>Concepto y características</h3>
-              <p>Un RDD representa una colección inmutable y particionada de registros que se pueden operar
-                en paralelo. Sin embargo, a diferencia de los DataFrames, donde cada registro es una fila estructurada
-                que contiene campos con un esquema conocido, en los RDD los registros son simplemente objetos de Java,
-                Scala o Python a elección del programador.</p>
-              <p>Los RDD te dan control total, ya que cada registro en un RDD es simplemente un objeto. Puedes almacenar
-                lo que quieras en estos objetos, en cualquier formato. Esto te da un gran poder, pero no está exento de
-                posibles problemas. Toda manipulación e interacción entre valores debe definirse manualmente.
-                La optimización requerirá mucho más trabajo manual, ya que Spark no comprende la estructura
-                interna de tus registros como lo hace con las API de estructura.</p>
-              <p>Un RDD presenta tres características fundamentales:</p>
-  <ul>
-    <li>Está <strong>particionado</strong> entre diferentes nodos del clúster.</li>
-    <li>Es <strong>inmutable</strong>: cualquier operación genera un nuevo RDD.</li>
-    <li>Es <strong>Resilence</strong>: puede reconstruirse en caso de pérdida de datos, tiene una gran tolerancia a fallos.</li>
-  </ul>
-  <p>
-    Un RDD puede crearse a partir de datos externos (archivos, HDFS, etc.) o a partir de otros RDD mediante transformaciones.
-  </p>
-              <hr>
-  <h4>Arquitectura y funcionamiento</h4>
-  <p>
-    El funcionamiento de los RDD se integra en la arquitectura general de Spark:
-  </p>
-  <ol>
-    <li>El <strong>Driver Program</strong> define las operaciones a ejecutar.</li>
-    <li>Spark construye un <strong>DAG (Directed Acyclic Graph)</strong> con las transformaciones necesarias.</li>
-    <li>El plan se divide en etapas y tareas.</li>
-    <li>Las tareas se ejecutan en <strong>Executors</strong> distribuidos en el clúster.</li>
-    <li>Cada executor procesa una partición del RDD en paralelo.</li>
-  </ol>
-  <p>
-    Los RDD mantienen el historial de cómo se han creado mediante el mecanismo de <strong>lineage (linaje)</strong>. Gracias a esto,
-    si se pierde una partición por fallo de un nodo, Spark puede <strong>recomputarla</strong> aplicando de nuevo las transformaciones
-    desde el origen, sin necesidad de replicar constantemente los datos.
-  </p>
-              <hr>
-  <h4>Operaciones sobre RDD</h4>
-  <p>
-    Las operaciones sobre RDD se clasifican en:
-  </p>
+              <h4>Qué hay que recordar de un RDD</h4>
+              <ul>
+                <li><strong>Distribuido:</strong> los datos se dividen en particiones.</li>
+                <li><strong>Inmutable:</strong> cada transformación crea un nuevo RDD.</li>
+                <li><strong>Tolerante a fallos:</strong> Spark puede reconstruir particiones mediante el linaje.</li>
+                <li><strong>Evaluación perezosa:</strong> las transformaciones no se ejecutan hasta llamar a una acción.</li>
+              </ul>
 
-  <strong>1. Transformaciones (evaluación diferida)</strong>
-  <p>
-    Generan un nuevo RDD y no se ejecutan inmediatamente; Spark las acumula en el DAG.
-  </p>
-  <ul>
-    <li><strong>Distinct: </strong> El método <code>distinct</code> llama a RDD eliminando duplicados</li>
-    <pre><code class="language-python python-code">
-      words.distict().count()
-    </code></pre>
-    <li><strong>Filter: </strong> La llamada a <code>filter</code> equivale a la ejecución del comando SQL <code>WHERE </code>
-    Busca los registros en el RDD que cumplen una determinada condición</li>
-      <pre><code class="language-python python-code">
-        def comienza_por_a(o):
-          return o.startswith("a")
+              <h4>Transformaciones y acciones</h4>
+              <p>
+                Las <strong>transformaciones</strong> crean otro RDD. Las <strong>acciones</strong> disparan la ejecución y
+                devuelven un resultado al driver o escriben datos fuera de Spark.
+              </p>
+              <table border="1">
+                <thead>
+                  <tr>
+                    <th>Tipo</th>
+                    <th>Ejemplos</th>
+                    <th>Qué hacen</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>Transformaciones</td>
+                    <td><code>map</code>, <code>filter</code>, <code>flatMap</code>, <code>reduceByKey</code></td>
+                    <td>Preparan un nuevo RDD, pero no ejecutan todavía el cálculo.</td>
+                  </tr>
+                  <tr>
+                    <td>Acciones</td>
+                    <td><code>count</code>, <code>collect</code>, <code>take</code>, <code>first</code>, <code>reduce</code></td>
+                    <td>Ejecutan el plan y devuelven resultados.</td>
+                  </tr>
+                </tbody>
+              </table>
 
-        words.filter(lambda word: startswith(word)).collect()
-      </code></pre>
-    <li><strong>Map: </strong> Permite aplicar una operación o función a cada elemento del conjunto de datos y devuelve un RDD con los resultados. </li>
-    <pre><code class="language-python python-code">
-      rdd = sc.parallelize([1, 2, 3, 4])
-      resultado = rdd.map(lambda x: x * 2)
-      print(resultado.collect())
-    </code></pre>
+              <h4>Ejemplo mínimo</h4>
+              <pre><code class="language-python python-code">from pyspark.sql import SparkSession
 
-    <li><strong>flatMap:</strong> es una transformación que aplica una función a cada elemento del RDD, pero permitiendo que cada elemento genere cero, uno o varios elementos de salida.Estos resultados, aparecen en una única lista (map + flatten = flatMap)</li>
+spark = SparkSession.builder.appName("RDD_basico").master("local[*]").getOrCreate()
+sc = spark.sparkContext
 
-     <p>Entrada:  ["hola mundo"]</p>
-     <p>map →     [["hola", "mundo"]] //Lista dentro de una lista</p>
-     <p>flatMap → ["hola", "mundo"] //Lista aplanada</p>
-    <br>
-    <pre><code class="language-python python-code">
-      rdd = sc.parallelize(["hola mundo", "spark es rápido"])
-      resultado = rdd.flatMap(lambda x: x.split(" "))
-      print(resultado.collect())
-   </code></pre>
+rdd = sc.parallelize(["spark", "hadoop", "spark", "kafka"], 2)
+conteo = rdd.map(lambda palabra: (palabra, 1)).reduceByKey(lambda a, b: a + b)
 
+print(conteo.collect())
+spark.stop()</code></pre>
+              <p>
+                En este ejemplo, <code>map</code> y <code>reduceByKey</code> son transformaciones. La ejecución real se
+                produce cuando se llama a <code>collect()</code>.
+              </p>
 
-    <li><strong>sort:</strong> Orena los elementos de un RDD de una depterminada manera</li>
-      <pre><code class="language-python python-code">
-        rdd = sc.parallelize([3, 1, 4, 2])
-        resultado = rdd.sortBy(lambda x: x)
-        print(resultado.collect())
+              <h4>Particiones y persistencia</h4>
+              <p>
+                Las particiones determinan cuántas tareas puede ejecutar Spark en paralelo. Si hay muy pocas particiones,
+                no se aprovechan todos los cores; si hay demasiadas, aumenta la sobrecarga de planificación.
+              </p>
+              <pre><code class="language-python python-code">rdd = sc.parallelize(range(100), 4)
+print("Particiones:", rdd.getNumPartitions())</code></pre>
+              <p>
+                Si un RDD se reutiliza varias veces, puede persistirse en memoria para evitar recalcularlo.
+              </p>
+              <pre><code class="language-python python-code">rdd.persist()
+print(rdd.count())
+print(rdd.sum())</code></pre>
 
-      </code></pre>
-  </ul>
+              <h4>Cuándo usar RDD y cuándo DataFrame</h4>
+              <table border="1">
+                <thead>
+                  <tr>
+                    <th>Usa RDD cuando...</th>
+                    <th>Usa DataFrame cuando...</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>Necesitas control de bajo nivel sobre cada elemento.</td>
+                    <td>Trabajas con datos tabulares o con esquema.</td>
+                  </tr>
+                  <tr>
+                    <td>Quieres explicar particiones, linaje y transformaciones básicas.</td>
+                    <td>Quieres que Spark optimice el plan automáticamente.</td>
+                  </tr>
+                  <tr>
+                    <td>La lógica no encaja bien en SQL o DataFrames.</td>
+                    <td>Necesitas menos código y mejor rendimiento general.</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+        </div>
+    </section>
 
-  <strong>2. Acciones</strong>
-  <p>
-    Disparan la ejecución del cálculo y devuelven resultados al driver o a un almacenamiento.
-  </p>
-  <ul>
-    <li><strong>reduce</strong>: es una acción que combina todos los elementos del RDD utilizando una
-      función de agregación hasta obtener un único resultado. Es decir, toma n valores y los reduce a un único resultado</li>
-    <pre><code class="language-python python-code">
-      rdd = sc.parallelize([1, 2, 3, 4])
-      resultado = rdd.reduce(lambda a, b: a + b)
-      print(resultado)
-
-              //devuelve 10, que es la suma de todos los elementos del RDD
-
-    </code></pre>
-    <li><strong>count</strong></li>
-    <pre><code class="language-python python-code">
-      rdd = sc.parallelize([1, 2, 3, 4])
-      resultado = rdd.count()
-      print(resultado)
-
-      //devuelve 4, que es el número de elementos en el RDD
-
-    </code></pre>
-    <li><strong>take</strong></li>
-    <pre><code class="language-python python-code">
-      rdd = sc.parallelize([1, 2, 3, 4])
-      resultado = rdd.take(2)
-      print(resultado)
-
-      //devuelve [1, 2], que son los dos primeros elementos del RDD
-    </code></pre>
-    <li><strong>first</strong></li>
-    <pre><code class="language-python python-code">
-      rdd = sc.parallelize([1, 2, 3, 4])
-      resultado = rdd.first()
-      print(resultado)
-
-      //devuelve 1, que es el primer elemento del RDD
-    </code></pre>
-  </ul>
-              <hr>
-  <h4>Particionamiento</h4>
-  <p>
-    Los RDD se dividen en <strong>particiones</strong>, lo que permite el procesamiento paralelo. El número de particiones influye
-    directamente en el grado de paralelismo y en el rendimiento. Un particionamiento adecuado puede mejorar significativamente
-    el tiempo de ejecución, aunque un número excesivo de particiones puede introducir sobrecarga.
-  </p>
-
-              <hr>
-  <h3>Persistencia en memoria</h3>
-  <p>
-    Spark permite <strong>persistir</strong> RDD en memoria para reutilizarlos sin recalcularlos, lo cual resulta especialmente útil
-    en algoritmos iterativos (por ejemplo, machine learning) o cuando un mismo RDD se reutiliza múltiples veces.
-  </p>
-              <hr>
-  <h3>Casos de uso típicos</h3>
-  <ul>
-    <li>Procesamiento de logs masivos</li>
-    <li>Limpieza y transformación de datos</li>
-    <li>Algoritmos iterativos</li>
-    <li>Procesos ETL personalizados</li>
-    <li>Procesamiento de datos no estructurados</li>
-    <li>Transformaciones complejas no expresables fácilmente en SQL</li>
-  </ul>
-              <hr>
-  <h3>Ventajas</h3>
-  <ul>
-    <li>Buen rendimiento gracias al procesamiento en memoria</li>
-    <li>Tolerancia a fallos mediante lineage</li>
-    <li>API flexible y de bajo nivel, con gran control sobre la lógica</li>
-    <li>Escalabilidad horizontal</li>
-  </ul>
-              <hr>
-  <h3>Limitaciones</h3>
-  <ul>
-    <li>Mayor complejidad de programación comparado con DataFrames</li>
-    <li>Sin optimización automática de consultas</li>
-    <li>Menor eficiencia que DataFrames en muchos casos</li>
-    <li>Mayor riesgo de errores al no trabajar con esquema</li>
-  </ul>
-              <hr>
-      <h3>RDD vs DataFrame vs Dataset</h3>
-
-
-<p>
-    Apache Spark ha evolucionado desde un modelo inicial basado en <strong>RDD</strong> hacia abstracciones de más alto nivel como
-    <strong>DataFrames</strong> y <strong>Datasets</strong>, que facilitan el desarrollo y mejoran el rendimiento gracias a
-    optimizaciones automáticas.
-  </p>
-  <p>
-    Las tres APIs permiten procesar datos de forma distribuida, pero difieren en nivel de abstracción, optimización y facilidad de uso.
-  </p>
-
-  <strong>RDD</strong>
-  <p>
-    Los RDD representan colecciones distribuidas e inmutables de objetos y proporcionan una API de bajo nivel con control detallado,
-    pero sin optimizaciones automáticas y sin esquema.
-  </p>
-
-  <strong>DataFrame</strong>
-  <p>
-    Los DataFrames son estructuras distribuidas organizadas en filas y columnas, similares a una tabla. Incorporan un
-    <strong>esquema</strong> y se benefician de optimizaciones automáticas (por ejemplo, a través del optimizador Catalyst), lo que
-    normalmente se traduce en mejor rendimiento y menor cantidad de código.
-  </p>
-
-  <strong>Dataset</strong>
-  <p>
-    Los Datasets combinan la optimización de los DataFrames con el <strong>tipado fuerte</strong> (type-safe) en tiempo de compilación.
-    Están disponibles principalmente en <strong>Scala y Java</strong>. En Python no existe un soporte equivalente a Datasets tipados,
-    por lo que en PySpark se trabaja principalmente con DataFrames y RDD.
-  </p>
-
-  <strong>Tabla comparativa</strong>
-  <table border="1">
-    <thead>
-      <tr>
-        <th>Característica</th>
-        <th>RDD</th>
-        <th>DataFrame</th>
-        <th>Dataset</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td>Nivel de API</td>
-        <td>Bajo</td>
-        <td>Alto</td>
-        <td>Alto</td>
-      </tr>
-      <tr>
-        <td>Representación</td>
-        <td>Objetos</td>
-        <td>Filas y columnas</td>
-        <td>Objetos tipados</td>
-      </tr>
-      <tr>
-        <td>Esquema (schema)</td>
-        <td>No</td>
-        <td>Sí</td>
-        <td>Sí</td>
-      </tr>
-      <tr>
-        <td>Optimización automática</td>
-        <td>No</td>
-        <td>Sí</td>
-        <td>Sí</td>
-      </tr>
-      <tr>
-        <td>Tipado fuerte (compile-time)</td>
-        <td>No</td>
-        <td>No</td>
-        <td>Sí (Scala/Java)</td>
-      </tr>
-      <tr>
-        <td>Facilidad de uso</td>
-        <td>Media</td>
-        <td>Alta</td>
-        <td>Media</td>
-      </tr>
-      <tr>
-        <td>Rendimiento típico</td>
-        <td>Bueno</td>
-        <td>Muy bueno</td>
-        <td>Muy bueno</td>
-      </tr>
-      <tr>
-        <td>Lenguajes</td>
-        <td>Scala, Java, Python</td>
-        <td>Scala, Java, Python</td>
-        <td>Scala y Java</td>
-      </tr>
-    </tbody>
-  </table>
-      <p></p>
-              <hr>
-  <h3>Qué se usa actualmente?</h3>
-  <ul>
-    <li><strong>DataFrames</strong> suelen ser la opción estándar por simplicidad y rendimiento.</li>
-    <li><strong>Datasets</strong> se emplean cuando se requiere tipado fuerte en Scala/Java.</li>
-    <li><strong>RDD</strong> se reservan para transformaciones complejas o cuando se necesita control de bajo nivel.</li>
-  </ul>
-
-
-
-
-    </div>
-
-  </section>
-    <section  id="saber-mas">
-         <!-- Para saber más -->
+    <section id="saber-mas">
         <div class="lesson-container indice-modulos">
             <h3>CONCLUSIÓN</h3>
             <hr>
             <div class="text-cell">
-               <ul>
-    <p>
-    Aunque los RDD son la base histórica de Spark y siguen siendo útiles para comprender su funcionamiento interno, las aplicaciones
-    modernas tienden a utilizar DataFrames y Datasets por sus capacidades de optimización automática y su mayor productividad.
-    Los RDD se mantienen como una opción válida para casos especializados donde se requiere un control más granular sobre el procesamiento.
-  </p>
+              <p>
+                Los RDD son importantes para entender Spark, pero no deberían ser la primera opción para todos los
+                problemas. En aplicaciones modernas, empieza con DataFrames y usa RDD cuando necesites control fino o
+                quieras trabajar a bajo nivel.
+              </p>
             </div>
-
         </div>
     </section>
+
+
+
         <div>
             <div class="navigation-buttons">
               <button onclick="window.location.href='M2T1L3.html'">Anterior</button>

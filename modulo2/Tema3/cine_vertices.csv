@@ -1,0 +1,53 @@
+id,tipo,nombre,anio
+1,pelicula,Matrix,1999
+2,pelicula,Origen,2010
+3,pelicula,Interstellar,2014
+4,pelicula,Pulp Fiction,1994
+5,pelicula,Kill Bill,2003
+6,pelicula,The Dark Knight,2008
+7,pelicula,Inception,2010
+8,pelicula,Django Unchained,2012
+9,pelicula,The Prestige,2006
+10,pelicula,Memento,2000
+11,pelicula,Gladiator,2000
+12,pelicula,The Martian,2015
+13,pelicula,Titanic,1997
+14,pelicula,Avatar,2009
+15,pelicula,Alien,1979
+16,pelicula,Blade Runner,1982
+17,pelicula,The Godfather,1972
+18,pelicula,The Irishman,2019
+19,pelicula,Goodfellas,1990
+20,pelicula,The Departed,2006
+
+101,actor,Keanu Reeves,
+102,actor,Laurence Fishburne,
+103,actor,Carrie-Anne Moss,
+104,actor,Leonardo DiCaprio,
+105,actor,Joseph Gordon-Levitt,
+106,actor,Elliot Page,
+107,actor,Matthew McConaughey,
+108,actor,Anne Hathaway,
+109,actor,John Travolta,
+110,actor,Samuel L. Jackson,
+111,actor,Uma Thurman,
+112,actor,Christian Bale,
+113,actor,Heath Ledger,
+114,actor,Russell Crowe,
+115,actor,Matt Damon,
+116,actor,Kate Winslet,
+117,actor,Sigourney Weaver,
+118,actor,Harrison Ford,
+119,actor,Al Pacino,
+120,actor,Robert De Niro,
+
+201,director,Lana Wachowski,
+202,director,Lilly Wachowski,
+203,director,Christopher Nolan,
+204,director,Quentin Tarantino,
+205,director,Ridley Scott,
+206,director,James Cameron,
+207,director,Francis Ford Coppola,
+208,director,Martin Scorsese,
+209,director,Denis Villeneuve,
+210,director,Steven Spielberg,

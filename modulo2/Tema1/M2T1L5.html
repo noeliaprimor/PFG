@@ -55,7 +55,8 @@
              <ul>
                  <li><a href="#descripcion">Introducción</a></li>
                  <li><a href="#standalone">Instalación Standalone</a></li>
-                 <li><a href="docker">Instalación en cluster Docker</a></li>
+                 <li><a href="#docker">Instalación en cluster Docker</a></li>
+               <li><a href="#ejercicio-resuelto">Ejercicio Resuelto</a></li>
              </ul>
          </div>
      </div>
@@ -339,6 +340,32 @@ docker compose down
       </section>
 
 
+ <section id="ejercicio-resuelto">
+ 
+      <div class="lesson-container">
+        <h3>EJERCICIO RESUELTO PASO A PASO</h3>
+        <hr>
+        <div class="text-cell">
+          <h4>Verificar una instalacion local de Spark</h4>
+
+<p>Esta practica comprueba que Spark esta instalado y puede ejecutar un job minimo.</p>
+<ol><li>Comprueba la version.</li>
+ <pre><code class="language-bash">spark-submit --version</code></pre>
+  <img src="../../img/M2T1L5_1.png">
+  <li>Arranca PySpark y ejecuta el siguiente código <code>spark-submit</code>.</li>
+
+  <pre><code class="language-python python-code">from pyspark.sql import SparkSession
+spark = SparkSession.builder.appName("ComprobacionInstalacion").master("local[*]").getOrCreate()
+print("Spark activo:", spark.version)
+spark.range(5).show()
+spark.stop()</code></pre>
+  <li>Valida la salida, se deberá mostar una tabla con valores del 0 al 4..</li></ol>
+<img src="../../img/M2T1L5_2.png">
+
+        </div>
+      </div>
+    </section>
+
         <div>
             <div class="navigation-buttons">
               <button onclick="window.location.href='M2T1L4.html'">Anterior</button>
@@ -350,5 +377,8 @@ docker compose down
 </footer>
 <script src="../../js/include.js"></script>
 <script src="../../js/script.js"></script>
+
+
+
 </body>
 </html>

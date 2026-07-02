@@ -47,10 +47,10 @@
          <ul>
            <li><a href="#descripcion">Descripción</a></li>
            <li><a href="#contenido">Contenidos</a></li>
-           <li><a href="#diferencias">Diferencias de coportamiento: Standalone vs Kubernetes</a></li>
-           <li><a href="#caso">Caso Práctico aplicado</a></li>
-           <li><a href="#referencias">Referencias</a></li>
-           <li><a href="#conclusiones">Conclusiones</a></li>
+           <li><a href="#diferencias">Diferencias de comportamiento: Standalone vs Kubernetes</a></li>
+              <li><a href="#conclusiones">Conclusiones</a></li>
+           <li><a href="#caso">Ejercicio Práctico aplicado</a></li>
+
 
          </ul>
        </div>
@@ -150,13 +150,7 @@ sc = SparkContext(conf=conf)
   </p>
   <pre><code class="language-python python-code">ValueError: Cannot run multiple SparkContexts at once</code></pre>
 
-  <strong>Limitaciones del modelo basado únicamente en SparkContext</strong>
-  <p>
-    Antes de Spark 2.0, era común gestionar distintos contextos (por ejemplo, SQLContext o HiveContext) de forma separada.
-    Esto incrementaba la complejidad de aplicaciones híbridas (RDD + SQL) y fragmentaba la configuración. Estas limitaciones
-    motivaron la introducción de SparkSession como punto de entrada unificado.
 
-  </p>
   <hr />
   <h4>SparkSession</h4>
 
@@ -490,60 +484,7 @@ spark = SparkSession.builder \
 
         </div></div>
     </section>
-    <section id="caso">
-      <div class="lesson-container">
-          <h3>CASO PRÁCTICO APLICADO</h3>
-<hr>
-  <strong>Objetivo</strong>
-  <p>Construir una aplicación que:</p>
-  <ol>
-    <li>Inicialice una SparkSession.</li>
-    <li>Genere un RDD con números del 1 al 100.</li>
-    <li>Calcule la suma usando <code>reduce</code>.</li>
-    <li>Cree un DataFrame con los mismos datos.</li>
-    <li>Calcule la media usando funciones de agregación.</li>
-    <li>Finalice correctamente la sesión.</li>
-  </ol>
-
-  <strong>Ejemplo completo</strong>
-  <pre><code class="language-python python-code">from pyspark.sql import SparkSession
-from pyspark.sql.functions import avg
-
-spark = SparkSession.builder \
-    .appName("EjemploSesionUNED") \
-    .master("local[*]") \
-    .getOrCreate()
-
-sc = spark.sparkContext
-
-# RDD
-rdd = sc.parallelize(range(1, 101))
-suma = rdd.reduce(lambda a, b: a + b)
-print("Suma:", suma)
-
-# DataFrame
-df = spark.createDataFrame([(i,) for i in range(1, 101)], ["numero"])
-media = df.select(avg("numero")).collect()
-print("Media:", media)
-
-spark.stop()
-</code></pre>
-
-      </div>
-    </section>
-    <section id="referencias">
-      <div class="lesson-container">
-        <h3>REFERENCIAS</h3>
-        <hr>
-  <ul>
-    <li>Documentación oficial de Apache Spark: <code>https://spark.apache.org/docs/latest/</code></li>
-    <li>Guía de programación Spark SQL / SparkSession: <code>https://spark.apache.org/docs/latest/sql-programming-guide.html</code></li>
-    <li>Referencia PySpark (SparkContext / SparkSession): <code>https://spark.apache.org/docs/latest/api/python/</code></li>
-  </ul>
-
-      </div>
-    </section>
-    <section id="conclusiones">
+      <section id="conclusiones">
       <div class="lesson-container">
          <h3>CONCLUSIONES</h3>
         <hr>
@@ -562,6 +503,34 @@ spark.stop()
 
       </div>
     </section>
+    <section id="caso">
+      <div class="lesson-container">
+          <h3>CASO PRÁCTICO APLICADO</h3>
+<hr>
+  <strong>Objetivo</strong>
+  <p>Vamos a construir una aplicación que:</p>
+  <ol>
+    <li>Inicialice una SparkSession.</li>
+    <li>Genere un RDD con números del 1 al 100.</li>
+    <li>Calcule la suma usando <code>reduce</code>.</li>
+    <li>Cree un DataFrame con los mismos datos.</li>
+    <li>Calcule la media usando funciones de agregación.</li>
+    <li>Finalice correctamente la sesión.</li>
+
+    <p>La salida esperada si lo ejecutamos en pycharm será:</p>
+    <img src="../../img/M2T2L3_2.png">
+  </ol>
+
+  <strong><a href="M2T2L3_ejercicio.py">Aquí tienes la solución</a></strong>
+
+
+      </div>
+    </section>
+
+
+
+
+
 
     <div class="navigation-buttons">
       <button onclick="window.location.href='M2T2L2.html'">Anterior</button>

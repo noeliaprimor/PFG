@@ -48,6 +48,7 @@
            <li><a href="#descripcion">Introducción</a></li>
            <li><a href="#contenido">Contenido</a></li>
            <li><a href="#conclusion">Conclusion</a></li>
+           <li><a href="#ejercicio">Ejercicio Resuelto</a></li>
          </ul>
        </div>
      </div>
@@ -270,6 +271,116 @@ loaded_model = PipelineModel.load("/models/modelo_ml")</code></pre>
         </div>
       </div>
     </section>
+
+
+<section id="ejercicio-resuelto">
+  <div class="lesson-container">
+    <h3>EJERCICIO RESUELTO</h3>
+    <hr>
+
+    <div class="text-cell">
+
+      <h4>Predicción del éxito comercial de películas mediante MLlib</h4>
+
+      <p>
+        En este ejercicio se utilizará <strong>MLlib</strong> para entrenar un modelo sencillo de
+        Machine Learning capaz de predecir si una película será un éxito comercial a partir de
+        algunas de sus características.
+      </p>
+
+      <p>
+        Se trabajará con un conjunto de datos formado por varias películas. Cada registro contiene
+        información sobre la duración, el presupuesto y el género de la película, además de una
+        etiqueta que indica si fue un éxito comercial.
+      </p>
+
+      <h4>Objetivos</h4>
+
+      <p>Durante el ejercicio se aprenderá a:</p>
+
+      <ul>
+        <li>Leer un conjunto de datos desde un fichero CSV.</li>
+        <li>Transformar variables categóricas mediante <code>StringIndexer</code>.</li>
+        <li>Construir un vector de características con <code>VectorAssembler</code>.</li>
+        <li>Entrenar un modelo de Regresión Logística.</li>
+        <li>Obtener predicciones utilizando el modelo entrenado.</li>
+      </ul>
+
+      <h4>Datos de entrada</h4>
+
+      <p>
+        El fichero <code><a href="peliculas_mllib.csv">peliculas_mllib.csv</a></code> contiene información sobre distintas películas.
+      </p>
+
+      <table border="1">
+        <thead>
+          <tr>
+            <th>Película</th>
+            <th>Duración</th>
+            <th>Presupuesto (M€)</th>
+            <th>Género</th>
+            <th>Éxito</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>Matrix</td><td>136</td><td>63</td><td>Acción</td><td>1</td></tr>
+          <tr><td>Titanic</td><td>194</td><td>200</td><td>Drama</td><td>1</td></tr>
+          <tr><td>Avatar</td><td>162</td><td>237</td><td>Ciencia ficción</td><td>1</td></tr>
+          <tr><td>El Proyecto X</td><td>95</td><td>8</td><td>Comedia</td><td>0</td></tr>
+          <tr><td>Gladiator</td><td>155</td><td>103</td><td>Acción</td><td>1</td></tr>
+        </tbody>
+      </table>
+
+      <h4>Pasos del ejercicio</h4>
+
+      <ol>
+        <li>Crear una sesión Spark.</li>
+        <li>Leer el fichero CSV.</li>
+        <li>Transformar el género en un índice numérico.</li>
+        <li>Crear el vector de características.</li>
+        <li>Entrenar una Regresión Logística.</li>
+        <li>Aplicar el modelo para obtener predicciones.</li>
+      </ol>
+
+   
+
+      <h4>Resultado esperado</h4>
+
+      <p>
+        El programa mostrará para cada película la etiqueta real y la predicción realizada por el modelo.
+      </p>
+
+      <pre><code>Predicciones
++--------------------+--------------+-----+----------+------------------------------------------+
+|pelicula            |genero        |label|prediction|probability                               |
++--------------------+--------------+-----+----------+------------------------------------------+
+|Matrix              |Accion        |1    |1.0       |[0.004663374195198897,0.9953366258048011] |
+|Titanic             |Drama         |1    |1.0       |[3.236146087506977E-11,0.9999999999676386]|
+|Avatar              |CienciaFiccion|1    |1.0       |[7.517423984239629E-8,0.9999999248257602] |
+|Interstellar        |CienciaFiccion|1    |1.0       |[1.1194784048586583E-7,0.9999998880521596]|
+|Inception           |CienciaFiccion|1    |1.0       |[3.110325362140008E-5,0.9999688967463786] |
+|Gladiator           |Accion        |1    |1.0       |[9.640179951818838E-6,0.9999903598200481] |
+|ElCaballeroOscuro   |Accion        |1    |1.0       |[1.67635697970116E-6,0.9999983236430203]  |
+|PulpFiction         |Crimen        |1    |1.0       |[0.002143169428484325,0.9978568305715156] |
+|ForrestGump         |Drama         |1    |1.0       |[0.002178940710519337,0.9978210592894806] |
+|ElPadrino           |Crimen        |1    |1.0       |[9.594446696549535E-6,0.9999904055533034] |
+|ComediaFamiliar     |Comedia       |0    |0.0       |[0.9999453310198129,5.466898018713362E-5] |
+|DramaRural          |Drama         |0    |0.0       |[0.9972751766197263,0.0027248233802736888]|
+|ElProyectoX         |Comedia       |0    |0.0       |[0.9998299303337814,1.7006966621857522E-4]|
+|CineIndependiente   |Drama         |0    |0.0       |[0.998789256248263,0.00121074375173702]   |
+|AccionSerieB        |Accion        |0    |0.0       |[0.9998724581320364,1.2754186796359868E-4]|
+|RomanceJuvenil      |Romance       |0    |0.0       |[0.9999696291529088,3.0370847091232278E-5]|
+|TerrorNocturno      |Terror        |0    |0.0       |[0.9999940290064161,5.970993583903628E-6] |
+|DocumentalNaturaleza|Documental    |0    |0.0       |[0.9999979536239051,2.0463760949107623E-6]|
+|AnimacionLocal      |Animacion     |0    |0.0       |[0.9999983206236375,1.679376362528906E-6] |
+|ComediaRomantica    |Comedia       |0    |0.0       |[0.9975551808975593,0.002444819102440654] |
++--------------------+--------------+-----+----------+------------------------------------------+
+</code></pre>
+<p></p><strong><a href="M2T3L5_ejercicio.py">Aquí tienes la solución</a></strong></p>
+
+    </div>
+  </div>
+</section>
 
     <div class="navigation-buttons">
       <button onclick="window.location.href='M2T3L4.html'">Anterior</button>

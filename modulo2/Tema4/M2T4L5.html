@@ -54,168 +54,374 @@
       </div>
     </div>
 
-    <section id="enunciado">
-      <div class="lesson-container">
-        <h3>ENUNCIADO</h3>
-        <hr>
-        <div class="text-cell">
-          <p>
-            En esta práctica vas a implementar, ejecutar y analizar una aplicación Spark batch
-            orientada a detectar cuellos de botella de ejecución. El objetivo no es solo obtener
-            un resultado correcto, sino justificar cómo influyen la memoria, el paralelismo, el
-            particionado y el shuffle en el rendimiento de una aplicación Spark.
-          </p>
-          <p>
-            La práctica puede realizarse en modo local con varios cores o en un clúster si se
-            dispone de uno. Y la solución al problema resuelto la encontramos en <a href="M2T4_solucion.ipynb">este cuaderno Jupyter</a>
-          </p>
-        </div>
-      </div>
-    </section>
+<section id="enunciado">
+  <div class="lesson-container">
+    <h3>ENUNCIADO</h3>
+    <hr>
 
-    <section id="escenario">
-      <div class="lesson-container">
-        <h3>ESCENARIO DE TRABAJO</h3>
-        <hr>
-        <div class="text-cell">
-          <p>
-            El caso de uso propuesto es el análisis de ventas retail a partir del fichero
-            <a href="sales.csv">sales.csv</a>, que es un extrato del dataset utilizando en el <a href ="../Tema2/M2T2L12.html">ejercicio del Tema2</a>.
-          </p>
-             <p>
-            El fichero original se ha recortado a menos de 20 MB para que pueda ejecutarse en
-            equipos locales manteniendo una estructura suficiente para observar jobs, stages,
-            particiones y operaciones de shuffle. A continuación enumeramos los campos con los que vamos a trabajar:</p>
-          <ul>
-            <li><code>product_id</code>: identificador del producto.</li>
-            <li><code>store_id</code>: identificador de la tienda.</li>
-            <li><code>date</code>: fecha de observación.</li>
-            <li><code>sales</code>: unidades vendidas.</li>
-            <li><code>revenue</code>: ingresos generados.</li>
-            <li><code>stock</code>: inventario disponible.</li>
-            <li><code>price</code>: precio del producto.</li>
-            <li><code>promo_type_1</code> y <code>promo_type_2</code>: información promocional.</li>
-          </ul>
+    <div class="text-cell">
 
-        </div>
-      </div>
-    </section>
+      <p>
+        En esta práctica actuarás como un ingeniero de datos encargado de analizar y optimizar
+        una aplicación Apache Spark ya desarrollada.
+      </p>
 
-    <section id="aplicacion">
-      <div class="lesson-container">
-        <h3>APLICACIÓN SPARK</h3>
-        <hr>
-        <div class="text-cell">
-          <p>
-            Desarrolla una aplicación PySpark o Scala que realice las siguientes operaciones:
-          </p>
-          <ol>
-            <li>Leer <code>sales.csv</code> en formato CSV con cabecera.</li>
-            <li>Validar tipos de datos y convertir <code>date</code>, <code>sales</code>, <code>revenue</code>, <code>stock</code> y <code>price</code>.</li>
-            <li>Descartar registros con ventas o ingresos negativos.</li>
-            <li>Crear columnas derivadas como ingreso medio por unidad, indicador de rotura de stock y año-mes.</li>
-            <li>Calcular ventas e ingresos por tienda, producto, mes y tipo de promoción.</li>
-            <li>Obtener el top 10 de productos o tiendas por volumen de ingresos.</li>
-            <li>Guardar los resultados agregados en Parquet.</li>
-          </ol>
-          <p>
-            La aplicación debe tener nombre explícito con <code>spark.app.name</code> y debe imprimir
-            por consola el tiempo total de ejecución y el número de filas procesadas.
-          </p>
-          <pre><code class="language-bash bash-code">spark-submit \
-  --master local[4] \
-  --conf spark.app.name=M2T4_Optimizacion_Spark \
-  app_sales.py \
-  --input sales.csv \
-  --output output/metricas_sales</code></pre>
-        </div>
-      </div>
-    </section>
+      <p>
+        La aplicación procesa un conjunto de datos de ventas utilizando DataFrames de Spark.
+        Tu objetivo no será modificar la lógica de negocio, sino estudiar cómo Spark ejecuta
+        la aplicación, identificar posibles cuellos de botella y evaluar el efecto de distintas
+        configuraciones de ejecución.
+      </p>
 
-    <section id="ejecucion">
-      <div class="lesson-container">
-        <h3>EJECUCIÓN Y MONITORIZACIÓN</h3>
-        <hr>
-        <div class="text-cell">
-          <p>
-            Ejecuta primero una versión base sin optimizaciones específicas. Durante la ejecución,
-            abre Spark UI y registra las métricas principales.
-          </p>
-          <h4>Métricas mínimas que deben recogerse</h4>
-          <ul>
-            <li>Tiempo total de ejecución.</li>
-            <li>Número de jobs, stages y tasks.</li>
-            <li>Duración del stage más costoso.</li>
-            <li>Volumen de shuffle read y shuffle write.</li>
-            <li>Número de particiones usadas en las agregaciones.</li>
-            <li>Uso de memoria, spills a disco y errores si aparecen.</li>
-            <li>Capturas o evidencias de Spark UI, History Server o logs.</li>
-          </ul>
-          <p>
-            Si se trabaja en local, basta con Spark UI y event logs. Si se dispone de entorno
-            con Prometheus y Grafana, añade un panel sencillo con CPU, memoria y duración de jobs.
-          </p>
-          <pre><code class="language-bash bash-code">spark-submit \
-  --master local[4] \
-  --conf spark.eventLog.enabled=true \
-  --conf spark.eventLog.dir=file:///tmp/spark-events \
-  app_sales.py \
-  --input sales.csv \
-  --output output/base</code></pre>
-        </div>
-      </div>
-    </section>
+      <p>
+        Para ello utilizarás <strong>Spark UI</strong>, los <strong>Event Logs</strong> y varios
+        parámetros de configuración estudiados en este tema.
+      </p>
 
-    <section id="experimentos">
-      <div class="lesson-container">
-        <h3>EXPERIMENTOS DE CONFIGURACIÓN</h3>
-        <hr>
-        <div class="text-cell">
-          <p>
-            Repite la ejecución modificando un grupo reducido de parámetros. Cada cambio debe
-            ir acompañado de una hipótesis previa y una conclusión basada en métricas.
-          </p>
+      <p>
+        La solución completa del ejercicio puede consultarse en el cuaderno
+        <a href="M2T4_solucion.ipynb">M2T4_solucion.ipynb</a>.
+      </p>
 
-          <h4>Experimento 1: paralelismo local</h4>
-          <p>Compara al menos dos configuraciones de cores:</p>
-          <pre><code class="language-bash bash-code">--master local[2]
---master local[4]</code></pre>
+    </div>
+  </div>
+</section>
 
-          <h4>Experimento 2: particiones de shuffle</h4>
-          <p>
-            Modifica <code>spark.sql.shuffle.partitions</code> y observa el efecto sobre el número
-            de tareas, la duración de los stages y el tamaño de los ficheros de salida.
-          </p>
-          <pre><code class="language-bash bash-code">--conf spark.sql.shuffle.partitions=8
+<section id="escenario">
+  <div class="lesson-container">
+
+    <h3>ESCENARIO DE TRABAJO</h3>
+    <hr>
+
+    <div class="text-cell">
+
+      <p>
+        La aplicación trabaja sobre el fichero <code>sales.csv</code>, utilizado anteriormente
+        durante el Tema 2.
+      </p>
+
+      <p>
+        El conjunto de datos contiene información de ventas de distintos productos y tiendas,
+        incluyendo ventas, ingresos, stock y promociones.
+      </p>
+
+      <p>
+        La aplicación realiza varias agregaciones para obtener indicadores comerciales y guarda
+        el resultado en formato Parquet.
+      </p>
+
+      <p>
+        Aunque la aplicación funciona correctamente, se desea analizar si su rendimiento puede
+        mejorarse modificando algunos parámetros de configuración de Spark.
+      </p>
+
+    </div>
+
+  </div>
+</section>
+
+<section id="aplicacion">
+
+<div class="lesson-container">
+
+<h3>APLICACIÓN SPARK</h3>
+
+<hr>
+
+<div class="text-cell">
+
+<p>
+La aplicación proporcionada realiza automáticamente las siguientes operaciones:
+</p>
+
+<ol>
+
+<li>Leer el fichero <code>sales.csv</code>.</li>
+
+<li>Validar y convertir los tipos de datos.</li>
+
+<li>Eliminar registros inconsistentes.</li>
+
+<li>Calcular distintos indicadores de ventas.</li>
+
+<li>Realizar agregaciones por tienda y producto.</li>
+
+<li>Guardar el resultado en formato Parquet.</li>
+
+</ol>
+
+<p>
+No es necesario modificar el código de la aplicación durante la práctica.
+El objetivo será estudiar cómo Spark ejecuta este trabajo.
+</p>
+
+<pre><code class="language-bash">spark-submit \
+--master local[4] \
+--conf spark.app.name=M2T4_Monitorizacion \
+app_sales.py \
+--input sales.csv \
+--output output/base
+</code></pre>
+
+</div>
+
+</div>
+
+</section>
+
+<section id="ejecucion">
+
+<div class="lesson-container">
+
+<h3>EJECUCIÓN Y MONITORIZACIÓN</h3>
+
+<hr>
+
+<div class="text-cell">
+
+<p>
+Ejecuta inicialmente la aplicación utilizando la configuración por defecto.
+Durante la ejecución abre Spark UI desde:
+</p>
+
+<pre><code class="language-bash">http://localhost:4040
+</code></pre>
+
+<p>
+Observa la información generada por Spark e identifica:
+</p>
+
+<ul>
+
+<li>Número de Jobs.</li>
+
+<li>Número de Stages.</li>
+
+<li>Número de Tasks.</li>
+
+<li>Duración de cada Stage.</li>
+
+<li>Operaciones de Shuffle.</li>
+
+<li>Uso de memoria.</li>
+
+</ul>
+
+<p>
+Anota estas métricas, ya que servirán como referencia para los experimentos
+posteriores.
+</p>
+
+</div>
+
+</div>
+
+</section>
+
+<section id="experimentos">
+
+<div class="lesson-container">
+
+<h3>EXPERIMENTOS DE CONFIGURACIÓN</h3>
+
+<hr>
+
+<div class="text-cell">
+
+<p>
+Una vez obtenidas las métricas iniciales, repite la ejecución modificando
+únicamente un parámetro en cada experimento.
+</p>
+
+<h4>Experimento 1. Paralelismo</h4>
+
+<pre><code class="language-bash">--master local[2]
+
+--master local[4]
+</code></pre>
+
+<p>
+Compara el número de tareas generadas y el tiempo total de ejecución.
+</p>
+
+<hr>
+
+<h4>Experimento 2. Número de particiones</h4>
+
+<pre><code class="language-bash">--conf spark.sql.shuffle.partitions=8
+
 --conf spark.sql.shuffle.partitions=32
---conf spark.sql.shuffle.partitions=200</code></pre>
 
-          <h4>Experimento 3: caché o persistencia</h4>
-          <p>
-            Si el mismo DataFrame limpio se usa en varias agregaciones, prueba <code>cache()</code>
-            o <code>persist()</code>. Compara si mejora el tiempo total o si aumenta demasiado el
-            consumo de memoria.
-          </p>
+--conf spark.sql.shuffle.partitions=200
+</code></pre>
 
-          <h4>Experimento 4: recursos de driver y executor</h4>
-          <p>
-            En modo local puedes ajustar memoria de driver. En clúster, además, compara memoria
-            y cores de executor.
-          </p>
-          <pre><code class="language-bash bash-code">--conf spark.driver.memory=2g
---conf spark.executor.memory=2g
---conf spark.executor.cores=2</code></pre>
+<p>
+Observa cómo cambia el número de Tasks y la duración de los Stages.
+</p>
 
-          <h4>Experimento 5: Adaptive Query Execution</h4>
-          <p>
-            Activa y desactiva AQE para analizar si Spark ajusta mejor las particiones tras el
-            shuffle.
-          </p>
-          <pre><code class="language-bash bash-code">--conf spark.sql.adaptive.enabled=true
---conf spark.sql.adaptive.coalescePartitions.enabled=true</code></pre>
-        </div>
-      </div>
-    </section>
+<hr>
+
+<h4>Experimento 3. Uso de caché</h4>
+
+<p>
+Activa la caché del DataFrame principal mediante
+<code>cache()</code> y compara el tiempo total de ejecución.
+</p>
+
+<hr>
+
+<h4>Experimento 4. Adaptive Query Execution</h4>
+
+<pre><code class="language-bash">--conf spark.sql.adaptive.enabled=true
+</code></pre>
+
+<p>
+Comprueba si Spark modifica automáticamente el número de particiones
+tras las operaciones de Shuffle.
+</p>
+
+<hr>
+
+<h4>Registro de resultados</h4>
+
+<p>
+Completa una tabla similar a la siguiente utilizando las métricas obtenidas
+desde Spark UI.
+</p>
+
+<table border="1">
+
+<thead>
+
+<tr>
+
+<th>Configuración</th>
+
+<th>Tiempo</th>
+
+<th>Jobs</th>
+
+<th>Stages</th>
+
+<th>Tasks</th>
+
+<th>Observaciones</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+<tr>
+
+<td>Configuración base</td>
+
+<td></td>
+
+<td></td>
+
+<td></td>
+
+<td></td>
+
+<td></td>
+
+</tr>
+
+<tr>
+
+<td>local[2]</td>
+
+<td></td>
+
+<td></td>
+
+<td></td>
+
+<td></td>
+
+<td></td>
+
+</tr>
+
+<tr>
+
+<td>Shuffle = 8</td>
+
+<td></td>
+
+<td></td>
+
+<td></td>
+
+<td></td>
+
+<td></td>
+
+</tr>
+
+<tr>
+
+<td>Shuffle = 32</td>
+
+<td></td>
+
+<td></td>
+
+<td></td>
+
+<td></td>
+
+<td></td>
+
+</tr>
+
+<tr>
+
+<td>Cache</td>
+
+<td></td>
+
+<td></td>
+
+<td></td>
+
+<td></td>
+
+<td></td>
+
+</tr>
+
+<tr>
+
+<td>AQE</td>
+
+<td></td>
+
+<td></td>
+
+<td></td>
+
+<td></td>
+
+<td></td>
+
+</tr>
+
+</tbody>
+
+</table>
+
+
+
+</div>
+
+</div>
+
+</section>
+
+
 
 
     <div class="navigation-buttons">

@@ -46,6 +46,7 @@
              <ul>
                  <li><a href="#descripcion">Introducción</a></li>
                  <li><a href="#contenidos">Ejemplo de Ejecución de Spark</a></li>
+                 <li><a href="#ejercicios">Ejercicios propuestos</a></li>
 
 
              </ul>
@@ -60,6 +61,7 @@
             <p>Vamos a ejecutar un ejemplo sencillo de Spark a través de la consola de PySpark. Para ello nos vamos a
             descargar el fichero <a href="heart.csv">heart.csv </a> que contiene datos médicos de enfermedades del
             corazón. Este fichero forma parte del <a href="https://www.kaggle.com/datasets/algozee/heart-decices?resource=download">siguiente dataset.</a></p>
+              <p>Si necesitas más informción sobre el dataset, la puedes encontrar <a href="../../datasets.html">aquí.</a></p>
             </div>
         </div>
     </section>
@@ -121,8 +123,22 @@ df.select(numeric_cols).describe().show()
 
             </div>
         </div>
-    </section>
+        <section id="ejercicios">
 
+      <div class="lesson-container">
+        <h3>EJERCICIO RESUELTO PASO A PASO</h3>
+        <hr>
+        <div class="text-cell">
+          <h4>Ejecutar un DataFrame de ejemplo con spark-submit</h4>
+
+<p>Este ejercicio convierte la exploracion de <code>heart.csv</code> en una aplicacion ejecutable.</p>
+<ol><li>Crea un script que lea <code>heart.csv</code>.</li><li>Agrupa por edad.</li><li>Ejecuta con <code>spark-submit</code>.</li><li>Comprueba jobs y stages en Spark UI.</li></ol>
+<pre><code class="language-bash">spark-submit --master "local[*]" M2T1L7_ejercicio.py</code></pre>
+<p><strong>Resultado esperado:</strong> se muestra una tabla agregada por edad y en Spark UI se observan los jobs generados por <code>show()</code> y <code>count()</code>.
+ <a href="M2T1L7_ejercicio.py">Aquí </a> tienes disponible la solución.</p>
+        </div>
+      </div>
+    </section>
 
         <div>
             <div class="navigation-buttons">

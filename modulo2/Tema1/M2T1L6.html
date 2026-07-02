@@ -51,7 +51,9 @@
                  <li><a href="#descripcion">Descripción</a></li>
                  <li><a href="#scala">Scala Shell</a></li>
                 <li><a href="#python">PySpark (Python)</a></li>
-               <li><a href="#comparativa">comparativa</a></li>
+               <li><a href="#comparativa">Comparativa</a></li>
+               <li><a href="#ejercicio-resuelto">Ejercicio Resuelto</a></li>
+
              </ul>
          </div>
      </div>
@@ -263,6 +265,42 @@ df.show()</code></pre>
             </div>
         </div>
     </section>
+
+    <section id="ejercicio-resuelto">
+      <div class="lesson-container">
+        <h3>EJERCICIO RESUELTO PASO A PASO</h3>
+        <hr>
+        <div class="text-cell">
+          <h4>Probar la misma operacion en shell y en script</h4>
+
+<p>El objetivo es entender para que sirven <code>spark-shell</code>, <code>pyspark</code> y <code>spark-submit</code>.</p>
+<ol><li>Ejecuta el siguiente código en <code>pyspark</code>.</li>
+  <pre><code class="language-python python-code">datos = [("Ana", 32), ("Luis", 38), ("Marta", 42)]
+df = spark.createDataFrame(datos, ["nombre", "edad"])
+df.filter(df.edad &gt;= 35).show()</code></pre>
+  <img src="../../img/M2T1L6_1.png">
+
+
+  <li>Copia el siguiente código  a un fichero <code>.py</code>.</li>
+  <pre><code class="language-python python-code">from pyspark.sql import SparkSession
+spark = SparkSession.builder \
+    .appName("EjercicioSparkSubmit") \
+    .getOrCreate()
+
+datos = [("A", 10), ("B", 20), ("A", 15)]
+df = spark.createDataFrame(datos, ["grupo", "valor"])
+resultado = df.groupBy("grupo").sum("valor")
+resultado.show()
+
+spark.stop()
+  </code></pre>
+  <li>Lanzalo con <code>spark-submit</code>.</li></ol>
+
+<p><strong>Resultado esperado:</strong> en la shell se prueba rapido; con <code>spark-submit</code> se ejecuta como aplicacion repetible.</p>
+        </div>
+      </div>
+    </section>
+
         <div>
             <div class="navigation-buttons">
                  <button onclick="window.location.href='M2T1L5.html'">Anterior</button>

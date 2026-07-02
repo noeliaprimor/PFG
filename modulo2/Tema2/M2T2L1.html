@@ -47,6 +47,7 @@
          <ul>
            <li><a href="#descripcion">Descripción</a></li>
            <li><a href="#contenidos">Instalación y Configuración de Pycharm</a></li>
+           <li><a href="#ejercicio-resuelto">Ejercicio Resuelto</a></li>
          </ul>
        </div>
      </div>
@@ -57,7 +58,7 @@
             <hr>
             <div class="text-cell">
                <p>Hay muchas maneras de programar en Spark, hay APIs enriquecidas en Java, Scala, Python y R. Además,
-                se puede ejecutar en diversos entornos como hemos visto, en <a href =/modulo2/Tema1/M2T1L3.html"> esta lección.</a>
+                se puede ejecutar en diversos entornos como hemos visto, en <a href="../Tema1/M2T1L3.html"> esta lección.</a>
                 </p>
               <p>Además, podemos ejecutarlo, desde la consola, o un entorno de desarrollo específico.
               La elección del entorno de desarrollo depende del perfil del usuario, el caso de uso y el entorno de ejecución.
@@ -148,6 +149,56 @@
 
 
 
+
+
+    <section id="ejercicio-resuelto">
+      <div class="lesson-container">
+        <h3>EJERCICIO RESUELTO PASO A PASO</h3>
+        <hr>
+        <div class="text-cell">
+          <h4>Resolver un caso minimo relacionado con la leccion</h4>
+
+<p>Este ejercicio aplica el concepto de la leccion sobre un ejemplo pequeño y verificable.</p>
+<ol><li>Crea un nuevo proyecto Spark en pycharm.</li>
+  <li>Ejecuta una transformacion.</li>
+  <li>Crea un archivo ejercicio.py con el siguiente código.</li></ol>
+<pre><code class="language-python python-code">from pyspark.sql import SparkSession
+
+# Crear la sesión Spark
+spark = SparkSession.builder \
+    .appName("EjercicioResuelto") \
+    .master("local[*]") \
+    .getOrCreate()
+
+# Crear un DataFrame en memoria
+df = spark.createDataFrame(
+    [
+        ("A", 10),
+        ("B", 20),
+        ("A", 15)
+    ],
+    ["grupo", "valor"]
+)
+
+# Mostrar el DataFrame original
+print("DataFrame original:")
+df.show()
+
+# Agrupar y sumar
+
+print("Suma por grupo:")
+df.groupBy("grupo").sum("valor").show()
+
+# Finalizar Spark
+
+spark.stop()
+</code></pre>
+          <li>Ejecuta el fichero</li>
+<p><strong>Resultado esperado:</strong> </p>
+        <img src="../../img/M2T2L1_2.png">
+        </div>
+      </div>
+    </section>
 
     <div class="navigation-buttons">
       <button onclick="window.location.href='index.html'">Índice del Tema</button>

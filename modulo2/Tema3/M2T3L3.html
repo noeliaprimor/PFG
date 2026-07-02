@@ -48,7 +48,7 @@
            <li><a href="#descripcion">Introducción</a></li>
            <li><a href="#contenido">Contenido</a></li>
            <li><a href="#conclusion">Conclusion</a></li>
-
+           <li><a href="#ejercicio">Ejercicio Resuelto</a></li>
          </ul>
        </div>
      </div>
@@ -275,7 +275,63 @@ val gPregel = graph.pregel(initialMsg, maxIterations = 10)(
         </div>
       </div>
     </section>
-    
+
+<section id="ejercicio-resuelto">
+  <div class="lesson-container">
+    <h3>EJERCICIO RESUELTO</h3>
+    <hr>
+    <div class="text-cell">
+      <h4>Modelar una red de cine con GraphX</h4>
+
+      <p>
+        Este ejercicio utiliza GraphX para representar un pequeño grafo de cine formado por películas,
+        actores y directores. El objetivo es practicar la creación de vértices, aristas y el cálculo
+        del grado de cada vértice.
+      </p>
+
+      <p>
+        Se trabajará con dos ficheros:
+      </p>
+
+      <ul>
+        <li><a href="cine_vertices.csv"><code>cine_vertices.csv</code></a>: contiene películas, actores y directores.</li>
+        <li><a href="cine_aristas.csv"><code>cine_aristas.csv</code></a>: contiene las relaciones <code>actua_en</code> y <code>dirige</code>.</li>
+      </ul>
+<p>
+  El se pide al estudiante:
+</p>
+      <ol>
+        <li>Leer los vértices desde un fichero CSV.</li>
+        <li>Leer las aristas desde otro fichero CSV.</li>
+        <li>Construir un grafo con GraphX.</li>
+        <li>Mostrar los triplets del grafo.</li>
+        <li>Calcular el grado de cada vértice.</li>
+      </ol>
+
+
+
+      <p><strong>Resultado esperado:</strong> se muestran las relaciones entre actores, directores y películas.</p>
+
+<pre><code class="bash-code">Matrix (1999) tiene 5 relaciones
+Inception (2010) tiene 4 relaciones
+Origen (2010) tiene 4 relaciones
+Pulp Fiction (1994) tiene 4 relaciones
+Interstellar (2014) tiene 3 relaciones</code></pre>
+
+      <p>
+    Recuerda, GraphX unicamente funciona en Scala, por lo que vas a tener que compilar el <a href ="M2T3L3_Ejercicio.scala"> siguiente fichero Scala </a> para poder practicar.
+      </p>
+
+      <p>
+        Este ejercicio permite ver cómo GraphX representa entidades como vértices y relaciones como aristas.
+        Además, los <code>triplets</code> permiten consultar en una sola estructura el vértice origen, la relación
+        y el vértice destino.
+      </p>
+    </div>
+  </div>
+</section>
+
+
 
 
     <div class="navigation-buttons">

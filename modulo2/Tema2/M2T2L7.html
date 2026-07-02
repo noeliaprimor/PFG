@@ -49,6 +49,7 @@
            <li><a href="#paralizacion">Paralización</a></li>
            <li><a href="#particionado">Particionado</a></li>
            <li><a href="#conclusion">Conclusión</a></li>
+           <li><a href="#ejercicio">Ejercicio Resuelto</a></li>
 
          </ul>
        </div>
@@ -357,6 +358,27 @@ spark.conf.set("spark.default.parallelism", 8)</code></pre>
     </section>
 
 
+
+
+    <section id="ejercicio-resuelto">
+      <div class="lesson-container">
+        <h3>EJERCICIO RESUELTO PASO A PASO</h3>
+        <hr>
+        <div class="text-cell">
+          <h4>Guardar empleados particionados por departamento</h4>
+
+<p>Este ejercicio vamos a coger el listado de empleados del fichero <a href="empleados.json">empleados.json</a> y
+  vamos a guardar la información en parquet, particionada por departamento.</p>
+<ol><li>Leemos el fichero JSON</li>
+  <li>Guardamos en parquet por particionado</li>
+  <li>Comprobamos el parquet y la salida.</li></ol>
+</ol>
+          <p>El resultado esperado es: </p>
+          <img src="../../img/M2T2L7_7.png">
+<p></p><strong><a href="M2T2L7_ejercicio.py">Aquí tienes la solución</a></strong></p>
+        </div>
+      </div>
+    </section>
 
     <div class="navigation-buttons">
       <button onclick="window.location.href='M2T2L6.html'">Anterior</button>

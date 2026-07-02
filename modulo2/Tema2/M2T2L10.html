@@ -47,6 +47,7 @@
          <ul>
            <li><a href="#descripcion">Introducción</a></li>
            <li><a href="#ejemplos">Ejemplos Avanzados</a></li>
+           <li><a href="#ejercicio-resuelto">Ejercicio Resuelto</a></li>
 
 
          </ul>
@@ -447,6 +448,80 @@ gold = (silver
       </div>
     </section>
 
+
+
+<section id="ejercicio-resuelto">
+
+  <div class="lesson-container">
+
+    <h3>EJERCICIO RESUELTO PASO A PASO</h3>
+
+    <hr>
+
+    <div class="text-cell">
+
+      <h4>Top 3 empleados con mayor salario por departamento</h4>
+      <p>
+        Este ejercicio practica el uso de funciones de ventana en Spark. A partir del fichero
+        <a href="empleados.json">empleados.json</a>, se obtiene el ranking de empleados por salario dentro de cada departamento.
+      </p>
+      <ol>
+        <li>Crea un DataFrame leyendo el fichero JSON.</li>
+        <li>Define una ventana particionada por departamento.</li>
+        <li>Ordena los empleados de cada departamento por salario descendente.</li>
+        <li>Asigna un número de ranking con <code>row_number()</code>.</li>
+        <li>Filtra los tres empleados con mayor salario de cada departamento.</li>
+      </ol>
+      <p><strong>Resultado esperado:</strong> se muestra una tabla con los tres empleados con mayor salario dentro de cada departamento.</p>
+<pre><code class="bash-code">===== Primeros empleados =====
+
+===== Top 3 empleados con mayor salario por departamento =====
++------------+-------+----------------+-------+
+|departamento|ranking|nombre          |salario|
++------------+-------+----------------+-------+
+|Data        |1      |Sofia Gutierrez |72000  |
+|Data        |2      |Oscar Alonso    |72000  |
+|Data        |3      |Cristina Navarro|72000  |
+|Direccion   |1      |Carlos Torres   |95000  |
+|Direccion   |2      |Elena Ruiz      |95000  |
+|Direccion   |3      |Oscar Torres    |95000  |
+|Finanzas    |1      |Raul Fernandez  |62000  |
+|Finanzas    |2      |Patricia Gomez  |62000  |
+|Finanzas    |3      |Clara Alonso    |62000  |
+|IT          |1      |Jorge Sanchez   |65000  |
+|IT          |2      |Pablo Martin    |65000  |
+|IT          |3      |Nuria Navarro   |65000  |
+|Legal       |1      |Adrian Martin   |68000  |
+|Legal       |2      |Noelia Navarro  |68000  |
+|Legal       |3      |Noelia Diaz     |68000  |
+|Marketing   |1      |Hugo Gomez      |52000  |
+|Marketing   |2      |Carmen Perez    |52000  |
+|Marketing   |3      |Sara Hernandez  |52000  |
+|Operaciones |1      |Hugo Rodriguez  |54000  |
+|Operaciones |2      |Pablo Ramos     |54000  |
+|Operaciones |3      |Patricia Sanchez|54000  |
+|RRHH        |1      |Sergio Ramos    |48000  |
+|RRHH        |2      |Nuria Martin    |48000  |
+|RRHH        |3      |Elena Vazquez   |48000  |
+|Soporte     |1      |Manuel Dominguez|42000  |
+|Soporte     |2      |David Gonzalez  |42000  |
+|Soporte     |3      |Ana Alonso      |42000  |
+|Ventas      |1      |Marcos Martinez |47000  |
+|Ventas      |2      |Miguel Jimenez  |47000  |
+|Ventas      |3      |Oscar Martinez  |47000  |
++------------+-------+----------------+-------+
+</code></pre>
+      <p>
+        La operación <code>partitionBy("departamento")</code> crea grupos lógicos por departamento, mientras que <code>orderBy(F.desc("salario"))</code> ordena los empleados de cada grupo. La función <code>row_number()</code> asigna una posición dentro de cada departamento.
+      </p>
+
+      <p></p><strong><a href="M2T2L10_ejercicio.py">Aquí tienes la solución</a></strong></p>
+
+    </div>
+
+  </div>
+
+</section>
 
     <div class="navigation-buttons">
       <button onclick="window.location.href='M2T2L9.html'">Anterior</button>

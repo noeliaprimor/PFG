@@ -158,6 +158,27 @@ Evaluar:
 
             </div>
     </section>
+
+    <section class="ejercicio-resuelto">
+      <div class="lesson-container">
+        <h3>EJERCICIO RESUELTO PASO A PASO</h3>
+        <hr>
+        <div class="text-cell">
+          <h4>Resolver el escalado con una medicion simple</h4>
+
+<p>Este ejercicio resume la practica final del tema midiendo particiones y tiempo.</p>
+<ol><li>Ejecuta el job con pocos workers o en local.</li><li>Aumenta workers o cores.</li><li>Compara el tiempo.</li></ol>
+<pre><code class="language-python python-code">from time import time
+rdd = spark.sparkContext.parallelize(range(1000000), 32)
+inicio = time()
+rdd.map(lambda x: x + 1).sum()
+print("Tiempo:", round(time() - inicio, 2), "segundos")
+print("Particiones:", rdd.getNumPartitions())</code></pre>
+<p><strong>Resultado esperado:</strong> la mejora solo aparece si hay suficientes particiones y recursos reales disponibles.</p>
+        </div>
+      </div>
+    </section>
+
         <div>
             <div class="navigation-buttons">
 

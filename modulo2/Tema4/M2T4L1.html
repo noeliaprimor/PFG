@@ -48,6 +48,8 @@
                 <li><a href="#descripcion">Introducción</a></li>
                 <li><a href="#contenido">Contenido</a></li>
                 <li><a href="#conclusion">Conclusión</a></li>
+               <li><a href="#ejercicio-resuelto">Ejercicio Resuelto</a></li>
+
             </ul>
         </div>
     </div>
@@ -248,6 +250,100 @@ spark.eventLog.dir=/tmp/spark-events
     </section>
 
 
+
+
+<section id="ejercicio-resuelto">
+  <div class="lesson-container">
+    <h3>EJERCICIO RESUELTO</h3>
+    <hr>
+    <div class="text-cell">
+
+      <h4>Monitorización de una aplicación Spark desde Spark UI</h4>
+
+      <p>
+        En este ejercicio se ejecutará una pequeña aplicación Spark para observar su comportamiento
+        desde <strong>Spark UI</strong> y comprobar la generación de <strong>event logs</strong>.
+      </p>
+
+      <p>
+        El objetivo no es realizar un análisis complejo, sino identificar cómo Spark organiza una
+        aplicación en <strong>jobs</strong>, <strong>stages</strong> y <strong>tasks</strong>.
+      </p>
+
+      <h4>Escenario del ejercicio</h4>
+
+      <p>
+        Se utilizará un pequeño conjunto de datos de películas creado en memoria. La aplicación realizará
+        varias operaciones sobre un DataFrame para que Spark genere información observable desde la interfaz web.
+      </p>
+
+      <h4>Pasos del ejercicio</h4>
+
+      <ol>
+        <li>Crear el directorio donde Spark almacenará los eventos.</li>
+        <li>Ejecutar la aplicación activando los event logs.</li>
+        <li>Abrir Spark UI durante la ejecución.</li>
+        <li>Identificar los jobs, stages y tasks generados.</li>
+        <li>Comprobar que se han creado ficheros de eventos en el directorio configurado.</li>
+      </ol>
+
+      <h4>Preparación del directorio de eventos</h4>
+
+      <pre><code class="language-bash">mkdir -p /tmp/spark-events</code></pre>
+
+      <h4>Ejecución de la aplicación</h4>
+
+      <pre><code class="language-bash">spark-submit \
+  --master "local[*]" \
+  --conf spark.eventLog.enabled=true \
+  --conf spark.eventLog.dir=file:///tmp/spark-events \
+  M2T4L1_ejercicio.py</code></pre>
+
+      <h4>Acceso a Spark UI</h4>
+
+      <p>
+        Mientras la aplicación se encuentra en ejecución, Spark UI suele estar disponible en:
+      </p>
+
+      <pre><code class="language-bash">http://localhost:4040</code></pre>
+
+      <p>
+        Desde esta interfaz se pueden revisar los jobs ejecutados, los stages generados y las tasks
+        lanzadas por Spark.
+      </p>
+
+      <h4>Comprobación de los event logs</h4>
+
+      <p>
+        Al finalizar la ejecución, puede comprobarse que Spark ha generado ficheros de eventos:
+      </p>
+
+      <pre><code class="language-bash">ls -lh /tmp/spark-events</code></pre>
+
+      <h4>Resultado esperado</h4>
+
+      <p>
+        El alumno debe observar que una aplicación aparentemente sencilla genera varios elementos internos:
+      </p>
+
+      <ul>
+        <li>Uno o varios jobs.</li>
+        <img src="../../img/M2T4L1_1.png">
+        <li>Stages asociados a las transformaciones y acciones.</li>
+           <img src="../../img/M2T4L1_2.png">
+        <li>Tasks ejecutadas en paralelo.</li>
+        <li>Eventos almacenados en el directorio configurado.</li>
+      </ul>
+
+      <p>
+        Este ejercicio permite relacionar la teoría de la lección con una comprobación práctica:
+        Spark no solo ejecuta código, sino que registra información estructurada que puede utilizarse
+        para monitorizar, diagnosticar y optimizar aplicaciones.
+      </p>
+
+    </div>
+  </div>
+</section>
 
     <div class="navigation-buttons">
       <button onclick="window.location.href='index.html'">Índice del Tema</button>

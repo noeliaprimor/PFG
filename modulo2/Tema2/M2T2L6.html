@@ -51,6 +51,7 @@
            <li><a href="#dataset">Dataset</a></li>
             <li><a href="#comparativa">Comparativa</a></li>
            <li><a href="#conclusion">Conclusión</a></li>
+           <li><a href="#ejercicio-resuelto">Ejercicio Resuelto</a></li>
          </ul>
        </div>
      </div>
@@ -373,6 +374,30 @@ val ds = spark.read.json("personas.json").as[Persona]</code></pre>
     reservado para escenarios específicos donde se requiere un control muy detallado o lógica no estructurada, mientras que
     Dataset es especialmente útil en aplicaciones Scala/Java que demandan tipado fuerte.
   </p>
+        </div>
+      </div>
+    </section>
+
+
+    <section id="ejercicio-resuelto">
+      <div class="lesson-container">
+        <h3>EJERCICIO RESUELTO PASO A PASO</h3>
+        <hr>
+        <div class="text-cell">
+          <h4>Aplicar transformaciones y acciones sobre RDD</h4>
+          <p>Vamos a hacer operaciones en un Dataframe creado a trvés del fichero JSON de empleados que se encuentra en <a href="empleados.json"> esta ubicación.</a></p>
+
+<p>Este ejercicio usa un conteo de palabras para distinguir transformaciones y acciones.</p>
+<ol><li>Leemos el JSON.</li>
+  <li>Convertimos el Dataframe en un RDD.</li>
+  <li>Filtramos para obtener únicamente el departamento.</li>
+  <li>Creamos pares (departamento, 1)</li>
+  <li>Contamos los empleados por departamento</li>
+  <li>La salida esperada es:</li>
+  <img src="../../img/M2T2L6_3.png">
+</ol>
+
+<p></p><strong><a href="M2T2L6_ejercicio.py">Aquí tienes la solución</a></strong></p>
         </div>
       </div>
     </section>

@@ -1,4 +1,4 @@
-﻿// Función segura para actualizar título y pie de página cuando los elementos existen
+// Función segura para actualizar título y pie de página cuando los elementos existen
 function updateTitleAndFooter() {
   try {
     var tituloElement = document.getElementById("titulo");
@@ -52,16 +52,8 @@ function renderResponsiveMenu(el, mode) {
               <li><a href="${siteUrl('/index.html')}">Inicio</a></li>
               <li><a href="${siteUrl('/index.html')}">Contenido de la asignatura</a>
                 <ul class="submenu">
-                  <li><a href="${siteUrl('/modulo1/index.html')}">Módulo 1: Ecosistema de procesamiento paralelo para datos masivos: Apache Hadoop</a></li>
                   <li><a href="${siteUrl('/modulo2/modulo2.html')}">Módulo 2: Procesamiento paralelo basado en memoria: Apache Spark</a></li>
                   <li><a href="${siteUrl('/modulo3/modulo3.html')}">Módulo 3: Gestión de datos en tiempo real</a></li>
-                </ul>
-              </li>
-              <li><a href="${siteUrl('/modulo1/index.html')}">Módulo 1</a>
-                <ul class="submenu">
-                  <li><a href="${siteUrl('/modulo1/index.html')}">Preparación del Entorno</a></li>
-                  <li><a href="${siteUrl('/modulo1/modulo1/index.html')}">Tema 1: Introducción a Big Data</a></li>
-                  <li><a href="${siteUrl('/modulo1/modulo2/index.html')}">Tema 2: El núcleo de Hadoop</a></li>
                 </ul>
               </li>
               <li><a href="${siteUrl('/modulo2/modulo2.html')}">Módulo 2</a>
@@ -240,6 +232,14 @@ document.addEventListener('DOMContentLoaded', function () {
         var imported = document.importNode(node, true);
         var existing = document.querySelector(selector);
         if (existing) existing.parentNode.replaceChild(imported, existing); else if (position === 'prepend') document.body.insertBefore(imported, document.body.firstChild); else document.body.appendChild(imported);
+        var insertedMainMenu = document.getElementById('menuprincipal');
+        if (insertedMainMenu && !insertedMainMenu.querySelector('.nav')) {
+          renderResponsiveMenu(insertedMainMenu, 'main');
+        }
+        var insertedModuleMenu = document.getElementById('menumodulo');
+        if (insertedModuleMenu && !insertedModuleMenu.querySelector('.nav')) {
+          renderResponsiveMenu(insertedModuleMenu, 'module');
+        }
         updateTitleAndFooter();
       }).catch(function (err) { console.warn('No se pudo cargar ' + url + ':', err); });
     }

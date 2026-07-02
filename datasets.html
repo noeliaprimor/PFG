@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Datasets utilizados en los módulos prácticos</title>
+  <link rel="stylesheet" href="./css/styles.css" />
+  <link rel="stylesheet" href="./css/tables.css" />
+  <script src="./js/jquery-3.6.0.min.js"></script>
+  <link rel="stylesheet" href="./css/prism-1.29.0.min.css" />
+  <script src="./js/prism-1.29.0.min.js"></script>
+</head>
+<body>
+<header class="header-section">
+  <div class="header-content">
+    <div class="title">
+      <a href="./index.html">
+        <p id="titulo">Infraestructuras computacionales para el procesamiento de datos masivos</p>
+      </a>
+    </div>
+    <div class="logo">
+      <a target="_blank" href="https://www.uned.es/universidad/facultades/informatica.html">
+        <img src="./img/logo_informatica.gif" alt="Logo ETSI Informatica UNED">
+      </a>
+    </div>
+  </div>
+  <div id="menuprincipal"></div>
+</header>
+
+<main>
+  <h2 class="titulos-leccion">Datasets utilizados en los módulos prácticos</h2>
+
+  <div class="lesson-container">
+    <h3>OBJETIVO</h3>
+    <hr>
+    <div class="text-cell">
+      <p>
+        Esta página resume los datasets y flujos de eventos utilizados en los módulos 2 y 3. Antes de ejecutar las
+        prácticas conviene identificar qué representa cada campo, de dónde proceden los datos y qué transformaciones se
+        van a aplicar con Spark, Kafka o Structured Streaming.
+      </p>
+    </div>
+  </div>
+
+  <div class="lesson-container">
+    <h3>Dataset heart.csv</h3>
+    <hr>
+    <div class="text-cell">
+      <p>
+        Se utiliza en las primeras prácticas de Spark para leer CSV, inspeccionar esquemas, filtrar registros y calcular
+        agregaciones sencillas. El fichero local se encuentra en <code>modulo2/Tema1/heart.csv</code>.
+      </p>
+      <p>
+        Fuente original:
+        <a href="https://www.kaggle.com/datasets/algozee/heart-decices?resource=download" target="_blank" rel="noopener noreferrer">Kaggle - Heart Disease Dataset</a>.
+      </p>
+      <ul>
+        <li><code>Age</code>: edad del paciente.</li>
+        <li><code>Sex</code>: sexo codificado numéricamente.</li>
+        <li><code>Chest pain type</code>: tipo de dolor torácico.</li>
+        <li><code>BP</code>: presión arterial.</li>
+        <li><code>Cholesterol</code>: nivel de colesterol.</li>
+        <li><code>FBS over 120</code>: indicador de glucosa en ayunas superior a 120.</li>
+        <li><code>EKG results</code>: resultado del electrocardiograma.</li>
+        <li><code>Max HR</code>: frecuencia cardiaca máxima.</li>
+        <li><code>Exercise angina</code>: angina inducida por ejercicio.</li>
+        <li><code>ST depression</code>, <code>Slope of ST</code>, <code>Number of vessels fluro</code> y <code>Thallium</code>: variables clínicas usadas como predictores.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="lesson-container">
+    <h3>Dataset retail sales</h3>
+    <hr>
+    <div class="text-cell">
+      <p>
+        Se utiliza para practicar DataFrames, joins, funciones de ventana, pivot, agregaciones y optimización. El
+        material local aparece comprimido como <code>modulo2/Tema2/DatasetTema2.zip</code> y una versión reducida para
+        optimización se encuentra en <code>modulo2/Tema4/sales.csv</code>.
+      </p>
+      <p>
+        Fuente original:
+        <a href="https://www.kaggle.com/datasets/manjeetsingh/retaildataset" target="_blank" rel="noopener noreferrer">Kaggle - Retail Dataset</a>.
+      </p>
+      <ul>
+        <li><code>product_id</code>: identificador del producto.</li>
+        <li><code>store_id</code>: identificador de la tienda.</li>
+        <li><code>date</code>: fecha de observación o venta.</li>
+        <li><code>sales</code>: unidades vendidas.</li>
+        <li><code>revenue</code>: ingresos generados.</li>
+        <li><code>stock</code>: inventario disponible.</li>
+        <li><code>price</code>: precio del producto.</li>
+        <li><code>promo_type_1</code> y <code>promo_type_2</code>: información promocional asociada a la venta.</li>
+        <li><code>customer_id</code>, <code>country</code>, <code>channel</code> o campos equivalentes: variables analíticas usadas en los ejercicios ampliados.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="lesson-container">
+    <h3>Eventos de criptomonedas CoinGecko</h3>
+    <hr>
+    <div class="text-cell">
+      <p>
+        Se utilizan para simular un flujo continuo de eventos en los ejercicios de Structured Streaming. El productor
+        consulta precios de criptomonedas y escribe eventos JSON que después consume Spark.
+      </p>
+      <p>
+        Fuente original:
+        <a href="https://www.coingecko.com/en/api" target="_blank" rel="noopener noreferrer">CoinGecko API</a>.
+      </p>
+      <ul>
+        <li><code>coin</code>: identificador de la criptomoneda, por ejemplo <code>bitcoin</code> o <code>ethereum</code>.</li>
+        <li><code>currency</code>: moneda de referencia, por ejemplo <code>eur</code> o <code>usd</code>.</li>
+        <li><code>price</code>: precio observado.</li>
+        <li><code>event_time</code>: instante en que se genera el evento.</li>
+        <li><code>source</code>: origen del dato, normalmente <code>coingecko</code>.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="lesson-container">
+    <h3>Eventos Kafka de tweets y pedidos</h3>
+    <hr>
+    <div class="text-cell">
+      <p>
+        En el módulo 3 se generan eventos sintéticos para practicar Kafka, validación JSON, cuarentena, métricas,
+        alertas y publicación en topics de salida. Los laboratorios están en <code>modulo3/Tema2</code> y
+        <code>modulo3/Tema3/kafka_spark_advanced_lab.zip</code>.
+      </p>
+      <ul>
+        <li><code>event_id</code>: identificador único del evento.</li>
+        <li><code>event_time</code>: tiempo de evento usado en ventanas y watermarks.</li>
+        <li><code>source</code>: origen del evento.</li>
+        <li><code>text</code>, <code>hashtags</code>, <code>mentions</code>: campos del laboratorio de tweets.</li>
+        <li><code>customer_id</code>, <code>merchant_id</code>, <code>country</code>, <code>channel</code>, <code>amount</code> y <code>currency</code>: campos del laboratorio de pedidos.</li>
+        <li><code>device_id</code>: identificador de dispositivo para ejercicios de enriquecimiento y fraude.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="navigation-buttons">
+    <button onclick="window.location.href='./modulo2/modulo2.html'">Módulo 2</button>
+    <button onclick="window.location.href='./modulo3/modulo3.html'">Módulo 3</button>
+  </div>
+</main>
+
+<footer>
+  <p id="piePagina">© 2026 PFG Noelia Prieto Morales. Todos los derechos reservados.</p>
+</footer>
+<script src="./js/include.js"></script>
+<script src="./js/script.js"></script>
+</body>
+</html>

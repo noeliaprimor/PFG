@@ -48,6 +48,8 @@
           <li><a href="#descripcion">Introducción</a></li>
           <li><a href="#contenido">Contenido</a></li>
           <li><a href="#conclusion">Conclusión</a></li>
+          <li><a href="#ejercicio-resuelto">Ejercicio Resuelto</a></li>
+
         </ul>
       </div>
     </div>
@@ -281,6 +283,98 @@ spark.ui.view.acls=usuario1,usuario2</code></pre>
     </section>
 
 
+
+<section id="ejercicio-resuelto">
+  <div class="lesson-container">
+    <h3>EJERCICIO RESUELTO</h3>
+    <hr>
+    <div class="text-cell">
+
+      <h4>Revisión de seguridad de un despliegue Spark</h4>
+
+      <p>
+        En este ejercicio se revisará la configuración de una aplicación Spark antes de moverla
+        de un entorno de laboratorio a un entorno compartido.
+      </p>
+
+      <p>
+        El objetivo es identificar configuraciones inseguras y proponer una versión mejorada del
+        comando <code>spark-submit</code>.
+      </p>
+
+      <h4>Escenario inicial</h4>
+
+      <p>
+        Necesitamos una aplicación Spark, vamos a utilizar la de la lección anterior disponible
+        <a href="M2T4L1_ejercicio.py"> aquí. </a>
+
+      </p>
+
+      <pre><code class="language-bash">spark-submit \
+  --master "local[*]" \
+  --conf spark.authenticate=false \
+  --conf spark.ui.acls.enable=false \
+  --conf spark.eventLog.enabled=false \
+  M2T4L1_ejercicio.py</code></pre>
+
+      <h4>Problemas detectados</h4>
+
+      <ul>
+        <li>La autenticación está desactivada.</li>
+        <li>El acceso a Spark UI no está restringido.</li>
+        <li>No se almacenan event logs para revisar ejecuciones anteriores.</li>
+        <li>No se documenta dónde se guardan los eventos de ejecución.</li>
+      </ul>
+
+      <h4>Versión mejorada del despliegue</h4>
+
+      <pre><code class="language-bash">mkdir -p /tmp/spark-events
+
+spark-submit \
+  --master "local[*]" \
+  --conf spark.authenticate=true \
+  --conf spark.authenticate.secret=secreto_laboratorio \
+  --conf spark.ui.acls.enable=true \
+  --conf spark.ui.view.acls=noelia \
+  --conf spark.eventLog.enabled=true \
+  --conf spark.eventLog.dir=file:///tmp/spark-events \
+  M2T4L1_ejercicio.py</code></pre>
+
+      <h4>Comprobaciones a realizar</h4>
+
+      <ol>
+        <li>Ejecutar la aplicación con la configuración mejorada.</li>
+        <li>Comprobar que la aplicación finaliza correctamente.</li>
+        <li>Verificar que se han generado ficheros en <code>/tmp/spark-events</code>.</li>
+        <li>Revisar qué información aparece en Spark UI.</li>
+        <li>Identificar qué parámetros deberían cambiar antes de pasar a producción.</li>
+      </ol>
+
+      <h4>Resultado esperado</h4>
+
+      <p>
+        El alumno debe comprender que desplegar una aplicación Spark no consiste únicamente en
+        ejecutarla, sino también en revisar su configuración de seguridad, observabilidad y acceso.
+      </p>
+
+      <p>
+        En un entorno real, el secreto no debería escribirse directamente en el comando, el acceso
+        a Spark UI debería estar protegido mediante mecanismos externos y los logs deberían almacenarse
+        en una ubicación persistente y controlada.
+      </p>
+
+      <h4>Conclusión del ejercicio</h4>
+
+      <p>
+        Este ejercicio permite distinguir entre una ejecución válida para pruebas locales y una
+        configuración más adecuada para un entorno compartido. La seguridad en Spark debe revisarse
+        antes del despliegue, especialmente cuando se procesan datos sensibles o se trabaja en clústeres
+        utilizados por varios usuarios.
+      </p>
+
+    </div>
+  </div>
+</section>
 
     <div class="navigation-buttons">
       <button onclick="window.location.href='M2T4L1.html'">Anterior</button>

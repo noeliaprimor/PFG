@@ -48,6 +48,7 @@
            <li><a href="#descripcion">Introducción</a></li>
            <li><a href="#contenido">Contenido</a></li>
            <li><a href="#conclusion">Ejecución</a></li>
+           <li><a href="#ejercicio-resuelto">Ejercicio Resuelto</a></li>
          </ul>
        </div>
      </div>
@@ -163,27 +164,31 @@
     APIs de Spark.
   </p>
 
-  <strong>1. Ejemplo en Python</strong>
+  <strong>1. Ejemplo en Python</strong>: genera un fichero ejemplo.py con el siguiente código y ejecutalo desde la consola.
   <pre><code  class="language-python python-code">from pyspark.sql import SparkSession
 
 spark = (
     SparkSession.builder
     .appName("MiAplicacionSpark")
     .getOrCreate()
-)</code></pre>
+)
+    print(f"Spark {spark.version} iniciado correctamente")
+    spark.stop()
+
+  </code></pre>
+        <p>Obtendremos la siguiente salida:</p>
+        <img src="../../img/M2T2L2_3.png">
 
   <strong>2. Ejemplo en Scala</strong>
-  <pre><code  class="language-python python-code">import org.apache.spark.sql.SparkSession
-
-val spark = SparkSession
-  .builder()
-  .appName("MiAplicacionSpark")
-  .getOrCreate()</code></pre>
+  <pre><code  class="language-python python-code">spark-shell --master "local[*]"</code></pre>
 
   <p>
     A partir de este objeto se puede acceder tanto a DataFrames como al SparkContext subyacente, en caso de que sea
     necesario trabajar a un nivel más bajo con RDDs.
+    <img src="../../img/M2T2L2_4.png">
+    Para salir ejecutamos:
   </p>
+  <pre><code  class="language-python python-code">:quit</code></pre>
 
   <strong> Implementación de la lógica de negocio</strong>
   <p>
@@ -214,12 +219,7 @@ resultado.write.mode("overwrite").parquet("/data/salida")</code></pre>
     utilizar aún recursos distribuidos.
   </p>
 
-  <pre><code  class="language-python python-code">spark = (
-    SparkSession.builder
-    .appName("PruebaLocal")
-    .master("local[*]")
-    .getOrCreate()
-)</code></pre>
+
 
   <p>
     El modo local resulta especialmente útil en etapas tempranas del desarrollo, en prototipos y en pruebas unitarias o
@@ -228,83 +228,8 @@ resultado.write.mode("overwrite").parquet("/data/salida")</code></pre>
 
   <hr />
 
-  <h4>Empaquetado de la aplicación</h4>
 
-  <strong>Empaquetado en Scala o Java</strong>
-  <p>
-    En aplicaciones desarrolladas en Scala o Java, el código suele empaquetarse en un archivo JAR. Este artefacto puede
-    incluir únicamente la aplicación o, de forma más habitual, contener también las dependencias necesarias en un
-    ensamblado o <em>uber jar</em>.
-  </p>
-  <p>
-    El empaquetado correcto es esencial para garantizar que el Driver y los Executors disponen de todas las clases y
-    bibliotecas requeridas durante la ejecución.
-  </p>
 
-  <strong>Distribución en Python</strong>
-  <p>
-    En PySpark, la aplicación se distribuye normalmente como un script <code>.py</code>, aunque también pueden añadirse
-    dependencias adicionales mediante archivos <code>.zip</code>, <code>.egg</code> o módulos auxiliares enviados con el
-    comando de ejecución.
-  </p>
-  <p>
-    Esta fase es importante cuando el proyecto no se limita a un único script, sino que incluye librerías propias,
-    funciones reutilizables o estructuras modulares más complejas.
-  </p>
-
-  <hr />
-
-  <h4>Ejecución de la aplicación</h4>
-
-  <strong>Uso de spark-submit</strong>
-  <p>
-    El mecanismo estándar para ejecutar aplicaciones Spark es <strong>spark-submit</strong>. Este comando permite lanzar
-    aplicaciones sobre distintos tipos de clúster, indicando parámetros como el master, la clase principal, el modo de
-    despliegue y opciones de configuración.
-  </p>
-
-  <strong>1. Ejemplo de ejecución en Python</strong>
-  <pre><code  class="language-python python-code">spark-submit --master local[*] mi_aplicacion.py</code></pre>
-
-  <strong>2. Ejemplo de ejecución en Scala</strong>
-  <pre><code  class="language-python python-code">spark-submit \
-  --class com.ejemplo.Main \
-  --master spark://spark-master:7077 \
-  mi-aplicacion.jar</code></pre>
-
-  <p>
-    Mediante este comando, Spark prepara el entorno de ejecución, arranca el Driver, distribuye dependencias y solicita
-    recursos al gestor de clúster correspondiente.
-  </p>
-
-  <strong>Parámetros principales de ejecución</strong>
-  <p>
-    Algunos de los parámetros más habituales al lanzar una aplicación Spark son los siguientes:
-  </p>
-  <ul>
-    <li><code>--master</code>: define el gestor de recursos o entorno de ejecución.</li>
-    <li><code>--class</code>: clase principal en aplicaciones Scala/Java.</li>
-    <li><code>--deploy-mode</code>: determina dónde se ejecuta el Driver.</li>
-    <li><code>--conf</code>: permite añadir parámetros de configuración específicos.</li>
-    <li><code>--py-files</code>: distribuye dependencias adicionales en aplicaciones Python.</li>
-  </ul>
-
-  <strong>Modos de ejecución</strong>
-  <p>
-    Spark permite distintos modos de ejecución según el entorno disponible:
-  </p>
-  <ul>
-    <li><strong>Local</strong>: ejecución en una sola máquina, útil para desarrollo y pruebas.</li>
-    <li><strong>Standalone</strong>: modo nativo de Spark, adecuado para laboratorios y clústeres dedicados.</li>
-    <li><strong>YARN</strong>: integración con ecosistemas Hadoop.</li>
-    <li><strong>Kubernetes</strong>: despliegue en entornos contenerizados modernos.</li>
-  </ul>
-  <p>
-    La elección del modo de ejecución influye en la gestión de recursos, en el despliegue del Driver y en la visibilidad
-    operativa de la aplicación.
-  </p>
-
-  <hr />
 
   <h4>Ciclo de ejecución interno de una aplicación Spark</h4>
   <p>
@@ -428,38 +353,6 @@ resultado.write.mode("overwrite").parquet("/data/salida")</code></pre>
     Esta práctica es especialmente importante en entornos Docker, clústeres compartidos y ejecuciones repetidas.
   </p>
 
-  <hr />
-
-  <h4>Ejemplo simplificado de aplicación completa en PySpark</h4>
-
-
-  <pre><code  class="language-python python-code">from pyspark.sql import SparkSession
-
-spark = (
-    SparkSession.builder
-    .appName("EjemploAplicacionCompleta")
-    .master("local[*]")
-    .getOrCreate()
-)
-
-df = spark.read.csv("/data/entrada.csv", header=True, inferSchema=True)
-
-resultado = (df
-    .filter(df.edad &gt;= 18)
-    .groupBy("pais")
-    .count())
-
-resultado.write.mode("overwrite").parquet("/data/salida")
-
-spark.stop()</code></pre>
-
-  <p>
-    Este ejemplo resume el ciclo habitual de una aplicación Spark: inicialización, lectura, transformación, escritura y
-    finalización.
-  </p>
-
-  <hr />
-
 
       </div>
     </section>
@@ -471,6 +364,64 @@ spark.stop()</code></pre>
   <p>
     El desarrollo y ejecución de una aplicación Spark es un proceso estructurado que abarca desde la definición del problema hasta la monitorización del job en funcionamiento. Comprender las fases de diseño, las transformaciones, las acciones y el ciclo de ejecución es fundamental para crear aplicaciones eficientes y escalables. Además, la elección de estrategias de optimización, el manejo adecuado de recursos y la observabilidad del rendimiento son aspectos clave para el éxito de cualquier proyecto basado en Spark.
   </p>
+        </div>
+      </div>
+    </section>
+
+
+    <section id="ejercicio-resuelto">
+      <div class="lesson-container">
+        <h3>EJERCICIO RESUELTO PASO A PASO</h3>
+        <hr>
+        <div class="text-cell">
+
+
+  <h4>Ejemplo práctico: aplicación de empleados</h4>
+  <p>
+    A continuación se muestra un ejemplo completo y sencillo de aplicación Spark. El objetivo es crear un DataFrame de
+    empleados, mostrar su contenido, filtrar los empleados con salario superior a 35.000 euros y calcular el salario
+    medio por departamento.
+  </p>
+
+  <strong>Accede a pyspark y ejecuta el siguiente código</strong>
+
+
+
+
+  <pre><code class="language-python python-code">
+    from pyspark.sql.functions import col, avg, count
+datos = [
+    ("Ana", "Data", 32000),
+    ("Luis", "Data", 38000),
+    ("Marta", "Seguridad", 42000),
+    ("Pedro", "Seguridad", 39000),
+    ("Lucia", "Desarrollo", 35000),
+]
+
+columnas = ["nombre", "departamento", "salario"]
+df = spark.createDataFrame(datos, columnas)
+
+print("DataFrame original")
+df.show()
+
+print("Empleados con salario superior a 35.000")
+df.filter(col("salario") > 35000).show()
+
+print("Salario medio por departamento")
+df.groupBy("departamento").agg(
+    count("*").alias("numero_empleados"),
+    avg("salario").alias("salario_medio")
+).show()
+
+
+  </code></pre>
+
+          <img src="../../img/M2T2L2_5.png">
+
+  <p>Accede a Spark UI, a la ruta que aparece en las primeras líneas de la salida, para comprobar los datos de ejecución:</code>:</p>
+
+<img src="../../img/M2T2L2_6.png">
+
         </div>
       </div>
     </section>

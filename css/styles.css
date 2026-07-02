@@ -946,14 +946,13 @@ textarea {
 
 /* Accesibilidad: oculto visualmente, pero accesible para screen readers */
 /* Responsive */
-@media (max-width: 600px){
+@media (max-width: 768px){
   .lesson-nav{
-    font-size: 13px;
-    padding: 8px 10px;
-    margin: 0 auto 14px;
-    width: 100%;
+    display: none;
   }
+}
 
+@media (max-width: 600px){
   .lesson-nav .crumbs{
     flex-wrap: nowrap;
     overflow-x: auto;
@@ -1055,6 +1054,34 @@ textarea {
 
   .nav .submenu a {
     padding: 10px 14px;
+  }
+
+  /* Fallback para cabeceras antiguas que todavía usen nav.navbar en lugar del menú generado por JS. */
+  .navbar ul.nav_menu,
+  .navbar .nav_menu {
+    align-items: stretch;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    margin: 0;
+    padding: 0;
+  }
+
+  .navbar li {
+    display: block;
+    margin: 0;
+    text-align: left;
+  }
+
+  .navbar a {
+    padding: 12px 16px;
+  }
+
+  .navbar .submenu {
+    box-shadow: none;
+    min-width: 0;
+    position: static;
+    width: 100%;
   }
 }
 

@@ -48,6 +48,8 @@
            <li><a href="#descripcion">Introducción</a></li>
            <li><a href="#contenido">Contenido</a></li>
            <li><a href="#conclusion">Conclusion</a></li>
+           <li><a href="#ejercicio-resuelto">Ejercicio Resuelto</a></li>
+          <li><a href="#ejercicio-resuelto">Ejercicio Resuelto</a></li>
            </ul>
        </div>
      </div>
@@ -279,6 +281,48 @@ out.write.mode("overwrite").parquet("/out/ventas_pais")</code></pre>
       </div>
     </section>
 
+
+
+    <section id="ejercicio-resuelto">
+      <div class="lesson-container">
+        <h3>EJERCICIO RESUELTO</h3>
+        <hr>
+        <div class="text-cell">
+<h4>Consultar empleados utilizando Spark SQL</h4>
+
+      <p>
+
+        Este ejercicio muestra cómo consultar un DataFrame mediante SQL. Se trabajará con el fichero
+        <a href="empleados.json">empleados.json</a>, que contiene información de empleados, departamentos y salarios.
+      </p>
+      <ol>
+        <li>Leer el fichero <code>empleados.json</code>.</li>
+        <li>Crear una vista temporal llamada <code>empleados</code>.</li>
+        <li>Ejecutar una consulta SQL agregada.</li>
+        <li>Calcular el número de empleados y el salario medio por departamento.</li>
+        <li>Filtrar los departamentos cuyo salario medio sea superior a 45.000.</li>
+        <li>Mostrar el plan de ejecución con <code>explain(True)</code>.</li>
+      </ol>
+      <p><strong>Resultado esperado:</strong> se muestra una tabla agregada por departamento.</p>
+
+<pre><code class="bash-code">
+  +------------+---------+-------------+
+|departamento|empleados|salario_medio|
++------------+---------+-------------+
+|   Direccion|     1022|     74964.77|
+|        Data|      979|     53994.38|
+|       Legal|     1028|     51053.99|
+|          IT|     1022|     48217.71|
+|    Finanzas|     1005|     45816.92|
++------------+---------+-------------+
+</code></pre>
+        <p>Después de la tabla, Spark mostrará el plan de ejecución de la consulta. En él se pueden observar las distintas fases del procesamiento, incluyendo el plan lógico, el plan lógico optimizado y el plan físico.</p>
+
+      <p><strong>Reto opcional:</strong> modifica la consulta para mostrar los cinco empleados con mayor salario de toda la empresa utilizando <code>ORDER BY salario DESC LIMIT 5</code>.</p>
+<p></p><strong><a href="M2T3L2_ejercicio.py">Aquí tienes la solución</a></strong></p>
+        </div>
+      </div>
+    </section>
 
     <div class="navigation-buttons">
       <button onclick="window.location.href='M2T3L1.html'">Anterior</button>

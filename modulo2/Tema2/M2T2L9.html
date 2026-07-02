@@ -50,7 +50,7 @@
            <li><a href="#dataset">Dataset (Scala/Java) y operaciones tipadas</a></li>
              <li><a href="#consideraciones">Consideraciones Generales</a></li>
            <li><a href="#conclusion">Conclusión</a></li>
-
+           <li><a href="#ejercicio-resuelto">Ejercicio Resuelto</a></li>
 
          </ul>
        </div>
@@ -412,6 +412,43 @@ df_coal = df.coalesce(2)</code></pre>
       </div>
     </section>
 </section>
+
+
+    <section id="ejercicio-resuelto">
+      <div class="lesson-container">
+        <h3>EJERCICIO RESUELTO</h3>
+        <hr>
+        <div class="text-cell">
+          <h4>Crear, filtrar y agregar un DataFrame</h4>
+
+<p>Este ejercicio practica el API estructurado de Spark con un caso de empleados. Vamos a realizar las siguientes acciones sobre el fichero <a href="empleados.json">empleados.json</a></p>
+<ol><li>Crea un DataFrame leyendo el fichero JSON.</li>
+  <li>Filtra salarios altos (> 45.000) </li>
+  <li>Agrupa por departamento.</li>
+  <li>Calcula número de empleados y salario medio.</li>
+</ol>
+
+          <p> La salida esperada es: </p>
+<pre><code class="bash-code">
+  +------------+----------------+-------------+
+|departamento|numero_empleados|salario_medio|
++------------+----------------+-------------+
+|Data        |979             |53994.38     |
+|Direccion   |1022            |74964.77     |
+|Finanzas    |1005            |45816.92     |
+|IT          |1022            |48217.71     |
+|Legal       |1028            |51053.99     |
+|Marketing   |1027            |39217.14     |
+|Operaciones |1022            |40169.77     |
+|RRHH        |1030            |36564.08     |
+|Soporte     |939             |31643.24     |
+|Ventas      |926             |35888.23     |
++------------+----------------+-------------+
+</code></pre>
+<p></p><strong><a href="M2T2L9_ejercicio.py">Aquí tienes la solución</a></strong></p>
+        </div>
+      </div>
+    </section>
 
     <div class="navigation-buttons">
       <button onclick="window.location.href='M2T2L8.html'">Anterior</button>
