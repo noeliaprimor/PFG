@@ -48,6 +48,7 @@
         <li><a href="#lambda">Arquitectura Lambda</a></li>
         <li><a href="#kappa">Arquitectura Kappa</a></li>
         <li><a href="#comparativa">Comparativa Lambda vs Kappa</a></li>
+        <li><a href="#ejercicio-resuelto">Ejercicio Resuelto</a></li>
       </ul>
     </div>
   </div>
@@ -114,8 +115,8 @@
     <li>La capa batch recalcula periódicamente vistas exactas sobre todo el histórico.</li>
     <li>La capa de servicio ofrece resultados combinados (batch + speed) a consumidores finales.</li>
   </ol>
-        <img src="../../img/M3T1L2_1.png">
-        <p class="img-caption">Imagen 1: Capas de la arquitectura Lamba</p>
+        <img src="../../img/M3T1L2_1.png" alt="Capas de la arquitectura Lamba">
+        <p class="img-caption">Figura 1: Capas de la arquitectura Lamba</p>
 
   <h4>Ventajas</h4>
   <ul>
@@ -169,8 +170,8 @@
     <li>Los resultados se escriben en un sistema de serving (almacenamiento analítico, base NoSQL, etc.).</li>
     <li>Para reprocesar histórico se reejecuta el job consumiendo el log desde el inicio (o desde un offset objetivo).</li>
   </ol>
-                <img src="../../img/M3T1L2_2.png">
-        <p class="img-caption">Imagen 2: Capas de la arquitectura Kappa</p>
+                <img src="../../img/M3T1L2_2.png" alt="Capas de la arquitectura Kappa">
+        <p class="img-caption">Figura 2: Capas de la arquitectura Kappa</p>
 
   <h4>Ventajas</h4>
   <ul>
@@ -265,6 +266,7 @@ query.awaitTermination()</code></pre>
         </tr>
       </tbody>
     </table>
+    <p class="img-caption">Tabla 1: Tabla de contenidos sobre ejemplo conceptual: enfoque kappa con spark structured streaming</p>
   </div>
 
       </div>
@@ -273,10 +275,128 @@ query.awaitTermination()</code></pre>
 
 
 
+<section id="ejercicio-resuelto">
+  <div class="lesson-container">
+    <h3>EJERCICIO RESUELTO</h3>
+    <hr>
+
+    <div class="text-cell">
+      <h4>Simulación de un sistema de monitorización IoT con Structured Streaming</h4>
+
+      <p>
+        En este ejercicio se simula un sistema de sensores IoT que envían mediciones de forma continua.
+        El objetivo es calcular, en tiempo real, cuántas mediciones recibe cada sensor en ventanas de
+        15 segundos.
+      </p>
+
+      <p>
+        Para simplificar el laboratorio no se utilizará Kafka. En su lugar, se empleará la fuente
+        <code>rate</code> de Spark, que permite generar eventos automáticamente.
+      </p>
+
+      <h4>Objetivos del ejercicio</h4>
+      <ol>
+        <li>Crear una sesión Spark.</li>
+        <li>Generar un flujo continuo utilizando la fuente <code>rate</code>.</li>
+        <li>Simular un identificador de sensor.</li>
+        <li>Agrupar los eventos por ventanas temporales de 15 segundos.</li>
+        <li>Mostrar por consola el número de mediciones recibidas por cada sensor.</li>
+      </ol>
+
+      <h4>Código resuelto</h4>
+
+<p></p><a href="M3T1L2_ejercicio.py"><strong>Aquí tienes la solución</strong></a></p>
+
+      <h4>Resultado esperado</h4>
+
+      <p>
+        La aplicación mostrará periódicamente una tabla con el número de eventos recibidos por cada
+        sensor dentro de cada ventana temporal.
+      </p>
+
+      <pre><code class="language-text">-------------------------------------------
+Batch: 1
+-------------------------------------------
++------------------------------------------+---------+-----+
+|window                                    |sensor_id|count|
++------------------------------------------+---------+-----+
+|{2026-07-03 11:51:45, 2026-07-03 11:52:00}|sensor_3 |6    |
+|{2026-07-03 11:51:45, 2026-07-03 11:52:00}|sensor_1 |6    |
+|{2026-07-03 11:51:45, 2026-07-03 11:52:00}|sensor_2 |6    |
++------------------------------------------+---------+-----+
+
+-------------------------------------------
+Batch: 2
+-------------------------------------------
++------------------------------------------+---------+-----+
+|window                                    |sensor_id|count|
++------------------------------------------+---------+-----+
+|{2026-07-03 11:51:45, 2026-07-03 11:52:00}|sensor_3 |9    |
+|{2026-07-03 11:51:45, 2026-07-03 11:52:00}|sensor_1 |9    |
+|{2026-07-03 11:51:45, 2026-07-03 11:52:00}|sensor_2 |9    |
++------------------------------------------+---------+-----+
+
+-------------------------------------------</code></pre>
+
+      <h4>Explicación paso a paso</h4>
+
+      <p>
+        La fuente <code>rate</code> genera automáticamente dos columnas: <code>timestamp</code>, que
+        representa el instante en el que se produce el evento, y <code>value</code>, que contiene un
+        número creciente generado por Spark.
+      </p>
+
+      <p>
+        A partir de la columna <code>value</code> se crea una nueva columna llamada <code>sensor_id</code>.
+        El operador módulo permite repartir los eventos entre tres sensores simulados:
+        <code>sensor_1</code>, <code>sensor_2</code> y <code>sensor_3</code>.
+      </p>
+
+      <p>
+        Después, los datos se agrupan utilizando una ventana temporal de 15 segundos y el identificador
+        del sensor. De esta forma, Spark calcula cuántas mediciones ha recibido cada sensor dentro de
+        cada intervalo de tiempo.
+      </p>
+
+      <p>
+        Finalmente, el resultado se escribe en consola utilizando el modo <code>complete</code>, adecuado
+        en este caso porque se trata de una agregación sobre datos en streaming.
+      </p>
+
+      <h4>Relación con la arquitectura Kappa</h4>
+
+      <p>
+        Este ejercicio representa un ejemplo simplificado de arquitectura Kappa, ya que todo el
+        procesamiento se realiza mediante un único flujo de datos en streaming. No existe una capa batch
+        separada ni una segunda lógica de procesamiento para recalcular los datos históricos.
+      </p>
+
+      <p>
+        En un sistema real, la fuente <code>rate</code> podría sustituirse por un sistema de mensajería
+        como Apache Kafka, y la salida por consola podría reemplazarse por una base de datos, un data lake
+        o una herramienta de visualización.
+      </p>
+
+      <h4>Preguntas de reflexión</h4>
+
+      <ol>
+        <li>¿Por qué este ejemplo se aproxima más a una arquitectura Kappa que a una arquitectura Lambda?</li>
+        <li>¿Qué papel desempeña la fuente <code>rate</code> en este laboratorio?</li>
+        <li>¿Qué habría que cambiar si los eventos procedieran de Kafka?</li>
+        <li>¿Qué ocurriría si se quisiera reprocesar un histórico de varios meses?</li>
+        <li>¿Qué ventajas aporta el uso de ventanas temporales en un sistema de monitorización?</li>
+      </ol>
+    </div>
+  </div>
+</section>
+
+
   <div class="navigation-buttons">
     <button onclick="window.location.href='M3T1L1.html'">Anterior</button>
     <button onclick="window.location.href='M3T1L3.html'">Siguiente</button>
   </div>
+
+
 
 </main>
 <footer>

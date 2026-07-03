@@ -49,7 +49,7 @@
            <li><a href="#paralizacion">Paralización</a></li>
            <li><a href="#particionado">Particionado</a></li>
            <li><a href="#conclusion">Conclusión</a></li>
-           <li><a href="#ejercicio">Ejercicio Resuelto</a></li>
+           <li><a href="#ejercicio-resuelto">Ejercicio Resuelto</a></li>
 
          </ul>
        </div>
@@ -201,8 +201,8 @@ rdd_part = rdd_kv.partitionBy(4)</code></pre>
   <p>
     Esto puede mejorar el rendimiento de operaciones como <code>groupBy</code> o <code>join</code>, aunque suele implicar shuffle.
   </p>
-
-  <h>Shuffle y su relación con el particionado</h>
+<hr>
+  <h4>Shuffle y su relación con el particionado</h4>
   <p>
     Un <strong>shuffle</strong> es el proceso por el cual Spark redistribuye datos entre particiones, normalmente a través de la red.
     Ocurre, por ejemplo, cuando se realizan:
@@ -335,6 +335,7 @@ spark.conf.set("spark.default.parallelism", 8)</code></pre>
       </tr>
     </tbody>
   </table>
+  <p class="img-caption">Tabla 1: Tabla de contenidos sobre diferencias entre rdd y dataframe respecto al particionado</p>
 
 
 
@@ -372,10 +373,11 @@ spark.conf.set("spark.default.parallelism", 8)</code></pre>
 <ol><li>Leemos el fichero JSON</li>
   <li>Guardamos en parquet por particionado</li>
   <li>Comprobamos el parquet y la salida.</li></ol>
-</ol>
+
           <p>El resultado esperado es: </p>
-          <img src="../../img/M2T2L7_7.png">
-<p></p><strong><a href="M2T2L7_ejercicio.py">Aquí tienes la solución</a></strong></p>
+          <img src="../../img/M2T2L7_7.png" alt="Resultado del ejercicio Spark agrupado por departamento">
+          <p class="img-caption">Figura 1: Resultado del ejercicio Spark agrupado por departamento</p>
+<p><strong><a href="M2T2L7_ejercicio.py">Aquí tienes la solución</a></strong></p>
         </div>
       </div>
     </section>

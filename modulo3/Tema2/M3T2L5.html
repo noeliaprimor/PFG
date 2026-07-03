@@ -69,7 +69,7 @@
         </p>
         <p>Aunque se puede preparar el laboratorio de manera manual siguiendo las instrucciones de esta
         página, se ha creado un cuaderno Jupyter con el paso a paso del ejercicio y las soluciones a las
-        preguntas planteadas <a href="M3T2.ipynb">aquí.</a></p>
+        preguntas planteadas <a href="M3T2.ipynb">aquí</a>.</p>
 
         <h4>Objetivo</h4>
         <ol>
@@ -103,7 +103,7 @@
         <p>
           Si tu copia local ya contiene la carpeta <code>app/</code>, <code>output/</code> y
           <code>checkpoint/</code>, no ejecutes el script de creación. Si falta la aplicación Python,
-          puedes usar <code>crear_laboratorio.sh</code> como mecanismo de recuperación.
+          puedes usar <code><a href="crear_laboratorio.sh">crear_laboratorio.sh</a></code> como mecanismo de recuperación.
         </p>
       </div>
     </div>
@@ -124,8 +124,8 @@ docker run --rm hello-world</code></pre>
         <h4>1. Creamos la estructura del laboratorio</h4>
 
         <p>Ejecutamos el script para crear las carpetas y ficheros necesarios, para ello</p>
-<img src="../../img/M3T2L4_1.png" height="249" width="827"/>
-        <p class="img-caption">Imagen 1: creación de la estructura del proyecto</p>
+<img src="../../img/M3T2L4_1.png" height="249" width="827" alt="creación de la estructura del proyecto">
+        <p class="img-caption">Figura 1: creación de la estructura del proyecto</p>
 
         <h4>2. Construir la imagen del laboratorio</h4>
         <p>
@@ -354,7 +354,7 @@ docker compose logs kafka --tail=50</code></pre>
         <h4>Error instalando <code>openjdk-17-jre-headless</code></h4>
         <p>
           Si <code>docker compose build</code> falla en la línea de <code>apt-get install</code>
-          con <code>exit code: 100</code>, asegúrate de que el <code>Dockerfile</code> use la
+          con <code>exit code: 100</code>, asegúrate de que el <code><a href="Dockerfile">Dockerfile</a></code> use la
           imagen base <code>python:3.11-slim-bookworm</code>. Después ejecuta:
         </p>
         <pre><code class="language-bash">docker compose build --no-cache lab</code></pre>
@@ -377,10 +377,13 @@ docker compose logs kafka --tail=50</code></pre>
 
 
 
+
   <div class="navigation-buttons">
     <button onclick="window.location.href='M3T2L4.html'">Anterior</button>
     <button onclick="window.location.href='M3T2auto.html'">Siguiente: Autoevaluación</button>
   </div>
+
+
 
 </main>
 <footer>

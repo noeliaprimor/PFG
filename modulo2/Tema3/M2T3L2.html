@@ -49,7 +49,7 @@
            <li><a href="#contenido">Contenido</a></li>
            <li><a href="#conclusion">Conclusion</a></li>
            <li><a href="#ejercicio-resuelto">Ejercicio Resuelto</a></li>
-          <li><a href="#ejercicio-resuelto">Ejercicio Resuelto</a></li>
+
            </ul>
        </div>
      </div>
@@ -66,7 +66,7 @@
     semi-estructurados). Proporciona un motor SQL distribuido y un modelo unificado basado en DataFrames y Datasets, permitiendo consultar,
     transformar y gobernar datos como si fuesen tablas, pero a escala Big Data.
   </p>
-          <img src="../../img/M2T3L2_1.png">
+          <img src="../../img/M2T3L2_1.png" alt="Arquitectura de Spark SQL">
           <p class="img-caption">Figura 1: Arquitectura de Spark SQL</p>
   <p>
     En la práctica, Spark SQL actúa como la capa que habilita gran parte del procesamiento analítico moderno dentro de Spark, incluyendo
@@ -174,8 +174,8 @@ df = spark.read.schema(schema).option("header", True).csv("/data/datos.csv")</co
     <li><strong>Physical Plan</strong>: selección de operadores concretos y estrategias de ejecución.</li>
     <li><strong>Ejecución</strong>: distribución en stages y tasks sobre el clúster.</li>
   </ol>
-          <img src = "/img/M2T3L2_2.png">
-          <p class="img-caption">Imagen 2: Fases de ejecución con Catalyst </p>
+          <img src = "/img/M2T3L2_2.png" alt="Fases de ejecución con Catalyst">
+          <p class="img-caption">Figura 2: Fases de ejecución con Catalyst</p>
 
   <p>Ejemplos de optimizaciones habituales:</p>
   <ul>

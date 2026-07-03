@@ -47,6 +47,7 @@
         <li><a href="#descripcion">Introducción</a></li>
         <li><a href="#contenido">Contenido</a></li>
         <li><a href="#conclusion">Conclusión</a></li>
+        <li><a href="#ejercicio-resuelto">Ejercicio Resuelto</a></li>
       </ul>
     </div>
   </div>
@@ -92,8 +93,8 @@
   <li><strong>Zookeeper o KRaft: </strong>sistemas utilizados para coordinar y gestionar el clúster.</li>
 </ul>
 
-                        <img src="../../img/M3T1L3_1.png">
-        <p class="img-caption">Imagen 1: Arquitectura de Apache Kafka</p>
+                        <img src="../../img/M3T1L3_1.png" alt="Arquitectura de Apache Kafka">
+        <p class="img-caption">Figura 1: Arquitectura de Apache Kafka</p>
 
 
 <p>Una de las principales características de Apache Kafka es su capacidad para procesar datos en tiempo real con baja latencia. Además, permite escalar horizontalmente distribuyendo la carga entre múltiples servidores.</p>
@@ -198,10 +199,147 @@
 
 
 
+   <section  id="ejercicio-resuelto">
+  <div class="lesson-container">
+    <h3>EJERCICIO RESUELTO</h3>
+    <hr>
+
+    <div class="text-cell">
+      <h4>Producir y consumir eventos JSON con clave en Kafka</h4>
+
+      <p>
+        Este ejercicio introduce el funcionamiento básico de Apache Kafka mediante un ejemplo sencillo:
+        crear un topic, publicar eventos JSON y consumirlos desde el principio. Para ello es necesario tener una instalación de kafka disponible bien en docker o en local.
+        Tienes información en <a href="https://www.datacamp.com/es/tutorial/apache-kafka-for-beginners-a-comprehensive-guide"> este enlace.</a>
+      </p>
+
+      <p>
+        El objetivo es observar cómo Kafka almacena eventos en un topic y cómo un consumidor puede
+        leerlos posteriormente, identificando la clave del mensaje, el valor y el momento de recepción.
+      </p>
+
+      <h4>Objetivos del ejercicio</h4>
+      <ol>
+        <li>Crear un topic de laboratorio.</li>
+        <li>Publicar varios eventos JSON utilizando una clave.</li>
+        <li>Consumir los eventos desde el principio del topic.</li>
+        <li>Observar la relación entre <code>key</code>, <code>value</code> y <code>timestamp</code>.</li>
+        <li>Entender Kafka como un log distribuido de eventos.</li>
+      </ol>
+
+      <h4>Paso 1. Crear el topic</h4>
+
+      <pre><code class="language-bash">kafka-topics.sh \
+  --bootstrap-server localhost:9092 \
+  --create \
+  --if-not-exists \
+  --topic eventos_demo</code></pre>
+
+      <p>
+        Este comando crea un topic llamado <code>eventos_demo</code>. El topic funciona como un canal
+        donde los productores publican eventos y los consumidores los leen.
+      </p>
+
+      <h4>Paso 2. Publicar eventos con clave y valor</h4>
+
+      <p>
+        A continuación se inicia un productor de consola. La opción
+        <code>parse.key=true</code> permite enviar una clave junto con cada mensaje. La clave y el valor
+        se separan mediante el carácter <code>:</code>.
+      </p>
+
+      <pre><code class="language-bash">kafka-console-producer.sh \
+  --bootstrap-server localhost:9092 \
+  --topic eventos_demo \
+  --property parse.key=true \
+  --property key.separator=:</code></pre>
+
+      <p>
+        Una vez iniciado el productor, introduce los siguientes mensajes:
+      </p>
+
+      <pre><code class="language-json">pedido_1:{"event_id":"e1","source":"web","amount":25.5}
+pedido_2:{"event_id":"e2","source":"app","amount":13.2}
+pedido_3:{"event_id":"e3","source":"web","amount":42.0}</code></pre>
+
+      <p>
+        En este ejemplo, <code>pedido_1</code>, <code>pedido_2</code> y <code>pedido_3</code> son las claves
+        de los mensajes. El contenido JSON representa el valor del evento.
+      </p>
+
+      <h4>Paso 3. Consumir los eventos desde el principio</h4>
+
+      <p>
+        En otra terminal, ejecuta el consumidor indicando que se muestren la clave, el valor y el
+        timestamp del mensaje.
+      </p>
+
+      <pre><code class="language-bash">kafka-console-consumer.sh \
+  --bootstrap-server localhost:9092 \
+  --topic eventos_demo \
+  --from-beginning \
+  --property print.key=true \
+  --property print.value=true \
+  --property print.timestamp=true \
+  --property key.separator=" | " \
+  --max-messages 3</code></pre>
+
+      <h4>Resultado esperado</h4>
+
+      <p>
+        El consumidor mostrará los tres eventos publicados. La salida exacta puede variar ligeramente,
+        especialmente en el valor del timestamp.
+      </p>
+
+      <pre><code class="language-text">CreateTime:1751532000000 | pedido_1 | {"event_id":"e1","source":"web","amount":25.5}
+CreateTime:1751532000001 | pedido_2 | {"event_id":"e2","source":"app","amount":13.2}
+CreateTime:1751532000002 | pedido_3 | {"event_id":"e3","source":"web","amount":42.0}</code></pre>
+
+      <h4>Explicación paso a paso</h4>
+
+      <p>
+        El productor envía eventos al topic <code>eventos_demo</code>. Cada evento está formado por una
+        clave y un valor. La clave puede utilizarse para identificar el tipo de evento, el usuario, el
+        pedido o cualquier otro elemento relevante para el sistema.
+      </p>
+
+      <p>
+        Kafka almacena los mensajes en el topic siguiendo un modelo de log. Esto significa que los
+        eventos quedan disponibles durante el periodo de retención configurado, aunque ya hayan sido
+        consumidos.
+      </p>
+
+      <p>
+        La opción <code>--from-beginning</code> permite leer los mensajes desde el inicio del topic. Esto
+        ayuda a entender una de las características principales de Kafka: los consumidores pueden
+        reprocesar eventos anteriores siempre que sigan disponibles en el log.
+      </p>
+
+      <p>
+        El timestamp indica el momento asociado al evento dentro de Kafka. En este laboratorio se utiliza
+        para observar que cada mensaje no solo contiene datos, sino también metadatos útiles para el
+        procesamiento posterior.
+      </p>
+
+      <h4>Preguntas de reflexión</h4>
+
+      <ol>
+        <li>¿Qué diferencia hay entre un productor y un consumidor en Kafka?</li>
+        <li>¿Qué representa el topic <code>eventos_demo</code> dentro del sistema?</li>
+        <li>¿Por qué puede ser útil asignar una clave a cada mensaje?</li>
+        <li>¿Qué ocurre si se ejecuta de nuevo el consumidor con <code>--from-beginning</code>?</li>
+        <li>¿Por qué Kafka puede considerarse un log distribuido de eventos?</li>
+      </ol>
+    </div>
+  </div>
+</section>
+
   <div class="navigation-buttons">
     <button onclick="window.location.href='M3T1L2.html'">Anterior</button>
     <button onclick="window.location.href='M3T1L4.html'">Siguiente</button>
   </div>
+
+
 
 </main>
 <footer>

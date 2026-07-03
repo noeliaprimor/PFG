@@ -46,6 +46,8 @@
         <li><a href="#descripcion">Introducción</a></li>
         <li><a href="#contenido">Contenido</a></li>
         <li><a href="#conclusion">Conclusión</a></li>
+        <li><a href="#ejercicio-resuelto">Ejercicio Resuelto</a></li>
+
       </ul>
     </div>
   </div>
@@ -109,8 +111,8 @@
 
 
 
-  <img src="../../img/M3T3L1_1.png" alt="Modelo de micro-batches en Spark Streaming">
-  <p class="img-caption">Imagen 1: Modelo de micro-batches en Spark Streaming clásico</p>
+  <img src="../../img/M3T3L1_1.png" alt="Modelo de micro-batches en Spark Streaming clásico">
+  <p class="img-caption">Figura 1: Modelo de micro-batches en Spark Streaming clásico</p>
 
         <hr>
 
@@ -367,10 +369,152 @@ def update_count(new_values, current_state):
       </div>
     </section>
 
+<section  id="ejercicio-resuelto">
+  <div class="lesson-container">
+    <h3>EJERCICIO RESUELTO </h3>
+    <hr>
+
+    <div class="text-cell">
+      <h4>Contar palabras con Spark Streaming clásico</h4>
+
+      <p>
+        En este ejercicio se construye una aplicación sencilla con Spark Streaming clásico.
+        El objetivo es procesar líneas de texto recibidas por un socket y contar las palabras
+        que aparecen en cada micro-batch.
+      </p>
+
+      <h4>Objetivos del ejercicio</h4>
+      <ol>
+        <li>Crear un <code>StreamingContext</code>.</li>
+        <li>Recibir datos desde un socket.</li>
+        <li>Transformar cada línea en palabras.</li>
+        <li>Contar las palabras dentro de cada micro-batch.</li>
+        <li>Mostrar el resultado por consola.</li>
+      </ol>
+
+      <h4>Paso 1. Abrir una terminal de entrada</h4>
+
+      <p>
+        Antes de ejecutar Spark, abre una terminal y lanza un servidor de texto con
+        <code>nc</code>:
+      </p>
+
+      <pre><code class="language-bash">nc -lk 9999</code></pre>
+
+      <p>
+        Todo lo que escribas en esta terminal será enviado al programa de Spark Streaming.
+      </p>
+
+      <h4>Paso 2. Código resuelto en PySpark</h4>
+
+      <pre><code class="language-python python-code">from pyspark import SparkConf
+from pyspark.streaming import StreamingContext
+
+conf = (SparkConf()
+        .setAppName("SparkStreamingWordCount")
+        .setMaster("local[2]"))
+
+ssc = StreamingContext(conf, 5)
+
+lineas = ssc.socketTextStream("localhost", 9999)
+
+palabras = lineas.flatMap(lambda linea: linea.split(" "))
+
+pares = palabras.map(lambda palabra: (palabra, 1))
+
+conteo = pares.reduceByKey(lambda a, b: a + b)
+
+conteo.pprint()
+
+ssc.start()
+ssc.awaitTermination()</code></pre>
+
+      <h4>Paso 3. Probar el programa</h4>
+
+      <p>
+        En la terminal donde está ejecutándose <code>nc</code>, escribe varias líneas:
+      </p>
+
+      <pre><code class="language-text">spark kafka spark
+streaming spark
+big data streaming</code></pre>
+
+      <h4>Resultado esperado</h4>
+
+      <p>
+        Cada 5 segundos Spark generará un micro-batch y mostrará el conteo de palabras
+        recibidas en ese intervalo.
+      </p>
+
+      <pre><code class="language-text">-------------------------------------------
+Time: 2026-07-03 11:30:05
+-------------------------------------------
+('spark', 2)
+('kafka', 1)
+
+-------------------------------------------
+Time: 2026-07-03 11:30:10
+-------------------------------------------
+('streaming', 1)
+('spark', 1)</code></pre>
+
+      <h4>Explicación paso a paso</h4>
+
+      <p>
+        La aplicación crea un <code>StreamingContext</code> con un intervalo de micro-batch
+        de 5 segundos. Esto significa que Spark agrupa los datos recibidos durante ese periodo
+        y los procesa como un pequeño lote.
+      </p>
+
+      <p>
+        El método <code>socketTextStream</code> crea un DStream a partir de las líneas de texto
+        recibidas por el puerto 9999. Internamente, ese DStream se representa como una secuencia
+        de RDDs.
+      </p>
+
+      <p>
+        Las transformaciones <code>flatMap</code>, <code>map</code> y <code>reduceByKey</code>
+        se aplican sobre cada RDD generado en cada micro-batch.
+      </p>
+
+      <p>
+        Finalmente, <code>pprint()</code> muestra por consola el resultado de cada intervalo.
+        La aplicación no finaliza automáticamente, ya que queda esperando nuevos datos con
+        <code>awaitTermination()</code>.
+      </p>
+
+      <h4>Relación con la lección</h4>
+
+      <p>
+        Este ejercicio muestra el funcionamiento básico de Spark Streaming clásico:
+        los datos no se procesan evento a evento, sino agrupados en micro-batches.
+      </p>
+
+      <p>
+        También permite observar la diferencia con Structured Streaming. En este caso no se
+        trabaja con DataFrames ni con <code>readStream</code>, sino con DStreams y operaciones
+        similares a las utilizadas sobre RDDs.
+      </p>
+
+      <h4>Preguntas de reflexión</h4>
+
+      <ol>
+        <li>¿Qué representa el intervalo de 5 segundos definido en el <code>StreamingContext</code>?</li>
+        <li>¿Qué diferencia hay entre un DStream y un DataFrame de Structured Streaming?</li>
+        <li>¿Por qué se usa <code>local[2]</code> en lugar de <code>local[1]</code>?</li>
+        <li>¿Qué ocurre si no se escribe nada en la terminal de <code>nc</code>?</li>
+        <li>¿Por qué Spark Streaming clásico se considera hoy una tecnología heredada?</li>
+      </ol>
+    </div>
+  </div>
+</section>
+
   <div class="navigation-buttons">
     <button onclick="window.location.href='index.html'">Índice del Tema</button>
     <button onclick="window.location.href='M3T3L2.html'">Siguiente</button>
   </div>
+
+
 
 </main>
 <footer>

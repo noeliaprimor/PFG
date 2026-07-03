@@ -46,6 +46,8 @@
           <li><a href="#descripcion">Introducción</a></li>
           <li><a href="#contenido">Contenido</a></li>
           <li><a href="#conclusion">Conclusión</a></li>
+          <li><a href="#ejercicio-resuelto">Ejercicio Resuelto</a></li>
+
         </ul>
       </div>
     </div>
@@ -514,10 +516,172 @@ eventos_df = (stream_df
   </section>
 
 
+<section class="ejercicio-resuelto" id="ejercicio-resuelto">
+  <div class="lesson-container">
+    <h3>EJERCICIO RESUELTO PASO A PASO</h3>
+    <hr>
+
+    <div class="text-cell">
+      <h4>Crear un topic particionado y consumir eventos con clave</h4>
+
+      <p>
+        En este ejercicio se trabaja con varios conceptos internos de Kafka: topics,
+        particiones, claves, offsets y grupos de consumidores.
+      </p>
+
+      <p>
+        El objetivo es comprobar cómo Kafka almacena eventos en un topic particionado
+        y cómo la clave del mensaje influye en la distribución de los eventos.
+      </p>
+
+      <h4>Objetivos del ejercicio</h4>
+      <ol>
+        <li>Crear un topic con varias particiones.</li>
+        <li>Publicar eventos JSON usando una clave.</li>
+        <li>Consumir los mensajes mostrando clave, valor, partición, offset y timestamp.</li>
+        <li>Observar que Kafka mantiene el orden dentro de cada partición.</li>
+        <li>Relacionar el ejercicio con el modelo interno de Kafka.</li>
+      </ol>
+
+      <h4>Paso 1. Crear un topic con varias particiones</h4>
+
+      <pre><code class="language-bash">kafka-topics.sh \
+  --bootstrap-server localhost:9092 \
+  --create \
+  --if-not-exists \
+  --topic pedidos \
+  --partitions 3 \
+  --replication-factor 1</code></pre>
+
+      <p>
+        Se crea un topic llamado <code>pedidos</code> con tres particiones. En un entorno local
+        se utiliza <code>replication-factor 1</code> porque normalmente solo existe un broker.
+        En producción se utilizaría un factor de replicación mayor para tolerancia a fallos.
+      </p>
+
+      <h4>Paso 2. Comprobar la configuración del topic</h4>
+
+      <pre><code class="language-bash">kafka-topics.sh \
+  --bootstrap-server localhost:9092 \
+  --describe \
+  --topic pedidos</code></pre>
+
+      <p>
+        Este comando permite ver las particiones del topic, el broker líder y las réplicas
+        asociadas.
+      </p>
+
+      <h4>Paso 3. Publicar eventos con clave</h4>
+
+      <p>
+        Se inicia un productor indicando que cada mensaje tendrá una clave y un valor separados
+        por el carácter <code>:</code>.
+      </p>
+
+      <pre><code class="language-bash">kafka-console-producer.sh \
+  --bootstrap-server localhost:9092 \
+  --topic pedidos \
+  --property parse.key=true \
+  --property key.separator=:</code></pre>
+
+      <p>
+        Una vez iniciado el productor, introduce estos mensajes:
+      </p>
+
+      <pre><code class="language-json">cliente_1:{"event_id":"evt-001","event_type":"pedido_creado","importe":25.5}
+cliente_2:{"event_id":"evt-002","event_type":"pedido_creado","importe":40.0}
+cliente_1:{"event_id":"evt-003","event_type":"pago_confirmado","importe":25.5}
+cliente_3:{"event_id":"evt-004","event_type":"pedido_creado","importe":18.9}
+cliente_2:{"event_id":"evt-005","event_type":"pago_confirmado","importe":40.0}</code></pre>
+
+      <p>
+        En este ejemplo, la clave representa el identificador del cliente. Kafka usará esa clave
+        para decidir en qué partición almacenar cada evento.
+      </p>
+
+      <h4>Paso 4. Consumir los eventos mostrando metadatos</h4>
+
+      <pre><code class="language-bash">kafka-console-consumer.sh \
+  --bootstrap-server localhost:9092 \
+  --topic pedidos \
+  --from-beginning \
+  --property print.key=true \
+  --property print.value=true \
+  --property print.partition=true \
+  --property print.offset=true \
+  --property print.timestamp=true \
+  --property key.separator=" | " \
+  --max-messages 5</code></pre>
+
+      <h4>Resultado esperado</h4>
+
+      <p>
+        La salida mostrará los eventos publicados junto con metadatos de Kafka. Los valores concretos
+        de partición, offset y timestamp pueden variar.
+      </p>
+
+      <pre><code class="language-text">CreateTime:1751532000000 | Partition:0 | Offset:0 | cliente_1 | {"event_id":"evt-001","event_type":"pedido_creado","importe":25.5}
+CreateTime:1751532000001 | Partition:1 | Offset:0 | cliente_2 | {"event_id":"evt-002","event_type":"pedido_creado","importe":40.0}
+CreateTime:1751532000002 | Partition:0 | Offset:1 | cliente_1 | {"event_id":"evt-003","event_type":"pago_confirmado","importe":25.5}
+CreateTime:1751532000003 | Partition:2 | Offset:0 | cliente_3 | {"event_id":"evt-004","event_type":"pedido_creado","importe":18.9}
+CreateTime:1751532000004 | Partition:1 | Offset:1 | cliente_2 | {"event_id":"evt-005","event_type":"pago_confirmado","importe":40.0}</code></pre>
+
+      <h4>Explicación paso a paso</h4>
+
+      <p>
+        El topic <code>pedidos</code> se divide en tres particiones. Esto permite que Kafka
+        distribuya los mensajes y facilite el procesamiento en paralelo.
+      </p>
+
+      <p>
+        Al enviar mensajes con clave, Kafka intenta almacenar los eventos con la misma clave en la
+        misma partición. Por eso, los eventos de <code>cliente_1</code> deberían mantenerse juntos
+        y conservar su orden relativo dentro de esa partición.
+      </p>
+
+      <p>
+        El offset identifica la posición de cada mensaje dentro de una partición. No es global para
+        todo el topic, sino independiente en cada partición.
+      </p>
+
+      <p>
+        El timestamp indica el momento asociado al mensaje dentro de Kafka. Este metadato puede ser
+        útil para análisis temporales o para integraciones posteriores con motores como Spark
+        Structured Streaming.
+      </p>
+
+      <h4>Relación con la lección</h4>
+
+      <p>
+        Este ejercicio permite ver de forma práctica varios conceptos internos de Kafka:
+        el topic como unidad lógica, las particiones como mecanismo de paralelismo, la clave como
+        criterio de distribución y el offset como posición de lectura.
+      </p>
+
+      <p>
+        También ayuda a entender por qué el diseño de claves y particiones es una decisión importante
+        en sistemas de streaming: afecta al orden, al paralelismo y al reparto de carga.
+      </p>
+
+      <h4>Preguntas de reflexión</h4>
+
+      <ol>
+        <li>¿Por qué Kafka divide un topic en particiones?</li>
+        <li>¿Qué relación existe entre la clave del mensaje y la partición donde se almacena?</li>
+        <li>¿El offset es único en todo el topic o solo dentro de cada partición?</li>
+        <li>¿Qué ocurriría si todos los mensajes usaran siempre la misma clave?</li>
+        <li>¿Por qué en producción suele usarse un factor de replicación mayor que 1?</li>
+      </ol>
+    </div>
+  </div>
+</section>
+
   <div class="navigation-buttons">
     <button onclick="window.location.href='M3T2L1.html'">Anterior</button>
     <button onclick="window.location.href='M3T2L3.html'">Siguiente</button>
   </div>
+
+
 
 </main>
 <footer>

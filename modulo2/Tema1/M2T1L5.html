@@ -87,13 +87,13 @@
             <div class="text-cell">
                 <ul>
                     <li>Java 8 o superior (OpenJDK recomendado)</li>
-                  <img src="../../img/M2T2L5_1.png">
+                  <img src="../../img/M2T2L5_1.png" alt="Verificación de versión de Java requerida para Spark">
                   <p class="img-caption">Figura 1: Verificación de versión de Java requerida para Spark</p>
                     <li>Python 3.6 o superior</li>
-                  <img src="../../img/M2T2L5_2.png">
+                  <img src="../../img/M2T2L5_2.png" alt="Verificación de versión de Python requerida para PySpark">
                   <p class="img-caption">Figura 2: Verificación de versión de Python requerida para PySpark</p>
                     <li>Al menos 4 GB de RAM para pruebas locales</li>
-                  <img src="../../img/M2T2L5_3.png">
+                  <img src="../../img/M2T2L5_3.png" alt="Verificación de requisitos de memoria del sistema">
                   <p class="img-caption">Figura 3: Verificación de requisitos de memoria del sistema</p>
                 </ul>
 
@@ -101,7 +101,7 @@
             <div class="text-cell">
                 <h4> Instalación de Apache Spark </h4>
                   <p>Para instalar Apache Spark en modo standalone, se pueden seguir los siguientes pasos:</p>
-              <p><strong>Descargar Spark:</strong> Vamos a utilizar la versión 3.5.8 compilado para hadoop3, se puede
+              <p><strong>Descargar Spark:</strong> Vamos a utilizar la versión 3.5.8 compilado para hadoop3,
               se puede encontrar en la página oficial del proyecto apache <a href="https://downloads.apache.org/spark/spark-3.5.8/spark-3.5.8-bin-hadoop3.tgz">aquí</a>.</p>
 
 
@@ -128,11 +128,11 @@ pyspark --master local[*]
 
 
 <p>Como resultado de la ejecución de codigo anterior nos saldrá la siguiente salida</p>
-              <img src="../../img/M2T2L5_4.png">
+              <img src="../../img/M2T2L5_4.png" alt="Consola de PySpark indicando inicio correcto de la sesión Spark">
               <p class="img-caption">Figura 4: Consola de PySpark indicando inicio correcto de la sesión Spark</p>
               <p>Si todo ha ido bien, deberíamos ver la consola de PySpark, lo que indica que Spark se ha instalado correctamente y está listo para usarse en modo local. Ademas podemos
               acceder al interfaz visual del usuario a través de la dirección local que aparece, en nuestro caso: http://192.168.68.66:4040</p>
-              <img src="../../img/M2T2L5_5.png">
+              <img src="../../img/M2T2L5_5.png" alt="Interfaz web de Spark mostrando información de la aplicación en ejecución">
               <p class="img-caption">Figura 5: Interfaz web de Spark mostrando información de la aplicación en ejecución</p>
               <br>
               <p>Para salir, unicamente ejutamos quit en la shell de spark</p>
@@ -180,10 +180,10 @@ pyspark --master local[*]
 <br>
             <p>Una vez instalado comprobamos la instalación ejecutando: <code>$sudo docker run hello-world</code></p>
             <br>
-            <img src="../../img/M2T2L5_6.png">
+            <img src="../../img/M2T2L5_6.png" alt="Confirmación exitosa de instalación de Docker">
             <p class="img-caption">Figura 6: Confirmación exitosa de instalación de Docker</p>
             <p>Se recomienda también instalar la versión Docker Deskop para poder acceder de forma visual a los detalles de la herramienta
-            para ello ha que descargar la última versión del paquete de la <a href="https://desktop.docker.com/linux/main/amd64/docker-desktop-amd64.deb?utm_source=docker&utm_medium=webreferral&utm_campaign=docs-driven-download-linux-amd64">Siguiente dirección y ejecutar:</a></p>
+            para ello hay que descargar la última versión del paquete de la <a href="https://desktop.docker.com/linux/main/amd64/docker-desktop-amd64.deb?utm_source=docker&utm_medium=webreferral&utm_campaign=docs-driven-download-linux-amd64">Siguiente dirección y ejecutar:</a></p>
             <pre><code class="language-bash bash-code">
 sudo dpkg -i docker-desktop-amd64.deb
 
@@ -209,7 +209,7 @@ SPARK_MASTER_UI_PORT=8080
             <p>En esta carpeta nos decargamos l siguiente archivo <a href="docker-compose.yml"><code>docker-compose.yml</code></a></p>
 
 
-            <pre><code class=language-bash bash-code">
+            <pre><code class="language-bash bash-code">
 services:
   spark-master:
     image: apache/spark:3.5.1
@@ -254,12 +254,12 @@ docker compose ps
 
 
 </code></pre>
-                <img src="../../img/M2T2L5_7.png">
+                <img src="../../img/M2T2L5_7.png" alt="Consola de Spark mostrando logs de configuración del cluster Standalone">
                 <p class="img-caption">Figura 7: Consola de Spark mostrando logs de configuración del cluster Standalone</p>
 
                   <p>Una vez que el cluster esté en funcionamiento, podemos acceder a la interfaz web
                   del maestro en http://localhost:8080, donde podremos ver el estado de los trabajadores y las aplicaciones en ejecución.</p>
-<img src="../../img/M2T2L5_8.png">
+<img src="../../img/M2T2L5_8.png" alt="Interfaz web de administración del cluster Spark mostrando estado de workers y aplicaciones">
 <p class="img-caption">Figura 8: Interfaz web de administración del cluster Spark mostrando estado de workers y aplicaciones</p>
               </div>
             <div class="text-cell">
@@ -323,9 +323,9 @@ docker compose exec spark-master
 
 </code></pre>
                 <p>Esto ejecutará el script <code>mitrabajo.py</code> en el cluster de Spark, utilizando los recursos de los nodos trabajadores. Podemos monitorear el progreso del trabajo a través de la interfaz web del maestro.</p>
-<img src="../../img/M2T2L5_9.png">
+<img src="../../img/M2T2L5_9.png" alt="Salida en el master de Spark mostrando logs de ejecución de la aplicación">
 <p class="img-caption">Figura 9: Salida en el master de Spark mostrando logs de ejecución de la aplicación</p>
-              <img src="../../img/M2T2L5_10.png">
+              <img src="../../img/M2T2L5_10.png" alt="Salida en la consola mostrando el DataFrame creado y procesado">
               <p class="img-caption">Figura 10: Salida en la consola mostrando el DataFrame creado y procesado</p>
 
         <p>Para cerrar el entorno ejecutamos:</p>
@@ -341,7 +341,7 @@ docker compose down
 
 
  <section id="ejercicio-resuelto">
- 
+
       <div class="lesson-container">
         <h3>EJERCICIO RESUELTO PASO A PASO</h3>
         <hr>
@@ -351,7 +351,8 @@ docker compose down
 <p>Esta practica comprueba que Spark esta instalado y puede ejecutar un job minimo.</p>
 <ol><li>Comprueba la version.</li>
  <pre><code class="language-bash">spark-submit --version</code></pre>
-  <img src="../../img/M2T1L5_1.png">
+  <img src="../../img/M2T1L5_1.png" alt="Ejecución de comandos de Spark en el entorno configurado">
+  <p class="img-caption">Figura 11: Ejecución de comandos de Spark en el entorno configurado</p>
   <li>Arranca PySpark y ejecuta el siguiente código <code>spark-submit</code>.</li>
 
   <pre><code class="language-python python-code">from pyspark.sql import SparkSession
@@ -360,7 +361,8 @@ print("Spark activo:", spark.version)
 spark.range(5).show()
 spark.stop()</code></pre>
   <li>Valida la salida, se deberá mostar una tabla con valores del 0 al 4..</li></ol>
-<img src="../../img/M2T1L5_2.png">
+<img src="../../img/M2T1L5_2.png" alt="Comprobación del entorno Spark desde terminal">
+<p class="img-caption">Figura 12: Comprobación del entorno Spark desde terminal</p>
 
         </div>
       </div>
@@ -379,6 +381,6 @@ spark.stop()</code></pre>
 <script src="../../js/script.js"></script>
 
 
-
+</main>
 </body>
 </html>

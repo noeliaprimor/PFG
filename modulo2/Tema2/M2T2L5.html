@@ -140,6 +140,7 @@ df.write     # Para guardar</code></pre>
       </tr>
     </tbody>
   </table>
+  <p class="img-caption">Tabla 1: Tabla de contenidos sobre lectura de archivos csv</p>
  <hr>
   <h4>Lectura de JSON</h4>
   <p>
@@ -267,6 +268,7 @@ df.write     # Para guardar</code></pre>
       </tr>
     </tbody>
   </table>
+  <p class="img-caption">Tabla 2: Tabla de contenidos sobre modos de escritura</p>
 
 
   <h3>Diferencias entre formatos: CSV vs JSON vs Parquet</h3>
@@ -315,6 +317,7 @@ df.write     # Para guardar</code></pre>
       </tr>
     </tbody>
   </table>
+  <p class="img-caption">Tabla 3: Tabla de contenidos sobre diferencias entre formatos: csv vs json vs parquet</p>
   <p>
     En producción, Parquet suele ser el estándar en procesos de analítica y ETL por su eficiencia y compatibilidad.
   </p>
@@ -362,7 +365,7 @@ rdd.saveAsTextFile("salida_rdd")</code></pre>
         <div class="text-cell">
 
   <ul>
-    <li>Priorizar formatos columnar (Parquet/ORC) frente a formatos de texto (CSV/JSON) cuando sea posible.</li>
+    <li>Priorizar formatos columnares (Parquet/ORC) frente a formatos de texto (CSV/JSON) cuando sea posible.</li>
     <li>Usar <code>inferSchema</code> solo en pruebas; en producción conviene definir esquemas explícitos.</li>
     <li>Controlar particiones con <code>repartition</code> o <code>coalesce</code> antes de escribir para evitar demasiados ficheros pequeños.</li>
     <li>Evitar <code>collect()</code> con grandes volúmenes, ya que puede saturar la memoria del Driver.</li>
@@ -406,7 +409,7 @@ rdd.saveAsTextFile("salida_rdd")</code></pre>
           <h4>Lectura y esccirtura de ficheros</h4>
 
 <p>En este ejercicio vamos a leer un fichero JSON con los datos de 10.000 empleados y vamos a guardar la informción en parquet</p>
-<ol><li>Lectura del fichero JSON que se encuentra en <a href="empleados.json"> esta ubicación.</a></li>
+<ol><li>Lectura del fichero JSON que se encuentra en <a href="empleados.json">esta ubicación.</a></li>
   <li>Imprime el esquema para comprobar la lectura correcta.</li>
   <li>Guarda en formato parquet</li>
   <li>Lee el fichero parquet para comprobar</li>
@@ -476,7 +479,7 @@ Contenido del Parquet:
 only showing top 20 rows
 
           </code>
-<p></p><strong><a href="M2T2L5_ejercicio.py">Aquí tienes la solución</a></strong></p>
+<p><strong><a href="M2T2L5_ejercicio.py">Aquí tienes la solución</a></strong></p>
         </div>
       </div>
     </section>

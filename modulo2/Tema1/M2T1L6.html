@@ -89,9 +89,9 @@
             <!-- Blóque con texto -->
             <div class="text-cell">
                 <h4> Ejecución </h4>
-               <p>Se inicia en la terminal ejecutando <code>./spark-shell</code></p> desde la carpeta de instalación de Spark. También se pueden añadir configuraciones:</p>
+               <p>Se inicia en la terminal ejecutando <code>./spark-shell</code> desde la carpeta de instalación de Spark. También se pueden añadir configuraciones:</p>
   <pre><code class="language-python python-code">spark-shell --master local[4] --executor-memory 4G</code></pre>
-       <img src="../../img/M2T2L6_1.png">
+       <img src="../../img/M2T2L6_1.png" alt="Interfaz de Scala Shell de Spark mostrando inicio de sesión y comandos disponibles">
        <p class="img-caption">Figura 1: Interfaz de Scala Shell de Spark mostrando inicio de sesión y comandos disponibles</p>
             </div>
            <div class="text-cell">
@@ -129,8 +129,6 @@ df.show()</code></pre>
 
             </div>
 
-            </div>
-        </div>
     </section>
     <section  id="python">
          <!-- Para saber más -->
@@ -147,7 +145,7 @@ df.show()</code></pre>
 
   <p>También admite configuraciones:</p>
   <pre><code class="language-python python-code">pyspark --master local[*] --packages com.databricks:spark-xml_2.12:0.15.0</code></pre>
-              <img src="../../img/M2T2L6_2.png">
+              <img src="../../img/M2T2L6_2.png" alt="Interfaz de PySpark Shell mostrando contexto Spark disponible y comandos Python">
               <p class="img-caption">Figura 2: Interfaz de PySpark Shell mostrando contexto Spark disponible y comandos Python</p>
 
   <h3>Características principales</h3>
@@ -235,6 +233,7 @@ df.show()</code></pre>
       </tr>
     </tbody>
   </table>
+  <p class="img-caption">Tabla 1: Tabla de contenidos sobre comparación rápida</p>
 
   <h3>Casos de uso comunes en ambas shells</h3>
   <ul>
@@ -262,8 +261,8 @@ df.show()</code></pre>
 
             </div>
 
-            </div>
-        </div>
+
+
     </section>
 
     <section id="ejercicio-resuelto">
@@ -273,12 +272,13 @@ df.show()</code></pre>
         <div class="text-cell">
           <h4>Probar la misma operacion en shell y en script</h4>
 
-<p>El objetivo es entender para que sirven <code>spark-shell</code>, <code>pyspark</code> y <code>spark-submit</code>.</p>
+<p>El objetivo es entender para qué sirven <code>spark-shell</code>, <code>pyspark</code> y <code>spark-submit</code>.</p>
 <ol><li>Ejecuta el siguiente código en <code>pyspark</code>.</li>
   <pre><code class="language-python python-code">datos = [("Ana", 32), ("Luis", 38), ("Marta", 42)]
 df = spark.createDataFrame(datos, ["nombre", "edad"])
 df.filter(df.edad &gt;= 35).show()</code></pre>
-  <img src="../../img/M2T1L6_1.png">
+  <img src="../../img/M2T1L6_1.png" alt="Comparativa de ejecución Spark con Scala y Python">
+  <p class="img-caption">Figura 3: Comparativa de ejecución Spark con Scala y Python</p>
 
 
   <li>Copia el siguiente código  a un fichero <code>.py</code>.</li>

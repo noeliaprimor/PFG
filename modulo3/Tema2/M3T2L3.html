@@ -46,6 +46,8 @@
           <li><a href="#descripcion">Introducción</a></li>
           <li><a href="#contenido">Contenido</a></li>
           <li><a href="#conclusion">Conclusión</a></li>
+          <li><a href="#ejercicio-resuelto">Ejercicio Resuelto</a></li>
+
         </ul>
       </div>
     </div>
@@ -110,8 +112,8 @@
     de <strong>source</strong>: el origen desde el que Spark lee datos. En Structured Streaming,
     una consulta suele tener una source, un conjunto de transformaciones y un sink.
   </p>
-         <img src ="/img/M3T2L3_1.png">
-        <p class="img-caption"> Figura 1: Flujo de datos desde Spark </p>
+         <img src ="/img/M3T2L3_1.png" alt="Flujo de datos desde Spark">
+        <p class="img-caption">Figura 1: Flujo de datos desde Spark</p>
         <hr>
   <h4>Criterios para elegir conectores y sinks</h4>
   <ul>
@@ -524,12 +526,112 @@ query = (df.writeStream
     </div>
   </section>
 
+<section class="ejercicio-resuelto" id="ejercicio-resuelto">
+  <div class="lesson-container">
+    <h3>EJERCICIO RESUELTO</h3>
+    <hr>
+
+    <div class="text-cell">
+      <h4>Escribir eventos procesados en distintos sinks con Spark</h4>
+
+      <p>
+        En este ejercicio se simula un pequeño conjunto de eventos de pedidos y se escriben los
+        resultados en distintos destinos. El objetivo es comprender la diferencia entre un sink de
+        desarrollo, como la consola, y un sink persistente, como un fichero Parquet.
+      </p>
+
+      <h4>Objetivos del ejercicio</h4>
+      <ol>
+        <li>Crear una sesión Spark.</li>
+        <li>Construir un DataFrame con eventos de pedidos.</li>
+        <li>Aplicar una transformación sencilla sobre los datos.</li>
+        <li>Escribir el resultado en consola para depuración.</li>
+        <li>Guardar el resultado en formato Parquet como sink persistente.</li>
+      </ol>
+
+      <h4>Código resuelto</h4>
+
+            <p></p><a href="M3T2L3_ejercicio.py"><strong>Aquí tienes la solución</strong></a></p>
+
+      <h4>Resultado esperado</h4>
+
+      <p>
+        Primero se mostrará el resultado por consola. Después, Spark guardará los datos en formato
+        Parquet dentro del directorio <code>output/pedidos_parquet</code>, particionados por canal.
+      </p>
+
+      <pre><code class="language-text">+---------+----------+-------+------+-------+-----------------+-------------+
+|pedido_id|cliente_id|importe|moneda|canal  |categoria_importe|fecha_proceso|
++---------+----------+-------+------+-------+-----------------+-------------+
+|pedido-1 |cli-1     |25.5   |EUR   |web    |normal           |2026-07-03   |
+|pedido-2 |cli-2     |40.0   |EUR   |app    |normal           |2026-07-03   |
+|pedido-3 |cli-1     |15.0   |EUR   |web    |normal           |2026-07-03   |
+|pedido-4 |cli-3     |80.0   |EUR   |tienda |alto             |2026-07-03   |
++---------+----------+-------+------+-------+-----------------+-------------+</code></pre>
+
+      <h4>Explicación paso a paso</h4>
+
+      <p>
+        En primer lugar se crea un DataFrame en memoria que representa eventos de pedidos. Cada fila
+        contiene un identificador de pedido, un cliente, un importe, una moneda y el canal de origen.
+      </p>
+
+      <p>
+        A continuación se aplica una transformación para clasificar cada pedido según su importe.
+        Los pedidos con importe igual o superior a 50 se marcan como <code>alto</code>, mientras que
+        el resto se clasifican como <code>normal</code>.
+      </p>
+
+      <p>
+        La salida por consola actúa como un sink de desarrollo. Es útil para comprobar el resultado
+        durante las pruebas, pero no debe utilizarse como destino final en un sistema real.
+      </p>
+
+      <p>
+        Después, los datos se escriben en formato Parquet. Este formato es adecuado para analítica
+        porque almacena los datos por columnas y permite lecturas eficientes.
+      </p>
+
+      <p>
+        La opción <code>partitionBy("canal")</code> organiza físicamente los datos por canal de origen.
+        Esta decisión puede mejorar consultas posteriores cuando se filtra por ese campo.
+      </p>
+
+      <h4>Relación con la lección</h4>
+
+      <p>
+        Este ejercicio muestra que un sink no es solo el lugar donde se escriben los datos, sino una
+        decisión de diseño. Escribir en consola sirve para depurar; escribir en Parquet permite conservar
+        los datos y analizarlos posteriormente.
+      </p>
+
+      <p>
+        En un pipeline real de Structured Streaming, este mismo patrón podría adaptarse usando
+        <code>writeStream</code>, un <code>checkpointLocation</code> y un destino persistente como
+        un Data Lake, Kafka o una base de datos.
+      </p>
+
+      <h4>Preguntas de reflexión</h4>
+
+      <ol>
+        <li>¿Por qué la consola no debería usarse como sink productivo?</li>
+        <li>¿Qué ventajas aporta Parquet frente a CSV o JSON en entornos analíticos?</li>
+        <li>¿Qué efecto tiene particionar la salida por <code>canal</code>?</li>
+        <li>¿Qué podría ocurrir si se usa <code>mode("overwrite")</code> en producción sin control?</li>
+        <li>¿Qué habría que añadir si este ejemplo se transformara en una consulta de streaming?</li>
+      </ol>
+    </div>
+  </div>
+</section>
+
 
 
   <div class="navigation-buttons">
     <button onclick="window.location.href='M3T2L2.html'">Anterior</button>
     <button onclick="window.location.href='M3T2L4.html'">Siguiente</button>
   </div>
+
+
 
 </main>
 <footer>

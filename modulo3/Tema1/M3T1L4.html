@@ -48,6 +48,7 @@
         <li><a href="#descripcion">Introducción</a></li>
         <li><a href="#contenido">Contenido</a></li>
         <li><a href="#conclusion">Conclusión</a></li>
+        <li><a href="#ejercicio-resuelto">Ejercicio Resuelto</a></li>
       </ul>
     </div>
   </div>
@@ -223,6 +224,7 @@ windowed = (stream_df
         </tr>
       </tbody>
     </table>
+    <p class="img-caption">Tabla 1: Tabla de contenidos sobre comparativa general</p>
   </div>
 <hr>
   <h3>Casos de uso habituales</h3>
@@ -261,10 +263,128 @@ windowed = (stream_df
 
 
 
+<section  id="ejercicio-resuelto">
+  <div class="lesson-container">
+    <h3>EJERCICIO RESUELTO PASO A PASO</h3>
+    <hr>
+
+    <div class="text-cell">
+      <h4>Procesar eventos simulados con Structured Streaming</h4>
+
+      <p>
+        En este ejercicio se utiliza la fuente <code>rate</code> de Spark para simular un flujo continuo
+        de eventos. El objetivo es comprender cómo Structured Streaming trata un stream como una tabla
+        que se actualiza de forma incremental.
+      </p>
+
+      <h4>Objetivos del ejercicio</h4>
+      <ol>
+        <li>Crear una sesión Spark.</li>
+        <li>Generar un stream de eventos con la fuente <code>rate</code>.</li>
+        <li>Clasificar los eventos en varias categorías.</li>
+        <li>Agrupar los datos mediante ventanas temporales.</li>
+        <li>Mostrar los resultados en consola usando el modo <code>complete</code>.</li>
+      </ol>
+
+      <h4>Código resuelto</h4>
+
+      <pre><code class="language-python python-code">from pyspark.sql import SparkSession
+from pyspark.sql import functions as F
+
+spark = (SparkSession.builder
+         .appName("StructuredStreamingDemo")
+         .master("local[*]")
+         .getOrCreate())
+
+eventos = (spark.readStream
+           .format("rate")
+           .option("rowsPerSecond", 6)
+           .load())
+
+eventos_clasificados = eventos.withColumn(
+    "categoria",
+    F.when(F.col("value") % 3 == 0, "alta")
+     .when(F.col("value") % 3 == 1, "media")
+     .otherwise("baja")
+)
+
+metricas = (
+    eventos_clasificados
+    .groupBy(
+        F.window("timestamp", "10 seconds"),
+        "categoria"
+    )
+    .count()
+)
+
+query = (
+    metricas.writeStream
+    .outputMode("complete")
+    .format("console")
+    .option("truncate", "false")
+    .start()
+)
+
+query.awaitTermination()</code></pre>
+
+      <h4>Resultado esperado</h4>
+
+      <p>
+        La consola mostrará periódicamente el número de eventos recibidos por categoría dentro de cada
+        ventana temporal de 10 segundos.
+      </p>
+
+      <pre><code class="language-text">+------------------------------------------+---------+-----+
+|window                                    |categoria|count|
++------------------------------------------+---------+-----+
+|{2026-07-03 11:00:00, 2026-07-03 11:00:10}|alta     |20   |
+|{2026-07-03 11:00:00, 2026-07-03 11:00:10}|media    |20   |
+|{2026-07-03 11:00:00, 2026-07-03 11:00:10}|baja     |20   |
++------------------------------------------+---------+-----+</code></pre>
+
+      <h4>Explicación paso a paso</h4>
+
+      <p>
+        La fuente <code>rate</code> genera eventos automáticamente. Cada evento contiene una columna
+        <code>timestamp</code>, que indica el momento de generación, y una columna <code>value</code>,
+        que contiene un número incremental.
+      </p>
+
+      <p>
+        A partir de la columna <code>value</code> se crea una nueva columna llamada
+        <code>categoria</code>. Esta clasificación permite simular distintos tipos de eventos dentro
+        del flujo.
+      </p>
+
+      <p>
+        Después, los eventos se agrupan por ventanas temporales de 10 segundos. De esta forma,
+        Structured Streaming calcula cuántos eventos de cada categoría llegan dentro de cada intervalo.
+      </p>
+
+      <p>
+        El modo de salida <code>complete</code> muestra el resultado agregado completo cada vez que se
+        actualiza la consulta. Es adecuado en este ejemplo porque se está realizando una agregación.
+      </p>
+
+      <h4>Preguntas de reflexión</h4>
+
+      <ol>
+        <li>¿Por qué la fuente <code>rate</code> es útil para hacer pruebas sin Kafka?</li>
+        <li>¿Qué columnas genera automáticamente Spark en este stream?</li>
+        <li>¿Qué representa una ventana temporal en Structured Streaming?</li>
+        <li>¿Por qué se utiliza el modo de salida <code>complete</code>?</li>
+        <li>¿Qué cambiaría si se utilizara Kafka como fuente de entrada?</li>
+      </ol>
+    </div>
+  </div>
+</section>
+
   <div class="navigation-buttons">
     <button onclick="window.location.href='M3T1L3.html'">Anterior</button>
     <button onclick="window.location.href='M3T1L5.html'">Siguiente</button>
   </div>
+
+
 
 </main>
 <footer>

@@ -46,6 +46,8 @@
         <li><a href="#descripcion">Introducción</a></li>
         <li><a href="#contenido">Contenido</a></li>
         <li><a href="#conclusion">Conclusión</a></li>
+        <li><a href="#ejercicio-resuelto">Ejercicio Resuelto</a></li>
+
       </ul>
     </div>
   </div>
@@ -98,7 +100,7 @@
   </p>
 
   <img src="../../img/M3T3L2_1.png" alt="Patrón de integración entre Spark Structured Streaming y Kafka">
-  <p class="img-caption">Imagen 1: Patrón de integración entre Spark Structured Streaming y Kafka</p>
+  <p class="img-caption">Figura 1: Patrón de integración entre Spark Structured Streaming y Kafka</p>
 
 <hr>
 
@@ -398,12 +400,224 @@ spark.streams.active</code></pre>
     </div>
   </section>
 
+<section class="ejercicio-resuelto" id="ejercicio-resuelto">
+  <div class="lesson-container">
+    <h3>EJERCICIO RESUELTO PASO A PASO</h3>
+    <hr>
+
+    <div class="text-cell">
+      <h4>Leer eventos desde Kafka con Spark Structured Streaming</h4>
+
+      <p>
+        En este ejercicio se construye un pequeño pipeline de integración entre Apache Kafka
+        y Spark Structured Streaming. Kafka actuará como sistema de entrada de eventos y Spark
+        se encargará de leerlos, convertirlos desde JSON y mostrar el resultado procesado.
+      </p>
+
+      <h4>Objetivos del ejercicio</h4>
+      <ol>
+        <li>Crear un topic Kafka para eventos de ventas.</li>
+        <li>Publicar eventos JSON en Kafka.</li>
+        <li>Leer el topic desde Spark Structured Streaming.</li>
+        <li>Convertir las columnas <code>key</code> y <code>value</code> desde binario a texto.</li>
+        <li>Aplicar un esquema al JSON recibido.</li>
+        <li>Mostrar los eventos procesados por consola.</li>
+      </ol>
+
+      <h4>Paso 1. Crear el topic Kafka</h4>
+
+      <pre><code class="language-bash">kafka-topics.sh \
+  --bootstrap-server localhost:9092 \
+  --create \
+  --if-not-exists \
+  --topic ventas \
+  --partitions 3 \
+  --replication-factor 1</code></pre>
+
+      <h4>Paso 2. Publicar eventos de prueba</h4>
+
+      <pre><code class="language-bash">kafka-console-producer.sh \
+  --bootstrap-server localhost:9092 \
+  --topic ventas \
+  --property parse.key=true \
+  --property key.separator=:</code></pre>
+
+      <p>
+        Introduce los siguientes eventos en la terminal del productor:
+      </p>
+
+      <pre><code class="language-json">cliente_1:{"event_id":"evt-001","event_time":"2026-07-03T10:00:00Z","customer_id":"cliente_1","amount":25.5,"country":"ES"}
+cliente_2:{"event_id":"evt-002","event_time":"2026-07-03T10:01:00Z","customer_id":"cliente_2","amount":40.0,"country":"PT"}
+cliente_1:{"event_id":"evt-003","event_time":"2026-07-03T10:02:00Z","customer_id":"cliente_1","amount":18.9,"country":"ES"}</code></pre>
+
+      <h4>Paso 3. Ejecutar el programa PySpark</h4>
+
+      <p>
+        Para que Spark pueda conectarse a Kafka, ejecuta el programa incluyendo el paquete
+        <code>spark-sql-kafka</code>. La versión debe ajustarse a la versión de Spark instalada.
+      </p>
+
+      <pre><code class="language-bash">spark-submit \
+  --packages org.apache.spark:spark-sql-kafka-0-10_2.12:3.5.1 \
+  kafka_spark_ventas.py</code></pre>
+
+      <h4>Código resuelto: <code>kafka_spark_ventas.py</code></h4>
+
+      <pre><code class="language-python python-code">from pyspark.sql import SparkSession
+from pyspark.sql import functions as F
+from pyspark.sql.types import StructType, StructField, StringType, DoubleType, TimestampType
+
+spark = (SparkSession.builder
+         .appName("KafkaSparkVentas")
+         .master("local[*]")
+         .getOrCreate())
+
+schema = StructType([
+    StructField("event_id", StringType()),
+    StructField("event_time", TimestampType()),
+    StructField("customer_id", StringType()),
+    StructField("amount", DoubleType()),
+    StructField("country", StringType())
+])
+
+kafka_df = (spark.readStream
+            .format("kafka")
+            .option("kafka.bootstrap.servers", "localhost:9092")
+            .option("subscribe", "ventas")
+            .option("startingOffsets", "earliest")
+            .load())
+
+eventos = (
+    kafka_df
+    .selectExpr(
+        "CAST(key AS STRING) AS key",
+        "CAST(value AS STRING) AS json_value",
+        "topic",
+        "partition",
+        "offset",
+        "timestamp AS kafka_timestamp"
+    )
+    .select(
+        "key",
+        F.from_json(F.col("json_value"), schema).alias("event"),
+        "topic",
+        "partition",
+        "offset",
+        "kafka_timestamp"
+    )
+    .select(
+        "key",
+        "event.event_id",
+        "event.event_time",
+        "event.customer_id",
+        "event.amount",
+        "event.country",
+        "topic",
+        "partition",
+        "offset",
+        "kafka_timestamp"
+    )
+)
+
+ventas_por_pais = (
+    eventos
+    .groupBy("country")
+    .agg(
+        F.count("*").alias("num_eventos"),
+        F.sum("amount").alias("importe_total")
+    )
+)
+
+query = (
+    ventas_por_pais.writeStream
+    .outputMode("complete")
+    .format("console")
+    .option("truncate", "false")
+    .option("checkpointLocation", "checkpoints/kafka_spark_ventas")
+    .start()
+)
+
+query.awaitTermination()</code></pre>
+
+      <h4>Resultado esperado</h4>
+
+      <p>
+        Spark mostrará una tabla agregada con el número de eventos y el importe total por país.
+      </p>
+
+      <pre><code class="language-text">+-------+-----------+-------------+
+|country|num_eventos|importe_total|
++-------+-----------+-------------+
+|ES     |2          |44.4         |
+|PT     |1          |40.0         |
++-------+-----------+-------------+</code></pre>
+
+      <h4>Explicación paso a paso</h4>
+
+      <p>
+        Kafka almacena los eventos en el topic <code>ventas</code>. Cada mensaje tiene una
+        <code>key</code>, que identifica al cliente, y un <code>value</code>, que contiene el evento
+        en formato JSON.
+      </p>
+
+      <p>
+        Spark lee el topic mediante <code>readStream</code>. Las columnas <code>key</code> y
+        <code>value</code> llegan en formato binario, por lo que se convierten a texto mediante
+        <code>CAST</code>.
+      </p>
+
+      <p>
+        Después se aplica un esquema explícito con <code>from_json</code>. Esto permite transformar
+        el JSON en columnas estructuradas y trabajar con tipos de datos adecuados, como
+        <code>TimestampType</code> y <code>DoubleType</code>.
+      </p>
+
+      <p>
+        Se conservan columnas propias de Kafka como <code>topic</code>, <code>partition</code>,
+        <code>offset</code> y <code>kafka_timestamp</code>. Estos metadatos son útiles para depurar
+        el consumo y entender desde qué posición del topic se han leído los eventos.
+      </p>
+
+      <p>
+        Finalmente, Spark agrupa los eventos por país y calcula el número de ventas y el importe
+        total. La salida se muestra en consola y se utiliza un checkpoint para guardar el progreso
+        de la consulta.
+      </p>
+
+      <h4>Relación con la lección</h4>
+
+      <p>
+        Este ejercicio reproduce el patrón habitual de integración entre Kafka y Spark:
+        Kafka recibe y conserva eventos, mientras Spark los consume, los parsea, los transforma
+        y escribe el resultado en un sink.
+      </p>
+
+      <p>
+        En un sistema real, el sink de consola se sustituiría por un Data Lake, una tabla analítica,
+        otro topic Kafka o una base de datos.
+      </p>
+
+      <h4>Preguntas de reflexión</h4>
+
+      <ol>
+        <li>¿Por qué las columnas <code>key</code> y <code>value</code> llegan en formato binario?</li>
+        <li>¿Qué diferencia hay entre <code>event_time</code> y <code>kafka_timestamp</code>?</li>
+        <li>¿Para qué sirven las columnas <code>partition</code> y <code>offset</code>?</li>
+        <li>¿Qué función cumple <code>checkpointLocation</code>?</li>
+        <li>¿Qué cambiaría si se quisiera escribir el resultado en Parquet en lugar de consola?</li>
+      </ol>
+    </div>
+  </div>
+</section>
+
 
 
   <div class="navigation-buttons">
     <button onclick="window.location.href='M3T3L1.html'">Anterior</button>
     <button onclick="window.location.href='M3T3L3.html'">Siguiente</button>
   </div>
+
+
 
 </main>
 <footer>

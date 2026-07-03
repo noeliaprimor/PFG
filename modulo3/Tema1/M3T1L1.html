@@ -47,195 +47,591 @@
         <li><a href="#descripcion">Introducción</a></li>
         <li><a href="#contenido">Contenido</a></li>
         <li><a href="#conclusion">Conclusión</a></li>
+        <li><a href="#ejercicio-resuelto">Ejercicio Resuelto</a></li>
       </ul>
     </div>
   </div>
 
-  <section id="descripcion">
+   <section id="descripcion">
     <div class="lesson-container">
       <h3>INTRODUCCIÓN</h3>
       <hr>
       <div class="text-cell">
-  <p>
-    El procesamiento en tiempo real en Apache Spark permite analizar y transformar datos a medida que se generan,
-    reduciendo la latencia entre la llegada del evento y la obtención de resultados. En el contexto Big Data,
-    esta capacidad resulta esencial para casos como detección de fraude, monitorización de sistemas,
-    análisis de logs o procesamiento de eventos IoT.
-  </p>
-  <p>
-    Spark incorpora capacidades de streaming mediante dos enfoques principales:
-  </p>
-  <ul>
-    <li>Spark Streaming (basado en DStreams).</li>
-    <li>Structured Streaming (basado en DataFrames/Datasets).</li>
-  </ul>
-  <p>
-    Actualmente, Structured Streaming es el modelo recomendado por su integración con Spark SQL
-    y su optimización automática mediante Catalyst.
-  </p>      </div>
+        <p>
+          Imagina una plataforma de cine en línea. Cada segundo pueden producirse nuevos eventos:
+          un usuario reproduce una película, otro la puntúa, otro abandona la visualización y otro
+          añade un título a su lista de favoritos. Si esperamos al final del día para analizar toda
+          esa información, llegaremos tarde a muchas decisiones.
+        </p>
+
+        <p>
+          El <strong>procesamiento en tiempo real</strong> surge para analizar los datos a medida que
+          se generan. En lugar de esperar a tener un fichero completo o una carga diaria, el sistema
+          recibe eventos continuamente y actualiza los resultados de forma incremental.
+        </p>
+
+        <p>
+          Apache Spark permite trabajar con este tipo de escenarios mediante
+          <strong>Structured Streaming</strong>, una API que permite procesar flujos de datos utilizando
+          operaciones muy parecidas a las que ya se emplean con DataFrames estáticos.
+        </p>
+      </div>
     </div>
   </section>
 
+
   <section id="contenido">
     <div class="lesson-container">
-
       <h3>CONTENIDO</h3>
       <hr>
       <div class="text-cell">
 
+        <h4>¿Qué problema resuelve el procesamiento en tiempo real?</h4>
 
+        <p>
+          En un procesamiento batch tradicional, los datos se acumulan durante un periodo de tiempo
+          y después se procesan todos juntos. Este enfoque es adecuado para informes diarios, cierres
+          mensuales o análisis históricos.
+        </p>
 
-  <h4>Conceptos clave del streaming en Spark</h4>
+        <p>
+          Sin embargo, hay situaciones en las que el valor del dato depende de la rapidez con la que
+          se analiza. Por ejemplo:
+        </p>
 
-  <P><strong>Evento:</strong>
-    Unidad de información generada por un sistema externo (por ejemplo, una transacción,
-    un clic web o una lectura de sensor) o como en el ejercicio del Modulo 2, tema 4 por una API de obtención de información de precio de criptomonedas.
-  </p>
+        <ul>
+          <li>Detectar una operación fraudulenta antes de que se complete.</li>
+          <li>Mostrar recomendaciones mientras el usuario está navegando.</li>
+          <li>Monitorizar sensores industriales y generar alertas.</li>
+          <li>Analizar logs de una aplicación para detectar errores en producción.</li>
+          <li>Calcular métricas de uso de una plataforma casi en tiempo real.</li>
+        </ul>
 
-  <p><strong>Flujo de datos (Stream):</strong>
+        <p>
+          En estos casos, no basta con almacenar los datos y analizarlos después. Es necesario
+          procesarlos conforme llegan.
+        </p>
 
-    Secuencia continua y potencialmente infinita de eventos.
-  </p>
+        <hr>
 
-  <p><strong>Micro-batch:</strong>
+        <h4>Conceptos clave</h4>
 
-    Modelo en el cual los datos se agrupan en pequeños intervalos temporales
-    (por ejemplo, cada pocos segundos) y se procesan como mini-lotes.
-  </p>
+        <p>
+          Antes de escribir código, conviene entender algunos conceptos básicos.
+        </p>
 
-  <p><strong>Procesamiento incremental:</strong>
+        <table border="1">
+          <thead>
+            <tr>
+              <th>Concepto</th>
+              <th>Explicación</th>
+              <th>Ejemplo</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Evento</strong></td>
+              <td>Unidad individual de información generada por un sistema.</td>
+              <td>Un usuario valora una película con 5 estrellas.</td>
+            </tr>
+            <tr>
+              <td><strong>Stream</strong></td>
+              <td>Secuencia continua de eventos que llegan al sistema.</td>
+              <td>Valoraciones que llegan continuamente a la plataforma.</td>
+            </tr>
+            <tr>
+              <td><strong>Micro-batch</strong></td>
+              <td>Pequeño lote de eventos procesado en intervalos cortos.</td>
+              <td>Procesar las valoraciones recibidas cada 10 segundos.</td>
+            </tr>
+            <tr>
+              <td><strong>Sink</strong></td>
+              <td>Destino donde se escriben los resultados.</td>
+              <td>Consola, Parquet, base de datos o dashboard.</td>
+            </tr>
+          </tbody>
+        </table>
+        <p class="img-caption">Tabla 1: Tabla de contenidos sobre conceptos clave</p>
 
-    Cada nueva llegada de datos actualiza los resultados previos sin recalcular
-    el dataset completo.
-  </p>
-<hr>
-  <h4>Evolución del streaming en Spark</h4>
+        <hr>
 
-  <strong>Spark Streaming (DStreams)</strong>
-  <p>
-    Fue la primera implementación de streaming en Spark. Se basa en la abstracción DStream,
-    que representa una secuencia de RDDs generados periódicamente.
-  </p>
-  <p>
-    Aunque funcional, presenta limitaciones en optimización y en integración con Spark SQL.
-  </p>
+        <h4>Flujo básico de una aplicación de streaming</h4>
 
-  <strong>Structured Streaming</strong>
-  <p>
-    Structured Streaming introduce un modelo declarativo donde el flujo de datos
-    se trata como una tabla infinita. El desarrollador define una consulta
-    utilizando DataFrames, y Spark ejecuta dicha consulta de forma incremental.
-  </p>
-<hr>
-  <h4>Arquitectura típica de streaming con Spark</h4>
-  <ol>
-    <li>Fuente de datos (Kafka, archivos, sockets, etc.).</li>
-    <li>Ingesta mediante readStream.</li>
-    <li>Transformaciones (filter, groupBy, window, join).</li>
-    <li>Escritura con writeStream hacia un sink (console, Parquet, base de datos).</li>
-  </ol>
-<hr>
-  <h3>Ejemplo básico en Structured Streaming (PySpark)</h3>
-  <pre><code class="language-python python-code">from pyspark.sql import SparkSession
+        <p>
+          Una aplicación de streaming suele seguir el siguiente esquema:
+        </p>
 
-spark = SparkSession.builder.appName("StreamingExample").getOrCreate()
+        <pre><code class="language-bash">Eventos de entrada
+        ↓
+Fuente de datos
+        ↓
+readStream
+        ↓
+Transformaciones
+        ↓
+writeStream
+        ↓
+Resultados actualizados</code></pre>
 
-stream_df = (spark
-    .readStream
-    .format("socket")
-    .option("host", "localhost")
-    .option("port", 9999)
-    .load())
+        <p>
+          En Spark, la lectura de datos en streaming se realiza mediante <code>readStream</code> y la
+          escritura de resultados mediante <code>writeStream</code>. Entre ambos pasos pueden aplicarse
+          transformaciones similares a las utilizadas con DataFrames: filtros, agrupaciones,
+          agregaciones, joins o ventanas temporales.
+        </p>
 
-result = stream_df.groupBy("value").count()
+        <hr>
 
-query = (result
-    .writeStream
-    .outputMode("complete")
-    .format("console")
-    .start())
+        <h4>Batch frente a streaming</h4>
 
-query.awaitTermination()</code></pre>
+        <table border="1">
+          <thead>
+            <tr>
+              <th>Aspecto</th>
+              <th>Procesamiento batch</th>
+              <th>Procesamiento streaming</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Disponibilidad de datos</td>
+              <td>Datos completos antes de ejecutar.</td>
+              <td>Datos que llegan continuamente.</td>
+            </tr>
+            <tr>
+              <td>Frecuencia</td>
+              <td>Por lotes: diario, semanal, mensual.</td>
+              <td>Continua o casi continua.</td>
+            </tr>
+            <tr>
+              <td>Latencia</td>
+              <td>Mayor.</td>
+              <td>Menor.</td>
+            </tr>
+            <tr>
+              <td>Ejemplo</td>
+              <td>Informe diario de ventas.</td>
+              <td>Ventas por minuto en un dashboard.</td>
+            </tr>
+          </tbody>
+        </table>
+        <p class="img-caption">Tabla 2: Tabla de contenidos sobre batch frente a streaming</p>
 
-  <h3>Modos de salida</h3>
-  <ul>
-    <li><strong>Append</strong>: solo nuevas filas.</li>
-    <li><strong>Update</strong>: filas actualizadas.</li>
-    <li><strong>Complete</strong>: resultado completo en cada trigger.</li>
-  </ul>
-<hr>
-  <h4>Gestión de ventanas temporales</h4>
-  <pre><code class="language-python python-code">from pyspark.sql.functions import window
+        <hr>
 
-windowed = (stream_df
-    .groupBy(window(stream_df.timestamp, "10 minutes"))
-    .count())</code></pre>
+        <h4>Spark Streaming y Structured Streaming</h4>
 
-  <p>
-    Las ventanas permiten agrupar eventos por intervalos temporales,
-    fundamentales en análisis de series temporales.
-  </p>
-<hr>
-  <h4>Watermarking y datos tardíos</h4>
-  <p>
-    En escenarios reales, algunos eventos pueden llegar con retraso.
-    Structured Streaming permite definir un watermark para establecer
-    cuánto tiempo se aceptan eventos tardíos.
-  </p>
-  <pre><code class="language-python python-code">stream_df.withWatermark("timestamp", "5 minutes")</code></pre>
-<hr>
-  <h4>Garantías de procesamiento</h4>
-  <ul>
-    <li>At-least-once: el evento puede procesarse más de una vez.</li>
-    <li>Exactly-once (según fuente y sink): cada evento se procesa exactamente una vez.</li>
-  </ul>
-<hr>
-  <h4>Ventajas del streaming en Spark</h4>
-  <ul>
-    <li>API unificada para batch y streaming.</li>
-    <li>Optimización automática.</li>
-    <li>Escalabilidad distribuida.</li>
-    <li>Integración con ecosistema Big Data.</li>
-  </ul>
-<hr>
-  <h4>Retos técnicos</h4>
-  <ul>
-    <li>Gestión eficiente del estado.</li>
-    <li>Control de latencia.</li>
-    <li>Dimensionamiento correcto de recursos.</li>
-    <li>Monitorización continua.</li>
-  </ul>
+        <p>
+          Spark ha tenido dos enfoques principales para trabajar con datos en tiempo real.
+        </p>
 
+        <table border="1">
+          <thead>
+            <tr>
+              <th>Modelo</th>
+              <th>Base</th>
+              <th>Situación actual</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Spark Streaming</strong></td>
+              <td>DStreams basados en RDD</td>
+              <td>Modelo histórico.</td>
+            </tr>
+            <tr>
+              <td><strong>Structured Streaming</strong></td>
+              <td>DataFrames y Spark SQL</td>
+              <td>Modelo recomendado en aplicaciones modernas.</td>
+            </tr>
+          </tbody>
+        </table>
+        <p class="img-caption">Tabla 3: Tabla de contenidos sobre spark streaming y structured streaming</p>
 
+        <p>
+          Structured Streaming resulta más sencillo para el estudiante porque mantiene la misma forma
+          de trabajar que los DataFrames vistos en módulos anteriores. La diferencia principal es que
+          el DataFrame no representa un conjunto cerrado de datos, sino una tabla que va creciendo con
+          nuevos eventos.
+        </p>
+
+        <hr>
+
+        <h4>La idea de tabla infinita</h4>
+
+        <p>
+          Structured Streaming interpreta un flujo de eventos como una tabla que nunca termina de
+          crecer. Cada vez que llegan nuevos eventos, Spark actualiza el resultado de la consulta.
+        </p>
+
+        <pre><code class="language-bash">Tabla de valoraciones
+
++---------+---------+-----------+
+| pelicula| usuario | valoracion|
++---------+---------+-----------+
+| Matrix  | u001    | 5         |
+| Titanic | u002    | 4         |
+| Avatar  | u003    | 5         |
+| ...     | ...     | ...       |
++---------+---------+-----------+
+
+La tabla sigue creciendo conforme llegan nuevos eventos.</code></pre>
+
+        <p>
+          Sobre esta tabla se pueden escribir consultas como si fuera un DataFrame normal:
+        </p>
+
+        <pre><code class="language-python python-code">resultado = valoraciones.groupBy("pelicula").count()</code></pre>
+
+        <p>
+          La diferencia es que el resultado se va actualizando mientras la aplicación continúa en ejecución.
+        </p>
+
+        <hr>
+
+        <h4>Ventanas temporales</h4>
+
+        <p>
+          En muchos casos no interesa calcular un total global, sino analizar lo que ocurre en un
+          intervalo de tiempo concreto. Para ello se utilizan ventanas temporales.
+        </p>
+
+        <p>
+          Por ejemplo, en una plataforma de cine podríamos calcular cuántas valoraciones recibe cada
+          película cada minuto:
+        </p>
+
+        <pre><code class="language-python python-code">from pyspark.sql.functions import window
+
+resultado = (
+    valoraciones
+    .groupBy(window("timestamp", "1 minute"), "pelicula")
+    .count()
+)</code></pre>
+
+        <p>
+          De esta forma, Spark no solo agrupa por película, sino también por el intervalo temporal al
+          que pertenece cada evento.
+        </p>
+
+        <hr>
+
+        <h4>Datos tardíos y watermark</h4>
+
+        <p>
+          En un sistema real, no todos los eventos llegan puntualmente. Puede ocurrir que un evento
+          generado a las 12:00 llegue al sistema a las 12:05 debido a problemas de red, latencia del
+          origen o reintentos.
+        </p>
+
+        <p>
+          Structured Streaming permite gestionar estos datos tardíos mediante <strong>watermarking</strong>.
+          Un watermark indica durante cuánto tiempo se aceptan eventos retrasados antes de cerrar una
+          ventana temporal.
+        </p>
+
+        <pre><code class="language-python python-code">valoraciones.withWatermark("timestamp", "5 minutes")</code></pre>
+
+        <p>
+          En este ejemplo, Spark acepta eventos que lleguen hasta 5 minutos tarde. Pasado ese umbral,
+          puede descartar eventos demasiado antiguos para evitar mantener estado indefinidamente.
+        </p>
+
+        <hr>
+
+        <h4>Modos de salida</h4>
+
+        <p>
+          Cuando una consulta de streaming genera resultados, Spark necesita saber cómo escribirlos en
+          el destino. Para ello existen distintos modos de salida.
+        </p>
+
+        <table border="1">
+          <thead>
+            <tr>
+              <th>Modo</th>
+              <th>Funcionamiento</th>
+              <th>Uso típico</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Append</strong></td>
+              <td>Solo escribe filas nuevas.</td>
+              <td>Eventos ya cerrados o resultados que no cambian.</td>
+            </tr>
+            <tr>
+              <td><strong>Update</strong></td>
+              <td>Escribe solo las filas que han cambiado.</td>
+              <td>Agregaciones que se actualizan.</td>
+            </tr>
+            <tr>
+              <td><strong>Complete</strong></td>
+              <td>Escribe todo el resultado en cada actualización.</td>
+              <td>Ejercicios y agregaciones pequeñas.</td>
+            </tr>
+          </tbody>
+        </table>
+        <p class="img-caption">Tabla 4: Tabla de contenidos sobre modos de salida</p>
+
+        <hr>
+
+        <h4>Garantías de procesamiento</h4>
+
+        <p>
+          En sistemas distribuidos es importante entender qué ocurre si hay fallos, reintentos o
+          duplicados. Las garantías de procesamiento describen cómo se tratan los eventos.
+        </p>
+
+        <table border="1">
+          <thead>
+            <tr>
+              <th>Garantía</th>
+              <th>Significado</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>At-most-once</strong></td>
+              <td>Un evento se procesa como máximo una vez. Puede perderse.</td>
+            </tr>
+            <tr>
+              <td><strong>At-least-once</strong></td>
+              <td>Un evento se procesa al menos una vez. Puede repetirse.</td>
+            </tr>
+            <tr>
+              <td><strong>Exactly-once</strong></td>
+              <td>Un evento se procesa exactamente una vez, si la fuente y el destino lo permiten.</td>
+            </tr>
+          </tbody>
+        </table>
+        <p class="img-caption">Tabla 5: Tabla de contenidos sobre garantías de procesamiento</p>
+
+        <p>
+          En la práctica, conseguir exactly-once depende de la fuente de datos, del destino y de la
+          configuración de checkpoints.
+        </p>
+
+        <hr>
+
+        <h4>Ventajas y retos</h4>
+
+        <table border="1">
+          <thead>
+            <tr>
+              <th>Ventajas</th>
+              <th>Retos</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Permite reaccionar rápidamente ante nuevos datos.</td>
+              <td>Requiere controlar la latencia.</td>
+            </tr>
+            <tr>
+              <td>Integra batch y streaming con una API similar.</td>
+              <td>Puede necesitar gestionar estado.</td>
+            </tr>
+            <tr>
+              <td>Escala en entornos distribuidos.</td>
+              <td>Necesita monitorización continua.</td>
+            </tr>
+            <tr>
+              <td>Se integra con Kafka, ficheros, Parquet y otros sistemas.</td>
+              <td>Los errores pueden acumularse si el flujo no se controla.</td>
+            </tr>
+          </tbody>
+        </table>
+        <p class="img-caption">Tabla 6: Tabla de contenidos sobre ventajas y retos</p>
 
       </div>
     </div>
   </section>
 
+
   <section id="conclusion">
     <div class="lesson-container">
-      <strong>CONCLUSIÓN</strong>
+      <h3>CONCLUSIÓN</h3>
       <hr>
       <div class="text-cell">
-  <p>
-    El procesamiento en tiempo real en Apache Spark permite construir aplicaciones
-    analíticas con baja latencia y alta escalabilidad. Structured Streaming ofrece
-    un modelo declarativo que simplifica el desarrollo y garantiza coherencia
-    con el resto del ecosistema Spark.
-  </p>
-  <p>
-    En arquitecturas modernas de datos, Spark se posiciona como una solución
-    robusta para integrar batch y streaming dentro de un mismo entorno distribuido.
-  </p>      </div>
+        <p>
+          El procesamiento en tiempo real permite analizar datos mientras se generan, reduciendo la
+          latencia entre la llegada de los eventos y la obtención de resultados. Esta capacidad es
+          fundamental en escenarios donde las decisiones deben tomarse rápidamente.
+        </p>
+
+        <p>
+          Structured Streaming facilita este tipo de procesamiento porque permite trabajar con flujos
+          de datos utilizando una API muy cercana a los DataFrames de Spark. Esto permite construir
+          aplicaciones de streaming de forma progresiva, reutilizando conocimientos ya adquiridos sobre
+          Spark SQL y procesamiento distribuido.
+        </p>
+      </div>
     </div>
   </section>
 
+
+  <section id="ejercicio-resuelto">
+    <div class="lesson-container">
+      <h3>EJERCICIO RESUELTO</h3>
+      <hr>
+      <div class="text-cell">
+
+        <h4>Procesamiento continuo de valoraciones de películas</h4>
+
+        <p>
+          En este ejercicio se va a simular una plataforma de cine que recibe valoraciones de películas
+          de forma continua. Para que el origen de los datos sea fácil de entender, Spark leerá nuevos
+          ficheros CSV desde un directorio de entrada.
+        </p>
+
+        <p>
+          Cada vez que se copie un nuevo fichero en la carpeta, Spark lo detectará y procesará sus filas
+          como nuevos eventos.
+        </p>
+
+        <h4>Escenario</h4>
+
+        <p>
+          Se parte de una carpeta llamada <code>entrada_valoraciones</code>. Dentro de ella se irán copiando
+          ficheros CSV con valoraciones de películas.
+        </p>
+
+        <p>Un primer fichero podría tener el siguiente contenido:</p>
+
+        <pre><code class="language-csv">pelicula,usuario,valoracion
+Matrix,u001,5
+Interstellar,u002,4
+Inception,u003,5
+Titanic,u004,4
+Avatar,u005,5</code></pre>
+
+        <p>
+          Más adelante se puede añadir otro fichero con nuevas valoraciones:
+        </p>
+
+        <pre><code class="language-csv">pelicula,usuario,valoracion
+Matrix,u006,4
+Gladiator,u007,5
+Titanic,u008,5
+Avatar,u009,4
+Inception,u010,5</code></pre>
+
+        <h4>Objetivo</h4>
+
+        <p>
+          El programa deberá calcular de forma continua:
+        </p>
+
+        <ul>
+          <li>Cuántas valoraciones ha recibido cada película.</li>
+          <li>Cuál es la valoración media de cada película.</li>
+        </ul>
+
+        <h4>Pasos del ejercicio</h4>
+
+        <ol>
+          <li>Crear una sesión Spark.</li>
+          <li>Definir el esquema de los datos.</li>
+          <li>Leer la carpeta de entrada mediante <code>readStream</code>.</li>
+          <li>Agrupar los eventos por película.</li>
+          <li>Calcular el número de valoraciones y la media.</li>
+          <li>Mostrar los resultados en consola mediante <code>writeStream</code>.</li>
+        </ol>
+
+        <h4>Código fuente</h4>
+
+
+
+        <h4>Preparación de la carpeta de entrada</h4>
+
+        <p>
+          Antes de ejecutar el programa, crea la carpeta de entrada:
+        </p>
+
+        <pre><code class="language-bash">mkdir -p entrada_valoraciones</code></pre>
+
+        <p>
+        Vamos a utilizar dos ficheros diferentes para este ejercicio:</p>
+          <ul>
+        <li>Generador de valoraciones:  <a href="generacion_valoraciones.py">Fichero</a> que genera los ficheros de valoración en la carpeta entrada valoraciones
+        <img src="../../img/M3T1L1_1.png" alt="Generación y procesamiento de valoraciones de películas en streaming"></li>
+        <p class="img-caption">Figura 1: Generación y procesamiento de valoraciones de películas en streaming</p>
+        <li>Procesador en streaming:  <a href="M3T1L1_ejercicio.py">Fichero</a> que lee los ficheros de valoración y los procesa.
+
+      </ul>
+        <p> Ambos ficheros se pueden procesar en paralelo desde Pycharm
+        </p>
+
+        <h4>Resultado esperado</h4>
+
+        <p>
+          Los resultados van apareciendo según se generan los ficheros:
+        </p>
+
+        <pre><code>-------------------------------------------
+Batch: 1
+-------------------------------------------
++-------------------+----------------+----------------+
+|pelicula           |num_valoraciones|valoracion_media|
++-------------------+----------------+----------------+
+|Interstellar       |4               |3.5             |
+|El Padrino         |7               |2.71            |
+|Gladiator          |3               |3.67            |
+|Avatar             |7               |3.57            |
+|Pulp Fiction       |3               |2.67            |
+|Forrest Gump       |5               |2.8             |
+|Matrix             |6               |3.5             |
+|Inception          |3               |2.33            |
+|Titanic            |5               |3.4             |
+|El Caballero Oscuro|7               |2.0             |
++-------------------+----------------+----------------+
+
+-------------------------------------------
+Batch: 2
+-------------------------------------------
++-------------------+----------------+----------------+
+|pelicula           |num_valoraciones|valoracion_media|
++-------------------+----------------+----------------+
+|Interstellar       |7               |2.86            |
+|El Padrino         |10              |3.0             |
+|Gladiator          |5               |2.6             |
+|Avatar             |10              |3.4             |
+|Pulp Fiction       |5               |2.8             |
+|Forrest Gump       |7               |2.86            |
+|Matrix             |8               |3.5             |
+|Inception          |4               |2.5             |
+|Titanic            |6               |3.67            |
+|El Caballero Oscuro|8               |2.38            |
++-------------------+----------------+----------------+</code></pre>
+
+
+        <h4>Conceptos trabajados</h4>
+
+        <ul>
+          <li>Lectura continua de nuevos ficheros.</li>
+          <li>Uso de <code>readStream</code>.</li>
+          <li>Transformaciones sobre DataFrames de streaming.</li>
+          <li>Agregaciones incrementales.</li>
+          <li>Uso de <code>writeStream</code> y modo de salida <code>complete</code>.</li>
+        </ul>
+
+        <p>
+          Este ejercicio permite entender la idea central de Structured Streaming: Spark permanece
+          escuchando una fuente de datos y actualiza los resultados cada vez que llegan nuevos eventos.
+        </p>
+
+      </div>
+    </div>
+  </section>
 
 
   <div class="navigation-buttons">
     <button onclick="window.location.href='index.html'">Índice del Tema</button>
     <button onclick="window.location.href='M3T1L2.html'">Siguiente</button>
   </div>
+
+
 
 </main>
 <footer>

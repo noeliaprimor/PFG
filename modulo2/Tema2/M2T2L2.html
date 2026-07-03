@@ -102,7 +102,7 @@
     Executors. A su vez, los Executors ejecutan dichas tareas y devuelven los resultados parciales o finales al Driver,
     además de almacenar datos intermedios en memoria o disco cuando es necesario.
   </p>
-        <img src="../../img/M2T2L2_2.png">
+        <img src="../../img/M2T2L2_2.png" alt="Estructura de una aplicación Spark">
         <p class="img-caption">Figura 1: Estructura de una aplicación Spark</p>
 
   <hr />
@@ -164,7 +164,7 @@
     APIs de Spark.
   </p>
 
-  <strong>1. Ejemplo en Python</strong>: genera un fichero ejemplo.py con el siguiente código y ejecutalo desde la consola.
+  <strong>1. Ejemplo en Python</strong>: genera un fichero ejemplo.py con el siguiente código y ejecútalo desde la consola.
   <pre><code  class="language-python python-code">from pyspark.sql import SparkSession
 
 spark = (
@@ -177,16 +177,18 @@ spark = (
 
   </code></pre>
         <p>Obtendremos la siguiente salida:</p>
-        <img src="../../img/M2T2L2_3.png">
+        <img src="../../img/M2T2L2_3.png" alt="Salida de la ejecución del Script anterior">
+        <p class="img-caption">Figura 2: Salida de la ejecución del Script anterior</p>
 
   <strong>2. Ejemplo en Scala</strong>
   <pre><code  class="language-python python-code">spark-shell --master "local[*]"</code></pre>
 
   <p>
     A partir de este objeto se puede acceder tanto a DataFrames como al SparkContext subyacente, en caso de que sea
-    necesario trabajar a un nivel más bajo con RDDs.
-    <img src="../../img/M2T2L2_4.png">
-    Para salir ejecutamos:
+    necesario trabajar a un nivel más bajo con RDDs.</p>
+    <img src="../../img/M2T2L2_4.png" alt="Salida de ejecución spark.range(10).show">
+    <p class="img-caption">Figura 3: Salida de ejecución spark.range(10).show</p>
+   <p> Para salir ejecutamos:
   </p>
   <pre><code  class="language-python python-code">:quit</code></pre>
 
@@ -416,11 +418,13 @@ df.groupBy("departamento").agg(
 
   </code></pre>
 
-          <img src="../../img/M2T2L2_5.png">
+          <img src="../../img/M2T2L2_5.png" alt="Ejecución de tareas Spark sobre particiones de datos">
+          <p class="img-caption">Figura 4: Ejecución de tareas Spark sobre particiones de datos</p>
 
-  <p>Accede a Spark UI, a la ruta que aparece en las primeras líneas de la salida, para comprobar los datos de ejecución:</code>:</p>
+  <p>Accede a Spark UI, a la ruta que aparece en las primeras líneas de la salida, para comprobar los datos de ejecución:</p>
 
-<img src="../../img/M2T2L2_6.png">
+<img src="../../img/M2T2L2_6.png" alt="Arquitectura de Spark con driver, executors y cluster manager">
+<p class="img-caption">Figura 5: Arquitectura de Spark con driver, executors y cluster manager</p>
 
         </div>
       </div>

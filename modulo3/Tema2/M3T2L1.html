@@ -47,6 +47,8 @@
         <li><a href="#descripcion">Introducción</a></li>
         <li><a href="#contenido">Contenido</a></li>
         <li><a href="#conclusion">Conclusión</a></li>
+        <li><a href="#ejercicio-resuelto">Ejercicio Resuelto</a></li>
+
       </ul>
     </div>
   </div>
@@ -232,6 +234,7 @@
       </tr>
     </tbody>
   </table>
+  <p class="img-caption">Tabla 1: Tabla de contenidos sobre diseño del evento</p>
 
   <p>
     También es recomendable definir un esquema de datos mediante JSON Schema, Avro o Protobuf.
@@ -278,7 +281,7 @@
   <h3>Flujo típico de adquisición y transmisión</h3>
 
   <img src="../../img/M3T2L1_1.png" alt="Flujo típico de adquisición y transmisión de un evento">
-  <p class="img-caption">Imagen 1: Flujo típico de adquisición y transmisión de un evento</p>
+  <p class="img-caption">Figura 1: Flujo típico de adquisición y transmisión de un evento</p>
 
 
   <p>
@@ -510,10 +513,101 @@ eventos_df = (stream_df
 
 
 
+<section class="ejercicio-resuelto" id="ejercicio-resuelto">
+  <div class="lesson-container">
+    <h3>EJERCICIO RESUELTO </h3>
+    <hr>
+
+    <div class="text-cell">
+      <h4>Diseñar y validar eventos antes de procesarlos con Spark</h4>
+
+      <p>
+        En este ejercicio se simula la adquisición de eventos de una aplicación de comercio electrónico.
+        El objetivo es comprobar que los eventos contienen los campos mínimos necesarios antes de ser
+        enviados a un sistema de transmisión como Kafka o procesados por Spark Structured Streaming.
+      </p>
+
+      <h4>Objetivos del ejercicio</h4>
+      <ol>
+        <li>Crear una sesión Spark.</li>
+        <li>Construir un conjunto de eventos en formato JSON.</li>
+        <li>Parsear los eventos aplicando un esquema.</li>
+        <li>Separar eventos válidos e inválidos.</li>
+        <li>Mostrar el resultado final por consola.</li>
+      </ol>
+
+      <h4>Código resuelto</h4>
+      <p></p><a href="M3T2L1_ejercicio.py"><strong>Aquí tienes la solución</strong></a></p>
+
+
+
+
+      <h4>Resultado esperado</h4>
+
+      <pre><code class="language-text">+--------+-------------+--------------------+--------+----------+-------+------+--------+
+|event_id|event_type   |event_time          |key     |cliente_id|importe|moneda|estado  |
++--------+-------------+--------------------+--------+----------+-------+------+--------+
+|evt-001 |pedido_creado|2026-07-03T10:00:00Z|pedido-1|cli-1     |25.5   |EUR   |valido  |
+|evt-002 |pedido_creado|2026-07-03T10:01:00Z|pedido-2|cli-2     |40.0   |EUR   |valido  |
+|evt-003 |pedido_creado|NULL                |pedido-3|cli-3     |15.0   |EUR   |invalido|
+|evt-004 |pedido_creado|2026-07-03T10:03:00Z|NULL    |cli-4     |18.5   |EUR   |invalido|
++--------+-------------+--------------------+--------+----------+-------+------+--------+
+</code></pre>
+
+      <h4>Explicación paso a paso</h4>
+
+      <p>
+        Primero se crea un conjunto pequeño de eventos en formato JSON. Cada evento representa un
+        pedido creado dentro de una aplicación de comercio electrónico.
+      </p>
+
+      <p>
+        Después se define un esquema con los campos esperados: <code>event_id</code>,
+        <code>event_type</code>, <code>event_time</code>, <code>key</code> y <code>payload</code>.
+        Este paso simula la validación que debería realizarse antes de transmitir o procesar eventos
+        en una arquitectura real.
+      </p>
+
+      <p>
+        A continuación, Spark parsea el JSON y convierte cada evento en columnas estructuradas.
+        Finalmente, se añade una columna <code>estado</code> para marcar como inválidos aquellos eventos
+        que no contienen campos obligatorios.
+      </p>
+
+      <h4>Relación con la lección</h4>
+
+      <p>
+        Este ejercicio muestra que la adquisición de eventos no consiste únicamente en recibir datos.
+        También es necesario validar que cada evento contiene una clave, un timestamp, un tipo de evento
+        y un payload correctamente formado.
+      </p>
+
+      <p>
+        En un sistema real, los eventos válidos podrían enviarse a Kafka o procesarse con Spark
+        Structured Streaming, mientras que los eventos inválidos podrían almacenarse en una cola de
+        errores para su revisión.
+      </p>
+
+      <h4>Preguntas de reflexión</h4>
+
+      <ol>
+        <li>¿Por qué es importante que cada evento tenga un identificador único?</li>
+        <li>¿Qué problemas puede causar un evento sin timestamp?</li>
+        <li>¿Por qué la clave del evento es importante para Kafka?</li>
+        <li>¿Qué debería hacerse con los eventos inválidos en un sistema real?</li>
+        <li>¿Qué ventajas aporta definir un esquema antes de procesar los eventos?</li>
+      </ol>
+    </div>
+  </div>
+</section>
+
+
   <div class="navigation-buttons">
     <button onclick="window.location.href='index.html'">Índice del Tema</button>
     <button onclick="window.location.href='M3T2L2.html'">Siguiente</button>
   </div>
+
+
 
 </main>
 <footer>
