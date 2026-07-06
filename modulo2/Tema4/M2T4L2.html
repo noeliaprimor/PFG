@@ -96,7 +96,7 @@
 
 <p>Spark permite activar autenticación básica mediante un secreto compartido entre los componentes del sistema.</p>
 
-<pre><code class=language-bash bash-code">spark.authenticate=true
+<pre><code class="language-bash bash-code">spark.authenticate=true
 spark.authenticate.secret=mi_secreto</code></pre>
 
 <p>Este mecanismo ayuda a evitar que procesos no autorizados se conecten a la aplicación Spark.</p>
@@ -105,7 +105,7 @@ spark.authenticate.secret=mi_secreto</code></pre>
 
 <p>En entornos Hadoop empresariales, Spark puede integrarse con Kerberos para proporcionar autenticación fuerte basada en tickets.</p>
 
-<pre><code class=language-bash bash-code">kinit usuario@REALM
+<pre><code class="language-bash bash-code">kinit usuario@REALM
 
 spark-submit \
   --principal usuario@REALM \
@@ -120,7 +120,7 @@ spark-submit \
 
 <p>Spark permite activar cifrado de red mediante propiedades de configuración:</p>
 
-<pre><code class=language-bash bash-code">spark.network.crypto.enabled=true
+<pre><code class="language-bash bash-code">spark.network.crypto.enabled=true
 spark.ssl.enabled=true</code></pre>
 
 <p>El cifrado ayuda a proteger los datos en tránsito y reduce el riesgo de exposición de información sensible dentro de la red del clúster.</p>
@@ -140,7 +140,7 @@ spark.ssl.enabled=true</code></pre>
 
 <p>Para limitar el acceso pueden activarse listas de control de acceso:</p>
 
-<pre><code class=language-bash bash-code">spark.ui.acls.enable=true
+<pre><code class="language-bash bash-code">spark.ui.acls.enable=true
 spark.ui.view.acls=usuario1,usuario2</code></pre>
 
 <p>En entornos productivos también es recomendable proteger Spark UI mediante redes privadas, proxies autenticados o reglas de firewall.</p>
@@ -193,7 +193,7 @@ spark.ui.view.acls=usuario1,usuario2</code></pre>
 
 <p>La herramienta principal para desplegar aplicaciones Spark es <code>spark-submit</code>. Esta utilidad permite enviar una aplicación al entorno de ejecución indicando el modo de despliegue, recursos necesarios y dependencias.</p>
 
-<pre><code class=language-bash bash-code">spark-submit \
+<pre><code class="language-bash bash-code">spark-submit \
   --master spark://spark-master:7077 \
   --deploy-mode client \
   app.py</code></pre>
@@ -219,7 +219,7 @@ spark.ui.view.acls=usuario1,usuario2</code></pre>
   <li>Imágenes Docker personalizadas en entornos contenerizados.</li>
 </ul>
 
-<pre><code class=language-bash bash-code">spark-submit \
+<pre><code class="language-bash bash-code">spark-submit \
   --packages org.apache.spark:spark-sql-kafka-0-10_2.12:3.5.0 \
   app.py</code></pre>
 

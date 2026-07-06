@@ -95,7 +95,7 @@
   <li>Incluyen niveles de severidad como INFO, WARN, ERROR y DEBUG.</li>
 </ul>
 
-<pre><code  class=language-bash bash-code">INFO TaskSetManager: Starting task 0.0 in stage 1.0
+<pre><code  class="language-bash bash-code">INFO TaskSetManager: Starting task 0.0 in stage 1.0
 WARN Executor: Lost task 3.0 due to node failure
 ERROR Executor: Exception in task
 </code></pre>
@@ -112,7 +112,7 @@ ERROR Executor: Exception in task
   <li>Son utilizados por herramientas como Spark UI para reconstruir la ejecución de una aplicación.</li>
 </ul>
 
-<pre><code  class=language-bash bash-code">{
+<pre><code  class="language-bash bash-code">{
   "Event": "SparkListenerTaskEnd",
   "Stage ID": 1,
   "Task Info": {
@@ -133,7 +133,7 @@ ERROR Executor: Exception in task
 
 <p>La configuración de logs suele realizarse mediante un archivo denominado <code>log4j.properties</code>.</p>
 
-<pre><code class=language-bash bash-code">log4j.rootCategory=INFO, console
+<pre><code class="language-bash bash-code">log4j.rootCategory=INFO, console
 
 log4j.appender.console=org.apache.log4j.ConsoleAppender
 log4j.appender.console.layout=org.apache.log4j.PatternLayout
@@ -142,7 +142,7 @@ log4j.appender.console.layout.ConversionPattern=%d{yy/MM/dd HH:mm:ss} %p %c{1}: 
 
 <p>También es posible reducir el nivel de detalle de los mensajes generados por Spark:</p>
 
-<pre><code class=language-bash bash-code">log4j.logger.org.apache.spark=ERROR
+<pre><code class="language-bash bash-code">log4j.logger.org.apache.spark=ERROR
 </code></pre>
 
 <p>Esta configuración permite reducir el ruido en consola y centrarse únicamente en errores relevantes.</p>
@@ -153,7 +153,7 @@ log4j.appender.console.layout.ConversionPattern=%d{yy/MM/dd HH:mm:ss} %p %c{1}: 
 
 <p>Para activar el registro de eventos pueden utilizarse las siguientes propiedades:</p>
 
-<pre><code class=language-bash bash-code">spark.eventLog.enabled=true
+<pre><code class="language-bash bash-code">spark.eventLog.enabled=true
 spark.eventLog.dir=/tmp/spark-events
 </code></pre>
 
@@ -177,7 +177,7 @@ spark.eventLog.dir=/tmp/spark-events
 
 <p>Esta herramienta resulta especialmente útil para comprender cómo Spark distribuye el trabajo y para detectar posibles cuellos de botella.</p>
 <hr>
-<h4>Flujo de eventos en Spark</h5>
+<h4>Flujo de eventos en Spark</h4>
 
 <p>El flujo general de eventos en Spark puede describirse de la siguiente forma:</p>
 
@@ -203,7 +203,7 @@ spark.eventLog.dir=/tmp/spark-events
   <li>Terminación inesperada de consultas streaming.</li>
 </ul>
 
-<pre><code class=language-bash bash-code">WARN StreamingQueryManager: Query terminated with exception
+<pre><code class="language-bash bash-code">WARN StreamingQueryManager: Query terminated with exception
 </code></pre>
 
 <p>Por su parte, los eventos permiten analizar métricas como latencia, número de registros procesados, duración de cada micro-batch y estado de la consulta.</p>

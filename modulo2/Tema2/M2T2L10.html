@@ -162,7 +162,7 @@ val ds = spark.read.json("personas.json").as[Persona]</code></pre>
   </table>
   <p class="img-caption">Tabla 1: Tabla de contenidos sobre ventajas frente a rdd</p>
 
-  <h>Casos de uso típicos</h>
+  <h4>Casos de uso típicos</h4>
   <ul>
     <li>Procesos ETL (limpieza, normalización, enriquecimiento).</li>
     <li>Analítica exploratoria y agregaciones masivas.</li>
@@ -220,7 +220,7 @@ w7d = (Window
 
 df_roll = df.withColumn("avg_7d", F.avg("importe").over(w7d))</code></pre>
 
-  <strong>Sessionization con lag + sum acumulado</strong> : agrupa los eventos de cada user_id en sesiones, considerando que empieza una sesión nueva cuando pasan más de 30 minutos entre un evento y el siguiente.
+  <strong>Sessionization con lag + sum acumulado</strong>: agrupa los eventos de cada user_id en sesiones, considerando que empieza una sesión nueva cuando pasan más de 30 minutos entre un evento y el siguiente.
           Si un usuario genera eventos con marcas de tiempo, <code>ts</code>, este código:
           <ul>
           <li>Ordena esos eventos por tiempo</li>
@@ -256,7 +256,7 @@ df_no_tx = users.join(tx.select("user_id").distinct(), "user_id", "left_anti")
 # Usuarios que SÍ tienen transacciones (left_semi)
 df_has_tx = users.join(tx.select("user_id").distinct(), "user_id", "left_semi")</code></pre>
 
-  <strong>Join con condición no equi-join (rangos)</strong> : Join por rango temporal entre las transacciones Tx y promociones. Se asocia a cada transacción la promoción que estaba activa en ese momento.
+  <strong>Join con condición no equi-join (rangos)</strong>: Join por rango temporal entre las transacciones Tx y promociones. Se asocia a cada transacción la promoción que estaba activa en ese momento.
           Es decir, ocurre despúes o en el inicio de la promo <code> >= start_ts</code> y antes del final <code> < end_ts</code>
   <pre><code  class="language-python python-code">cond = (
   (tx["ts"] &gt;= promo["start_ts"]) &
@@ -436,7 +436,7 @@ silver = (bronze
           <li><strong>Gold:</strong> Es la capa de consumo o agregado, donde se realizan agregaciones, cálculos complejos y se preparan los datos para su consumo final, como por ejemplo para alimentar dashboards, informes o modelos de machine learning. En esta etapa, se pueden generar tablas agregadas, vistas materializadas o datasets optimizados para consultas de BI, con el objetivo de facilitar el acceso y mejorar el rendimiento en las consultas finales.</li>
 
 
-</p>
+
 
   <pre><code  class="language-python python-code">from pyspark.sql import functions as F
 
@@ -444,7 +444,7 @@ gold = (silver
   .groupBy(F.window("ts", "1 day").alias("day"), "country")
   .agg(F.count("*").alias("events"))
 )</code></pre>
-
+ </ul>
   </div>
       </div>
     </section>
@@ -516,7 +516,7 @@ gold = (silver
         La operación <code>partitionBy("departamento")</code> crea grupos lógicos por departamento, mientras que <code>orderBy(F.desc("salario"))</code> ordena los empleados de cada grupo. La función <code>row_number()</code> asigna una posición dentro de cada departamento.
       </p>
 
-      <p></p><strong><a href="M2T2L10_ejercicio.py">Aquí tienes la solución</a></strong></p>
+      <p><strong><a href="M2T2L10_ejercicio.py">Aquí tienes la solución</a></strong></p>
 
     </div>
 
